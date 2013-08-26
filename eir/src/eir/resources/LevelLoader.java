@@ -35,16 +35,25 @@ import com.google.gson.JsonSyntaxException;
 public class LevelLoader
 {
 
+	//TODO: use logging facade
 	private Logger log = Logger.getLogger( this.getClass() );
 
-	// me bad regexper, couldn't figure this - it should be "data/levels"
+	
+	/** put level files here */
 	private static String LEVEL_DATA_ROOT = "data/levels/";
 
-	private Multimap<String, String> levelFiles;
+	/**
+	 * Maps level types to level names. Level type represents a group of levelnames,
+	 * that can be loaded using {@link #readLevel(String)}.
+	 */
+	private Multimap<String, String> levelTypes;
 	
+	/**
+	 * Creates level loader and lists level folder ({@link #LEVEL_DATA_ROOT}
+	 */
 	public LevelLoader()
 	{
-		levelFiles = readLevelFiles();
+		levelTypes = readLevelFiles();
 	}
 	
 	/**
@@ -53,7 +62,7 @@ public class LevelLoader
 	 */
 	public Set <String> getLevelTypes()
 	{
-		return Collections.unmodifiableSet( levelFiles.keySet() );
+		return Collections.unmodifiableSet( levelTypes.keySet() );
 	}
 	
 	/**
@@ -63,7 +72,7 @@ public class LevelLoader
 	 */
 	public Collection <String> getLevelNames(String levelType) 
 	{
-		return Collections.unmodifiableCollection( levelFiles.get( levelType ) );
+		return Collections.unmodifiableCollection( levelTypes.get( levelType ) );
 	}
 
 
@@ -74,7 +83,7 @@ public class LevelLoader
 	 */
 	private Multimap<String, String> readLevelFiles()
 	{
-		Multimap<String, String> levelFiles = HashMultimap.create();
+		Multimap<String, String> levelTypes = HashMultimap.create();
 
 		// resource path scaner; TODO: comes with 2mb lib, consider something
 		// lighter:
@@ -102,15 +111,15 @@ public class LevelLoader
 				continue;
 			}
 
-			String levelName = matcher.group( 1 );
+			String levelType = matcher.group( 1 );
 			String levelIdx = matcher.group( 2 );
 
-			log.trace( "Level file found: " + levelName + " : " + levelIdx );
+			log.debug( "Level file found: " + levelType + " : " + levelIdx );
 
-			levelFiles.put( levelName, LEVEL_DATA_ROOT+filename );
+			levelTypes.put( levelType, LEVEL_DATA_ROOT+filename );
 		}
 
-		return levelFiles;
+		return levelTypes;
 	}
 	
 	/**
@@ -118,11 +127,11 @@ public class LevelLoader
 	 * @param levelName
 	 * @return
 	 */
-	public LevelDescriptor readLevel(String levelName)
+	public LevelDescriptor readLevel(String levelId)
 	{
 		Gson gson = new Gson();
 		
-		InputStream stream = openFileStream( levelName );
+		InputStream stream = openFileStream( levelId );
 
 		LevelDescriptor level = null;
 
@@ -136,13 +145,18 @@ public class LevelLoader
 		return level;
 	}
 
-	private InputStream openFileStream(String levelName)
+	/**
+	 * Open stream to level name.
+	 * @param levelName
+	 * @return
+	 * @throws IllegalArgumentException if no resource matching the Level name is found.
+	 */
+	private InputStream openFileStream(String levelId)
 	{
-		String filename = new StringBuilder().append("").append("").append( levelName ).toString();
-		InputStream stream = this.getClass().getClassLoader().getResourceAsStream( filename );
+		InputStream stream = this.getClass().getClassLoader().getResourceAsStream( levelId );
 		if(stream == null)
 		{
-			throw new IllegalArgumentException("Cannot open file " + filename);
+			throw new IllegalArgumentException ("Cannot open resource " + levelId );
 		}
 		return stream;
 
@@ -181,7 +195,7 @@ public class LevelLoader
 	 * @throws URISyntaxException
 	 * @throws IOException
 	 */
-	String[] getResourceListing(Class clazz, String path)
+	String[] getResourceListing(Class <?> clazz, String path)
 	{
 		URL dirURL = clazz.getClassLoader().getResource( path );
 		
