@@ -1,5 +1,7 @@
 package com.nnf.eir;
 
+import eir.game.EirGame;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -11,6 +13,6 @@ public class Main {
 		cfg.width = 480;
 		cfg.height = 320;
 		
-		new LwjglApplication(new EirMain(), cfg);
+		new LwjglApplication(new EirGame(), cfg);
 	}
 }

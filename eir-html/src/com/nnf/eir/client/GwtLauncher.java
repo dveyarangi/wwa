@@ -1,6 +1,7 @@
 package com.nnf.eir.client;
 
-import com.nnf.eir.EirMain;
+import eir.game.EirGame;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
@@ -14,6 +15,6 @@ public class GwtLauncher extends GwtApplication {
 
 	@Override
 	public ApplicationListener getApplicationListener () {
-		return new EirMain();
+		return new EirGame();
 	}
 }

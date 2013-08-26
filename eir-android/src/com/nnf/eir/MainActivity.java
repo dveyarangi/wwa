@@ -1,5 +1,6 @@
 package com.nnf.eir;
 
+import eir.game.EirGame;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -13,6 +14,6 @@ public class MainActivity extends AndroidApplication {
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useGL20 = false;
         
-        initialize(new EirMain(), cfg);
+        initialize(new EirGame(), cfg);
     }
 }
