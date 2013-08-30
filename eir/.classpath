@@ -7,9 +7,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="libs/gdx.jar" sourcepath="libs/gdx-sources.jar"/>
-	<classpathentry kind="lib" path="libs/gson-1.7.1.jar"/>
-	<classpathentry kind="lib" path="libs/guava-13.0.1.jar"/>
-	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="libs/build/gdx-tools.jar" sourcepath="F:/Development/games/libgdx/extensions/gdx-tools/sources/gdx-tools-sources.jar"/>
+	<classpathentry kind="lib" path="libs/dev/log4j-1.2.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/main/gdx.jar" sourcepath="libs/dev/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="libs/main/gson-1.7.1.jar"/>
+	<classpathentry kind="lib" path="libs/main/guava-13.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

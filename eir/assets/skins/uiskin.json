@@ -1,0 +1,22 @@
+{
+    com.badlogic.gdx.graphics.Color: {
+                        text-passive-color: { r: 82, g: 139, b: 175, a: 1 },
+                        text-active-color: { r: 54, g: 171, b: 245, a: 1 },
+                        text-disabled-color: { r: 1, g: 1, b: 1, a: 1 }
+    },
+    com.badlogic.gdx.graphics.g2d.BitmapFont: {
+            default-font: { file: skins/fonts/default.fnt, size: 50}
+    },
+
+    com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+            default: {
+                    font: default-font, 
+                    fontColor:        text-passive-color,
+                    downFontColor:    text-passive-color, 
+                    overFontColor:    text-active-color,
+                    checkedFontColor:    text-passive-color, 
+                    checkedOverFontColor:    text-passive-color, 
+                    disabledFontColor:    text-passive-color
+            }
+    }
+}

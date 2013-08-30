@@ -117,6 +117,7 @@ public class LevelLoader
 			log.debug( "Level file found: " + levelType + " : " + levelIdx );
 
 			levelTypes.put( levelType, LEVEL_DATA_ROOT+filename );
+			
 		}
 
 		return levelTypes;
