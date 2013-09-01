@@ -29,7 +29,7 @@ public class MenuScreen extends AbstractScreen
         super.show();
 
         // retrieve the custom skin for our 2D widgets
-        Skin skin = super.getSkin();
+        Skin skin = UI.getSkin();
 
         // create the table actor and add it to the stage
         mainTable = new Table( skin );
@@ -87,7 +87,7 @@ public class MenuScreen extends AbstractScreen
         
         mainTable.left().add(menuTable);
 
-
+        UI.showTwoChoiceDialog( stage, "is this it, u gonna quit?", "Yes", "No", 100, 100 );
     }
 
 

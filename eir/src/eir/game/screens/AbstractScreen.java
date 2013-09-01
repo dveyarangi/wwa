@@ -2,14 +2,11 @@ package eir.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import eir.game.EirGame;
 
@@ -28,7 +25,6 @@ public abstract class AbstractScreen implements Screen
 
     private BitmapFont font;
     private SpriteBatch batch;
-    private Skin skin;
     private TextureAtlas atlas;
     
 
@@ -76,17 +72,6 @@ public abstract class AbstractScreen implements Screen
         return atlas;
     }
 
-    protected Skin getSkin()
-    {
-//    	NinePatch ninePatch = new NinePa
-        if( skin == null ) {
-            FileHandle skinFile = Gdx.files.internal( "skins/uiskin.json" );
-//            TextureAtlas textureFile = new TextureAtlas( Gdx.files.internal( "skins/uiskin.png" ) );
-            skin = new Skin( skinFile );
-        }
-        return skin;
-    }
-    
 
     // Screen implementation
 
@@ -157,7 +142,6 @@ public abstract class AbstractScreen implements Screen
         // as the collaborators are lazily loaded, they may be null
         if( font != null ) font.dispose();
         if( batch != null ) batch.dispose();
-        if( skin != null ) skin.dispose();
         if( atlas != null ) atlas.dispose();
     }
     
