@@ -6,6 +6,7 @@
 bin/
 tmp/
 gen/
+.gwt/
 *.tmp
 *.bak
 *.swp
