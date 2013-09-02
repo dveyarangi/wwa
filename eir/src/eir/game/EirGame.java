@@ -25,8 +25,6 @@ public class EirGame extends Game
     {
     }
 
- 
-
     // Game-related methods
 
     @Override

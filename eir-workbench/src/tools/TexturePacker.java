@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eir.tools;
+
 
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
 
