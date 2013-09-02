@@ -87,7 +87,7 @@ public class MenuScreen extends AbstractScreen
         
         mainTable.left().add(menuTable);
 
-        UI.showTwoChoiceDialog( stage, "is this it, u gonna quit?", "Yes", "No", 100, 100 );
+//        UI.showTwoChoiceDialog( stage, "is this it, u gonna quit?", "Yes", "No", 100, 100 );
     }
 
 

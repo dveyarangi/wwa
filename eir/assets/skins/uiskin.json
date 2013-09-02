@@ -19,10 +19,10 @@
                     disabledFontColor:    text-passive-color
             }
     },
-    com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-            default: {
+    com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle : {
+    		default: {
                     font: default-font, 
                     fontColor:        text-passive-color
-            }
+    		}
     }
 }
