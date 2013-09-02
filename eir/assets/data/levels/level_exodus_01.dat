@@ -1,42 +1,28 @@
 {
 	#############################################################################		
 
-		###############################################################
-		"world" : {
-			
 			# width of the game world in tiles
-			"width" : "10",
+			"width" : "500",
 			
 			# length of the game world in tiles
-			"lenght" : "1000",
+			"height" : "500",
 			
 			########################################
-			# specific tile modificators:
-			"tiles" : [
-			
-				  # cooooooooooooooordinates         # tile type                         # tile image TODO questionable 
+			# asteroids
+			"asteroids" : [
 				
-				{ "x":"1",  "y":"1", "z":"0",        "type": "PIT_OF_THORNS",            "imageId" : "pit_of_thorns" },
-				{ "x":"0",  "y":"1", "z":"0",        "type": "PIEDESTAL_OF_GLORY",       "imageId" : "piedestal_of_glory" }
-				
+				{ 
+				  "id":"sad_head_01",
+				  "x":"50",  "y":"150", "z":"0", "a" : "100",
+				  "model" : "asteroid_head_01" 
+				},
+				{ 
+				  "id":"sad_head_02",
+				  "x":"150",  "y":"50", "z":"0", "a" : "50",
+				  "model" : "asteroid_head_01" 
+				}				  
 			]
 			########################################
-
-		},
-		################################################################
-		"resources" : {
-				
-			
-			########################################
-			"images" : {
-			
-					"pit_of_thorns" : "tile_pit_of_thorns_01.png", 
-					"piedestal_of_glory" : "tile_piedestal_of_glory_01.png" 
-					
-			}
-			########################################
-		}	
-		################################################################
 
 
 	#############################################################################

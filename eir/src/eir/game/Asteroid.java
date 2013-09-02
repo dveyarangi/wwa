@@ -3,8 +3,7 @@
  */
 package eir.game;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.physics.box2d.Body;
+import eir.resources.PolygonalModel;
 
 /**
  * @author dveyarangi
@@ -12,32 +11,30 @@ import com.badlogic.gdx.physics.box2d.Body;
  */
 public class Asteroid
 {
-	Body body;
-	Sprite sprite;
-	/**
-	 * @param body
-	 * @param sprite
-	 */
-	public Asteroid(Body body, Sprite sprite)
-	{
-		super();
-		this.body = body;
-		this.sprite = sprite;
-	}
+	private String id;
+	
+	private float x;
+	private float y;
+	private float z;
+	
+	private float a;
+	
+	private PolygonalModel model;
+
 	/**
 	 * @return
 	 */
-	public Body getBody()
+	public PolygonalModel getModel()
 	{
-		return body;
+		return model;
 	}
+
 	/**
 	 * @return
 	 */
-	public Sprite getSprite()
-	{
-		return sprite;
-	}
+	public float getAngle()	{ return a;	}
+	public float getX()	{ return x;	}
+	public float getY()	{ return y;	}
 	
-	
+
 }

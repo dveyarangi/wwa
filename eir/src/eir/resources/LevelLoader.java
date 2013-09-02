@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -22,10 +23,16 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import com.badlogic.gdx.physics.box2d.World;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 /**
@@ -128,17 +135,32 @@ public class LevelLoader
 	 * @param levelName
 	 * @return
 	 */
-	public LevelDescriptor readLevel(String levelId)
+	public Level readLevel(final World world, String levelId)
 	{
-		Gson gson = new Gson();
+		// attaching polygonal model loader
+		Gson gson = new GsonBuilder()
+		.registerTypeAdapter( PolygonalModel.class, new JsonDeserializer<PolygonalModel>()
+		{
+			@Override
+			public PolygonalModel deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+			{
+				String modelId = elem.getAsString();
+				
+				return GameFactory.loadModel( world, modelId );
+			}
+
+		})
+		.create();
+		
+		
 		
 		InputStream stream = openFileStream( levelId );
 
-		LevelDescriptor level = null;
+		Level level = null;
 
 		try
 		{
-			level = gson.fromJson( new InputStreamReader( stream ), LevelDescriptor.class );
+			level = gson.fromJson( new InputStreamReader( stream ), Level.class );
 		} 
 		catch ( JsonSyntaxException jse ) { log.error( "Level file is contains errors", jse ); } 
 		catch ( JsonIOException jioe ) { log.error( "Level file not found or unreadible", jioe ); }
@@ -172,10 +194,9 @@ public class LevelLoader
 		LevelLoader loader = new LevelLoader();
 
 		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
+//		LevelDescriptor level = loader.readLevel( world, levelName );
 
-		LevelDescriptor level = loader.readLevel( levelName );
-
-		System.out.println( "Loaded level descriptor " + level );
+//		System.out.println( "Loaded level descriptor " + level );
 
 		// }
 		// finally { System.exit( 0 ); }

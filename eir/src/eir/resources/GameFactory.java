@@ -1,13 +1,12 @@
 /**
  * 
  */
-package eir.game;
+package eir.resources;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-import eir.resources.BodyLoader;
 
 /**
  * @author dveyarangi
@@ -23,13 +21,33 @@ import eir.resources.BodyLoader;
  */
 public class GameFactory
 {
-	public static Asteroid createAsteroidHead(float x, float y, World world, String name) {
-	    // 0. Create a loader for the file saved from the editor.
-	    BodyLoader loader = new BodyLoader(Gdx.files.internal("units/" + name + ".bog"));
+	// TODO: model cache
+	
+	private static final String MODELS_PATH = "models/";
+	
+	private static final String createBodyPath(String modelId)
+	{
+		return new StringBuilder()
+			.append( MODELS_PATH ).append( modelId ).append(".bog")
+			.toString();
+	}
+	private static final String createImagePath(String modelId)
+	{
+		return new StringBuilder()
+			.append( MODELS_PATH ).append( modelId ).append(".png")
+			.toString();
+	}
+	
+	public static PolygonalModel loadModel(World world, String modelId) 
+	{
+		System.out.println("Loading model " + modelId);
+		
+		// 0. Create a loader for the file saved from the editor.
+	    BodyLoader loader = new BodyLoader(Gdx.files.internal(createBodyPath(modelId)));
 	 
 	    // 1. Create a BodyDef, as usual.
 	    BodyDef bd = new BodyDef();
-	    bd.position.set(x, y);
+//	    bd.position.set(x, y);
 	    bd.type = BodyType.DynamicBody;
 	 
 	    // 2. Create a FixtureDef, as usual.
@@ -43,13 +61,13 @@ public class GameFactory
 	    
 	 
 	    // 4. Create the body fixture automatically by using the loader.
-	    loader.attachFixture(body, name, fd, 1f);
+	    loader.attachFixture(body, modelId, fd, 1f);
 	    
-	    Sprite sprite = createSprite("units/" + name + ".png");
+	    Sprite sprite = createSprite(createImagePath( modelId ));
 	    sprite.setPosition(body.getPosition().x, body.getPosition().y );
 		sprite.setSize(100, 100);
 
-	    return new Asteroid( body, sprite );
+	    return new PolygonalModel( body, sprite );
 	}
 	
 	public static Sprite createSprite(String textureName)

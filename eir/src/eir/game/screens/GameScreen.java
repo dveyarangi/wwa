@@ -18,8 +18,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import eir.game.Asteroid;
 import eir.game.EirGame;
-import eir.game.GameFactory;
 import eir.resources.BodyLoader;
+import eir.resources.GameFactory;
+import eir.resources.Level;
+import eir.resources.LevelLoader;
 
 /**
  * place holder screen for now. does same as application listener from sample
@@ -37,10 +39,13 @@ public class GameScreen extends AbstractScreen
 
 	private static final Vector2 GRAVITY = Vector2.Zero;
 
-	private List<Asteroid> asteroids = new LinkedList<Asteroid>();
-
-	private World physicsWorld = new World( Vector2.Zero, true/* sleep */);
+	private World physicsWorld;
 	private Box2DDebugRenderer debugRenderer;
+	
+
+	private Level level; 
+			
+
 
 	public GameScreen(EirGame game)
 	{
@@ -50,11 +55,17 @@ public class GameScreen extends AbstractScreen
 
 		camera = new OrthographicCamera( 1, h / w );
 		batch = new SpriteBatch();
+		
+		physicsWorld = new World( GRAVITY, true/* sleep */);
 
-		Asteroid asteroid = GameFactory.createAsteroidHead( 200, 200, physicsWorld, "asteroid_head_01" );
-		asteroids.add( asteroid );
+		debugRenderer = new Box2DDebugRenderer(true, true, true, true, true);
+		
+		
+		LevelLoader loader = new LevelLoader();
+		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
 
-		debugRenderer = new Box2DDebugRenderer();
+		level = loader.readLevel( physicsWorld, levelName );
+		level.init();
 	}
 
 	@Override
@@ -67,11 +78,12 @@ public class GameScreen extends AbstractScreen
 		Body body;
 		Sprite sprite;
 		batch.begin();
-		for(Asteroid asteroid : asteroids)
+		for(Asteroid asteroid : level.getAsteroids())
 		{
-			body = asteroid.getBody();
-			sprite = asteroid.getSprite();
+			body = asteroid.getModel().getBody();
+			sprite = asteroid.getModel().getSprite();
 			sprite.setPosition(body.getPosition().x, body.getPosition().y );
+			sprite.setRotation( body.getAngle() );
 			sprite.draw( batch );
 		}
 		batch.end();
