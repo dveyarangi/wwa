@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eir.game;
+package eir.world;
 
 import eir.resources.PolygonalModel;
 

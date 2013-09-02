@@ -16,12 +16,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import eir.game.Asteroid;
 import eir.game.EirGame;
 import eir.resources.BodyLoader;
 import eir.resources.GameFactory;
 import eir.resources.Level;
 import eir.resources.LevelLoader;
+import eir.world.Asteroid;
 
 /**
  * place holder screen for now. does same as application listener from sample

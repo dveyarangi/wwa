@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.physics.box2d.Body;
 
-import eir.game.Asteroid;
+import eir.world.Asteroid;
 
 public class Level
 {
