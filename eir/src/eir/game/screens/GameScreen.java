@@ -72,19 +72,16 @@ public class GameScreen extends AbstractScreen
 	public void render(float delta)
 	{
 		super.render( delta );
-		GL10 gl = Gdx.graphics.getGL10();
 		
-		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
-		batch.setProjectionMatrix( camera.projection );
-		batch.setTransformMatrix( camera.view );
-
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 
 		batch.begin();
+		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
 		batch.setProjectionMatrix( camera.projection );
 		batch.setTransformMatrix( camera.view );
 		
+		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
 		{
 			asteroid.getModel().render(batch);

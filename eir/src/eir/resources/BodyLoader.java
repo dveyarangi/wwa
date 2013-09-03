@@ -78,7 +78,7 @@ public class BodyLoader {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
-                origin.set( vec.set(rbModel.origin).mul(scale) );
+                origin.set(rbModel.origin).mul(scale);
 
                 for (int i=0, n=rbModel.polygons.size(); i<n; i++) {
                         PolygonModel polygon = rbModel.polygons.get(i);

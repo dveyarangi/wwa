@@ -66,13 +66,12 @@ public class GameFactory
 	    loader.attachFixture(body, modelId, fd, origin, size);
 	    
 	    Sprite sprite = createSprite(createImagePath( modelId ));
-	    System.out.println(origin);
+
+	    sprite.setSize(size, size);
 		sprite.setOrigin( origin.x, origin.y );
-//	    sprite.setPosition(body.getPosition().x, body.getPosition().y );
-		sprite.setSize(size, size);
 
 	    return new PolygonalModel( body, sprite );
-	}
+	} 
 	
 	public static Sprite createSprite(String textureName)
 	{
@@ -82,7 +81,7 @@ public class GameFactory
 		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
 		
 		Sprite sprite = new Sprite(region);
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
+//		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		
 		return sprite;
 	}
