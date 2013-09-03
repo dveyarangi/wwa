@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -38,7 +39,7 @@ public class GameFactory
 			.toString();
 	}
 	
-	public static PolygonalModel loadModel(World world, String modelId) 
+	public static PolygonalModel loadModel(World world, String modelId, int size) 
 	{
 		System.out.println("Loading model " + modelId);
 		
@@ -48,7 +49,7 @@ public class GameFactory
 	    // 1. Create a BodyDef, as usual.
 	    BodyDef bd = new BodyDef();
 //	    bd.position.set(x, y);
-	    bd.type = BodyType.DynamicBody;
+	    bd.type = BodyType.StaticBody;
 	 
 	    // 2. Create a FixtureDef, as usual.
 	    FixtureDef fd = new FixtureDef();
@@ -58,14 +59,17 @@ public class GameFactory
 	 
 	    // 3. Create a Body, as usual.
 	    Body body = world.createBody(bd);
+
+	    Vector2 origin = new Vector2();
 	    
-	 
 	    // 4. Create the body fixture automatically by using the loader.
-	    loader.attachFixture(body, modelId, fd, 1f);
+	    loader.attachFixture(body, modelId, fd, origin, size);
 	    
 	    Sprite sprite = createSprite(createImagePath( modelId ));
-	    sprite.setPosition(body.getPosition().x, body.getPosition().y );
-		sprite.setSize(100, 100);
+	    System.out.println(origin);
+		sprite.setOrigin( origin.x, origin.y );
+//	    sprite.setPosition(body.getPosition().x, body.getPosition().y );
+		sprite.setSize(size, size);
 
 	    return new PolygonalModel( body, sprite );
 	}

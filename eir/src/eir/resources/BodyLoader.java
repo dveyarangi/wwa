@@ -74,11 +74,11 @@ public class BodyLoader {
          * @param fd The fixture parameters to apply to the created body fixture.
          * @param scale The desired scale of the body. The default width is 1.
          */
-        public void attachFixture(Body body, String name, FixtureDef fd, float scale) {
+        public void attachFixture(Body body, String name, FixtureDef fd, Vector2 origin, float scale) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
-                Vector2 origin = vec.set(rbModel.origin).mul(scale);
+                origin.set( vec.set(rbModel.origin).mul(scale) );
 
                 for (int i=0, n=rbModel.polygons.size(); i<n; i++) {
                         PolygonModel polygon = rbModel.polygons.get(i);

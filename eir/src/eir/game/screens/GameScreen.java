@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -44,22 +46,26 @@ public class GameScreen extends AbstractScreen
 	
 
 	private Level level; 
-			
-
+	private float a = 0;
+	
+	private Rectangle  glViewport;
+	float w, h;
 
 	public GameScreen(EirGame game)
 	{
 		super( game );
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		w = Gdx.graphics.getWidth();
+		h = Gdx.graphics.getHeight();
 
-		camera = new OrthographicCamera( 1, h / w );
+		camera = new OrthographicCamera( w, h );
+
 		batch = new SpriteBatch();
+		batch.setProjectionMatrix( camera.projection );
+		batch.setTransformMatrix( camera.view );
 		
 		physicsWorld = new World( GRAVITY, true/* sleep */);
 
 		debugRenderer = new Box2DDebugRenderer(true, true, true, true, true);
-		
 		
 		LevelLoader loader = new LevelLoader();
 		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
@@ -72,24 +78,27 @@ public class GameScreen extends AbstractScreen
 	public void render(float delta)
 	{
 		super.render( delta );
-		Gdx.gl.glClearColor( 0, 0, 0, 1 );
-		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
+		GL10 gl = Gdx.graphics.getGL10();
+		
+		camera.rotate( 0.1f );
+		camera.update();
+		
+		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
+		batch.setProjectionMatrix( camera.projection );
+		batch.setTransformMatrix( camera.view );
+		
+		gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 
 		Body body;
 		Sprite sprite;
 		batch.begin();
 		for(Asteroid asteroid : level.getAsteroids())
 		{
-			body = asteroid.getModel().getBody();
-			sprite = asteroid.getModel().getSprite();
-			sprite.setPosition(body.getPosition().x, body.getPosition().y );
-			sprite.setRotation( body.getAngle() );
-			sprite.draw( batch );
+			asteroid.getModel().render(batch);
 		}
 		batch.end();
 		
 		debugRenderer.render( physicsWorld, camera.combined );
-
 	}
 
 	@Override

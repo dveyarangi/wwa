@@ -32,6 +32,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
@@ -144,9 +145,11 @@ public class LevelLoader
 			@Override
 			public PolygonalModel deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
 			{
-				String modelId = elem.getAsString();
+				JsonObject object = elem.getAsJsonObject();
+				String modelId = object.get("modelId").getAsString();
+				int size = object.get("size").getAsInt();
 				
-				return GameFactory.loadModel( world, modelId );
+				return GameFactory.loadModel( world, modelId, size );
 			}
 
 		})

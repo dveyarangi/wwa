@@ -17,7 +17,7 @@ import eir.game.EirGame;
 public abstract class AbstractScreen implements Screen
 {
     // the fixed viewport dimensions (ratio: 1.6)
-    protected static final int GAME_VIEWPORT_WIDTH = 400, GAME_VIEWPORT_HEIGHT = 240;
+    protected static final int GAME_VIEWPORT_WIDTH = 800, GAME_VIEWPORT_HEIGHT = 480;
     protected static final int MENU_VIEWPORT_WIDTH = 512, MENU_VIEWPORT_HEIGHT = 256;
 
     protected final EirGame game;
