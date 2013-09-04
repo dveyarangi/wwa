@@ -58,9 +58,9 @@ public class GameScreen extends AbstractScreen
 		debugRenderer = new Box2DDebugRenderer(true, true, true, true, true);
 		
 		LevelLoader loader = new LevelLoader();
-		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
+//		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
 
-		level = loader.readLevel( physicsWorld, levelName );
+		level = loader.readLevel( physicsWorld, "data/levels/level_exodus_01.dat" );
 		level.init();
 		
 		inputMultiplexer = new InputMultiplexer();
@@ -94,9 +94,9 @@ public class GameScreen extends AbstractScreen
 		
 		batch.end();
 		
-		debugGrid.render();
+//		debugGrid.render();
 		
-		debugRenderer.render( physicsWorld, camera.combined );
+//		debugRenderer.render( physicsWorld, camera.combined );
 	}
 
 	@Override
