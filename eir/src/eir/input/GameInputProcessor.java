@@ -71,14 +71,17 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
 	{
-		return false;
+		lastx = screenX;
+		lasty = screenY;
+		return true;
 	}
 
 	@Override
 	public boolean scrolled(int amount)
-	{
-		System.out.println(camera.zoom);
+	{	
 		camera.zoom += amount*0.1*camera.zoom;
+		camera.position.x -= amount*camera.zoom*0.1*(lastx - camera.viewportWidth/2);
+		camera.position.y += amount*camera.zoom*0.1*(lasty - camera.viewportHeight/2);
 		camera.update();
 		
 		return true;
