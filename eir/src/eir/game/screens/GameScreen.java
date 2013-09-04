@@ -67,7 +67,7 @@ public class GameScreen extends AbstractScreen
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
 		inputMultiplexer.addProcessor( new GameInputProcessor(camera) );
 		
-		debugGrid = new CoordinateGrid( w, h, camera );
+		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class GameScreen extends AbstractScreen
 		batch.setProjectionMatrix( camera.projection );
 		batch.setTransformMatrix( camera.view );
 		
-		batch.draw( level.getBackgroundTexture(), -w/2, -h/2, w, h );
+		batch.draw( level.getBackgroundTexture(), -level.getWidth()/2, -level.getHeight()/2, level.getWidth(), level.getHeight() );
 		
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())

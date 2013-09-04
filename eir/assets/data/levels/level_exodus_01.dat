@@ -2,10 +2,10 @@
 	#############################################################################		
 			"name" : "level_exodus_01",
 			# width of the game world in tiles
-			"width" : "500",
+			"width" : "1024",
 			
 			# length of the game world in tiles
-			"height" : "500",
+			"height" : "1024",
 			
 			########################################
 			# asteroids

@@ -49,4 +49,13 @@ public class Level
 		return backgroundTexture;
 	}
 
+	/**
+	 * @return
+	 */
+	public float getHeight() { return height; }
+	/**
+	 * @return
+	 */
+	public float getWidth() { return width; }
+
 }
