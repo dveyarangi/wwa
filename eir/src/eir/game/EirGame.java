@@ -47,7 +47,11 @@ public class EirGame extends Game
  //       if( getScreen() == null ) {
  //           setScreen( new SplashScreen( this ) );
  //       }
-        setScreen( new MenuScreen( this ) );
+        if( getScreen() == null ) {
+        	setScreen( new MenuScreen( this ) );
+        }
+/*        else
+        	setScreen( getScreen() );*/
     }
 
     @Override

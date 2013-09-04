@@ -52,8 +52,6 @@ public class GameScreen extends AbstractScreen
 		camera = new OrthographicCamera( w, h );
 
 		batch = new SpriteBatch();
-		batch.setProjectionMatrix( camera.projection );
-		batch.setTransformMatrix( camera.view );
 		
 		physicsWorld = new World( GRAVITY, true/* sleep */);
 
@@ -80,13 +78,13 @@ public class GameScreen extends AbstractScreen
 		
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
-		
-		debugGrid.render();
 
 		batch.begin();
 		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
 		batch.setProjectionMatrix( camera.projection );
 		batch.setTransformMatrix( camera.view );
+		
+		batch.draw( level.getBackgroundTexture(), -w/2, -h/2, w, h );
 		
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
@@ -95,6 +93,8 @@ public class GameScreen extends AbstractScreen
 		}
 		
 		batch.end();
+		
+		debugGrid.render();
 		
 		debugRenderer.render( physicsWorld, camera.combined );
 	}
