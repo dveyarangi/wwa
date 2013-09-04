@@ -5,11 +5,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
+import eir.debug.CoordinateGrid;
 import eir.game.EirGame;
 import eir.input.GameInputProcessor;
 import eir.input.UIInputProcessor;
@@ -41,6 +41,8 @@ public class GameScreen extends AbstractScreen
 
 	private float w, h;
 
+	private CoordinateGrid debugGrid;
+	
 	public GameScreen(EirGame game)
 	{
 		super( game );
@@ -66,15 +68,20 @@ public class GameScreen extends AbstractScreen
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
 		inputMultiplexer.addProcessor( new GameInputProcessor(camera) );
+		
+		debugGrid = new CoordinateGrid( w, h, camera );
 	}
 
 	@Override
 	public void render(float delta)
 	{
 		super.render( delta );
+		camera.update();
 		
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
+		
+		debugGrid.render();
 
 		batch.begin();
 		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
