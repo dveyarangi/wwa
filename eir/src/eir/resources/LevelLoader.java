@@ -21,8 +21,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.World;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -43,10 +42,7 @@ import com.google.gson.JsonSyntaxException;
 public class LevelLoader
 {
 
-	//TODO: use logging facade
-	private Logger log = Logger.getLogger( this.getClass() );
-
-	
+	private static final String TAG = LevelLoader.class.getSimpleName();
 	/** put level files here */
 	private static String LEVEL_DATA_ROOT = "data/levels/";
 
@@ -61,7 +57,6 @@ public class LevelLoader
 	 */
 	public LevelLoader()
 	{
-		levelTypes = readLevelFiles();
 	}
 	
 	/**
@@ -98,7 +93,7 @@ public class LevelLoader
 		String[] levelsFiles = getResourceListing( this.getClass(), LEVEL_DATA_ROOT );
 
 
-		log.trace( "Listing " + levelsFiles.length + " resource file(s)." );
+		Gdx.app.debug( TAG, "Listing " + levelsFiles.length + " resource file(s)." );
 		
 		// for strings like data/levels/level_exodus_01.dat
 		Pattern levelFilePattern = Pattern.compile( ".*level_(.*)_(\\d{2})\\.dat" );
@@ -109,20 +104,20 @@ public class LevelLoader
 		for ( String filename : levelsFiles )
 		{
 
-			log.trace( "Checking resource file " + filename );
+			Gdx.app.debug( TAG,  "Checking resource file " + filename );
 			
 			Matcher matcher = levelFilePattern.matcher( filename );
 
 			if ( !matcher.matches() || matcher.groupCount() != 2 )
 			{
-				log.error( "Ignoring file " + filename );
+				Gdx.app.error( TAG,  "Ignoring file " + filename );
 				continue;
 			}
 
 			String levelType = matcher.group( 1 );
 			String levelIdx = matcher.group( 2 );
 
-			log.debug( "Level file found: " + levelType + " : " + levelIdx );
+			Gdx.app.debug( TAG,  "Level file found: " + levelType + " : " + levelIdx );
 
 			levelTypes.put( levelType, LEVEL_DATA_ROOT+filename );
 			
@@ -165,8 +160,8 @@ public class LevelLoader
 		{
 			level = gson.fromJson( new InputStreamReader( stream ), Level.class );
 		} 
-		catch ( JsonSyntaxException jse ) { log.error( "Level file is contains errors", jse ); } 
-		catch ( JsonIOException jioe ) { log.error( "Level file not found or unreadible", jioe ); }
+		catch ( JsonSyntaxException jse ) { Gdx.app.error( TAG,  "Level file is contains errors", jse ); } 
+		catch ( JsonIOException jioe ) { Gdx.app.error( TAG,  "Level file not found or unreadible", jioe ); }
 
 		return level;
 	}
@@ -276,8 +271,8 @@ public class LevelLoader
 				return result.toArray( new String[result.size()] );
 			}
 		} 
-		catch ( URISyntaxException e ) { log.error( e ); } 
-		catch ( IOException e ) { log.error( e ); }
+		catch ( URISyntaxException e ) { Gdx.app.error( TAG, "Cannot list files for URL " + dirURL,  e ); } 
+		catch ( IOException e ) { Gdx.app.error( TAG, "Cannot list files for URL " + dirURL, e ); }
 		
 		throw new UnsupportedOperationException( "Cannot list files for URL " + dirURL );
 	}
