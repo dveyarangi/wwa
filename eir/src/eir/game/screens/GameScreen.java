@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import eir.debug.CoordinateGrid;
 import eir.game.EirGame;
+import eir.input.CameraController;
 import eir.input.GameInputProcessor;
 import eir.input.UIInputProcessor;
 import eir.resources.Level;
@@ -29,6 +30,7 @@ public class GameScreen extends AbstractScreen
 	private InputMultiplexer inputMultiplexer;
 	
 	private OrthographicCamera camera;
+	private CameraController camController;
 	private SpriteBatch batch;
 
 	private static final Vector2 GRAVITY = Vector2.Zero;
@@ -50,6 +52,7 @@ public class GameScreen extends AbstractScreen
 		h = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera( w, h );
+		camController = new CameraController(camera);
 
 		batch = new SpriteBatch();
 		
@@ -65,7 +68,7 @@ public class GameScreen extends AbstractScreen
 		
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
-		inputMultiplexer.addProcessor( new GameInputProcessor(camera) );
+		inputMultiplexer.addProcessor( new GameInputProcessor(camController) );
 		
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
 	}
@@ -74,11 +77,13 @@ public class GameScreen extends AbstractScreen
 	public void render(float delta)
 	{
 		super.render( delta );
-		camera.update();
+		camController.cameraStep(delta);
 		
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
-
+		
+		
+		
 		batch.begin();
 		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
 		batch.setProjectionMatrix( camera.projection );

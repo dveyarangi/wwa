@@ -1,6 +1,5 @@
 package eir.input;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,14 +11,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
  */
 public class GameInputProcessor implements InputProcessor
 {
-	private OrthographicCamera camera;
+	private final CameraController camController;
+	private final OrthographicCamera camera;
 	
 	private int lastx = -1;
 	private int lasty = -1;
 	
-	public GameInputProcessor(OrthographicCamera camera)
+	public GameInputProcessor(CameraController camController)
 	{
-		this.camera = camera;
+		this.camController = camController;
+		this.camera = camController.camera;
 	}
 
 	@Override
@@ -62,7 +63,6 @@ public class GameInputProcessor implements InputProcessor
 	{
 		camera.position.x -= (screenX-lastx)*camera.zoom;
 		camera.position.y += (screenY-lasty)*camera.zoom;
-		camera.update();
 		lastx = screenX;
 		lasty = screenY;
 		return true;
@@ -78,11 +78,11 @@ public class GameInputProcessor implements InputProcessor
 
 	@Override
 	public boolean scrolled(int amount)
-	{	
-		camera.zoom += amount*0.1*camera.zoom;
-		camera.position.x -= amount*camera.zoom*0.1*(lastx - camera.viewportWidth/2);
-		camera.position.y += amount*camera.zoom*0.1*(lasty - camera.viewportHeight/2);
-		camera.update();
+	{
+		camController.injectImpulse(0, 0, amount);
+		//camera.zoom += amount*0.1*camera.zoom;
+		//camera.position.x -= amount*camera.zoom*0.1*(lastx - camera.viewportWidth/2);
+		//camera.position.y += amount*camera.zoom*0.1*(lasty - camera.viewportHeight/2);
 		
 		return true;
 	}
