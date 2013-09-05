@@ -94,9 +94,9 @@ public class GameScreen extends AbstractScreen
 		
 		batch.end();
 		
-//		debugGrid.render();
+		debugGrid.render();
 		
-//		debugRenderer.render( physicsWorld, camera.combined );
+		debugRenderer.render( physicsWorld, camera.combined );
 	}
 
 	@Override
