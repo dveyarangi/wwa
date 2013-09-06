@@ -50,6 +50,8 @@ public class CameraController
 	 */
 	public void cameraStep( float delta )
 	{
+		
+		System.out.println(level.getWidth() +" "+camera.position.x);
 		if( !underUserControl )
 		{
 			if( camera.zoom < maxZoomIn )
@@ -61,14 +63,22 @@ public class CameraController
 				injectLinearImpulse(0, 0, (maxZoomOut - camera.zoom)/10 );
 			}
 			
-			if( camera.position.x<-level.getWidth()/2 || camera.position.x> level.getWidth()/2 )
+			if( camera.position.x<-level.getWidth()/2 )
 			{
 				injectLinearImpulse( (level.getWidth()/2-camera.position.x)/10, 0, 0);
 			}
+			else if (camera.position.x> level.getWidth()/2)
+			{
+				injectLinearImpulse( (level.getWidth()/2-camera.position.x*2)/10, 0, 0);
+			}
 			
-			if( camera.position.y<-level.getHeight()/2 || camera.position.y>level.getHeight()/2 )
+			if( camera.position.y<-level.getHeight()/2 )
 			{
 				injectLinearImpulse( 0, (level.getHeight()/2-camera.position.y)/10, 0);
+			}
+			else if(camera.position.y>level.getHeight()/2)
+			{
+				injectLinearImpulse( 0, (level.getHeight()/2-camera.position.y*2)/10, 0);
 			}
 		}
 		
@@ -81,7 +91,6 @@ public class CameraController
 		camera.position.y += v.y*delta + a.y*delta*delta/2;
 		
 		camera.update();
-//		underUserControl = false;
 	}
 	
 	public void setUnderUserControl( boolean under )
