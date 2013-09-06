@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 
 import eir.world.Asteroid;
+import eir.world.environment.Web;
 
 public class Level
 {
@@ -15,6 +16,8 @@ public class Level
 	private int width;
 	private int height;
 	private List <Asteroid> asteroids;
+	
+	private List <Web> webs;
 	
 	private Texture backgroundTexture;
 	
@@ -25,7 +28,13 @@ public class Level
 	{
 		return asteroids;
 	}
-
+	/**
+	 * @return
+	 */
+	public List <Web> getWebs()
+	{
+		return webs;
+	}
 	/**
 	 * 
 	 */
@@ -38,7 +47,6 @@ public class Level
 			body.setTransform( asteroid.getX(), asteroid.getY(), asteroid.getAngle() );
 		}
 		
-		backgroundTexture = new Texture(Gdx.files.internal("data/levels/" + name + ".png"));
 	}
 
 	/**

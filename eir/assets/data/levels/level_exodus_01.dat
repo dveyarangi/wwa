@@ -1,11 +1,14 @@
 {
 	#############################################################################		
 			"name" : "level_exodus_01",
+			
 			# width of the game world in tiles
 			"width" : "1024",
 			
 			# length of the game world in tiles
 			"height" : "1024",
+			
+			"backgroundTexture" : "data/levels/level_exodus_01.png",
 			
 			########################################
 			# asteroids
@@ -18,7 +21,7 @@
 				  
 				},
 				{ 
-				  "id":"sad_head_02",
+				  "id":"sad_head_01",
 				  "x":"50",  "y":"0", "z":"0", "a" : "0",
 				  "model" : { "modelId" : "asteroid_head_01", "size" : "50" }
 				},				  
@@ -27,8 +30,21 @@
 				  "x":"100",  "y":"-50", "z":"0", "a" : "0",
 				  "model" : { "modelId" : "asteroid_head_04", "size" : "100" }
 				}				  
-			]
-			########################################
+			],
+			
+			"webs" : [
+				{
+					"source" : "sad_head_02",
+					"target" : "sad_head_01",
+					"threadTexture" : "models/web_01.png"
+					
+				},
+				{
+					"source" : "sad_head_02",
+					"target" : "sad_head_04",
+					"threadTexture" : "models/web_02.png"
+				}
+			]			########################################
 
 
 	#############################################################################

@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -135,20 +136,31 @@ public class LevelLoader
 	{
 		// attaching polygonal model loader
 		Gson gson = new GsonBuilder()
-		.registerTypeAdapter( PolygonalModel.class, new JsonDeserializer<PolygonalModel>()
-		{
-			@Override
-			public PolygonalModel deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+			.registerTypeAdapter( PolygonalModel.class, new JsonDeserializer<PolygonalModel>()
 			{
-				JsonObject object = elem.getAsJsonObject();
-				String modelId = object.get("modelId").getAsString();
-				int size = object.get("size").getAsInt();
-				
-				return GameFactory.loadModel( world, modelId, size );
-			}
-
-		})
-		.create();
+				@Override
+				public PolygonalModel deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					JsonObject object = elem.getAsJsonObject();
+					String modelId = object.get("modelId").getAsString();
+					int size = object.get("size").getAsInt();
+					
+					return GameFactory.loadModel( world, modelId, size );
+				}
+	
+			})
+			.registerTypeAdapter( Texture.class, new JsonDeserializer<Texture>()
+			{
+				@Override
+				public Texture deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					String textureFile = elem.getAsString();
+					
+					return GameFactory.loadTexture( textureFile );
+				}
+	
+			})
+			.create();
 		
 		
 		

@@ -85,4 +85,14 @@ public class GameFactory
 		
 		return sprite;
 	}
+	/**
+	 * @param world
+	 * @param textureFile
+	 * @param size
+	 * @return
+	 */
+	public static Texture loadTexture(String textureFile)
+	{
+		return new Texture(Gdx.files.internal(textureFile));
+	}
 }
