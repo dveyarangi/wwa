@@ -40,7 +40,7 @@ public class CameraController
 	{
 		if( camera.zoom < maxZoomIn )
 		{
-			injectImpulse(0, 0, maxZoomIn);
+			injectImpulse(0, 0, maxZoomIn*0.1f);
 			camera.zoom = maxZoomIn;
 		}
 		else if (camera.zoom > maxZoomOut )
