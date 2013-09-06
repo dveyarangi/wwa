@@ -50,8 +50,6 @@ public class CameraController
 	 */
 	public void cameraStep( float delta )
 	{
-		
-		System.out.println(level.getWidth() +" "+camera.position.x);
 		if( !underUserControl )
 		{
 			if( camera.zoom < maxZoomIn )
