@@ -61,8 +61,7 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
-		camera.position.x -= (screenX-lastx)*camera.zoom;
-		camera.position.y += (screenY-lasty)*camera.zoom;
+		camController.injectImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
 		lastx = screenX;
 		lasty = screenY;
 		return true;
@@ -79,11 +78,9 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean scrolled(int amount)
 	{
-		camController.injectImpulse(0, 0, amount);
-		//camera.zoom += amount*0.1*camera.zoom;
-		//camera.position.x -= amount*camera.zoom*0.1*(lastx - camera.viewportWidth/2);
-		//camera.position.y += amount*camera.zoom*0.1*(lasty - camera.viewportHeight/2);
-		
+		camController.injectImpulse(-amount*(lastx - camera.viewportWidth/2), 
+									 amount*(lasty - camera.viewportHeight/2), 
+									 amount);
 		return true;
 	}
 

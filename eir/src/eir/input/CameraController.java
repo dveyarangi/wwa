@@ -25,19 +25,13 @@ public class CameraController
 		this.camera = camera;
 		maxZoomIn = 0.1f;
 		maxZoomOut = 100;
-//		zoomF = 0;
-//		zoomV = 0;
-//		zoomAcc = 0;
 		b = 10;
-		//b = 1/camera.zoom;
 	}
 	
 	
 	public void injectImpulse( float x, float y, float z )
 	{
-//		zoomF += z*camera.zoom*100;
-		f.z = z*100*camera.zoom;
-		//f.add(x, y, z*100);
+		f.add(x*100*camera.zoom, y*100*camera.zoom, z*100*camera.zoom);
 	}
 	
 	/**
@@ -61,11 +55,14 @@ public class CameraController
 		
 		a.z = f.z - b*v.z;
 		v.z += a.z * delta;
-//		a.set( f.sub(v.mul(b)) );
-//		v.add( a.mul(delta) );
-		f.set(0, 0, 0);
-		camera.zoom += v.z*delta + a.z*delta*delta/2;
 		
+		a.set( f.tmp().sub(v.tmp2().mul(b)) );
+		v.add( a.tmp().mul(delta) );
+		f.set(0, 0, 0);
+		
+		camera.zoom += v.z*delta + a.z*delta*delta/2;
+		camera.position.x += v.x*delta + a.x*delta*delta/2;
+		camera.position.y += v.y*delta + a.y*delta*delta/2;
 		
 //		zoomAcc = zoomF - b*zoomV;
 //		zoomV   = zoomV + zoomAcc*delta;
