@@ -52,7 +52,6 @@ public class GameScreen extends AbstractScreen
 		h = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera( w, h );
-		camController = new CameraController(camera);
 
 		batch = new SpriteBatch();
 		
@@ -66,9 +65,11 @@ public class GameScreen extends AbstractScreen
 		level = loader.readLevel( physicsWorld, "data/levels/level_exodus_01.dat" );
 		level.init();
 		
+		camController = new CameraController(camera, level);
+		
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
-		inputMultiplexer.addProcessor( new GameInputProcessor(camController) );
+		inputMultiplexer.addProcessor( new GameInputProcessor(camController, level) );
 		
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
 	}
