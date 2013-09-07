@@ -21,10 +21,14 @@ public class CameraController
 	private final Vector3 v = new Vector3(0,0,0); // velocity
 	private final Vector3 a = new Vector3(0,0,0); // acceleration
 	private final float b = 15; // Viscosity coefficient
-	private final float maxZoomOut = 5;
+	private final float maxZoomOut = 2;
 	private final float maxZoomIn = 0.1f;
 	
 	private boolean underUserControl = false;
+	private boolean wasOutOfXBounds = false;
+	private boolean wasOutOfYBounds = false;
+	private boolean wasOutOfZoomOutBounds = false;
+	private boolean wasOutOfZoomInBounds = false;
 	
 	public CameraController( OrthographicCamera camera, Level level )
 	{
@@ -54,29 +58,64 @@ public class CameraController
 		{
 			if( camera.zoom < maxZoomIn )
 			{
+				wasOutOfZoomInBounds = true;
 				injectLinearImpulse(0, 0, (maxZoomIn - camera.zoom)*10 );
 			}
-			else if (camera.zoom > maxZoomOut )
+			else if ( wasOutOfZoomInBounds )
 			{
-				injectLinearImpulse(0, 0, (maxZoomOut - camera.zoom)/10 );
+				wasOutOfZoomInBounds = false;
+				f.z = 0;
+				v.z = 0;
+				a.z = 0;
+			}
+			
+			if (camera.zoom > maxZoomOut )
+			{
+				wasOutOfZoomOutBounds = true;
+				injectLinearImpulse(0, 0, (maxZoomOut - camera.zoom) );
+			}
+			else if ( wasOutOfZoomOutBounds )
+			{
+				wasOutOfZoomOutBounds = false;
+				f.z = 0;
+				v.z = 0;
+				a.z = 0;
 			}
 			
 			if( camera.position.x<-level.getWidth()/2 )
 			{
-				injectLinearImpulse( (level.getWidth()/2-camera.position.x)/10, 0, 0);
+				wasOutOfXBounds = true;
+				injectLinearImpulse( (level.getWidth()/2-camera.position.x), 0, 0);
 			}
 			else if (camera.position.x> level.getWidth()/2)
 			{
-				injectLinearImpulse( (level.getWidth()/2-camera.position.x*2)/10, 0, 0);
+				wasOutOfXBounds = true;
+				injectLinearImpulse( (level.getWidth()/2-camera.position.x*2), 0, 0);
+			}
+			else if ( wasOutOfXBounds )
+			{
+				wasOutOfXBounds = false;
+				f.x = 0;
+				v.x = 0;
+				a.x = 0;
 			}
 			
 			if( camera.position.y<-level.getHeight()/2 )
 			{
-				injectLinearImpulse( 0, (level.getHeight()/2-camera.position.y)/10, 0);
+				wasOutOfYBounds = true;
+				injectLinearImpulse( 0, (level.getHeight()/2-camera.position.y), 0);
 			}
 			else if(camera.position.y>level.getHeight()/2)
 			{
-				injectLinearImpulse( 0, (level.getHeight()/2-camera.position.y*2)/10, 0);
+				wasOutOfYBounds = true;
+				injectLinearImpulse( 0, (level.getHeight()/2-camera.position.y*2), 0);
+			}
+			else if ( wasOutOfYBounds )
+			{
+				wasOutOfYBounds = false;
+				f.y = 0;
+				v.y = 0;
+				a.y = 0;
 			}
 		}
 		
