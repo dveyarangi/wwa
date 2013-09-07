@@ -1,6 +1,8 @@
 package eir.resources;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,7 +17,7 @@ public class Level
 	
 	private int width;
 	private int height;
-	private List <Asteroid> asteroids;
+	private Map <String, Asteroid> asteroids;
 	
 	private List <Web> webs;
 	
@@ -24,9 +26,14 @@ public class Level
 	/**
 	 * @return
 	 */
-	public List <Asteroid> getAsteroids()
+	public Collection <Asteroid> getAsteroids()
 	{
-		return asteroids;
+		return asteroids.values();
+	}
+	
+	public Asteroid getAsteroid(String name)
+	{
+		return asteroids.get( name );
 	}
 	/**
 	 * @return
@@ -40,7 +47,7 @@ public class Level
 	 */
 	public void init()
 	{
-		for(Asteroid asteroid : asteroids)
+		for(Asteroid asteroid : asteroids.values())
 		{
 			
 			Body body = asteroid.getModel().getBody();
