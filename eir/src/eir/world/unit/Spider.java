@@ -35,7 +35,10 @@ public class Spider
 	
 	private Vector2 anchor;
 	
-	private static final float GRAVITY = 1000;
+	private Vector2 lastLeftContact;
+	private Vector2 lastRightContact;
+	
+	private static final float GRAVITY = 5000;
 	
 	/**
 	 * currently traversed asteroid, maybe null in transition
@@ -47,6 +50,9 @@ public class Spider
 	 */
 	private Vector2 gravityForce;
 	private Vector2 stickyForce;
+	
+	private static final float STICK_DURATION = 1f;
+	private float stickTimeRemaining = 0;
 	
 	public Spider(World world, float x, float y)
 	{
@@ -61,10 +67,10 @@ public class Spider
         // chassis
         PolygonShape chassisShape = new PolygonShape();
         chassisShape.set(new float[] {
-        	   -size , -size/2, 
-        		size , -size/2, 
-        		size ,  size/2, 
-        	   -size , size/2}); // counterclockwise order
+        	   -size , -size/4, 
+        		size , -size/4, 
+        		size ,  size/4, 
+        	   -size , size/4}); // counterclockwise order
 
         FixtureDef chassisFixtureDef = new FixtureDef();
         chassisFixtureDef.shape = chassisShape;
@@ -75,12 +81,12 @@ public class Spider
 
         // left wheel
         CircleShape wheelShape = new CircleShape();
-        wheelShape.setRadius( size );
+        wheelShape.setRadius( size*0.9f );
         
         FixtureDef wheelFixtureDef = new FixtureDef();
         wheelFixtureDef.shape = wheelShape;
         wheelFixtureDef.density = 0.1f;
-        wheelFixtureDef.friction = 0.1f;
+        wheelFixtureDef.friction = 1f;
 
         
         bodyDef.position.set(x-size/2, y);
@@ -96,7 +102,7 @@ public class Spider
         RevoluteJointDef axisDef = new RevoluteJointDef();
         axisDef.bodyA = chassis;
         axisDef.bodyB = leftWheel;
-        axisDef.localAnchorA.set(-size/2f*0.99f, 0);
+        axisDef.localAnchorA.set(-size*0.99f, 0);
         axisDef.localAnchorB.set(0, 0);
 //        axisDef.frequencyHz = chassisFixtureDef.density;
  //       axisDef.localAxisA.set(Vector2.Zero);
@@ -107,10 +113,10 @@ public class Spider
         axisDef.bodyB = rightWheel;
         axisDef.localAnchorA.x *= -1;
         
-        axisDef.maxMotorTorque = 1000;
+        axisDef.maxMotorTorque = 10000;
         axisDef.collideConnected = false;
         axisDef.enableMotor = true;
-        axisDef.motorSpeed = 100;
+        axisDef.motorSpeed = 10;
 
 
         RevoluteJoint rightAxis = (RevoluteJoint) world.createJoint(axisDef);
@@ -125,7 +131,7 @@ public class Spider
 		this.asteroid = asteroid;
 	}
 	
-	public void update()
+	public void update(float delta)
 	{
 		if(asteroid != null)
 		{
@@ -141,7 +147,9 @@ public class Spider
 			else
 			{
 				force = stickyForce;
-				stickyForce = null;
+				if(stickTimeRemaining <= 0)
+					stickyForce = null;
+				stickTimeRemaining -= delta;
 //				System.out.println("using sticky : " + force);
 			}
 //			System.out.println("position: " + chassis.getPosition());
@@ -187,11 +195,12 @@ public class Spider
 			WorldManifold worldManifold = contact.getWorldManifold();
 //			contact.getWorldManifold().get
 
-			Vector2 contactNormal = worldManifold.getNormal();
+			Vector2 contactNormal = worldManifold.getNormal().nor();
 			// print the contact point and the normal
 //			System.out.println( "contact: " + worldManifold.getPoints()[0].x + "," + worldManifold.getPoints()[0].y );
 //			System.out.println( worldManifold.getNormal().x + "," + worldManifold.getNormal().y );
 			stickyForce = new Vector2(contactNormal.x, contactNormal.y).mul( -GRAVITY );
+			stickTimeRemaining = STICK_DURATION;
 		}
 	}
 }

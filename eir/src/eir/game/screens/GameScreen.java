@@ -76,8 +76,8 @@ public class GameScreen extends AbstractScreen
 		
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
 		
-		spider = new Spider( physicsWorld, 0, 0 );
-		spider.setAsteroid( level.getAsteroid("sad_head_01") );
+		spider = new Spider( physicsWorld, 200, 100 );
+		spider.setAsteroid( level.getAsteroid("sad_head_02") );
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class GameScreen extends AbstractScreen
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 		
-		spider.update();
+		spider.update(delta);
 		physicsWorld.step( delta, 1,1 );
 		
 		batch.begin();
