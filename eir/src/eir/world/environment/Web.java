@@ -17,6 +17,8 @@ public class Web
 	private String target;
 	
 	private Texture threadTexture;
+	private Texture sourceTexture;
+	private Texture targetTexture;
 //	private Texture sourceConnectorTexture;
 //	private Texture targetConnectorTexture;
 }
