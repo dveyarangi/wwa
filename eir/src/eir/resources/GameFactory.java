@@ -18,6 +18,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+import eir.world.Asteroid;
+import eir.world.environment.Web;
+
 
 /**
  * @author dveyarangi
@@ -110,6 +113,27 @@ public class GameFactory
 		
 		return sprite;
 	}
+	
+	public static Sprite createSprite(Texture texture)
+	{
+		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
+		return new Sprite(region);
+	}
+	
+//	public static Web createWeb( Asteroid source, Asteroid target )
+//	{
+//		Sprite sourceSprite = createSprite("web_srouce_01.png");
+//		Sprite targetSprite = createSprite("web_target_01.png");
+//		Sprite threadSprite = createSprite("web_thread_01.png");
+//		
+//		sourceSprite.setPosition(source.getX(), source.getY());
+//		threadSprite.setPosition(source.getX()-target.getX(), source.getY()-target.getY());
+//		targetSprite.setPosition(target.getX(), target.getY());
+//		
+//		return new Web(sourceSprite, threadSprite, targetSprite);
+//	}
+//	
+	
 	/**
 	 * @param world
 	 * @param textureFile

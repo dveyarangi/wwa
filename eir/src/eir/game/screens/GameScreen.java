@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -12,11 +13,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import eir.debug.CoordinateGrid;
 import eir.game.EirGame;
 import eir.input.CameraController;
+import eir.input.GameGestureListener;
 import eir.input.GameInputProcessor;
 import eir.input.UIInputProcessor;
 import eir.resources.GameFactory;
 import eir.resources.Level;
 import eir.world.Asteroid;
+import eir.world.environment.Web;
 import eir.world.unit.Spider;
 
 /**
@@ -76,6 +79,7 @@ public class GameScreen extends AbstractScreen
 		
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
+		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
 		inputMultiplexer.addProcessor( new GameInputProcessor(camController, level) );
 		
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
@@ -106,6 +110,11 @@ public class GameScreen extends AbstractScreen
 		for(Asteroid asteroid : level.getAsteroids())
 		{
 			asteroid.getModel().render(batch);
+		}
+		
+		for( Web web : level.getWebs() )
+		{
+			web.draw(batch);
 		}
 		
 		batch.end();
