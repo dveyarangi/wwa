@@ -49,11 +49,14 @@ public class Level
 	{
 		for(Asteroid asteroid : asteroids.values())
 		{
-			
 			Body body = asteroid.getModel().getBody();
 			body.setTransform( asteroid.getX(), asteroid.getY(), asteroid.getAngle() );
 		}
 		
+		for( Web web : webs )
+		{
+			web.init( asteroids.get(web.getSource()), asteroids.get(web.getTarget()));
+		}
 	}
 
 	/**

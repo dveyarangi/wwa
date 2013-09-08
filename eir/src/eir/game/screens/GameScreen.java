@@ -19,6 +19,7 @@ import eir.input.UIInputProcessor;
 import eir.resources.Level;
 import eir.resources.LevelLoader;
 import eir.world.Asteroid;
+import eir.world.environment.Web;
 import eir.world.unit.Spider;
 
 /**
@@ -105,6 +106,11 @@ public class GameScreen extends AbstractScreen
 		for(Asteroid asteroid : level.getAsteroids())
 		{
 			asteroid.getModel().render(batch);
+		}
+		
+		for( Web web : level.getWebs() )
+		{
+			web.draw(batch);
 		}
 		
 		batch.end();
