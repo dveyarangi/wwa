@@ -3,6 +3,9 @@
  */
 package eir.resources;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -22,24 +25,46 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class GameFactory
 {
-	// TODO: model cache
 	
 	private static final String MODELS_PATH = "models/";
 	
-	private static final String createBodyPath(String modelId)
+	/**
+	 * Loaded textures by name (filename, actually)
+	 */
+	private final Map <String, Texture> textureCache = new HashMap <String, Texture> (); 
+	
+	private final World world;
+	
+	public GameFactory(World world)
+	{
+		this.world = world;
+	}
+	
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	public Level loadLevel(String levelName)
+	{
+		LevelLoader loader = new LevelLoader();
+		return loader.readLevel( this, levelName );	
+	}
+	
+	private final String createBodyPath(String modelId)
 	{
 		return new StringBuilder()
 			.append( MODELS_PATH ).append( modelId ).append(".bog")
 			.toString();
 	}
-	private static final String createImagePath(String modelId)
+	private final String createImagePath(String modelId)
 	{
 		return new StringBuilder()
 			.append( MODELS_PATH ).append( modelId ).append(".png")
 			.toString();
 	}
 	
-	public static PolygonalModel loadModel(World world, String modelId, int size) 
+	public PolygonalModel loadModel(String modelId, int size) 
 	{
 		System.out.println("Loading model " + modelId);
 		
@@ -73,9 +98,9 @@ public class GameFactory
 	    return new PolygonalModel( body, sprite );
 	} 
 	
-	public static Sprite createSprite(String textureName)
+	public Sprite createSprite(String textureName)
 	{
-		Texture texture = new Texture(Gdx.files.internal(textureName));
+		Texture texture = loadTexture( textureName );
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
@@ -91,8 +116,21 @@ public class GameFactory
 	 * @param size
 	 * @return
 	 */
-	public static Texture loadTexture(String textureFile)
+	public Texture loadTexture(String textureFile)
 	{
-		return new Texture(Gdx.files.internal(textureFile));
+		Texture texture = textureCache.get( textureFile );
+		if(texture == null)
+			texture = new Texture(Gdx.files.internal(textureFile));
+		
+		return texture;
 	}
+	
+	public void dispose()
+	{
+		for(Texture texture : textureCache.values())
+		{
+			texture.dispose();
+		}
+	}
+
 }

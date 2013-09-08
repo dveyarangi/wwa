@@ -14,8 +14,8 @@ import eir.game.EirGame;
 import eir.input.CameraController;
 import eir.input.GameInputProcessor;
 import eir.input.UIInputProcessor;
+import eir.resources.GameFactory;
 import eir.resources.Level;
-import eir.resources.LevelLoader;
 import eir.world.Asteroid;
 import eir.world.unit.Spider;
 
@@ -38,6 +38,8 @@ public class GameScreen extends AbstractScreen
 
 	private World physicsWorld;
 	private Box2DDebugRenderer debugRenderer;
+	
+	private GameFactory gameFactory;
 	
 
 	private Level level; 
@@ -62,10 +64,12 @@ public class GameScreen extends AbstractScreen
 
 		debugRenderer = new Box2DDebugRenderer(true, true, false, true, true);
 		
-		LevelLoader loader = new LevelLoader();
+		this.gameFactory = new GameFactory(physicsWorld);
+		
 //		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
 
-		level = loader.readLevel( physicsWorld, "data/levels/level_exodus_01.dat" );
+
+		level = gameFactory.loadLevel( "data/levels/level_exodus_01.dat" );
 		level.init();
 		
 		camController = new CameraController(camera, level);
@@ -90,7 +94,7 @@ public class GameScreen extends AbstractScreen
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 		
 		spider.update(delta);
-		physicsWorld.step( delta, 1,1 );
+		physicsWorld.step( delta, 3,1 );
 		
 		batch.begin();
 		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
@@ -149,6 +153,7 @@ public class GameScreen extends AbstractScreen
 	public void dispose()
 	{
 		super.dispose();
+		gameFactory.dispose();
 	}
 
 }

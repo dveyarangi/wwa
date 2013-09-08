@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.physics.box2d.World;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
@@ -132,7 +131,7 @@ public class LevelLoader
 	 * @param levelName
 	 * @return
 	 */
-	public Level readLevel(final World world, String levelId)
+	public Level readLevel(final GameFactory factory, String levelId)
 	{
 		// attaching polygonal model loader
 		Gson gson = new GsonBuilder()
@@ -145,7 +144,7 @@ public class LevelLoader
 					String modelId = object.get("modelId").getAsString();
 					int size = object.get("size").getAsInt();
 					
-					return GameFactory.loadModel( world, modelId, size );
+					return factory.loadModel(  modelId, size );
 				}
 	
 			})
@@ -156,7 +155,7 @@ public class LevelLoader
 				{
 					String textureFile = elem.getAsString();
 					
-					return GameFactory.loadTexture( textureFile );
+					return factory.loadTexture( textureFile );
 				}
 	
 			})
