@@ -19,6 +19,7 @@ import eir.input.UIInputProcessor;
 import eir.resources.Level;
 import eir.resources.LevelLoader;
 import eir.world.Asteroid;
+import eir.world.unit.Spider;
 
 /**
  * place holder screen for now. does same as application listener from sample
@@ -44,6 +45,8 @@ public class GameScreen extends AbstractScreen
 	private Level level; 
 
 	private float w, h;
+	
+	private Spider spider;
 
 	private CoordinateGrid debugGrid;
 	
@@ -59,7 +62,7 @@ public class GameScreen extends AbstractScreen
 		
 		physicsWorld = new World( GRAVITY, true/* sleep */);
 
-		debugRenderer = new Box2DDebugRenderer(true, true, true, true, true);
+		debugRenderer = new Box2DDebugRenderer(true, true, false, true, true);
 		
 		LevelLoader loader = new LevelLoader();
 //		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
@@ -75,6 +78,9 @@ public class GameScreen extends AbstractScreen
 		inputMultiplexer.addProcessor( new GameInputProcessor(camController, level) );
 		
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
+		
+		spider = new Spider( physicsWorld, 200, 100 );
+		spider.setAsteroid( level.getAsteroid("sad_head_02") );
 	}
 
 	@Override
@@ -86,7 +92,8 @@ public class GameScreen extends AbstractScreen
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 		
-		
+		spider.update(delta);
+		physicsWorld.step( delta, 1,1 );
 		
 		batch.begin();
 		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
@@ -94,7 +101,6 @@ public class GameScreen extends AbstractScreen
 		batch.setTransformMatrix( camera.view );
 		
 		batch.draw( level.getBackgroundTexture(), -level.getWidth()/2, -level.getHeight()/2, level.getWidth(), level.getHeight() );
-		
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
 		{
