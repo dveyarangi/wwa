@@ -15,6 +15,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+import eir.world.environment.Web;
+
 
 /**
  * @author dveyarangi
@@ -84,6 +86,11 @@ public class GameFactory
 //		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		
 		return sprite;
+	}
+	
+	public static Web createWeb()
+	{
+		return null;
 	}
 	/**
 	 * @param world

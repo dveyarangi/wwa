@@ -21,4 +21,9 @@ public class Web
 	private Texture targetTexture;
 //	private Texture sourceConnectorTexture;
 //	private Texture targetConnectorTexture;
+	
+	public void render()
+	{
+		
+	}
 }
