@@ -41,7 +41,7 @@ public class Web
 		targetSprite.draw(spriteBatch);
 	}
 	
-	public void init( )
+	public void init()
 	{
 		Asteroid sourceAst = source.getAsteroid();
 		Asteroid targetAst = target.getAsteroid();
