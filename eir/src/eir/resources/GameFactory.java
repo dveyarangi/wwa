@@ -98,7 +98,7 @@ public class GameFactory
 	    sprite.setSize(size, size);
 		sprite.setOrigin( origin.x, origin.y );
 
-	    return new PolygonalModel( body, sprite );
+	    return new PolygonalModel( origin, body, sprite );
 	} 
 	
 	public Sprite createSprite(String textureName)
