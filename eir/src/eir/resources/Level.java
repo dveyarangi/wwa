@@ -55,7 +55,7 @@ public class Level
 		
 		for( Web web : webs )
 		{
-			web.init( asteroids.get(web.getSource()), asteroids.get(web.getTarget()));
+			web.init( asteroids.get(web.getSource().getAsteroidName()), asteroids.get(web.getTarget().getAsteroidName()));
 		}
 	}
 

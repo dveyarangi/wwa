@@ -17,8 +17,8 @@ import eir.world.Asteroid;
  */
 public class Web
 {
-	private String source;
-	private String target;
+	private Anchor source;
+	private Anchor target;
 	
 	private Texture threadTexture;
 	private Texture sourceTexture;
@@ -28,11 +28,11 @@ public class Web
 	private Sprite targetSprite;
 	private Sprite threadSprite;
 	
-	public Web( String source, String target )
+/*	public Web( String source, String target )
 	{
 		this.source = source;
 		this.target = target;
-	}
+	}*/
 	
 	public void draw( SpriteBatch spriteBatch )
 	{
@@ -67,14 +67,31 @@ public class Web
 		threadSprite.setScale((float) (v.len() - sourceSprite.getWidth()*scale)/threadSprite.getWidth(), scale);
 	}
 	
-	public String getSource()
+	public Anchor getSource()
 	{
 		return source;
 	}
 	
-	public String getTarget()
+	public Anchor getTarget()
 	{
 		return target;
+	}
+	
+	public static class Anchor
+	{
+		private String name;
+		private float x;
+		private float y;
+		/**
+		 * @return
+		 */
+		public String getAsteroidName()
+		{
+			return name;
+		}
+		
+		public float getX() { return x; }
+		public float getY() { return y; }
 	}
 }
 
