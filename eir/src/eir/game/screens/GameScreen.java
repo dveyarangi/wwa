@@ -85,7 +85,7 @@ public class GameScreen extends AbstractScreen
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
 		
 		spider = new Spider( physicsWorld, 200, 100 );
-		spider.setAsteroid( level.getAsteroid("sad_head_02") );
+		spider.setAsteroid( level.getAsteroids().iterator().next());
 	}
 
 	@Override

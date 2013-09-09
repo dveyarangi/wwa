@@ -17,7 +17,8 @@ public class Level
 	
 	private int width;
 	private int height;
-	private Map <String, Asteroid> asteroids;
+	
+	private List <Asteroid> asteroids;
 	
 	private List <Web> webs;
 	
@@ -28,13 +29,9 @@ public class Level
 	 */
 	public Collection <Asteroid> getAsteroids()
 	{
-		return asteroids.values();
+		return asteroids;
 	}
-	
-	public Asteroid getAsteroid(String name)
-	{
-		return asteroids.get( name );
-	}
+
 	/**
 	 * @return
 	 */
@@ -47,7 +44,7 @@ public class Level
 	 */
 	public void init()
 	{
-		for(Asteroid asteroid : asteroids.values())
+		for(Asteroid asteroid : asteroids)
 		{
 			Body body = asteroid.getModel().getBody();
 			body.setTransform( asteroid.getX(), asteroid.getY(), asteroid.getAngle() );
@@ -55,7 +52,7 @@ public class Level
 		
 		for( Web web : webs )
 		{
-			web.init( asteroids.get(web.getSource().getAsteroidName()), asteroids.get(web.getTarget().getAsteroidName()));
+			web.init();
 		}
 	}
 

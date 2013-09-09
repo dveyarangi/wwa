@@ -41,7 +41,7 @@ public class Web
 		targetSprite.draw(spriteBatch);
 	}
 	
-	public void init( Asteroid source, Asteroid target )
+	public void init()
 	{
 		sourceSprite = new Sprite( new TextureRegion(this.sourceTexture, 512, 256) );
 		targetSprite = new Sprite( new TextureRegion(this.targetTexture, 512, 256) );
@@ -51,7 +51,6 @@ public class Web
 		targetSprite.setPosition( target.getX() - targetSprite.getWidth()/2, target.getY() - targetSprite.getHeight()/2 );		
 		threadSprite.setPosition( source.getX() + (target.getX() - source.getX())/2 - threadSprite.getWidth()/2,
 								  source.getY() + (target.getY() - source.getY())/2 - threadSprite.getHeight()/2);
-		
 		
 		Vector2 v = Vector2.tmp.set(target.getX() - source.getX(), target.getY() - source.getY());
 		
@@ -79,16 +78,13 @@ public class Web
 	
 	public static class Anchor
 	{
-		private String name;
+		private Asteroid asteroid;
 		private float x;
 		private float y;
 		/**
 		 * @return
 		 */
-		public String getAsteroidName()
-		{
-			return name;
-		}
+		public Asteroid getAsteroid() {	return asteroid; }
 		
 		public float getX() { return x; }
 		public float getY() { return y; }

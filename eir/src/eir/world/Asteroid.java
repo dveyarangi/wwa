@@ -11,7 +11,7 @@ import eir.resources.PolygonalModel;
  */
 public class Asteroid
 {
-	private String id;
+	private String name;
 	
 	private float x;
 	private float y;
@@ -29,12 +29,11 @@ public class Asteroid
 		return model;
 	}
 
-	/**
-	 * @return
-	 */
 	public float getAngle()	{ return a;	}
 	public float getX()	{ return x;	}
 	public float getY()	{ return y;	}
+
+	public String getName() { return name; }
 	
 
 }

@@ -12,27 +12,27 @@
 			
 			########################################
 			# asteroids
-			"asteroids" : {
+			"asteroids" : [
 				
-				"sad_head_02" : { 
+				{ "name" : "sad_head_02",
 				  "x":"200",  "y":"200", "z":"0", "a" : "-250",
 				  "model" : { "modelId" : "asteroid_head_02", "size" : "200" }
 				  
 				},
-				"sad_head_01" : { 
+				{  "name" : "sad_head_01",
 				  "x":"50",  "y":"0", "z":"0", "a" : "0",
 				  "model" : { "modelId" : "asteroid_head_01", "size" : "50" }
 				},				  
-				"sad_head_04" : { 
+				{ "name" : "sad_head_04",
 				  "x":"100",  "y":"-50", "z":"0", "a" : "0",
 				  "model" : { "modelId" : "asteroid_head_04", "size" : "100" }
 				}				  
-			},
+			],
 			
 			"webs" : [
 				{
-					"source" : { "name" : "sad_head_02", "x":0.513124942779541,"y":0.9625000953674316 },
-					"target" : { "name" : "sad_head_01", "x":0.8537499904632568,"y":0.8049999475479126 },
+					"source" : { "asteroid" : "sad_head_02", "x":0.513124942779541,"y":0.9625000953674316 },
+					"target" : { "asteroid" : "sad_head_01", "x":0.8537499904632568,"y":0.8049999475479126 },
 
 					"threadTexture" : "models/web_thread_01.png",
 					"sourceTexture" : "models/web_source_01.png",
@@ -40,8 +40,8 @@
 					
 				},
 				{
-					"source" : { "name" : "sad_head_02", "x":0.014375001192092896,"y":0.3737499713897705 },
-					"target" : { "name" : "sad_head_04", "x":0.5893750190734863,"y":0.9787501096725464 },
+					"source" : { "asteroid" : "sad_head_02", "x":0.014375001192092896,"y":0.3737499713897705 },
+					"target" : { "asteroid" : "sad_head_04", "x":0.5893750190734863,"y":0.9787501096725464 },
 					"threadTexture" : "models/web_thread_02.png",
 					"sourceTexture" : "models/web_source_02.png",
 					"targetTexture" : "models/web_target_02.png"

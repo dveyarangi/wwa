@@ -14,7 +14,11 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -35,6 +39,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
+import eir.world.Asteroid;
+
 /**
  * @author dveyarangi
  * 
@@ -51,6 +57,30 @@ public class LevelLoader
 	 * that can be loaded using {@link #readLevel(String)}.
 	 */
 	private Multimap<String, String> levelTypes;
+	
+	private static class LoadingContext
+	{
+		Map <String, Asteroid> asteroids = 
+				new HashMap <String, Asteroid> ();
+
+		/**
+		 * @param asteroidName
+		 * @return
+		 */
+		public Asteroid getAsteroid(String name)
+		{
+			return asteroids.get( name );
+		}
+
+		/**
+		 * @param asteroid
+		 */
+		public void addAsteroid(Asteroid asteroid)
+		{
+			asteroids.put( asteroid.getName(), asteroid );
+		}
+		
+	}
 	
 	/**
 	 * Creates level loader and lists level folder ({@link #LEVEL_DATA_ROOT}
@@ -133,20 +163,43 @@ public class LevelLoader
 	 */
 	public Level readLevel(final GameFactory factory, String levelId)
 	{
+		final LoadingContext context = new LoadingContext();
+		
+		final Gson rawGson = new GsonBuilder()
+		.registerTypeAdapter( PolygonalModel.class, new JsonDeserializer<PolygonalModel>()
+		{
+			@Override
+			public PolygonalModel deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+			{
+				JsonObject object = elem.getAsJsonObject();
+				String modelId = object.get("modelId").getAsString();
+				int size = object.get("size").getAsInt();
+				
+				return factory.loadModel(  modelId, size );
+			}
+		}).create();
 		// attaching polygonal model loader
 		Gson gson = new GsonBuilder()
-			.registerTypeAdapter( PolygonalModel.class, new JsonDeserializer<PolygonalModel>()
+			.registerTypeAdapter( Asteroid.class, new JsonDeserializer<Asteroid>()
 			{
 				@Override
-				public PolygonalModel deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				public Asteroid deserialize(JsonElement elem, Type type, JsonDeserializationContext ctx) throws JsonParseException
 				{
-					JsonObject object = elem.getAsJsonObject();
-					String modelId = object.get("modelId").getAsString();
-					int size = object.get("size").getAsInt();
+					Asteroid asteroid;
+					if(elem.isJsonObject())
+					{
+						asteroid = rawGson.fromJson( elem, type );
+						context.addAsteroid(asteroid);
+						return asteroid;
+					}
+					String asteroidName = elem.getAsString();
 					
-					return factory.loadModel(  modelId, size );
+					asteroid = context.getAsteroid(asteroidName);
+					if(asteroid == null)
+						throw new IllegalArgumentException("Asteroid " + asteroidName + " not defined.");
+					return asteroid;
+					
 				}
-	
 			})
 			.registerTypeAdapter( Texture.class, new JsonDeserializer<Texture>()
 			{
@@ -157,11 +210,8 @@ public class LevelLoader
 					
 					return factory.loadTexture( textureFile );
 				}
-	
 			})
 			.create();
-		
-		
 		
 		InputStream stream = openFileStream( levelId );
 
