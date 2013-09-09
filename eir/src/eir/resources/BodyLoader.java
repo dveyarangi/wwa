@@ -208,7 +208,7 @@ public class BodyLoader {
                 return m;
         }*/
 
-        private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem) {
+/*        private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem) {
                 RigidBodyModel rbModel = new RigidBodyModel();
                 rbModel.name = (String) bodyElem.get("name");
                 rbModel.imagePath = (String) bodyElem.get("imagePath");
@@ -263,5 +263,5 @@ public class BodyLoader {
 
         private void free(Vector2 v) {
                 vectorPool.add(v);
-        }
+        }*/
 }
