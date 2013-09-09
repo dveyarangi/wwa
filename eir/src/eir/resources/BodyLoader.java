@@ -9,6 +9,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +28,7 @@ import java.util.Map;
 public class BodyLoader {
 
         // Model
-        private final Model model;
+ //       private final Model model;
 
         // Reusable stuff
         private final List<Vector2> vectorPool = new ArrayList<Vector2>();
@@ -36,7 +40,7 @@ public class BodyLoader {
         // Ctors
         // -------------------------------------------------------------------------
 
-        public BodyLoader(FileHandle file) {
+ /*       public BodyLoader(FileHandle file) {
                 if (file == null) throw new NullPointerException("file is null");
                 model = readJson(file.readString());
         }
@@ -44,6 +48,13 @@ public class BodyLoader {
         public BodyLoader(String str) {
                 if (str == null) throw new NullPointerException("str is null");
                 model = readJson(str);
+        }*/
+        
+        public static Model readModel(String str)
+        {
+        	Gson gson = new Gson();
+        	Model model = gson.fromJson( str, Model.class );
+        	return model;
         }
 
         // -------------------------------------------------------------------------
@@ -74,7 +85,7 @@ public class BodyLoader {
          * @param fd The fixture parameters to apply to the created body fixture.
          * @param scale The desired scale of the body. The default width is 1.
          */
-        public void attachFixture(Body body, String name, FixtureDef fd, Vector2 origin, float scale) {
+ /*       public void attachFixture(Body body, String name, FixtureDef fd, Vector2 origin, float scale) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
@@ -110,17 +121,17 @@ public class BodyLoader {
 
                         free(center);
                 }
-        }
+        }*/
 
         /**
          * Gets the image path attached to the given name.
          */
-        public String getImagePath(String name) {
+ /*       public String getImagePath(String name) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
                 return rbModel.imagePath;
-        }
+        }*/
 
         /**
          * Gets the origin point attached to the given name. Since the point is
@@ -128,41 +139,49 @@ public class BodyLoader {
          * size. Warning: this method returns the same Vector2 object each time, so
          * copy it if you need it for later use.
          */
-        public Vector2 getOrigin(String name, float scale) {
+ /*       public Vector2 getOrigin(String name, float scale) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
                 return vec.set(rbModel.origin).mul(scale);
-        }
+        }*/
 
         /**
          * <b>For advanced users only.</b> Lets you access the internal model of
          * this loader and modify it. Be aware that any modification is permanent
          * and that you should really know what you are doing.
          */
-        public Model getInternalModel() {
+ /*       public Model getInternalModel() {
                 return model;
-        }
+        }*/
 
         // -------------------------------------------------------------------------
         // Json Models
         // -------------------------------------------------------------------------
 
         public static class Model {
-                public final Map<String, RigidBodyModel> rigidBodies = new HashMap<String, RigidBodyModel>();
+                public List <RigidBodyModel> rigidBodies = new ArrayList<RigidBodyModel>();
         }
 
         public static class RigidBodyModel {
                 public String name;
                 public String imagePath;
-                public final Vector2 origin = new Vector2();
-                public final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
-                public final List<CircleModel> circles = new ArrayList<CircleModel>();
+                public Vector2 origin = new Vector2();
+                public List<List <Vector2>> polygons;
+                public List<CircleModel> circles;
+                public List<ShapeModel> shapes;
         }
 
         public static class PolygonModel {
-                public final List<Vector2> vertices = new ArrayList<Vector2>();
+                public List<Vector2> vertices = new ArrayList<Vector2>();
                 private Vector2[] buffer; // used to avoid allocation in attachFixture()
+        }
+        
+        public static enum ShapeType { POLYGON }
+        
+        public static class ShapeModel {
+        	private ShapeType type;
+        	private List<Vector2> vertices;
         }
 
         public static class CircleModel {
@@ -174,7 +193,7 @@ public class BodyLoader {
         // Json reading process
         // -------------------------------------------------------------------------
 
-        private Model readJson(String str) {
+ /*       private Model readJson(String str) {
                 Model m = new Model();
                 OrderedMap<String,?> rootElem = (OrderedMap<String,?>) new JsonReader().parse(str);
 
@@ -187,7 +206,7 @@ public class BodyLoader {
                 }
 
                 return m;
-        }
+        }*/
 
         private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem) {
                 RigidBodyModel rbModel = new RigidBodyModel();

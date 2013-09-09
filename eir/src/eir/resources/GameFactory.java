@@ -72,7 +72,8 @@ public class GameFactory
 		System.out.println("Loading model " + modelId);
 		
 		// 0. Create a loader for the file saved from the editor.
-	    BodyLoader loader = new BodyLoader(Gdx.files.internal(createBodyPath(modelId)));
+		BodyLoader.readModel(Gdx.files.internal(createBodyPath(modelId)).readString());
+//	    BodyLoader loader = new BodyLoader();
 	 
 	    // 1. Create a BodyDef, as usual.
 	    BodyDef bd = new BodyDef();
@@ -91,7 +92,7 @@ public class GameFactory
 	    Vector2 origin = new Vector2();
 	    
 	    // 4. Create the body fixture automatically by using the loader.
-	    loader.attachFixture(body, modelId, fd, origin, size);
+//	    loader.attachFixture(body, modelId, fd, origin, size);
 	    
 	    Sprite sprite = createSprite(createImagePath( modelId ));
 
