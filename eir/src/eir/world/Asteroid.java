@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
@@ -62,8 +63,9 @@ public class Asteroid
 	
 	/**
 	 * @param batch
+	 * @param shapeRenderer 
 	 */
-	public void draw(SpriteBatch batch)
+	public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer)
 	{
 		sprite.draw( batch );
 	}

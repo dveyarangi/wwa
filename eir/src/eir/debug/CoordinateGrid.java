@@ -28,18 +28,15 @@ public class CoordinateGrid
 	private final float halfWidth;
 	private final float halfHeight;
 	
-	ShapeRenderer grid;
 	public CoordinateGrid(float width, float height, OrthographicCamera camera)
 	{
 		this.camera = camera;
 		this.halfHeight = height/2;
 		this.halfWidth = width/2;
-		grid = new ShapeRenderer();
 	}
 
-	public void render()
+	public void render( ShapeRenderer grid )
 	{
-		grid.setProjectionMatrix(camera.combined);
 		
 		GLCommon gl = Gdx.gl;
 		gl.glEnable(GL10.GL_BLEND);

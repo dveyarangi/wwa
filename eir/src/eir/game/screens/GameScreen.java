@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -42,6 +43,8 @@ public class GameScreen extends AbstractScreen
 	private World physicsWorld;
 	private Box2DDebugRenderer debugRenderer;
 	
+	private ShapeRenderer shapeRenderer;
+	
 	private GameFactory gameFactory;
 	
 
@@ -62,6 +65,8 @@ public class GameScreen extends AbstractScreen
 		camera = new OrthographicCamera( w, h );
 
 		batch = new SpriteBatch();
+		
+		shapeRenderer = new ShapeRenderer();
 		
 		physicsWorld = new World( GRAVITY, true/* sleep */);
 
@@ -100,16 +105,21 @@ public class GameScreen extends AbstractScreen
 		spider.update(delta);
 		physicsWorld.step( delta, 3,1 );
 		
-		batch.begin();
-		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
+		// setting renderers to camera view:
 		batch.setProjectionMatrix( camera.projection );
 		batch.setTransformMatrix( camera.view );
+		
+		shapeRenderer.setProjectionMatrix( camera.projection);
+		shapeRenderer.setTransformMatrix( camera.view );
+		
+		batch.begin();
+		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
 		
 		batch.draw( level.getBackgroundTexture(), -level.getWidth()/2, -level.getHeight()/2, level.getWidth(), level.getHeight() );
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
 		{
-			asteroid.draw(batch);
+			asteroid.draw(batch, shapeRenderer);
 		}
 		
 		for( Web web : level.getWebs() )
@@ -119,7 +129,12 @@ public class GameScreen extends AbstractScreen
 		
 		batch.end();
 		
-		debugGrid.render();
+		debugGrid.render( shapeRenderer );
+		
+		for(Asteroid asteroid : level.getAsteroids())
+		{
+			asteroid.getModel().draw( shapeRenderer);
+		}
 		
 		debugRenderer.render( physicsWorld, camera.combined );
 	}
