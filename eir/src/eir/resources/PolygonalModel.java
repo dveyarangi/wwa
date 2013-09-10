@@ -102,7 +102,7 @@ public class PolygonalModel
 			Vector2 a = vertices[idx];
 			Vector2 b = vertices[(idx+1)%len];
 			
-			directions[idx] = new Vector2(b.x-a.x, b.y-a.y ).nor();
+			directions[idx] = new Vector2( b.x-a.x, b.y-a.y ).nor();
 			
 			// TODO: checkout about vertical ones
 			slopes[idx] = directions[idx].y / directions[idx].x;
@@ -150,11 +150,14 @@ public class PolygonalModel
 		// adding edges lenghts until we are past the stepLen:
 		stepLen -= lengths[idx] - scaledOffset;
 		int nidx = idx;
+		
+		// loop is required since step may skip several poly vertices:
 		while(stepLen > 0) 
 		{
 			nidx += dir;
 			if(nidx >= len) nidx = 0;
 			else if(nidx < 0) nidx = len-1;
+			
 			stepLen -= lengths[nidx];
 		}
 		
@@ -166,9 +169,9 @@ public class PolygonalModel
 	 * @param surfaceIdx
 	 * @return
 	 */
-	public Vector2 getSurfacePoint(float surfaceIdx)
+	public void getSurfacePoint(float surfaceIdx, Vector2 result)
 	{
-		int idx = ((int) surfaceIdx) % len;
+		int idx = getIdx(surfaceIdx);
 		
 		// surface idx offset from the floor vertex:
 		float offset = surfaceIdx - idx;
@@ -178,8 +181,31 @@ public class PolygonalModel
 		
 		Vector2 dir = directions[idx];
 		
-		return dir.tmp().mul( scaledOffset ).add( vertices[idx] ).cpy();
+		result.set(dir).mul( scaledOffset ).add( vertices[idx] ).cpy();
 	}
 
+	/**
+	 * @param surfaceIdx
+	 * @return
+	 */
+	public float getSlope(float surfaceIdx)
+	{
+		return slopes[getIdx(surfaceIdx)];
+	}
 
+	/**
+	 * @param surfaceIdx
+	 * @return
+	 */
+	public Vector2 getNormal(float surfaceIdx)
+	{
+		return normals[getIdx(surfaceIdx)];
+	}
+
+	
+	private final int getIdx(float surfaceIdx)
+	{
+		return ((int) surfaceIdx) % len;
+
+	}
 }

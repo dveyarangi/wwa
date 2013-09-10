@@ -42,7 +42,7 @@ public class NavMesh
 	 */
 	public void draw(ShapeRenderer shape)
 	{
-		shape.setColor( 1, 1, 1, 1 );
+		shape.setColor( 0, 1, 0, 0.5f );
 		for(NavNode srcNode : nodes)
 		{
 			shape.begin(ShapeType.Circle);
