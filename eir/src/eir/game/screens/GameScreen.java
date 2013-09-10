@@ -1,5 +1,10 @@
 package eir.game.screens;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import yarangi.numbers.RandomUtil;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
@@ -55,7 +60,7 @@ public class GameScreen extends AbstractScreen
 	
 	private NavMesh navMesh;
 	
-	private Spider spider;
+	private List <Spider> spiders = new LinkedList <Spider> ();
 
 	private CoordinateGrid debugGrid;
 	
@@ -94,7 +99,13 @@ public class GameScreen extends AbstractScreen
 		
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
 		
-		spider = new Spider( gameFactory, level.getAsteroids().iterator().next(), 200, 100 );
+		// infest Nir:
+		for(int i = 0; i < 15; i ++)
+			spiders.add(new Spider( gameFactory, level.getAsteroids().get(2), 
+					RandomUtil.N( 10 ) + 5, // size 
+					RandomUtil.N( 25 ), // location
+					(RandomUtil.N(2)==1? 1:-1) *(RandomUtil.R( 20 )+5) ) // speed
+			);
 	}
 
 	@Override
@@ -106,7 +117,6 @@ public class GameScreen extends AbstractScreen
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 		
-		spider.update(delta);
 		physicsWorld.step( delta, 3,1 );
 		
 		// setting renderers to camera view:
@@ -132,7 +142,11 @@ public class GameScreen extends AbstractScreen
 			web.draw( batch );
 		}
 		
-		spider.draw( batch );
+		for(Spider spider : spiders)
+		{
+			spider.update(delta);
+			spider.draw( batch );
+		}
 		
 		batch.end();
 		

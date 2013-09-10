@@ -34,7 +34,7 @@ import eir.world.environment.NavNode;
  */
 public class Spider
 {
-	private static final float size = 10;
+	private float size;
 	
 	private Vector2 position;
 	
@@ -43,7 +43,7 @@ public class Spider
 	 */
 	private Asteroid asteroid;
 	
-	private float speed = 20f;
+	private float speed;
 
 	
 	private float surfaceIdx;
@@ -51,9 +51,13 @@ public class Spider
 	private Sprite sprite;
 	
 	
-	public Spider(GameFactory factory, Asteroid asteroid, float x, float y)
+	public Spider(GameFactory factory, Asteroid asteroid, float size, float surfaceIdx, float speed)
 	{
 		this.asteroid = asteroid;
+		
+		this.size = size;
+		this.speed = speed;
+		this.surfaceIdx = surfaceIdx;
 		position = new Vector2();
 		asteroid.getModel().getSurfacePoint( surfaceIdx, position );
 		

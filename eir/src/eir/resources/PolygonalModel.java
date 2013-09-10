@@ -54,6 +54,8 @@ public class PolygonalModel
 	 * navigation nodes corresponding to polygon vertices
 	 */
 	private NavNode [] nodes;
+	
+	private float maxSurfaceIdx;
 
 	
 	/**
@@ -115,6 +117,8 @@ public class PolygonalModel
 			prevNode = currNode;
 			currNode = navMesh.insertNode( b );
 			navMesh.linkNodes( currNode, prevNode );
+			
+			maxSurfaceIdx ++;
 		}
 	}
 	
@@ -145,7 +149,7 @@ public class PolygonalModel
 		int idx = ((int) surfaceIdx) % len;
 		
 		// offset scaled by edge length:
-		float scaledOffset = (surfaceIdx - idx) * lengths[idx];
+		float scaledOffset = (normalSurfaceIdx( surfaceIdx ) - idx) * lengths[idx];
 		
 		// adding edges lenghts until we are past the stepLen:
 		stepLen -= lengths[idx] - scaledOffset;
@@ -174,7 +178,7 @@ public class PolygonalModel
 		int idx = getIdx(surfaceIdx);
 		
 		// surface idx offset from the floor vertex:
-		float offset = surfaceIdx - idx;
+		float offset = normalSurfaceIdx(surfaceIdx) - idx;
 		
 		// offset scaled by edge length:
 		float scaledOffset = offset * lengths[idx];
@@ -202,10 +206,15 @@ public class PolygonalModel
 		return normals[getIdx(surfaceIdx)];
 	}
 
+	private float normalSurfaceIdx(float surfaceIdx)
+	{
+		return (surfaceIdx > 0 ? surfaceIdx : (maxSurfaceIdx+surfaceIdx));
+	}
+	
 	
 	private final int getIdx(float surfaceIdx)
 	{
-		return ((int) surfaceIdx) % len;
+		return ((int)normalSurfaceIdx(surfaceIdx)) % len;
 
 	}
 }

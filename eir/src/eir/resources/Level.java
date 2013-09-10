@@ -24,7 +24,7 @@ public class Level
 	/**
 	 * @return
 	 */
-	public Collection <Asteroid> getAsteroids()
+	public List <Asteroid> getAsteroids()
 	{
 		return asteroids;
 	}
