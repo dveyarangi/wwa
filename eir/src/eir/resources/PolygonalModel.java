@@ -56,7 +56,7 @@ public class PolygonalModel
 	public void render(SpriteBatch batch)
 	{
 		sprite.setPosition( body.getPosition().x-sprite.getOriginX(), body.getPosition().y-sprite.getOriginY() );
-		sprite.setRotation( body.getAngle() * MathUtils.radiansToDegrees );
+		sprite.setRotation( body.getAngle() );
 		sprite.draw( batch );
 	}
 

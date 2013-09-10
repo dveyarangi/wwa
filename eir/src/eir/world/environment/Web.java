@@ -42,7 +42,7 @@ public class Web
 	}
 	
 	public void init()
-	{
+	{	
 		Asteroid sourceAst = source.getAsteroid();
 		Asteroid targetAst = target.getAsteroid();
 		
