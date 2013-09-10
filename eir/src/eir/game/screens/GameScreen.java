@@ -94,8 +94,7 @@ public class GameScreen extends AbstractScreen
 		
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
 		
-		spider = new Spider( physicsWorld, 200, 100 );
-		spider.setAsteroid( level.getAsteroids().iterator().next());
+		spider = new Spider( level.getAsteroids().iterator().next(), 200, 100 );
 	}
 
 	@Override
@@ -134,6 +133,9 @@ public class GameScreen extends AbstractScreen
 		}
 		
 		batch.end();
+		
+		spider.update( delta );
+		spider.draw( shapeRenderer );
 		
 		//////////////////////////////////////////////////////////////////
 		// debug rendering
