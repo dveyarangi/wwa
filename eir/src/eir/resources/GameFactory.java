@@ -79,7 +79,7 @@ public class GameFactory
 
 	} 
 	
-	public Sprite createSprite(String modelId, float x, float y, float width, float height, float degrees)
+	public Sprite createSprite(String modelId, float x, float y, float width, float height, float degrees, Vector2 origin)
 	{
 		Texture texture = loadTexture( createImagePath(modelId) );
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -87,13 +87,17 @@ public class GameFactory
 		TextureRegion region = new TextureRegion(texture);
 		
 		Sprite sprite = new Sprite(region);
+		float realOX = origin.x*sprite.getWidth();
+		float realOY = origin.y*sprite.getHeight();
+		sprite.setOrigin(realOX, realOY);
+		
 		float scaleX = width/region.getRegionWidth();
 		float scaleY = height/region.getRegionHeight();
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		sprite.setScale( scaleX, scaleY );
+		
 		sprite.setRotation( degrees );
-		sprite.setPosition( x-sprite.getWidth()/2, y-sprite.getHeight()/2 );
-//		sprite.setPosition( x, y );
+		
+		sprite.setPosition( x-realOX, y-realOY );
 		
 		return sprite;
 	}

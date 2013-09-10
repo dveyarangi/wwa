@@ -167,16 +167,9 @@ public class LevelLoader
 	{
 		final LoadingContext context = new LoadingContext();
 		
-		final Gson rawGson = new Gson();/*Builder()
-		.registerTypeAdapter( PolygonalModel.class, new JsonDeserializer<PolygonalModel>()
-		{
-			@Override
-			public PolygonalModel deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
-			{
-				String modelId = elem.getAsString();
-				return factory.loadModel( modelId );
-			}
-		}).create();*/
+		// this is raw gson parser (without custom deserializatiors)
+		// it is used for asteroid reference substitutions
+		final Gson rawGson = new Gson();
 		
 		Gson gson = new GsonBuilder()
 			.registerTypeAdapter( Asteroid.class, new JsonDeserializer<Asteroid>()

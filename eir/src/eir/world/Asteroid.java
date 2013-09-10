@@ -58,8 +58,8 @@ public class Asteroid
 	
 	public void init(GameFactory factory)
 	{
-		sprite = factory.createSprite(modelId, x, y, size, size, a);
 		model = factory.loadAsteroidModel( this, modelId );
+		sprite = factory.createSprite(modelId, x, y, size, size, a, model.getOrigin());
 	}
 	
 	/**
