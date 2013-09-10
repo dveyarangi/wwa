@@ -6,9 +6,9 @@ package eir.world.environment;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.resources.GameFactory;
 import eir.world.Asteroid;
 
 /**
@@ -43,22 +43,28 @@ public class Web
 	
 	public void init( Asteroid source, Asteroid target )
 	{
-		sourceSprite = GameFactory.createSprite(this.sourceTexture);
-		targetSprite = GameFactory.createSprite(this.targetTexture);
-		threadSprite = GameFactory.createSprite(this.threadTexture);
+		sourceSprite = new Sprite( new TextureRegion(this.sourceTexture, 512, 256) );
+		targetSprite = new Sprite( new TextureRegion(this.targetTexture, 512, 256) );
+		threadSprite = new Sprite( new TextureRegion(this.threadTexture, 1024, 256) );
 		
-		float sourceCenterX = (source.getX() + source.getModel().getSprite().getWidth() )/2;
-		float sourceCenterY = (source.getY() + source.getModel().getSprite().getHeight())/2;
-
-		float targetCenterX = (target.getX() + target.getModel().getSprite().getWidth() )/2;
-		float targetCenterY = (target.getY() + target.getModel().getSprite().getHeight())/2;
+		sourceSprite.setPosition( source.getX() - sourceSprite.getWidth()/2, source.getY() - sourceSprite.getHeight()/2 );
+		targetSprite.setPosition( target.getX() - targetSprite.getWidth()/2, target.getY() - targetSprite.getHeight()/2 );		
+		threadSprite.setPosition( source.getX() + (target.getX() - source.getX())/2 - threadSprite.getWidth()/2,
+								  source.getY() + (target.getY() - source.getY())/2 - threadSprite.getHeight()/2);
 		
 		
-		sourceSprite.scale(0.0001f);
+		Vector2 v = Vector2.tmp.set(target.getX() - source.getX(), target.getY() - source.getY());
 		
-		sourceSprite.setPosition( sourceCenterX - sourceSprite.getWidth(), sourceCenterY - sourceSprite.getHeight() );
-		//threadSprite.setPosition( targetCenterX - sourceCenterX, targetCenterY - sourceCenterY );
-		//sourceSprite.setPosition( targetCenterX, targetCenterY );
+		float angle = v.angle();
+		targetSprite.rotate( angle );
+		sourceSprite.rotate( angle );
+		threadSprite.rotate( angle );
+		
+		float scale = 0.1f; // different sizes of webs?
+		
+		sourceSprite.setScale(scale);
+		targetSprite.setScale(scale);
+		threadSprite.setScale((float) (v.len() - sourceSprite.getWidth()*scale)/threadSprite.getWidth(), scale);
 	}
 	
 	public String getSource()
