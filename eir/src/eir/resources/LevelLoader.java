@@ -157,6 +157,8 @@ public class LevelLoader
 	}
 	
 	/**
+	 * TODO: this goes to read-only code mode fast, do something about it
+	 * 
 	 * Loads level descriptor of specified levelName.
 	 * @param levelName
 	 * @return
@@ -178,7 +180,7 @@ public class LevelLoader
 				return factory.loadModel(  modelId, size );
 			}
 		}).create();
-		// attaching polygonal model loader
+		
 		Gson gson = new GsonBuilder()
 			.registerTypeAdapter( Asteroid.class, new JsonDeserializer<Asteroid>()
 			{
