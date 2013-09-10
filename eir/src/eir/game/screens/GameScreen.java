@@ -21,6 +21,7 @@ import eir.resources.GameFactory;
 import eir.resources.Level;
 import eir.world.Asteroid;
 import eir.world.Web;
+import eir.world.environment.NavMesh;
 import eir.world.unit.Spider;
 
 /**
@@ -52,6 +53,8 @@ public class GameScreen extends AbstractScreen
 
 	private float w, h;
 	
+	private NavMesh navMesh;
+	
 	private Spider spider;
 
 	private CoordinateGrid debugGrid;
@@ -72,7 +75,9 @@ public class GameScreen extends AbstractScreen
 
 		debugRenderer = new Box2DDebugRenderer(true, true, false, true, true);
 		
-		this.gameFactory = new GameFactory(physicsWorld);
+		this.navMesh = new NavMesh();
+		
+		this.gameFactory = new GameFactory( navMesh );
 		
 //		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
 
@@ -106,6 +111,8 @@ public class GameScreen extends AbstractScreen
 		physicsWorld.step( delta, 3,1 );
 		
 		// setting renderers to camera view:
+		// TODO: those are copying matrix arrays, maybe there is a lighter way to do this
+		// TODO: at least optimize to not set if camera has not moved
 		batch.setProjectionMatrix( camera.projection );
 		batch.setTransformMatrix( camera.view );
 		
@@ -113,21 +120,23 @@ public class GameScreen extends AbstractScreen
 		shapeRenderer.setTransformMatrix( camera.view );
 		
 		batch.begin();
-		// TODO: those are copying matrice arrays, maybe there is a lighter way to do this
 		
 		batch.draw( level.getBackgroundTexture(), -level.getWidth()/2, -level.getHeight()/2, level.getWidth(), level.getHeight() );
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
 		{
-			asteroid.draw(batch, shapeRenderer);
+			asteroid.draw( batch );
 		}
 		
 		for( Web web : level.getWebs() )
 		{
-			web.draw(batch);
+			web.draw( batch );
 		}
 		
 		batch.end();
+		
+		//////////////////////////////////////////////////////////////////
+		// debug rendering
 		
 		debugGrid.render( shapeRenderer );
 		

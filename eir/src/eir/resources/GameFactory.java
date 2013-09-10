@@ -12,11 +12,11 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 
 import eir.resources.BodyLoader.Model;
 import eir.resources.BodyLoader.RigidBodyModel;
 import eir.world.Asteroid;
+import eir.world.environment.NavMesh;
 
 
 /**
@@ -35,11 +35,11 @@ public class GameFactory
 	 */
 	private final Map <String, Texture> textureCache = new HashMap <String, Texture> (); 
 	
-	private final World world;
+	private final NavMesh navMesh;
 	
-	public GameFactory(World world)
+	public GameFactory(NavMesh navMesh)
 	{
-		this.world = world;
+		this.navMesh = navMesh;
 	}
 	
 
@@ -75,7 +75,7 @@ public class GameFactory
 		RigidBodyModel bodyModel = model.rigidBodies.get( 0 );
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 		
-		return new PolygonalModel( bodyModel.origin, vertices, asteroid.getSize(), asteroid.getX(), asteroid.getY(), asteroid.getAngle());
+		return new PolygonalModel( navMesh, bodyModel.origin, vertices, asteroid.getSize(), asteroid.getX(), asteroid.getY(), asteroid.getAngle());
 
 	} 
 	

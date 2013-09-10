@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.world.environment.NavNode;
+
 
 /**
  * @author dveyarangi
@@ -45,14 +47,20 @@ public class Web
 		Asteroid sourceAst = source.getAsteroid();
 		Asteroid targetAst = target.getAsteroid();
 		
-		Vector2 src = Vector2.tmp .set( source.getX() - 0.5f, source.getY() - 0.5f).rotate(sourceAst.getAngle()).add(0.5f,0.5f);
+		NavNode sourceNode = sourceAst.getModel().getNavNode(source.getNavNodeIdx());
+		NavNode targetNode = targetAst.getModel().getNavNode(target.getNavNodeIdx());
+		
+/*		Vector2 src = Vector2.tmp .set( source.getX() - 0.5f, source.getY() - 0.5f).rotate(sourceAst.getAngle()).add(0.5f,0.5f);
 		Vector2 tar = Vector2.tmp2.set( target.getX() - 0.5f, target.getY() - 0.5f).rotate(targetAst.getAngle()).add(0.5f,0.5f);
 		
 		
 		src.set( sourceAst.getX() + (src.x - 0.5f)*sourceAst.getSize(), 
 				 sourceAst.getY() + (src.y - 0.5f)*sourceAst.getSize() );
 		tar.set( targetAst.getX() + (tar.x - 0.5f)*targetAst.getSize(), 
-				 targetAst.getY() + (tar.y - 0.5f)*targetAst.getSize() );
+				 targetAst.getY() + (tar.y - 0.5f)*targetAst.getSize() );*/
+		
+		Vector2 src = sourceNode.getPoint();
+		Vector2 tar = targetNode.getPoint();
 		
 		sourceSprite = new Sprite( new TextureRegion(this.sourceTexture, 512, 256) );
 		targetSprite = new Sprite( new TextureRegion(this.targetTexture, 512, 256) );
@@ -90,15 +98,13 @@ public class Web
 	public static class Anchor
 	{
 		private Asteroid asteroid;
-		private float x;
-		private float y;
+		private int navIdx;
 		/**
 		 * @return
 		 */
 		public Asteroid getAsteroid() {	return asteroid; }
 		
-		public float getX() { return x; }
-		public float getY() { return y; }
+		public int getNavNodeIdx() { return navIdx; }
 	}
 }
 
