@@ -3,8 +3,6 @@
  */
 package eir.resources;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.environment.NavMesh;
@@ -31,7 +29,7 @@ public class PolygonalModel
 	 * @param body
 	 * @param sprite
 	 */
-	public PolygonalModel(NavMesh navMesh, Vector2 origin, Vector2 [] rawVertices, float size, float x, float y, float angle)
+	public PolygonalModel(NavMesh navMesh, Vector2 origin, Vector2 [] rawVertices, float size, Vector2 position, float angle)
 	{
 		super();
 		this.origin = origin;
@@ -49,7 +47,7 @@ public class PolygonalModel
 					.sub( origin.x, origin.y ) // making relative to origin 
 					.rotate( angle ) // rotating
 					.mul( size ) // scaling
-					.add( x,y )  // transposing
+					.add( position )  // transposing
 					.cpy();      // tmp ref is not to be saved!
 			
 			

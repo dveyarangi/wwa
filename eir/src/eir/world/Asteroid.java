@@ -3,16 +3,12 @@
  */
 package eir.world;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
-import eir.world.environment.NavNode;
 
 /**
  * @author dveyarangi
@@ -20,20 +16,39 @@ import eir.world.environment.NavNode;
  */
 public class Asteroid
 {
+	/**
+	 * Asteroid id for whatever we will need tihs
+	 */
 	private String name;
 	
-	private float x;
-	private float y;
-	private float z;
+	/**
+	 * Position of asteroid
+	 */
+	private Vector2 position;
 	
-	private float a;
+	/**
+	 * Angle, huh
+	 */
+	private float angle;
 	
+	/**
+	 * Size
+	 */
 	private float size;
 	
+	/**
+	 * Asteroid poly + texture model id (such models may potentialy be reused)
+	 */
 	private String modelId;
 	
+	/**
+	 * Asteroid sprite overlay
+	 */
 	private Sprite sprite;
 	
+	/**
+	 * Underlying polygon model with navigation and ambulation helpers.
+	 */
 	private PolygonalModel model;
 	
 	public Asteroid()
@@ -41,25 +56,22 @@ public class Asteroid
 
 	}
 
-	/**
-	 * @return
-	 */
-	public PolygonalModel getModel()
-	{
-		return model;
-	}
+	public PolygonalModel getModel() { return model; }
 
 	public String getName() { return name; }
 
-	public float getAngle()	{ return a;	}
-	public float getX()	{ return x;	}
-	public float getY()	{ return y;	}
+	public float getAngle()	{ return angle;	}
+	public Vector2 getPosition() { return position;	}
 	public float getSize() { return size; }
 	
+	/**
+	 * This is required to initialize sprite and model
+	 * @param factory
+	 */
 	public void init(GameFactory factory)
 	{
 		model = factory.loadAsteroidModel( this, modelId );
-		sprite = factory.createSprite(modelId, x, y, size, size, a, model.getOrigin());
+		sprite = factory.createSprite( modelId, position, model.getOrigin(), size, size, angle );
 	}
 	
 	/**

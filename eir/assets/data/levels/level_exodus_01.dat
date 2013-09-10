@@ -16,20 +16,23 @@
 				
 				{ 
 				  "name" : "sad_head_02",
-				  "x":"200",  "y":"200", "z":"0", "a" : "-250",
+				  "position" : { "x":"200",  "y":"200" },
+				  "angle" : "-250",
 				  "size" : "200",
 				  "modelId" : "asteroid_head_02"
 				},
 				{  
 				  "name" : "sad_head_01",
-				  "x":"50",  "y":"0", "z":"0", "a" : "0",
+				  "position" : { "x":"50",  "y":"0"}, 
+				  "angle" : "0",
 				  "size" : "50",				 
 				  "modelId" : "asteroid_head_01"
 				  
 				},				  
 				{ 
 				  "name" : "sad_head_04",
-				  "x":"250",  "y":"-100", "z":"0", "a" : "0",
+				  "position" : { "x":"250",  "y":"-100" },
+				  "angle" : "0",
 				  "size" : "100",
 				  "modelId" : "asteroid_head_04"
 				}				  

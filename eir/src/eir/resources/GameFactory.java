@@ -75,11 +75,15 @@ public class GameFactory
 		RigidBodyModel bodyModel = model.rigidBodies.get( 0 );
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 		
-		return new PolygonalModel( navMesh, bodyModel.origin, vertices, asteroid.getSize(), asteroid.getX(), asteroid.getY(), asteroid.getAngle());
+		return new PolygonalModel( 
+				navMesh, bodyModel.origin, vertices, 
+				asteroid.getSize(), 
+				asteroid.getPosition(), 
+				asteroid.getAngle());
 
 	} 
 	
-	public Sprite createSprite(String modelId, float x, float y, float width, float height, float degrees, Vector2 origin)
+	public Sprite createSprite(String modelId, Vector2 position, Vector2 origin, float width, float height, float degrees)
 	{
 		Texture texture = loadTexture( createImagePath(modelId) );
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -97,7 +101,7 @@ public class GameFactory
 		
 		sprite.setRotation( degrees );
 		
-		sprite.setPosition( x-realOX, y-realOY );
+		sprite.setPosition( position.x-realOX, position.y-realOY );
 		
 		return sprite;
 	}
