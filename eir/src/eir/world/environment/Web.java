@@ -45,13 +45,15 @@ public class Web
 	{
 		Asteroid sourceAst = source.getAsteroid();
 		Asteroid targetAst = target.getAsteroid();
-		System.out.println(source.getX()+ " "+source.getY());
-		Vector2 src = Vector2.tmp.set( sourceAst.getX() + sourceAst.getModel().getSprite().getWidth()*(source.getX()-0.5f), 
-				 					   sourceAst.getY() + sourceAst.getModel().getSprite().getHeight()*(source.getY()-0.5f) );
-
-		Vector2 tar = Vector2.tmp2.set( targetAst.getX() + targetAst.getModel().getSprite().getWidth()*(target.getX()-0.5f), 
-				   					    targetAst.getY() + targetAst.getModel().getSprite().getHeight()*(target.getY()-0.5f) );
-
+		
+		Vector2 src = Vector2.tmp .set( source.getX() - 0.5f, source.getY() - 0.5f).rotate(sourceAst.getAngle()).add(0.5f,0.5f);
+		Vector2 tar = Vector2.tmp2.set( target.getX() - 0.5f, target.getY() - 0.5f).rotate(targetAst.getAngle()).add(0.5f,0.5f);
+		
+		
+		src.set( sourceAst.getX() + (src.x - 0.5f)*sourceAst.getModel().getSprite().getWidth(), 
+				 sourceAst.getY() + (src.y - 0.5f)*sourceAst.getModel().getSprite().getHeight() );
+		tar.set( targetAst.getX() + (tar.x - 0.5f)*targetAst.getModel().getSprite().getWidth(), 
+				 targetAst.getY() + (tar.y - 0.5f)*targetAst.getModel().getSprite().getHeight() );
 		
 		sourceSprite = new Sprite( new TextureRegion(this.sourceTexture, 512, 256) );
 		targetSprite = new Sprite( new TextureRegion(this.targetTexture, 512, 256) );
