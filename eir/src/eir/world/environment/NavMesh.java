@@ -6,6 +6,8 @@ package eir.world.environment;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -32,5 +34,30 @@ public class NavMesh
 	{
 		na.addNeighbour(nb);
 		nb.addNeighbour(na);
+	}
+	
+	/**
+	 * Debug rendering method
+	 * @param shape
+	 */
+	public void draw(ShapeRenderer shape)
+	{
+		shape.setColor( 1, 1, 1, 1 );
+		for(NavNode srcNode : nodes)
+		{
+			shape.begin(ShapeType.Circle);
+				shape.circle( srcNode.getPoint().x, srcNode.getPoint().y, 1 );
+			shape.end();
+			
+			for(NavNode tarNode : srcNode.getNeighbors())
+			{
+
+				shape.begin(ShapeType.Line);
+					shape.line( srcNode.getPoint().x, srcNode.getPoint().y, tarNode.getPoint().x, tarNode.getPoint().y);
+				shape.end();
+			
+			}
+		}
+		
 	}
 }

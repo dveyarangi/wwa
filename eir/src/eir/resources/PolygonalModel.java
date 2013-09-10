@@ -96,26 +96,5 @@ public class PolygonalModel
 	{
 		return origin;
 	}
-	
-	/**
-	 * Debug rendering method
-	 * @param shape
-	 */
-	public void draw(ShapeRenderer shape)
-	{
-		shape.setColor( 1, 1, 1, 1 );
-		for(int idx = 0; idx < vertices.length; idx ++)
-		{
-			Vector2 a = vertices[idx];
-			Vector2 b = vertices[(idx+1)%vertices.length];
-			shape.begin(ShapeType.Line);
-				shape.line( a.x, a.y, b.x, b.y );
-			shape.end();
-			
-			shape.begin(ShapeType.Circle);
-				shape.circle( a.x, a.y, 1 );
-			shape.end();
-		}
-		
-	}
+
 }

@@ -148,4 +148,13 @@ public class GameFactory
 	{
 		Gdx.app.log( TAG, message);
 	}
+
+
+	/**
+	 * 
+	 */
+	public NavMesh getNavMesh()
+	{
+		return navMesh;
+	}
 }

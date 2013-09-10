@@ -47,5 +47,13 @@ public class NavNode
 	{
 		neighbours.add( node );
 	}
+
+	/**
+	 * @return
+	 */
+	public Set <NavNode> getNeighbors()
+	{
+		return neighbours;
+	}
 	
 }

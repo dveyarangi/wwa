@@ -140,10 +140,7 @@ public class GameScreen extends AbstractScreen
 		
 		debugGrid.render( shapeRenderer );
 		
-		for(Asteroid asteroid : level.getAsteroids())
-		{
-			asteroid.getModel().draw( shapeRenderer);
-		}
+		navMesh.draw( shapeRenderer);
 		
 		debugRenderer.render( physicsWorld, camera.combined );
 	}

@@ -49,7 +49,7 @@ public class Level
 		
 		for( Web web : webs )
 		{
-			web.init();
+			web.init( factory );
 		}
 	}
 
