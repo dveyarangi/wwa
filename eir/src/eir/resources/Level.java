@@ -2,14 +2,11 @@ package eir.resources;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.physics.box2d.Body;
 
 import eir.world.Asteroid;
-import eir.world.environment.Web;
+import eir.world.Web;
 
 public class Level
 {
@@ -40,14 +37,14 @@ public class Level
 		return webs;
 	}
 	/**
+	 * @param factory  
 	 * 
 	 */
-	public void init()
+	public void init( GameFactory factory )
 	{
 		for(Asteroid asteroid : asteroids)
 		{
-			Body body = asteroid.getModel().getBody();
-			body.setTransform( asteroid.getX(), asteroid.getY(), asteroid.getAngle() );
+			asteroid.init( factory );
 		}
 		
 		for( Web web : webs )

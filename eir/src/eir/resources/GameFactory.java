@@ -12,14 +12,11 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+import eir.resources.BodyLoader.Model;
+import eir.resources.BodyLoader.RigidBodyModel;
 import eir.world.Asteroid;
-import eir.world.environment.Web;
 
 
 /**
@@ -28,6 +25,8 @@ import eir.world.environment.Web;
  */
 public class GameFactory
 {
+	
+	public static final String TAG = GameFactory.class.getSimpleName();
 	
 	private static final String MODELS_PATH = "models/";
 	
@@ -67,50 +66,34 @@ public class GameFactory
 			.toString();
 	}
 	
-	public PolygonalModel loadModel(String modelId, int size) 
+	public PolygonalModel loadAsteroidModel(Asteroid asteroid, String modelId) 
 	{
-		System.out.println("Loading model " + modelId);
+		String modelFile = createBodyPath(modelId);
+		log("Loading asteroid model file [" + modelFile + "]");
 		
-		// 0. Create a loader for the file saved from the editor.
-		BodyLoader.readModel(Gdx.files.internal(createBodyPath(modelId)).readString());
-//	    BodyLoader loader = new BodyLoader();
-	 
-	    // 1. Create a BodyDef, as usual.
-	    BodyDef bd = new BodyDef();
-//	    bd.position.set(x, y);
-	    bd.type = BodyType.StaticBody;
-	 
-	    // 2. Create a FixtureDef, as usual.
-	    FixtureDef fd = new FixtureDef();
-	    fd.density = 1;
-	    fd.friction = 0.5f;
-	    fd.restitution = 0.3f;
-	 
-	    // 3. Create a Body, as usual.
-	    Body body = world.createBody(bd);
+		Model model = BodyLoader.readModel( Gdx.files.internal( modelFile ).readString() );
+		RigidBodyModel bodyModel = model.rigidBodies.get( 0 );
+		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
+		
+		return new PolygonalModel( bodyModel.origin, vertices, asteroid.getSize(), asteroid.getX(), asteroid.getY(), asteroid.getAngle());
 
-	    Vector2 origin = new Vector2();
-	    
-	    // 4. Create the body fixture automatically by using the loader.
-//	    loader.attachFixture(body, modelId, fd, origin, size);
-	    
-	    Sprite sprite = createSprite(createImagePath( modelId ));
-
-	    sprite.setSize(size, size);
-		sprite.setOrigin( origin.x, origin.y );
-
-	    return new PolygonalModel( origin, body, sprite );
 	} 
 	
-	public Sprite createSprite(String textureName)
+	public Sprite createSprite(String modelId, float x, float y, float width, float height, float degrees)
 	{
-		Texture texture = loadTexture( textureName );
+		Texture texture = loadTexture( createImagePath(modelId) );
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
+		TextureRegion region = new TextureRegion(texture);
 		
 		Sprite sprite = new Sprite(region);
-//		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
+		float scaleX = width/region.getRegionWidth();
+		float scaleY = height/region.getRegionHeight();
+		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
+		sprite.setScale( scaleX, scaleY );
+		sprite.setRotation( degrees );
+		sprite.setPosition( x-sprite.getWidth()/2, y-sprite.getHeight()/2 );
+//		sprite.setPosition( x, y );
 		
 		return sprite;
 	}
@@ -145,17 +128,24 @@ public class GameFactory
 	{
 		Texture texture = textureCache.get( textureFile );
 		if(texture == null)
+		{
 			texture = new Texture(Gdx.files.internal(textureFile));
-		
+			log("Loaded texture [" + textureFile + "]" );
+		}
 		return texture;
 	}
 	
 	public void dispose()
 	{
+		log("Disposing textures");
 		for(Texture texture : textureCache.values())
 		{
 			texture.dispose();
 		}
 	}
 
+	private void log(String message)
+	{
+		Gdx.app.log( TAG, message);
+	}
 }

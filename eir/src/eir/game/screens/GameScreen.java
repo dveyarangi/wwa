@@ -19,7 +19,7 @@ import eir.input.UIInputProcessor;
 import eir.resources.GameFactory;
 import eir.resources.Level;
 import eir.world.Asteroid;
-import eir.world.environment.Web;
+import eir.world.Web;
 import eir.world.unit.Spider;
 
 /**
@@ -73,7 +73,7 @@ public class GameScreen extends AbstractScreen
 
 
 		level = gameFactory.loadLevel( "data/levels/level_exodus_01.dat" );
-		level.init();
+		level.init(gameFactory);
 		
 		camController = new CameraController(camera, level);
 		
@@ -109,7 +109,7 @@ public class GameScreen extends AbstractScreen
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
 		{
-			asteroid.getModel().render(batch);
+			asteroid.draw(batch);
 		}
 		
 		for( Web web : level.getWebs() )

@@ -167,19 +167,16 @@ public class LevelLoader
 	{
 		final LoadingContext context = new LoadingContext();
 		
-		final Gson rawGson = new GsonBuilder()
+		final Gson rawGson = new Gson();/*Builder()
 		.registerTypeAdapter( PolygonalModel.class, new JsonDeserializer<PolygonalModel>()
 		{
 			@Override
 			public PolygonalModel deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
 			{
-				JsonObject object = elem.getAsJsonObject();
-				String modelId = object.get("modelId").getAsString();
-				int size = object.get("size").getAsInt();
-				
-				return factory.loadModel(  modelId, size );
+				String modelId = elem.getAsString();
+				return factory.loadModel( modelId );
 			}
-		}).create();
+		}).create();*/
 		
 		Gson gson = new GsonBuilder()
 			.registerTypeAdapter( Asteroid.class, new JsonDeserializer<Asteroid>()

@@ -136,7 +136,7 @@ public class Spider
 		if(asteroid != null)
 		{
 			Vector2 force;
-			if(stickyForce == null)
+/*			if(stickyForce == null)
 			{
 				force = gravityForce.set( 
 						asteroid.getModel().getBody().getPosition().x - chassis.getPosition().x, 
@@ -153,7 +153,7 @@ public class Spider
 //				System.out.println("using sticky : " + force);
 			}
 //			System.out.println("position: " + chassis.getPosition());
-			chassis.applyForce( force, chassis.getPosition() );
+			chassis.applyForce( force, chassis.getPosition() );*/
 		}
 		
 //		System.out.println(stickyForce);
@@ -188,7 +188,7 @@ public class Spider
 		@Override
 		public void postSolve(Contact contact, ContactImpulse impulse)
 		{
-			if(contact.getFixtureA().getBody() != asteroid.getModel().getBody()
+/*			if(contact.getFixtureA().getBody() != asteroid.getModel().getBody()
 			&& contact.getFixtureB().getBody() != asteroid.getModel().getBody())
 				return;
 			
@@ -200,7 +200,7 @@ public class Spider
 //			System.out.println( "contact: " + worldManifold.getPoints()[0].x + "," + worldManifold.getPoints()[0].y );
 //			System.out.println( worldManifold.getNormal().x + "," + worldManifold.getNormal().y );
 			stickyForce = new Vector2(contactNormal.x, contactNormal.y).mul( -GRAVITY );
-			stickTimeRemaining = STICK_DURATION;
+			stickTimeRemaining = STICK_DURATION;*/
 		}
 	}
 }

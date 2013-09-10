@@ -181,7 +181,7 @@ public class BodyLoader {
         
         public static class ShapeModel {
         	private ShapeType type;
-        	private List<Vector2> vertices;
+        	public Vector2 [] vertices;
         }
 
         public static class CircleModel {

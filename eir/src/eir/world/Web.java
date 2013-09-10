@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eir.world.environment;
+package eir.world;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.world.Asteroid;
 
 /**
  * @author dveyarangi
@@ -50,10 +49,10 @@ public class Web
 		Vector2 tar = Vector2.tmp2.set( target.getX() - 0.5f, target.getY() - 0.5f).rotate(targetAst.getAngle()).add(0.5f,0.5f);
 		
 		
-		src.set( sourceAst.getX() + (src.x - 0.5f)*sourceAst.getModel().getSprite().getWidth(), 
-				 sourceAst.getY() + (src.y - 0.5f)*sourceAst.getModel().getSprite().getHeight() );
-		tar.set( targetAst.getX() + (tar.x - 0.5f)*targetAst.getModel().getSprite().getWidth(), 
-				 targetAst.getY() + (tar.y - 0.5f)*targetAst.getModel().getSprite().getHeight() );
+		src.set( sourceAst.getX() + (src.x - 0.5f)*sourceAst.getSize(), 
+				 sourceAst.getY() + (src.y - 0.5f)*sourceAst.getSize() );
+		tar.set( targetAst.getX() + (tar.x - 0.5f)*targetAst.getSize(), 
+				 targetAst.getY() + (tar.y - 0.5f)*targetAst.getSize() );
 		
 		sourceSprite = new Sprite( new TextureRegion(this.sourceTexture, 512, 256) );
 		targetSprite = new Sprite( new TextureRegion(this.targetTexture, 512, 256) );
