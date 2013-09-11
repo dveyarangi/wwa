@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import yarangi.numbers.RandomUtil;
+import aurelienribon.tweenengine.TweenManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -12,9 +13,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 
 import eir.debug.CoordinateGrid;
 import eir.game.EirGame;
@@ -42,13 +40,8 @@ public class GameScreen extends AbstractScreen
 	
 	private OrthographicCamera camera;
 	private CameraController camController;
-	private SpriteBatch batch;
-
-	private static final Vector2 GRAVITY = Vector2.Zero;
-
-	private World physicsWorld;
-	private Box2DDebugRenderer debugRenderer;
 	
+	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
 	
 	private GameFactory gameFactory;
@@ -64,6 +57,8 @@ public class GameScreen extends AbstractScreen
 
 	private CoordinateGrid debugGrid;
 	
+	private TweenManager tween;
+	
 	public GameScreen(EirGame game)
 	{
 		super( game );
@@ -76,13 +71,11 @@ public class GameScreen extends AbstractScreen
 		
 		shapeRenderer = new ShapeRenderer();
 		
-		physicsWorld = new World( GRAVITY, true/* sleep */);
-
-		debugRenderer = new Box2DDebugRenderer(true, true, false, true, true);
-		
 		this.navMesh = new NavMesh();
 		
 		this.gameFactory = new GameFactory( navMesh );
+		
+		this.tween = new TweenManager();
 		
 //		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
 
@@ -101,11 +94,13 @@ public class GameScreen extends AbstractScreen
 		
 		// infest Nir:
 		for(int i = 0; i < 15; i ++)
+		{
 			spiders.add(new Spider( gameFactory, level.getAsteroids().get(2), 
 					RandomUtil.N( 10 ) + 5, // size 
 					RandomUtil.N( 25 ), // location
 					(RandomUtil.N(2)==1? 1:-1) *(RandomUtil.R( 20 )+5) ) // speed
 			);
+		}
 	}
 
 	@Override
@@ -114,10 +109,10 @@ public class GameScreen extends AbstractScreen
 		super.render( delta );
 		camController.cameraStep(delta);
 		
+		tween.update( delta );
+		
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
-		
-		physicsWorld.step( delta, 3,1 );
 		
 		// setting renderers to camera view:
 		// TODO: those are copying matrix arrays, maybe there is a lighter way to do this
@@ -157,8 +152,6 @@ public class GameScreen extends AbstractScreen
 		debugGrid.render( shapeRenderer );
 		
 		navMesh.draw( shapeRenderer);
-		
-		debugRenderer.render( physicsWorld, camera.combined );
 	}
 
 	@Override
