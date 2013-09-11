@@ -138,6 +138,7 @@ public class GameFactory
 		if(texture == null)
 		{
 			texture = new Texture(Gdx.files.internal(textureFile));
+			textureCache.put(textureFile, texture);
 			log("Loaded texture [" + textureFile + "]" );
 		}
 		return texture;
