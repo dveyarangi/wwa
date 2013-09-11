@@ -149,7 +149,7 @@ public class PolygonalModel
 		int idx = ((int) surfaceIdx) % len;
 		
 		// offset scaled by edge length:
-		float scaledOffset = (normalSurfaceIdx( surfaceIdx ) - idx) * lengths[idx];
+		float scaledOffset = ( surfaceIdx - idx) * lengths[idx];
 		
 		// adding edges lenghts until we are past the stepLen:
 		stepLen -= lengths[idx] - scaledOffset;
@@ -165,7 +165,11 @@ public class PolygonalModel
 			stepLen -= lengths[nidx];
 		}
 		
-		return (lengths[nidx] + stepLen) / lengths[nidx] + nidx;
+		float newSurfaceIdx = (lengths[nidx] + stepLen) / lengths[nidx] + nidx;
+		if(newSurfaceIdx < 0)
+			newSurfaceIdx += len;
+		
+		return newSurfaceIdx;
 	}
 	/**
 	 * retrieves a point on the surface of the polygon, where fraction specifies
@@ -178,7 +182,7 @@ public class PolygonalModel
 		int idx = getIdx(surfaceIdx);
 		
 		// surface idx offset from the floor vertex:
-		float offset = normalSurfaceIdx(surfaceIdx) - idx;
+		float offset = surfaceIdx - idx;
 		
 		// offset scaled by edge length:
 		float scaledOffset = offset * lengths[idx];
