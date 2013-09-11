@@ -26,14 +26,14 @@ Tasks ahead
 Project layout
 --------------
 * eir - game core resources and code
-	** assets - all resources folder
-		*** levels - level description file and level-specific resources
-		*** models - game element resourses - images, mesh files, etc
-		*** skins - user interface elements
-	** libs 
-		*** dev - development-time libraries, sources, profiling, etc
-		*** main - runtime libraries
-	** src - sources, duh
+	- assets - all resources folder
+		+ levels - level description file and level-specific resources
+		+ models - game element resourses - images, mesh files, etc
+		+ skins - user interface elements
+	- libs 
+		+ dev - development-time libraries, sources, profiling, etc
+		+ main - runtime libraries
+	- src - sources, duh
 
 * eir-desktop - desktop main 
 
@@ -44,11 +44,11 @@ Project layout
 * eir-ios - ios main 
 
 * eir-workbench - tools and place to store work in progress
-	** images - raw images that need processing
-	** lib - tools and their dependencies
-	** objects - ready to use resources (most of them are already in eir/assets)
-	** src - more tools
-	** uiskin - huh, unify, dunno
+	- images - raw images that need processing
+	- lib - tools and their dependencies
+	- objects - ready to use resources (most of them are already in eir/assets)
+	- src - more tools
+	- uiskin - huh, unify, dunno
 	
 Tools	
 -----
