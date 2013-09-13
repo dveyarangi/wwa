@@ -10,7 +10,6 @@ import java.util.List;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.sun.org.apache.bcel.internal.generic.SWAP;
 
 /**
  * @author dveyarangi
@@ -20,7 +19,7 @@ public class NavMesh
 {
 	private List <NavNode> nodes;
 	
-	private NavNode[][] routes; // predecessors
+	private NavNode[][] routes;
 	
 	public NavMesh()
 	{
