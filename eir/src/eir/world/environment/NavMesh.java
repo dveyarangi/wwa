@@ -47,11 +47,8 @@ public class NavMesh
 			mesh.linkNodes( mesh.nodes.get(a), mesh.nodes.get(b) );
 		}
 		
-//		long start = System.currentTimeMillis();
 		mesh.init();
-//		
-//		System.out.println(System.currentTimeMillis()-start);
-//		
+		
 		for( int i=0 ; i<20 ; i++ )
 		{
 			int a=0, b=0;
@@ -140,15 +137,6 @@ public class NavMesh
 			}
 		}
 		
-//		System.out.println("-----------------");
-//		p(lastdists, n);
-//		
-//		System.out.println("-----------------");
-//		p(dists, n);
-//		
-//		System.out.println("-----------------");
-//		System.out.println("-----------------");
-		
 		for( int k=0 ; k<n ; k++ )
 		{
 			for( int i=0 ; i<n ; i++ )
@@ -171,12 +159,6 @@ public class NavMesh
 				}
 			}
 			
-			
-//			System.out.println("-----------------");
-			p(dists, n);
-//			System.out.println();
-			p2(preds, n);
-			
 			// swap buffers
 			tmppreds = lastpreds;
 			lastpreds = preds;
@@ -190,41 +172,41 @@ public class NavMesh
 		routes = lastpreds;
 	}
 	
-	private void p( float[][] dists, int n )
-	{
-		for( int i=0 ; i<n ; i++ )
-		{
-			for( int j=0 ; j<n ; j++ )
-			{
-				if( dists[i][j]==Float.MAX_VALUE )
-				{
-					System.out.print("inf\t");
-				}
-				else
-					System.out.printf( "%.2f\t",dists[i][j]);
-				
-			}
-			System.out.println();
-		}
-	}
-	
-	private void p2( NavNode[][] dists, int n )
-	{
-		for( int i=0 ; i<n ; i++ )
-		{
-			for( int j=0 ; j<n ; j++ )
-			{
-				if( dists[i][j]==null )
-				{
-					System.out.print("n\t");
-				}
-				else
-					System.out.print( dists[i][j].index+"\t");
-				
-			}
-			System.out.println();
-		}
-	}
+//	private void p( float[][] dists, int n )
+//	{
+//		for( int i=0 ; i<n ; i++ )
+//		{
+//			for( int j=0 ; j<n ; j++ )
+//			{
+//				if( dists[i][j]==Float.MAX_VALUE )
+//				{
+//					System.out.print("inf\t");
+//				}
+//				else
+//					System.out.printf( "%.2f\t",dists[i][j]);
+//				
+//			}
+//			System.out.println();
+//		}
+//	}
+//	
+//	private void p2( NavNode[][] dists, int n )
+//	{
+//		for( int i=0 ; i<n ; i++ )
+//		{
+//			for( int j=0 ; j<n ; j++ )
+//			{
+//				if( dists[i][j]==null )
+//				{
+//					System.out.print("n\t");
+//				}
+//				else
+//					System.out.print( dists[i][j].index+"\t");
+//				
+//			}
+//			System.out.println();
+//		}
+//	}
 	
 	/**
 	 * find the shortest route between node a and b
