@@ -4,8 +4,8 @@
 package eir.world.environment;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -19,7 +19,62 @@ public class NavMesh
 {
 	private List <NavNode> nodes;
 	
-	private NavNode[][] routes;
+	private ArrayList<NavNode>[][] routes;
+	
+	private int nextNodeIndex = 0;
+	
+	public static void main( String args[] )
+	{
+		NavMesh mesh = new NavMesh();
+		
+		Random r = new Random();
+		r.setSeed(22222);
+		
+		for( int i=0 ; i<5 ; i++ )
+		{
+			mesh.insertNode(new Vector2(r.nextInt()%10, r.nextInt()%10));
+		}
+		
+		for( int i=0 ; i<5 ; i++ )
+		{
+			int a=0, b=0;
+			while( a==b )
+			{
+				a = Math.abs(r.nextInt()%5);
+				b = Math.abs(r.nextInt()%5);
+			}
+			
+			mesh.linkNodes( mesh.nodes.get(a), mesh.nodes.get(b) );
+		}
+		
+//		long start = System.currentTimeMillis();
+		mesh.init();
+//		
+//		System.out.println(System.currentTimeMillis()-start);
+//		
+		for( int i=0 ; i<20 ; i++ )
+		{
+			int a=0, b=0;
+			while( a==b )
+			{
+				a = Math.abs(r.nextInt()%5);
+				b = Math.abs(r.nextInt()%5);
+			}
+			System.out.println("from "+a+" to "+b);
+			
+			String s = "";
+			
+			List<NavNode> l = mesh.getShortestRoute(mesh.nodes.get(a), mesh.nodes.get(b));
+			if( l!=null )
+			{
+				for( NavNode n : l )
+				{
+					s+= n.index+",";
+				}
+				System.out.println(s);
+			}
+		}
+	}
 	
 	public NavMesh()
 	{
@@ -28,7 +83,7 @@ public class NavMesh
 	
 	public NavNode insertNode(Vector2 point)
 	{
-		NavNode node = new NavNode(point);
+		NavNode node = new NavNode(point, nextNodeIndex++);
 		nodes.add( node );
 		return node;
 	}
@@ -47,18 +102,32 @@ public class NavMesh
 		float[][] lastdists = new float[n][n];
 		float[][] tmpdists = null;
 		
-		NavNode[][] preds = new NavNode[n][n];
-		NavNode[][] lastpreds = new NavNode[n][n];
-		NavNode[][] tmppreds = null;
+		@SuppressWarnings("unchecked")
+		ArrayList<NavNode>[][] preds = new ArrayList[n][n];
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<NavNode>[][] lastpreds = new ArrayList[n][n];
+		
+		ArrayList<NavNode>[][] tmppreds = null;
 		
 		for( int i=0 ; i<n ; i++ )
 		{
 			for( int j=0 ; j<n ; j++ )
-			{
-				dists[i][j] = Float.MAX_VALUE;
-				lastdists[i][j] = Float.MAX_VALUE;
-				preds[i][j] = null;
-				lastpreds[i][j] = null;
+			{	
+				if( i!=j )
+				{
+					dists[i][j] = Float.MAX_VALUE;
+					lastdists[i][j] = Float.MAX_VALUE;
+				}
+				else
+				{
+					dists[i][j] = 0;
+					preds[i][j] = new ArrayList<NavNode>();
+					preds[i][j].add(nodes.get(i));
+					lastdists[i][j] = 0;
+					lastpreds[i][j] = new ArrayList<NavNode>();
+					lastpreds[i][j].add(nodes.get(i));
+				}
 			}
 		}
 		
@@ -66,15 +135,34 @@ public class NavMesh
 		{
 			for( NavNode neighbour : cur.getNeighbors() )
 			{
-				lastdists[nodes.indexOf(cur)][nodes.indexOf(neighbour)] = cur.getPoint().dst(neighbour.getPoint());
-				lastpreds[nodes.indexOf(cur)][nodes.indexOf(neighbour)] = neighbour;
+				int i = cur.index;
+				int j = neighbour.index;
+				
+				lastdists[i][j] = cur.getPoint().dst(neighbour.getPoint());
+				dists[i][j] = cur.getPoint().dst(neighbour.getPoint());
+				
+				if( lastpreds[i][j]==null ) 
+					lastpreds[i][j] = new ArrayList<NavNode>();
+				
+				lastpreds[i][j].add(cur);
+				lastpreds[i][j].add(neighbour);
 			}
 		}
+		
+//		System.out.println("-----------------");
+//		p(lastdists, n);
+//		
+//		System.out.println("-----------------");
+//		p(dists, n);
+//		
+//		System.out.println("-----------------");
+//		System.out.println("-----------------");
 		
 		for( int k=0 ; k<n ; k++ )
 		{
 			for( int i=0 ; i<n ; i++ )
 			{
+//				System.out.println();
 				for( int j=0 ; j<n ; j++ )
 				{
 					float contendor = lastdists[i][k] + lastdists[k][j];
@@ -82,10 +170,28 @@ public class NavMesh
 					if( lastdists[i][j]>contendor )
 					{
 						dists[i][j] = contendor;
-						preds[i][j] = nodes.get(k);
+						
+						if( preds[i][j]==null ) 
+							preds[i][j] = new ArrayList<NavNode>();
+						else
+							preds[i][j].clear();
+						
+						preds[i][j].add( nodes.get(i) );
+						preds[i][j].addAll(lastpreds[k][j]);
+					}
+					else
+					{
+						dists[i][j] = lastdists[i][j];
+						preds[i][j] = lastpreds[i][j];
 					}
 				}
 			}
+			
+			
+//			System.out.println("-----------------");
+//			p(dists, n);
+//			System.out.println();
+//			p2(preds, n);
 			
 			// swap buffers
 			tmppreds = lastpreds;
@@ -100,6 +206,23 @@ public class NavMesh
 		routes = lastpreds;
 	}
 	
+//	private void p( float[][] dists, int n )
+//	{
+//		for( int i=0 ; i<n ; i++ )
+//		{
+//			for( int j=0 ; j<n ; j++ )
+//			{
+//				if( dists[i][j]==Float.MAX_VALUE )
+//				{
+//					System.out.print("inf\t");
+//				}
+//				else
+//					System.out.printf( "%.2f\t",dists[i][j]);
+//				
+//			}
+//			System.out.println();
+//		}
+//	}
 	
 	/**
 	 * find the shortest route between node a and b
@@ -108,24 +231,8 @@ public class NavMesh
 	 * @return ordered list starting at a and ending at b using shortest route / null if no route
 	 */
 	public List<NavNode> getShortestRoute( NavNode a, NavNode b )
-	{
-		int aindex = nodes.indexOf(a);
-		int bindex = nodes.indexOf(b);
-		
-		if( routes[aindex][bindex]==null )
-			return null;
-		
-		
-		List<NavNode> route = new LinkedList<NavNode>();
-		
-		while( routes[aindex][bindex] != b )
-		{
-			route.add(routes[aindex][bindex]);
-		}
-		
-		route.add(b);
-		
-		return route;
+	{		
+		return routes[a.index][b.index];
 	}
 	
 	
