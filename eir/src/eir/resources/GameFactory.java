@@ -82,6 +82,12 @@ public class GameFactory
 				asteroid.getAngle());
 
 	} 
+/*	public Sprite createSprite(String textureFile, Vector2 position, Vector2 origin, float width, float height, float degrees)
+	{
+		Sprite sprite = loadTexture( textureFile );
+	sprite.setOrigin( sprite.getWidth()/2, sprite.getHeight()/2 );
+	sprite.setScale( width / sprite.getWidth(), height/ );
+	}*/
 	
 	public Sprite createSprite(String modelId, Vector2 position, Vector2 origin, float width, float height, float degrees)
 	{
