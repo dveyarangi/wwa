@@ -67,7 +67,12 @@ public class Ant implements Poolable
 	private float size = 5;
 	private Vector2 velocity = new Vector2();
 	private float angle;
-	private float speed = 4f;
+	
+	/**
+	 * TODO: raise contact if u raise the speed,
+	 * otherwise they will go astray. 
+	 */
+	private float speed = 10f;
 	
 	private static float CONTACT_DISTANCE = 2;
 	
