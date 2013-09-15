@@ -192,7 +192,16 @@ public class GameScreen extends AbstractScreen
 	public void dispose()
 	{
 		super.dispose();
+		
+		// dispose sprite batch renderer:
+		batch.dispose();
+		
+		// dispose shape renderer:
+		shapeRenderer.dispose();
+		
+		// dispose textures and stuff:
 		gameFactory.dispose();
+		
 	}
 
 }
