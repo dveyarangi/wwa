@@ -3,15 +3,22 @@
  */
 package eir.resources;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import eir.resources.BodyLoader.Model;
 import eir.resources.BodyLoader.RigidBodyModel;
@@ -162,6 +169,26 @@ public class GameFactory
 	private void log(String message)
 	{
 		Gdx.app.log( TAG, message);
+	}
+	
+	NumberFormat ANIMA_NUMBERING = new DecimalFormat( "0000" );
+	
+	public Animation loadAnimation(String atlasName, String regionName)
+	{
+		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(atlasName));
+		
+		int size = atlas.getRegions().size;
+		TextureRegion[] frames = new TextureRegion[size];
+
+		for(int fidx = 0; fidx < size; fidx ++)
+		{
+			frames[fidx] = atlas.findRegion( regionName + "." + ANIMA_NUMBERING.format(fidx) );
+			if(frames[fidx] == null)
+				throw new IllegalArgumentException( "Region array " + regionName + " was not found in atlas " + atlasName );
+		}
+		
+		Animation animation = new Animation( 0.05f, frames );
+		return animation;
 	}
 
 

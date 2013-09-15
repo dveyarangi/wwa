@@ -24,6 +24,10 @@ public class NavMesh
 		nodes = new ArrayList<NavNode> ();
 	}
 	
+	public int getNodesNum() { return nodes.size(); }
+	
+	public NavNode getNode(int idx) { return nodes.get( idx ); }
+	
 	public NavNode insertNode(Vector2 point)
 	{
 		NavNode node = new NavNode(point, nextNodeIndex++);

@@ -15,9 +15,9 @@ public class TexturePacker
 {
 	  public static void main (String[] args) throws Exception {
 	         TexturePacker2.
-	         process("drawing\\uiskin", // source dir
-	        		 "assets\\skins",  // target dir
-	        		 "uiskin" // atlas name
+	         process("anima\\blob", // source dir
+	        		 "anima\\blob",  // target dir
+	        		 "ant" // atlas name
 	        		 );
 	 }
 }

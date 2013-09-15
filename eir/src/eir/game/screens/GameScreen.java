@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
@@ -25,6 +26,8 @@ import eir.resources.Level;
 import eir.world.Asteroid;
 import eir.world.Web;
 import eir.world.environment.NavMesh;
+import eir.world.environment.NavNode;
+import eir.world.unit.Ant;
 import eir.world.unit.Spider;
 
 /**
@@ -54,6 +57,7 @@ public class GameScreen extends AbstractScreen
 	private NavMesh navMesh;
 	
 	private List <Spider> spiders = new LinkedList <Spider> ();
+	private List <Ant> ants = new LinkedList <Ant> ();
 
 	private CoordinateGrid debugGrid;
 	
@@ -101,6 +105,13 @@ public class GameScreen extends AbstractScreen
 					(RandomUtil.N(2)==1? 1:-1) *(RandomUtil.R( 20 )+5) ) // speed
 			);
 		}
+		for(int i = 0; i < 15; i ++)
+		{
+			NavNode startingNode = navMesh.getNode( RandomUtil.N( navMesh.getNodesNum() ) );
+			Ant ant = Ant.getAnt( gameFactory, startingNode );
+			
+			ants.add( ant );
+		}
 	}
 
 	@Override
@@ -141,6 +152,12 @@ public class GameScreen extends AbstractScreen
 		{
 			spider.update(delta);
 			spider.draw( batch );
+		}
+		
+		for(Ant ant : ants)
+		{
+//			ants.update(delta);
+			ant.draw( delta, batch );
 		}
 		
 		batch.end();
