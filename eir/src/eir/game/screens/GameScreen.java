@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 
 import eir.debug.CoordinateGrid;
+import eir.debug.DebugRenderer;
 import eir.game.EirGame;
 import eir.input.CameraController;
 import eir.input.GameGestureListener;
@@ -47,6 +48,8 @@ public class GameScreen extends AbstractScreen
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
 	
+	private DebugRenderer debug;
+	
 	private GameFactory gameFactory;
 	
 
@@ -54,14 +57,9 @@ public class GameScreen extends AbstractScreen
 
 	private float w, h;
 	
-	private NavMesh navMesh;
-	
 	private List <Spider> spiders = new LinkedList <Spider> ();
 	private List <Ant> ants = new LinkedList <Ant> ();
 
-	private CoordinateGrid debugGrid;
-	
-	private TweenManager tween;
 	
 	public GameScreen(EirGame game)
 	{
@@ -75,13 +73,7 @@ public class GameScreen extends AbstractScreen
 		
 		shapeRenderer = new ShapeRenderer();
 		
-		this.navMesh = new NavMesh();
-		
-		this.gameFactory = new GameFactory( navMesh );
-		
-		this.tween = new TweenManager();
-		
-//		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
+		this.gameFactory = new GameFactory();
 
 
 		level = gameFactory.loadLevel( "data/levels/level_exodus_01.dat" );
@@ -94,7 +86,6 @@ public class GameScreen extends AbstractScreen
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
 		inputMultiplexer.addProcessor( new GameInputProcessor(camController, level) );
 		
-		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
 		
 		// infest Nir:
 		for(int i = 0; i < 15; i ++)
@@ -105,13 +96,22 @@ public class GameScreen extends AbstractScreen
 					(RandomUtil.N(2)==1? 1:-1) *(RandomUtil.R( 20 )+5) ) // speed
 			);
 		}
-		for(int i = 0; i < 15; i ++)
+		
+		
+		for(int i = 0; i < 100; i ++)
 		{
-			NavNode startingNode = navMesh.getNode( RandomUtil.N( navMesh.getNodesNum() ) );
+			NavNode startingNode = gameFactory.getNavMesh().getNode( RandomUtil.N( gameFactory.getNavMesh().getNodesNum() ) );
 			Ant ant = Ant.getAnt( gameFactory, startingNode );
 			
 			ants.add( ant );
 		}
+		
+		log("Calculatin all pair stuff");
+		gameFactory.getNavMesh().init();
+		log("Done calculatin all pair stuff");
+
+		
+		debug = new DebugRenderer( gameFactory, level, camera );
 	}
 
 	@Override
@@ -119,8 +119,6 @@ public class GameScreen extends AbstractScreen
 	{
 		super.render( delta );
 		camController.cameraStep(delta);
-		
-		tween.update( delta );
 		
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
@@ -156,7 +154,7 @@ public class GameScreen extends AbstractScreen
 		
 		for(Ant ant : ants)
 		{
-//			ants.update(delta);
+			ant.update(delta);
 			ant.draw( delta, batch );
 		}
 		
@@ -166,9 +164,7 @@ public class GameScreen extends AbstractScreen
 		//////////////////////////////////////////////////////////////////
 		// debug rendering
 		
-		debugGrid.render( shapeRenderer );
-		
-		navMesh.draw( shapeRenderer);
+		debug.draw(shapeRenderer);
 	}
 
 	@Override

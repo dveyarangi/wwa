@@ -15,20 +15,19 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import eir.resources.BodyLoader.Model;
 import eir.resources.BodyLoader.RigidBodyModel;
 import eir.world.Asteroid;
+import eir.world.environment.FloydWarshalRoutes;
 import eir.world.environment.NavMesh;
 
 
 /**
+ * TODO: this class becomes crumbled, split to rendering and in-game stuff (them probably should go to level)
+ * 
  * @author dveyarangi
- *
  */
 public class GameFactory
 {
@@ -41,12 +40,16 @@ public class GameFactory
 	 * Loaded textures by name (filename, actually)
 	 */
 	private final Map <String, Texture> textureCache = new HashMap <String, Texture> (); 
+	/**
+	 * Loaded textures by name (filename, actually)
+	 */
+	private final Map <String, TextureAtlas> atlasCache = new HashMap <String, TextureAtlas> (); 
 	
 	private final NavMesh navMesh;
 	
-	public GameFactory(NavMesh navMesh)
+	public GameFactory()
 	{
-		this.navMesh = navMesh;
+		this.navMesh = new FloydWarshalRoutes();
 	}
 	
 
@@ -175,7 +178,12 @@ public class GameFactory
 	
 	public Animation loadAnimation(String atlasName, String regionName)
 	{
-		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal(atlasName));
+		TextureAtlas atlas = atlasCache.get( atlasName );
+		if(atlas == null)
+		{
+			atlas = new TextureAtlas(Gdx.files.internal(atlasName));
+			atlasCache.put( atlasName, atlas);
+		}
 		
 		int size = atlas.getRegions().size;
 		TextureRegion[] frames = new TextureRegion[size];

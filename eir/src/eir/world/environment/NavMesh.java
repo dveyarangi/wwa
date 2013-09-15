@@ -4,17 +4,19 @@
 package eir.world.environment;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
  * @author dveyarangi
  *
  */
-public class NavMesh
+public abstract class NavMesh
 {
 	protected List <NavNode> nodes;
 	private int nextNodeIndex = 0;	
@@ -23,6 +25,8 @@ public class NavMesh
 	{
 		nodes = new ArrayList<NavNode> ();
 	}
+	
+	public abstract void init();
 	
 	public int getNodesNum() { return nodes.size(); }
 	
@@ -41,27 +45,6 @@ public class NavMesh
 		nb.addNeighbour(na);
 	}
 	
-	
-	/**
-	 * Debug rendering method
-	 * @param shape
-	 */
-	public void draw(ShapeRenderer shape)
-	{
-		shape.setColor( 0, 1, 0, 0.5f );
-		for(NavNode srcNode : nodes)
-		{
-			shape.begin(ShapeType.Circle);
-				shape.circle( srcNode.getPoint().x, srcNode.getPoint().y, 1 );
-			shape.end();
-			
-			for(NavNode tarNode : srcNode.getNeighbors())
-			{
-				shape.begin(ShapeType.Line);
-					shape.line( srcNode.getPoint().x, srcNode.getPoint().y, tarNode.getPoint().x, tarNode.getPoint().y);
-				shape.end();
-			}
-		}
-		
-	}
+	public abstract Route getShortestRoute( NavNode from, NavNode to );
+
 }

@@ -35,7 +35,7 @@ public class CoordinateGrid
 		this.halfWidth = width/2;
 	}
 
-	public void render( ShapeRenderer grid )
+	public void draw( ShapeRenderer grid )
 	{
 		
 		GLCommon gl = Gdx.gl;

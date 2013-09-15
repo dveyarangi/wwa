@@ -6,19 +6,22 @@ package eir.world.environment;
  * @author Ni
  *
  */
-public class FloydWarshalRoutes
+public class FloydWarshalRoutes extends NavMesh
 {
-	private final NavMesh navMesh;
 	protected NavNode[][] routes;
 	
-	public FloydWarshalRoutes( NavMesh navMesh )
+	public FloydWarshalRoutes()
 	{
-		this.navMesh = navMesh;
+	}
+	
+	public void init()
+	{
+		calculate();
 	}
 	
 	public void calculate()
 	{
-		int n = navMesh.nodes.size();
+		int n = nodes.size();
 		
 		float[][] dists = new float[n][n];
 		float[][] lastdists = new float[n][n];
@@ -43,14 +46,14 @@ public class FloydWarshalRoutes
 				else
 				{
 					dists[i][j] = 0;
-					preds[i][j] = navMesh.nodes.get(i);
+					preds[i][j] = nodes.get(i);
 					lastdists[i][j] = 0;
-					lastpreds[i][j] = navMesh.nodes.get(i);
+					lastpreds[i][j] = nodes.get(i);
 				}
 			}
 		}
 		
-		for( NavNode cur : navMesh.nodes )
+		for( NavNode cur : nodes )
 		{
 			for( NavNode neighbour : cur.getNeighbors() )
 			{
