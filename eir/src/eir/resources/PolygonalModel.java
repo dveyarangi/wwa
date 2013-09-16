@@ -98,6 +98,7 @@ public class PolygonalModel
 		nodes = new NavNode[len];
 
 		NavNode currNode = navMesh.insertNode( vertices[0] );
+		int startingIdx = currNode.index;
 		NavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
 		{
@@ -115,7 +116,11 @@ public class PolygonalModel
 			
 			nodes[idx] = currNode;
 			prevNode = currNode;
-			currNode = navMesh.insertNode( b );
+			
+			if((idx+1)%len != 0)
+				currNode = navMesh.insertNode( b );
+			else
+				currNode = navMesh.getNode(startingIdx);
 			navMesh.linkNodes( currNode, prevNode );
 			
 			maxSurfaceIdx ++;

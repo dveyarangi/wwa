@@ -3,6 +3,8 @@
  */
 package eir.debug;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -27,6 +29,9 @@ public class DebugRenderer
 	
 	private BitmapFont font;
 	
+	private boolean drawCoordinateGrid = false;
+	private boolean drawNavMesh = true;
+	
 	public DebugRenderer(GameFactory factory, Level level, OrthographicCamera camera)
 	{
 		this.factory = factory;
@@ -39,14 +44,22 @@ public class DebugRenderer
 	 */
 	public void draw(SpriteBatch batch, ShapeRenderer shape)
 	{
-		debugGrid.draw( batch, shape );
+		if(Gdx.input.isKeyPressed(Keys.J))
+			drawCoordinateGrid =! drawCoordinateGrid;
+		if(Gdx.input.isKeyPressed(Keys.K))
+			drawNavMesh =! drawNavMesh;
 		
-		drawNavMesh( batch, shape );
+		if(drawCoordinateGrid)
+			debugGrid.draw( batch, shape );
+		
+		if(drawNavMesh)
+			drawNavMesh( batch, shape );
 		
 	}
 	
 	private void drawNavMesh(SpriteBatch batch, ShapeRenderer shape)
 	{
+		
 		NavMesh navMesh = factory.getNavMesh();
 		NavNode srcNode;
 		

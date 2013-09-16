@@ -98,10 +98,10 @@ public class GameScreen extends AbstractScreen
 		}
 		
 		// increasing infestation
-		for(int i = 0; i < 10; i ++)
+		for(int i = 0; i < 200; i ++)
 		{
 			NavNode startingNode = gameFactory.getNavMesh().getNode( 
-					RandomUtil.N( 33 ) + 60 );
+					RandomUtil.N( 30 ) + 60 );
 			Ant ant = Ant.getAnt( gameFactory, startingNode );
 			
 			ants.add( ant );
