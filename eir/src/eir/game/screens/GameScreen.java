@@ -4,19 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import yarangi.numbers.RandomUtil;
-import aurelienribon.tweenengine.TweenManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 
-import eir.debug.CoordinateGrid;
-import eir.debug.DebugRenderer;
+import eir.debug.Debug;
 import eir.game.EirGame;
 import eir.input.CameraController;
 import eir.input.GameGestureListener;
@@ -26,7 +23,6 @@ import eir.resources.GameFactory;
 import eir.resources.Level;
 import eir.world.Asteroid;
 import eir.world.Web;
-import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 import eir.world.unit.Ant;
 import eir.world.unit.Spider;
@@ -47,8 +43,6 @@ public class GameScreen extends AbstractScreen
 	
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
-	
-	private DebugRenderer debug;
 	
 	private GameFactory gameFactory;
 	
@@ -98,7 +92,7 @@ public class GameScreen extends AbstractScreen
 		}
 		
 		// increasing infestation
-		for(int i = 0; i < 200; i ++)
+		for(int i = 0; i < 50; i ++)
 		{
 			NavNode startingNode = gameFactory.getNavMesh().getNode( 
 					RandomUtil.N( 30 ) + 60 );
@@ -108,7 +102,7 @@ public class GameScreen extends AbstractScreen
 		}
 
 		
-		debug = new DebugRenderer( gameFactory, level, camera );
+		Debug.init( gameFactory, level, camera );
 	}
 
 	@Override
@@ -147,7 +141,7 @@ public class GameScreen extends AbstractScreen
 		//////////////////////////////////////////////////////////////////
 		// debug rendering
 		
-		debug.draw(batch, shapeRenderer);
+		Debug.debug.draw(batch, shapeRenderer);
 		
 		batch.begin();
 		for(Spider spider : spiders)

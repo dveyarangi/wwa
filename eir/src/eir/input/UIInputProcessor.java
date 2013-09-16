@@ -1,6 +1,9 @@
 package eir.input;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+
+import eir.debug.Debug;
 
 
 /**
@@ -13,7 +16,12 @@ public class UIInputProcessor implements InputProcessor
 	@Override
 	public boolean keyDown(int keycode)
 	{
-		// TODO Auto-generated method stub
+		if(keycode == Keys.J)
+			Debug.toggleCoordinateGrid();
+		if(keycode == Keys.K)
+			Debug.toggleNavMesh();
+		
+			
 		return false;
 	}
 

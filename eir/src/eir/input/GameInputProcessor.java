@@ -97,5 +97,7 @@ public class GameInputProcessor implements InputProcessor
 									 	   amount);
 		return true;
 	}
+	
+	public OrthographicCamera getCamera() { return camera; }
 
 }

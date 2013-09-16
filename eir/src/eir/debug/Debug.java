@@ -3,8 +3,6 @@
  */
 package eir.debug;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,8 +18,11 @@ import eir.world.environment.NavNode;
  * @author dveyarangi
  *
  */
-public class DebugRenderer
+public class Debug
 {
+	
+	public static Debug debug;
+	
 	
 	private GameFactory factory;
 
@@ -32,7 +33,12 @@ public class DebugRenderer
 	private boolean drawCoordinateGrid = false;
 	private boolean drawNavMesh = true;
 	
-	public DebugRenderer(GameFactory factory, Level level, OrthographicCamera camera)
+	public static void init(GameFactory factory, Level level, OrthographicCamera camera)
+	{
+		debug = new Debug( factory, level, camera );
+	}
+	
+	private Debug(GameFactory factory, Level level, OrthographicCamera camera)
 	{
 		this.factory = factory;
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
@@ -44,10 +50,6 @@ public class DebugRenderer
 	 */
 	public void draw(SpriteBatch batch, ShapeRenderer shape)
 	{
-		if(Gdx.input.isKeyPressed(Keys.J))
-			drawCoordinateGrid =! drawCoordinateGrid;
-		if(Gdx.input.isKeyPressed(Keys.K))
-			drawNavMesh =! drawNavMesh;
 		
 		if(drawCoordinateGrid)
 			debugGrid.draw( batch, shape );
@@ -94,4 +96,7 @@ public class DebugRenderer
 		}
 		shape.end();
 	}
+	
+	public static void toggleNavMesh() { debug.drawNavMesh =! debug.drawNavMesh; }
+	public static void toggleCoordinateGrid() { debug.drawCoordinateGrid =! debug.drawCoordinateGrid; }
 }
