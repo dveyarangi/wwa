@@ -53,7 +53,7 @@ public class Ant implements Poolable
 			ant.animation = factory.loadAnimation( 
 					RandomUtil.oneOf(2) ?
 							"anima//ant//blob_black.atlas" : 
-							"anima//ant//blob_white.atlas", 
+							"anima//ant//blob_black.atlas", 
 							"blob" );
 
 		return ant;
@@ -91,7 +91,7 @@ public class Ant implements Poolable
 	
 	private Ant()
 	{
-		stateTime = 0;
+		stateTime = RandomUtil.R( 10 );
 	}
 
 	@Override

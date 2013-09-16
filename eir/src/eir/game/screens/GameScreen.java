@@ -142,7 +142,14 @@ public class GameScreen extends AbstractScreen
 		{
 			web.draw( batch );
 		}
+		batch.end();
 		
+		//////////////////////////////////////////////////////////////////
+		// debug rendering
+		
+		debug.draw(batch, shapeRenderer);
+		
+		batch.begin();
 		for(Spider spider : spiders)
 		{
 			spider.update(delta);
@@ -157,11 +164,6 @@ public class GameScreen extends AbstractScreen
 		
 		batch.end();
 		
-		
-		//////////////////////////////////////////////////////////////////
-		// debug rendering
-		
-		debug.draw(batch, shapeRenderer);
 	}
 
 	@Override

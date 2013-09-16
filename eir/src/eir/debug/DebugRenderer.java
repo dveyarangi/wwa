@@ -49,22 +49,26 @@ public class DebugRenderer
 	{
 		NavMesh navMesh = factory.getNavMesh();
 		NavNode srcNode;
+		
+		shape.begin(ShapeType.FilledCircle);
 		for(int fidx = 0; fidx < navMesh.getNodesNum(); fidx ++)
 		{
 			shape.setColor( 0, 1, 0, 1f );
 			srcNode = navMesh.getNode( fidx );
 			
-			shape.begin(ShapeType.FilledCircle);
 				shape.filledCircle( srcNode.getPoint().x, srcNode.getPoint().y, 1 );
-			shape.end();
 		}	
+		shape.end();
+		
+		batch.begin();
 		for(int fidx = 0; fidx < navMesh.getNodesNum(); fidx ++)
 		{
 			srcNode = navMesh.getNode( fidx );
-			batch.begin();
 			font.draw( batch, String.valueOf( fidx ), srcNode.getPoint().x+1, srcNode.getPoint().y+1 );
-			batch.end();
 		}
+		batch.end();
+		
+		shape.begin(ShapeType.Line);
 		for(int fidx = 0; fidx < navMesh.getNodesNum(); fidx ++)
 		{
 			srcNode = navMesh.getNode( fidx );
@@ -72,10 +76,9 @@ public class DebugRenderer
 			shape.setColor( 0, 1, 0, 0.5f );
 			for(NavNode tarNode : srcNode.getNeighbors())
 			{
-				shape.begin(ShapeType.Line);
-					shape.line( srcNode.getPoint().x, srcNode.getPoint().y, tarNode.getPoint().x, tarNode.getPoint().y);
-				shape.end();
+				shape.line( srcNode.getPoint().x, srcNode.getPoint().y, tarNode.getPoint().x, tarNode.getPoint().y);
 			}
 		}
+		shape.end();
 	}
 }
