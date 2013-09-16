@@ -76,9 +76,9 @@ public class GameScreen extends AbstractScreen
 		this.gameFactory = new GameFactory();
 
 
-		level = gameFactory.loadLevel( "data/levels/level_exodus_01.dat" );
+		level = gameFactory.loadLevel( "levels/level_exodus_01.dat" );
 		level.init(gameFactory);
-		
+
 		camController = new CameraController(camera, level);
 		
 		inputMultiplexer = new InputMultiplexer();
@@ -97,18 +97,15 @@ public class GameScreen extends AbstractScreen
 			);
 		}
 		
-		
-		for(int i = 0; i < 100; i ++)
+		// increasing infestation
+		for(int i = 0; i < 10; i ++)
 		{
-			NavNode startingNode = gameFactory.getNavMesh().getNode( RandomUtil.N( gameFactory.getNavMesh().getNodesNum() ) );
+			NavNode startingNode = gameFactory.getNavMesh().getNode( 
+					RandomUtil.N( 33 ) + 60 );
 			Ant ant = Ant.getAnt( gameFactory, startingNode );
 			
 			ants.add( ant );
 		}
-		
-		log("Calculatin all pair stuff");
-		gameFactory.getNavMesh().init();
-		log("Done calculatin all pair stuff");
 
 		
 		debug = new DebugRenderer( gameFactory, level, camera );
@@ -164,7 +161,7 @@ public class GameScreen extends AbstractScreen
 		//////////////////////////////////////////////////////////////////
 		// debug rendering
 		
-		debug.draw(shapeRenderer);
+		debug.draw(batch, shapeRenderer);
 	}
 
 	@Override

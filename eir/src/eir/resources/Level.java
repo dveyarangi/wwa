@@ -1,16 +1,19 @@
 package eir.resources;
 
-import java.util.Collection;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Asteroid;
 import eir.world.Web;
+import eir.world.environment.NavNode;
 
 public class Level
 {
 	private String name;
+
 	
 	private int width;
 	private int height;
@@ -20,6 +23,10 @@ public class Level
 	private List <Web> webs;
 	
 	private Texture backgroundTexture;
+	
+	private float initialZoom;
+	private int initialNodeIdx;
+	private NavNode initialNode;
 	
 	/**
 	 * @return
@@ -42,6 +49,7 @@ public class Level
 	 */
 	public void init( GameFactory factory )
 	{
+		
 		for(Asteroid asteroid : asteroids)
 		{
 			asteroid.init( factory );
@@ -51,6 +59,17 @@ public class Level
 		{
 			web.init( factory );
 		}
+
+		// nav mesh initiated after this point
+		////////////////////////////////////////////////////
+		
+		log("Calculatin all pair stuff");
+		factory.getNavMesh().init();
+		log("Done calculatin all pair stuff");
+		
+		initialNode = factory.getNavMesh().getNode( initialNodeIdx );
+		
+
 	}
 
 	/**
@@ -69,5 +88,16 @@ public class Level
 	 * @return
 	 */
 	public float getWidth() { return width; }
+
+	/**
+	 * @return
+	 */
+	public float getInitialZoom() { return initialZoom; }
+	public Vector2 getInitialPoint() { return initialNode.getPoint(); }
+	
+	private void log(String message)
+	{
+		Gdx.app.log( name, message);
+	}
 
 }

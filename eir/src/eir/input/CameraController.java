@@ -33,6 +33,10 @@ public class CameraController
 	public CameraController( OrthographicCamera camera, Level level )
 	{
 		this.camera = camera;
+		
+		camera.position.x = level.getInitialPoint().x;
+		camera.position.y = level.getInitialPoint().y;
+//		camera.zoom = level.getInitialZoom();
 		this.level = level;
 	}
 	

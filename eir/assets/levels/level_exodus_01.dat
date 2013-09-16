@@ -8,7 +8,11 @@
 			# length of the game world in tiles
 			"height" : "1024",
 			
-			"backgroundTexture" : "data/levels/level_exodus_01.png",
+			"initialNodeIdx" : 89,
+			
+			"initialZoom" : 0.2,
+			
+			"backgroundTexture" : "levels/level_exodus_01.png",
 			
 			########################################
 			# asteroids
