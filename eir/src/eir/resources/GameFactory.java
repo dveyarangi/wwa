@@ -12,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -52,6 +53,25 @@ public class GameFactory
 		this.navMesh = new FloydWarshalRoutes();
 	}
 	
+	
+	public void dispose()
+	{
+		log("Disposing textures");
+		for(Texture texture : textureCache.values())
+		{
+			texture.dispose();
+		}
+		log("Disposing atlases");
+		for(TextureAtlas atlas : atlasCache.values())
+		{
+			atlas.dispose();
+		}	
+	}
+
+	private void log(String message)
+	{
+		Gdx.app.log( TAG, message);
+	}
 
 	/**
 	 * @param string
@@ -160,23 +180,9 @@ public class GameFactory
 		return texture;
 	}
 	
-	public void dispose()
-	{
-		log("Disposing textures");
-		for(Texture texture : textureCache.values())
-		{
-			texture.dispose();
-		}
-	}
-
-	private void log(String message)
-	{
-		Gdx.app.log( TAG, message);
-	}
-	
 	NumberFormat ANIMA_NUMBERING = new DecimalFormat( "0000" );
 	
-	public Animation loadAnimation(String atlasName, String regionName)
+	public TextureAtlas loadTextureAtlas(String atlasName)
 	{
 		TextureAtlas atlas = atlasCache.get( atlasName );
 		if(atlas == null)
@@ -184,6 +190,13 @@ public class GameFactory
 			atlas = new TextureAtlas(Gdx.files.internal(atlasName));
 			atlasCache.put( atlasName, atlas);
 		}
+
+		return atlas;
+	}
+	
+	public Animation loadAnimation(String atlasName, String regionName)
+	{
+		TextureAtlas atlas = loadTextureAtlas( atlasName );
 		
 		int size = atlas.getRegions().size;
 		TextureRegion[] frames = new TextureRegion[size];
@@ -207,4 +220,25 @@ public class GameFactory
 	{
 		return navMesh;
 	}
+
+
+	/**
+	 * TODO: cache!
+	 * @param string
+	 * @return
+	 */
+	public BitmapFont loadFont(String fontName, float scale)
+	{
+		BitmapFont font =  new BitmapFont(
+				 Gdx.files.internal(fontName + ".fnt"), 
+				 Gdx.files.internal(fontName + ".png"),
+				 false // wat is flip?
+				 );
+		 
+		 font.setScale( scale );
+		 
+		 return font;
+	}
+	
+
 }

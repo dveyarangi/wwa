@@ -6,6 +6,7 @@ package eir.world.unit;
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -35,6 +36,10 @@ public class Ant implements Poolable
 	
 	public static Ant getAnt(GameFactory factory, NavNode node)
 	{
+		if(font == null)
+		{
+			 font = factory.loadFont("skins//fonts//default", 0.2f);
+		}
 		Ant ant = pool.obtain();
 		if(ant.position == null)
 			ant.position = new Vector2();
@@ -55,6 +60,9 @@ public class Ant implements Poolable
 		pool.free( ant );
 	}
 	
+	private static BitmapFont font;
+
+	
 	private Vector2 position;
 	
 	private NavMesh mesh;
@@ -68,8 +76,9 @@ public class Ant implements Poolable
 	private Vector2 velocity = new Vector2();
 	private float angle;
 	
+	private float screamTime;
 	/**
-	 * TODO: raise contact if u raise the speed,
+	 * TODO: raise CONTACT_DISTANCE if u raise the speed,
 	 * otherwise they will go astray. 
 	 */
 	private float speed = 10f;
@@ -79,12 +88,12 @@ public class Ant implements Poolable
 	private Ant()
 	{
 		stateTime = 0;
-
 	}
 
 	@Override
 	public void reset()
 	{
+		screamTime = stateTime;
 		route = null;
 		nextNode = null;
 		velocity.set( 0,0 );
@@ -97,17 +106,28 @@ public class Ant implements Poolable
 			return;
 		if(nextNode == null)
 		{
+			// either we reached next node, or we do not have target
 			if(route == null || !route.hasNext())
 			{
+				if(route != null)
+					screamTime = stateTime;
+				// pick a random target
 				NavNode targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
 				route = mesh.getShortestRoute( currNode, targetNode );
 			}
 			
+			
+			// updating course to the next node
 			nextNode = route.next();
 			
-			updateCourse();
+			// update course:
+			velocity.set( nextNode.getPoint() ).sub( position ).nor().mul( speed );
+			angle = velocity.angle();
 		}
 		
+		// moving ant toward the next nav node 
+		// TODO: this is bad method, because if ant speed is too big it may skip 
+		// the next node and never return to the navmesh
 		position.add( velocity.tmp().mul( delta ) );
 		
 		if(position.tmp().sub( nextNode.getPoint() ).len2() < CONTACT_DISTANCE)
@@ -117,13 +137,7 @@ public class Ant implements Poolable
 		}
 
 	}
-	
-	private void updateCourse()
-	{
-		velocity.set( nextNode.getPoint() ).sub( position ).nor().mul( speed );
-		angle = velocity.angle();
-	}
-	
+
 	public void draw(float delta, SpriteBatch batch)
 	{
 		TextureRegion region = animation.getKeyFrame( stateTime, true );
@@ -134,6 +148,9 @@ public class Ant implements Poolable
 				size/region.getRegionWidth(), 
 				size/region.getRegionWidth(), angle);
 		stateTime += delta;
+		
+		if(stateTime - screamTime < 1)
+			font.draw( batch, "Yarr!", position.x, position.y );
 	}
 	
 	public void setTargetNode(NavNode targetNode)

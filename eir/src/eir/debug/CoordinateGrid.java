@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -35,7 +36,7 @@ public class CoordinateGrid
 		this.halfWidth = width/2;
 	}
 
-	public void draw( ShapeRenderer grid )
+	public void draw( SpriteBatch batch, ShapeRenderer grid )
 	{
 		
 		GLCommon gl = Gdx.gl;

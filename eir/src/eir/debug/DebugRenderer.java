@@ -4,6 +4,8 @@
 package eir.debug;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -23,35 +25,51 @@ public class DebugRenderer
 
 	private CoordinateGrid debugGrid;
 	
+	private BitmapFont font;
+	
 	public DebugRenderer(GameFactory factory, Level level, OrthographicCamera camera)
 	{
 		this.factory = factory;
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
+		font = factory.loadFont("skins//fonts//default", 0.05f);
 	}
 	/**
 	 * Debug rendering method
 	 * @param shape
 	 */
-	public void draw(ShapeRenderer shape)
+	public void draw(SpriteBatch batch, ShapeRenderer shape)
 	{
-		debugGrid.draw( shape );
+		debugGrid.draw( batch, shape );
 		
-		drawNavMesh(shape);
+		drawNavMesh( batch, shape );
 		
 	}
 	
-	private void drawNavMesh(ShapeRenderer shape)
+	private void drawNavMesh(SpriteBatch batch, ShapeRenderer shape)
 	{
 		NavMesh navMesh = factory.getNavMesh();
-		shape.setColor( 0, 1, 0, 0.5f );
+		NavNode srcNode;
 		for(int fidx = 0; fidx < navMesh.getNodesNum(); fidx ++)
 		{
-			NavNode srcNode = navMesh.getNode( fidx );
+			shape.setColor( 0, 1, 0, 1f );
+			srcNode = navMesh.getNode( fidx );
 			
-			shape.begin(ShapeType.Circle);
-				shape.circle( srcNode.getPoint().x, srcNode.getPoint().y, 1 );
+			shape.begin(ShapeType.FilledCircle);
+				shape.filledCircle( srcNode.getPoint().x, srcNode.getPoint().y, 1 );
 			shape.end();
-			
+		}	
+		for(int fidx = 0; fidx < navMesh.getNodesNum(); fidx ++)
+		{
+			srcNode = navMesh.getNode( fidx );
+			batch.begin();
+			font.draw( batch, String.valueOf( fidx ), srcNode.getPoint().x+1, srcNode.getPoint().y+1 );
+			batch.end();
+		}
+		for(int fidx = 0; fidx < navMesh.getNodesNum(); fidx ++)
+		{
+			srcNode = navMesh.getNode( fidx );
+
+			shape.setColor( 0, 1, 0, 0.5f );
 			for(NavNode tarNode : srcNode.getNeighbors())
 			{
 				shape.begin(ShapeType.Line);
