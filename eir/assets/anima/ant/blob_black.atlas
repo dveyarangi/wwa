@@ -1,5 +1,5 @@
 
-ant.png
+blob_black.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -46,7 +46,7 @@ blob.0005
   offset: 0, 0
   index: -1
 
-ant2.png
+blob_black2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -93,7 +93,7 @@ blob.0011
   offset: 0, 0
   index: -1
 
-ant3.png
+blob_black3.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none

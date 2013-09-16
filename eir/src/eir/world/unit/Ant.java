@@ -50,7 +50,11 @@ public class Ant implements Poolable
 		ant.position.set( node.getPoint().x, node.getPoint().y );
 		
 		if(ant.animation == null)
-			ant.animation = factory.loadAnimation( "anima//ant//ant.atlas", "blob" );
+			ant.animation = factory.loadAnimation( 
+					RandomUtil.oneOf(2) ?
+							"anima//ant//blob_black.atlas" : 
+							"anima//ant//blob_white.atlas", 
+							"blob" );
 
 		return ant;
 	}
