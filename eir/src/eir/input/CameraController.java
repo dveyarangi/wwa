@@ -73,7 +73,7 @@ public class CameraController
 				a.z = 0;
 			}
 			
-			if (camera.zoom > maxZoomOut )
+			if ( camera.zoom > maxZoomOut )
 			{
 				wasOutOfZoomOutBounds = true;
 				injectLinearImpulse(0, 0, (maxZoomOut - camera.zoom) );
@@ -86,12 +86,12 @@ public class CameraController
 				a.z = 0;
 			}
 			
-			if( camera.position.x<-level.getWidth()/2 )
+			if( camera.position.x < -level.getWidth()/2 )
 			{
 				wasOutOfXBounds = true;
 				injectLinearImpulse( (level.getWidth()/2-camera.position.x), 0, 0);
 			}
-			else if (camera.position.x> level.getWidth()/2)
+			else if ( camera.position.x > level.getWidth()/2 )
 			{
 				wasOutOfXBounds = true;
 				injectLinearImpulse( (level.getWidth()/2-camera.position.x*2), 0, 0);
@@ -127,9 +127,38 @@ public class CameraController
 		v.add( a.tmp().mul(delta) );
 		f.set(0, 0, 0);
 		
-		camera.zoom += v.z*delta + a.z*delta*delta/2;
+		float nextzoom = camera.zoom + v.z*delta + a.z*delta*delta/2;
+//		float nextx = camera.position.x + v.x*delta + a.x*delta*delta/2;
+//		float nexty = camera.position.y + v.y*delta + a.y*delta*delta/2;
+		
+		if( nextzoom < maxZoomOut && camera.zoom > maxZoomOut )
+			camera.zoom = maxZoomOut;
+		else
+			camera.zoom = nextzoom;
+		
 		camera.position.x += v.x*delta + a.x*delta*delta/2;
 		camera.position.y += v.y*delta + a.y*delta*delta/2;
+		
+//		if( nextx < -level.getWidth()/2 && camera.position.x > -level.getWidth()/2 )
+//			camera.position.x = -level.getWidth()/2;
+//		else
+//			camera.position.x= nextx;
+//		
+//		if( nextx > level.getWidth()/2 && camera.position.x < level.getWidth()/2 )
+//			camera.position.x = level.getWidth()/2;
+//		else
+//			camera.position.x= nextx;
+//		
+//		
+//		if( nexty < -level.getHeight()/2 && camera.position.y > -level.getHeight()/2 )
+//			camera.position.y = -level.getHeight()/2;
+//		else
+//			camera.position.y= nexty;
+//		
+//		if( nexty > level.getHeight()/2 && camera.position.y < level.getHeight()/2 )
+//			camera.position.y = level.getHeight()/2;
+//		else
+//			camera.position.y= nexty;
 		
 		camera.update();
 	}
