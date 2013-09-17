@@ -70,7 +70,7 @@ public class Ant implements Poolable
 	private Vector2 position;
 	
 	private NavMesh mesh;
-	private NavNode currNode, nextNode;
+	private NavNode currNode, nextNode, targetNode;
 	private Route route;
 	
 	private Animation animation;
@@ -116,7 +116,7 @@ public class Ant implements Poolable
 				if(route != null)
 					screamTime = stateTime;
 				// pick a random target
-				NavNode targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
+				targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
 				route = mesh.getShortestRoute( currNode, targetNode );
 			}
 			
@@ -154,11 +154,12 @@ public class Ant implements Poolable
 		stateTime += delta;
 		
 		if(stateTime - screamTime < 1)
-			font.draw( batch, "Yarr!", position.x, position.y );
+			font.draw( batch, "Yarr! Going to " + targetNode.index, position.x, position.y );
 	}
 	
 	public void setTargetNode(NavNode targetNode)
 	{
+		this.targetNode = targetNode;
 		route = mesh.getShortestRoute( currNode, targetNode);
 	}
 	

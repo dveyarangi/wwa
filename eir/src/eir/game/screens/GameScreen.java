@@ -141,6 +141,7 @@ public class GameScreen extends AbstractScreen
 		//////////////////////////////////////////////////////////////////
 		// debug rendering
 		
+		Debug.debug.update( delta );
 		Debug.debug.draw(batch, shapeRenderer);
 		
 		batch.begin();

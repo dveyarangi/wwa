@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.debug.Debug;
 import eir.world.Asteroid;
 import eir.world.Web;
 import eir.world.environment.NavNode;
@@ -63,9 +64,9 @@ public class Level
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
 		
-		log("Calculatin all pair stuff");
+		Debug.startTiming("navmesh");
 		factory.getNavMesh().init();
-		log("Done calculatin all pair stuff");
+		Debug.stopTiming("navmesh");
 		
 		initialNode = factory.getNavMesh().getNode( initialNodeIdx );
 		

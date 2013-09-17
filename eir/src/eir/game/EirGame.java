@@ -18,9 +18,7 @@ public class EirGame extends Game
     // whether we are in development mode
     public static final boolean DEV_MODE = true;
 
-    // a libgdx helper class that logs the current FPS each second
-    private FPSLogger fpsLogger;
-
+ 
     public EirGame()
     {
     }
@@ -32,8 +30,7 @@ public class EirGame extends Game
     {
         Gdx.app.log( LOG, "Creating game on " + Gdx.app.getType() );
 
-        // create the helper objects
-        fpsLogger = new FPSLogger();
+         
     }
 
     @Override
@@ -58,9 +55,6 @@ public class EirGame extends Game
     public void render()
     {
         super.render();
-
-        // output the current FPS
-        if( DEV_MODE ) fpsLogger.log();
     }
 
     @Override
