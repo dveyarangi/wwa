@@ -4,13 +4,9 @@
 package eir.world.environment;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
  * @author dveyarangi
@@ -32,9 +28,9 @@ public abstract class NavMesh
 	
 	public NavNode getNode(int idx) { return nodes.get( idx ); }
 	
-	public NavNode insertNode(Vector2 point)
+	public NavNode insertNode(Vector2 point, Vector2 rawPoint)
 	{
-		NavNode node = new NavNode(point, nextNodeIndex++);
+		NavNode node = new NavNode(point, rawPoint, nextNodeIndex++);
 		nodes.add( node );
 		return node;
 	}

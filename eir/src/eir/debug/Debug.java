@@ -50,7 +50,7 @@ public class Debug
 	private float [] deltas = new float [SAMPLES]; 
 	private float deltaPeak = 0;
 	private boolean isFirstBatch = true;
-    // create the helper objects
+    
     private FPSLogger fpsLogger = new FPSLogger();
 	
 	public static void init(GameFactory factory, Level level, OrthographicCamera camera)

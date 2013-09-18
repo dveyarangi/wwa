@@ -105,8 +105,10 @@ public class GameFactory
 		RigidBodyModel bodyModel = model.rigidBodies.get( 0 );
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 		
+		
+		
 		return new PolygonalModel( 
-				navMesh, bodyModel.origin, vertices, 
+				navMesh, bodyModel.origin, vertices, bodyModel.polygons,
 				asteroid.getSize(), 
 				asteroid.getPosition(), 
 				asteroid.getAngle());

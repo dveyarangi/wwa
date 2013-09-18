@@ -3,6 +3,15 @@
  */
 package eir.resources;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import yarangi.math.IVector2D;
+import yarangi.math.UnorderedPair;
+import yarangi.math.triangulation.Delaunay2D;
+import yarangi.math.triangulation.TriangleStore;
+
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.environment.NavMesh;
@@ -61,10 +70,11 @@ public class PolygonalModel
 	/**
 	 * @param navMesh 
 	 * @param origin 
+	 * @param polygons 
 	 * @param body
 	 * @param sprite
 	 */
-	public PolygonalModel(NavMesh navMesh, Vector2 origin, Vector2 [] rawVertices, float size, Vector2 position, float angle)
+	public PolygonalModel(NavMesh navMesh, Vector2 origin, Vector2 [] rawVertices, List<List<Vector2>> polygons, float size, Vector2 position, float angle)
 	{
 		super();
 		this.origin = origin;
@@ -97,7 +107,7 @@ public class PolygonalModel
 		
 		nodes = new NavNode[len];
 
-		NavNode currNode = navMesh.insertNode( vertices[0] );
+		NavNode currNode = navMesh.insertNode( vertices[0], rawVertices[0] );
 		int startingIdx = currNode.index;
 		NavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
@@ -118,13 +128,36 @@ public class PolygonalModel
 			prevNode = currNode;
 			
 			if((idx+1)%len != 0)
-				currNode = navMesh.insertNode( b );
+				currNode = navMesh.insertNode( b, rawVertices[(idx+1)%len] );
 			else
 				currNode = navMesh.getNode(startingIdx);
 			navMesh.linkNodes( currNode, prevNode );
 			
 			maxSurfaceIdx ++;
 		}
+		
+		Delaunay2D d2d = new Delaunay2D();
+		
+		for(List<Vector2> poly : polygons)
+		{
+			List <NavNode> polyNodes = new LinkedList <NavNode> ();
+			for(Vector2 polyPoint : poly)
+			{
+				for(NavNode node : nodes)
+				{
+					if(polyPoint.equals( node.getRawPoint() ))
+					{
+						polyNodes.add( node );
+					}
+				}
+			}
+			TriangleStore store = d2d.triangulate( polyNodes );
+			for(UnorderedPair<IVector2D> link : store.getLinks())
+			{
+				navMesh.linkNodes( (NavNode)link.getFirst(), (NavNode)link.getSecond() );
+			}
+		}
+
 	}
 	
 	/**
