@@ -66,11 +66,6 @@ public abstract class NavMesh
 	
 	public NavEdge getEdge(int node1Idx, int node2Idx)
 	{
-		int edgeIdx = getEdgeIdx( node1Idx, node2Idx );
-/*		if(!edges.contains( edgeIdx ))
-		{
-			throw new IllegalArgumentException("No edge between node idxs " + node1Idx + " and " + node2Idx );
-		}*/
 		return edges.get( getEdgeIdx( node1Idx, node2Idx ) );
 	}
 	public NavEdge getEdge(NavNode na, NavNode nb)
