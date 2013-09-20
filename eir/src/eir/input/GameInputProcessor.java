@@ -94,8 +94,8 @@ public class GameInputProcessor implements InputProcessor
 	{
 		if( !dragging )
 		{
-			camController.injectLinearImpulse(-amount*(lastx - camera.viewportWidth/2), 
-										 	   amount*(lasty - camera.viewportHeight/2), 
+			camController.injectLinearImpulse(-amount*(lastx - camera.viewportWidth/2)*2, 
+										 	   amount*(lasty - camera.viewportHeight/2)*2, 
 										 	   amount*1.2f);
 			return true;
 		}
