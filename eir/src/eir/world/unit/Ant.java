@@ -39,7 +39,7 @@ public class Ant implements Poolable
 	{
 		if(font == null)
 		{
-			 font = factory.loadFont("skins//fonts//default", 0.2f);
+			 font = factory.loadFont("skins//fonts//default", 0.05f);
 		}
 		Ant ant = pool.obtain();
 		if(ant.position == null)
@@ -109,8 +109,6 @@ public class Ant implements Poolable
 	
 	public void update(float delta)
 	{
-		float travelDistance = speed * delta + // the real travel distance 
-				nodeOffset;
 
 		if(nextNode == null)
 		{
@@ -128,10 +126,13 @@ public class Ant implements Poolable
 			route.next(); // skipping the source
 			nextNode = route.next(); // picking next
 			
-			
+			nodeOffset = 0;
 			velocity.set( nextNode.getPoint() ).sub( position ).nor().mul( speed );			
 			angle = velocity.angle();
 		}
+		
+		float travelDistance = speed * delta + // the real travel distance 
+				nodeOffset;
 		
 		NavEdge edge = mesh.getEdge( currNode, nextNode );
 		if(edge == null)
@@ -213,7 +214,9 @@ public class Ant implements Poolable
 		stateTime += delta;
 		
 		if(stateTime - screamTime < 1)
-			font.draw( batch, "Yarr! Going to " + targetNode.index, position.x, position.y );
+			font.draw( batch, "Yarr!", position.x, position.y );
+		if(targetNode != null)
+		font.draw( batch, String.valueOf( targetNode.index ), position.x+2, position.y-2 );
 	}
 	
 	public void setTargetNode(NavNode targetNode)

@@ -99,7 +99,7 @@ public class Debug
 		deltaPeak -= 0.00001f;
 		if(!isFirstBatch && delta > deltaPeak * 0.5)
 		{
-			log("Delta peak: " + delta);
+//			log("Delta peak: " + delta);
 //			deltaPeak *= 2;
 		}
 	}
