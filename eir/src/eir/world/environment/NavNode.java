@@ -107,4 +107,12 @@ public class NavNode implements IVector2D
 
 	@Override
 	public double y() {	return point.y; }
+	
+	public String toString()
+	{
+		return new StringBuilder()
+			.append("navnode [").append(index)
+			.append(" (").append(getPoint()).append(")]")
+			.toString();
+	}
 }

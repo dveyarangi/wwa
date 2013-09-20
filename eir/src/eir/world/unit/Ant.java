@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 import eir.resources.GameFactory;
+import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 import eir.world.environment.Route;
@@ -72,6 +73,8 @@ public class Ant implements Poolable
 	private NavMesh mesh;
 	private NavNode currNode, nextNode, targetNode;
 	private Route route;
+	// offset from current node on the nav edge
+	private float nodeOffset;
 	
 	private Animation animation;
 	private float stateTime;
@@ -105,6 +108,62 @@ public class Ant implements Poolable
 	}
 	
 	public void update(float delta)
+	{
+		float travelDistance = speed * delta + // the real travel distance 
+				nodeOffset;
+
+		if(nextNode == null)
+		{
+			// either we reached next node, or we do not have target
+			if(route == null || !route.hasNext())
+			{
+				if(route != null)
+					screamTime = stateTime;
+				// pick a random target
+				targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
+				route = mesh.getShortestRoute( currNode, targetNode );
+			}
+			
+			
+			route.next(); // skipping the source
+			nextNode = route.next(); // picking next
+			
+			
+			velocity.set( nextNode.getPoint() ).sub( position ).nor().mul( speed );			
+			angle = velocity.angle();
+		}
+		
+		NavEdge edge = mesh.getEdge( currNode, nextNode );
+		if(edge == null)
+		{
+			nextNode = null;
+			return;
+		}
+		
+		while(travelDistance > 0)
+		{
+			travelDistance -= edge.getLength();
+			if(travelDistance < 0)
+			{
+				velocity.set( nextNode.getPoint() ).sub( currNode.getPoint() ).nor().mul( speed );			
+				angle = velocity.angle();
+				break;
+			}
+			
+			currNode = nextNode;
+			if(!route.hasNext())
+			{
+				nextNode = null;
+				break;
+			}
+			
+			nextNode = route.next();
+		}
+		
+		nodeOffset = edge.getLength()+travelDistance;
+		position.set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
+	}
+/*	public void update(float delta)
 	{
 		if(delta > 1)
 			return;
@@ -140,7 +199,7 @@ public class Ant implements Poolable
 			nextNode = null;
 		}
 
-	}
+	}*/
 
 	public void draw(float delta, SpriteBatch batch)
 	{

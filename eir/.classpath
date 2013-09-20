@@ -12,5 +12,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/main/guava-13.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/main/tween-engine-api.jar" sourcepath="libs/dev/tween-engine-api-sources.jar"/>
 	<classpathentry kind="lib" path="libs/main/util-1.0.b18.jar"/>
+	<classpathentry kind="lib" path="libs/main/trove-3.0.0rc1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
