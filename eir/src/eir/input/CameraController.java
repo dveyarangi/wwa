@@ -16,19 +16,13 @@ public class CameraController
 	
 	private final Level level;
 	
-	// linear
-	private final Vector3 f = new Vector3(0,0,0); // force
 	private final Vector3 v = new Vector3(0,0,0); // velocity
 	private final Vector3 a = new Vector3(0,0,0); // acceleration
-	private final float b = 15; // Viscosity coefficient
+	private final float b = 7.5f; // Viscosity coefficient
 	private final float maxZoomOut = 2;
 	private final float maxZoomIn = 0.1f;
 	
 	private boolean underUserControl = false;
-	private boolean wasOutOfXBounds = false;
-	private boolean wasOutOfYBounds = false;
-	private boolean wasOutOfZoomOutBounds = false;
-	private boolean wasOutOfZoomInBounds = false;
 	
 	public CameraController( OrthographicCamera camera, Level level )
 	{
@@ -36,7 +30,7 @@ public class CameraController
 		
 		camera.position.x = level.getInitialPoint().x;
 		camera.position.y = level.getInitialPoint().y;
-//		camera.zoom = level.getInitialZoom();
+		camera.zoom = level.getInitialZoom();
 		this.level = level;
 	}
 	
@@ -49,7 +43,7 @@ public class CameraController
 	 */
 	public void injectLinearImpulse( float x, float y, float z )
 	{
-		f.add(x*100*camera.zoom, y*100*camera.zoom, z*100*camera.zoom);
+		v.add(x*camera.zoom, y*camera.zoom, z*camera.zoom);
 	}
 	
 	/**
@@ -62,103 +56,85 @@ public class CameraController
 		{
 			if( camera.zoom < maxZoomIn )
 			{
-				wasOutOfZoomInBounds = true;
-				injectLinearImpulse(0, 0, (maxZoomIn - camera.zoom)*10 );
+				injectLinearImpulse(0, 0, (maxZoomIn - camera.zoom)*100 );
 			}
-			else if ( wasOutOfZoomInBounds )
+			else if( camera.zoom > maxZoomOut )
 			{
-				wasOutOfZoomInBounds = false;
-				f.z = 0;
-				v.z = 0;
-				a.z = 0;
-			}
-			
-			if ( camera.zoom > maxZoomOut )
-			{
-				wasOutOfZoomOutBounds = true;
 				injectLinearImpulse(0, 0, (maxZoomOut - camera.zoom) );
-			}
-			else if ( wasOutOfZoomOutBounds )
-			{
-				wasOutOfZoomOutBounds = false;
-				f.z = 0;
-				v.z = 0;
-				a.z = 0;
 			}
 			
 			if( camera.position.x < -level.getWidth()/2 )
 			{
-				wasOutOfXBounds = true;
 				injectLinearImpulse( (level.getWidth()/2-camera.position.x), 0, 0);
 			}
 			else if ( camera.position.x > level.getWidth()/2 )
 			{
-				wasOutOfXBounds = true;
 				injectLinearImpulse( (level.getWidth()/2-camera.position.x*2), 0, 0);
-			}
-			else if ( wasOutOfXBounds )
-			{
-				wasOutOfXBounds = false;
-				f.x = 0;
-				v.x = 0;
-				a.x = 0;
 			}
 			
 			if( camera.position.y<-level.getHeight()/2 )
 			{
-				wasOutOfYBounds = true;
 				injectLinearImpulse( 0, (level.getHeight()/2-camera.position.y), 0);
 			}
-			else if(camera.position.y>level.getHeight()/2)
+			else if( camera.position.y>level.getHeight()/2 )
 			{
-				wasOutOfYBounds = true;
 				injectLinearImpulse( 0, (level.getHeight()/2-camera.position.y*2), 0);
-			}
-			else if ( wasOutOfYBounds )
-			{
-				wasOutOfYBounds = false;
-				f.y = 0;
-				v.y = 0;
-				a.y = 0;
 			}
 		}
 		
-		a.set( f.tmp().sub(v.tmp2().mul(b)) );
+		a.set( Vector3.tmp.set(0,0,0).sub(v.tmp2().mul(b)) );
 		v.add( a.tmp().mul(delta) );
-		f.set(0, 0, 0);
 		
 		float nextzoom = camera.zoom + v.z*delta + a.z*delta*delta/2;
-//		float nextx = camera.position.x + v.x*delta + a.x*delta*delta/2;
-//		float nexty = camera.position.y + v.y*delta + a.y*delta*delta/2;
+		float nextx = camera.position.x + v.x*delta + a.x*delta*delta/2;
+		float nexty = camera.position.y + v.y*delta + a.y*delta*delta/2;
 		
 		if( nextzoom < maxZoomOut && camera.zoom > maxZoomOut )
+		{
 			camera.zoom = maxZoomOut;
+			v.z = 0;
+			a.z = 0;
+		}
+		else if ( nextzoom > maxZoomIn && camera.zoom < maxZoomIn )
+		{
+			camera.zoom = maxZoomIn;
+			v.z = 0;
+			a.z = 0;
+		}
 		else
 			camera.zoom = nextzoom;
 		
-		camera.position.x += v.x*delta + a.x*delta*delta/2;
-		camera.position.y += v.y*delta + a.y*delta*delta/2;
 		
-//		if( nextx < -level.getWidth()/2 && camera.position.x > -level.getWidth()/2 )
-//			camera.position.x = -level.getWidth()/2;
-//		else
-//			camera.position.x= nextx;
-//		
-//		if( nextx > level.getWidth()/2 && camera.position.x < level.getWidth()/2 )
-//			camera.position.x = level.getWidth()/2;
-//		else
-//			camera.position.x= nextx;
-//		
-//		
-//		if( nexty < -level.getHeight()/2 && camera.position.y > -level.getHeight()/2 )
-//			camera.position.y = -level.getHeight()/2;
-//		else
-//			camera.position.y= nexty;
-//		
-//		if( nexty > level.getHeight()/2 && camera.position.y < level.getHeight()/2 )
-//			camera.position.y = level.getHeight()/2;
-//		else
-//			camera.position.y= nexty;
+		if( nextx < level.getWidth()/2 && camera.position.x > level.getWidth()/2 )
+		{
+			camera.position.x = level.getWidth()/2;
+			v.x = 0;
+			a.x = 0;
+		}
+		else if( nextx > -level.getWidth()/2 && camera.position.x < -level.getWidth()/2 )
+		{
+			camera.position.x = -level.getWidth()/2;
+			v.x = 0;
+			a.x = 0;
+		}
+		else
+			camera.position.x = nextx;
+		
+		
+		if( nexty > -level.getHeight()/2 && camera.position.y < -level.getHeight()/2 )
+		{
+			camera.position.y = -level.getHeight()/2;
+			v.y = 0;
+			a.y = 0;
+		}
+		else if( nexty < level.getHeight()/2 && camera.position.y > level.getHeight()/2 )
+		{
+			camera.position.y = level.getHeight()/2;
+			v.y = 0;
+			a.y = 0;
+		}
+		else
+			camera.position.y = nexty;
 		
 		camera.update();
 	}
@@ -166,5 +142,10 @@ public class CameraController
 	public void setUnderUserControl( boolean under )
 	{
 		underUserControl = under;
+		if(under==true)
+		{
+			v.set(0,0,0);
+			a.set(0,0,0);
+		}
 	}
 }

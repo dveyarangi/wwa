@@ -92,10 +92,14 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean scrolled(int amount)
 	{
-		camController.injectLinearImpulse(-amount*(lastx - camera.viewportWidth/2), 
-									 	   amount*(lasty - camera.viewportHeight/2), 
-									 	   amount);
-		return true;
+		if( !dragging )
+		{
+			camController.injectLinearImpulse(-amount*(lastx - camera.viewportWidth/2), 
+										 	   amount*(lasty - camera.viewportHeight/2), 
+										 	   amount*1.2f);
+			return true;
+		}
+		return false;
 	}
 	
 	public OrthographicCamera getCamera() { return camera; }
