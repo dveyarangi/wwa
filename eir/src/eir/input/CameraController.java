@@ -51,7 +51,7 @@ public class CameraController
 	 * @param delta
 	 */
 	public void cameraStep( float delta )
-	{
+	{	
 		if( !underUserControl )
 		{
 			if( camera.zoom < maxZoomIn )
@@ -95,7 +95,7 @@ public class CameraController
 			v.z = 0;
 			a.z = 0;
 		}
-		else if ( nextzoom > maxZoomIn && camera.zoom < maxZoomIn )
+		else if ( nextzoom > maxZoomIn && camera.zoom < maxZoomIn || nextzoom<0 )
 		{
 			camera.zoom = maxZoomIn;
 			v.z = 0;
@@ -105,13 +105,13 @@ public class CameraController
 			camera.zoom = nextzoom;
 		
 		
-		if( nextx < level.getWidth()/2 && camera.position.x > level.getWidth()/2 )
+		if( nextx < level.getWidth()/2 && camera.position.x > level.getWidth()/2 && !underUserControl )
 		{
 			camera.position.x = level.getWidth()/2;
 			v.x = 0;
 			a.x = 0;
 		}
-		else if( nextx > -level.getWidth()/2 && camera.position.x < -level.getWidth()/2 )
+		else if( nextx > -level.getWidth()/2 && camera.position.x < -level.getWidth()/2 && !underUserControl )
 		{
 			camera.position.x = -level.getWidth()/2;
 			v.x = 0;
@@ -121,13 +121,13 @@ public class CameraController
 			camera.position.x = nextx;
 		
 		
-		if( nexty > -level.getHeight()/2 && camera.position.y < -level.getHeight()/2 )
+		if( nexty > -level.getHeight()/2 && camera.position.y < -level.getHeight()/2 && !underUserControl )
 		{
 			camera.position.y = -level.getHeight()/2;
 			v.y = 0;
 			a.y = 0;
 		}
-		else if( nexty < level.getHeight()/2 && camera.position.y > level.getHeight()/2 )
+		else if( nexty < level.getHeight()/2 && camera.position.y > level.getHeight()/2 && !underUserControl )
 		{
 			camera.position.y = level.getHeight()/2;
 			v.y = 0;
