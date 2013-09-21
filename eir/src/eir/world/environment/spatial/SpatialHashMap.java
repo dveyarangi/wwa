@@ -156,7 +156,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 		
 		transition = AABB.copy( object.getArea() );
 	
-		iterateOverAABB( transition, 1, null, object );
+		iterateOverAABB( transition, false, object );
 		
 		aabbs.put( object.getId(), transition );
 	}
@@ -173,7 +173,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 		if(transition == null)
 			throw new IllegalArgumentException("Object " + object + " is not registered.");
 		
-		iterateOverAABB( transition, 2, null, object );
+		iterateOverAABB( transition, true, object );
 		
 		aabbs.remove( object.getId() );
 		
@@ -181,6 +181,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	}
 
 	/**
+	 * TODO: this method must be optimized by all casts.
 	 * Update object index
 	 * @param object
 	 */
@@ -188,9 +189,9 @@ public class SpatialHashMap <O extends ISpatialObject>
 	{
 		
 		AABB transition = aabbs.get( object.getId() );
-		iterateOverAABB( transition, 2, null, object );
+		iterateOverAABB( transition, true, object );
 		transition.copyFrom( object.getArea() );
-		iterateOverAABB( transition, 1, null, object );
+		iterateOverAABB( transition, false, object );
 	}
 
 	/**
@@ -202,12 +203,55 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * @param object
 	 * @return
 	 */
-	private int iterateOverAABB( AABB aabb, int odeToJava, ISpatialSensor <O> sensor, O object)
+	private void iterateOverAABB( AABB aabb, boolean remove, O object)
 	{
-		return iterateOverAABB( aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY(), odeToJava, sensor, object );
+		iterateOverAABB( aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY(), remove, object );
 	}
 	
-	private int iterateOverAABB( float cx, float cy, float rx, float ry, int odeToJava, ISpatialSensor <O> sensor, O object)
+	private void iterateOverAABB( float cx, float cy, float rx, float ry, boolean remove, O object)
+	{
+		
+		int minIdxx = Math.max(toGridIndex(cx - rx), -halfGridWidth);
+		int minIdxy = Math.max(toGridIndex(cy - ry), -halfGridHeight);
+		int maxIdxx = Math.min(toGridIndex(cx + rx),  halfGridWidth);
+		int maxIdxy = Math.min(toGridIndex(cy + ry),  halfGridHeight);
+		
+		int currx, curry;
+		int hash;
+		
+		Set <O> cell;
+		
+		for(currx = minIdxx; currx <= maxIdxx; currx ++)
+		{
+			for(curry = minIdxy; curry <= maxIdxy; curry ++)
+			{
+//				System.out.println(minx + " " + miny + " " + maxx + " " + maxy);
+				hash = hash(currx, curry);
+				
+				if(hash < 0) // invalid access
+					continue;
+				
+				cell = map[hash];
+				if(remove)
+					cell.remove( object );
+				else
+					cell.add(object);
+			}
+		}
+	}
+	
+	/**
+	 * Walks over provided AABB and feeds the sensor with object whose AABBs overlap it
+	 */
+	public ISpatialSensor <O> queryAABB(ISpatialSensor <O> sensor, AABB aabb)
+	{
+		return queryAABB( sensor, aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY() );
+	}
+
+	/**
+	 * Walks over provided AABB and feeds the sensor with object whose AABBs overlap it
+	 */
+	public ISpatialSensor <O> queryAABB(ISpatialSensor <O> sensor, float cx, float cy, float rx, float ry)
 	{
 		float minx = cx - rx;
 		float miny = cy - ry;
@@ -236,14 +280,6 @@ public class SpatialHashMap <O extends ISpatialObject>
 				if(hash < 0)
 					continue;
 				cell = map[hash];
-				if(odeToJava == 1) {
-					cell.add(object);
-					
-				} else
-				if(odeToJava == 2) {
-						cell.remove( object );
-				}
-				if(odeToJava == 0) {
 				
 				for(O obj : cell)
 				{
@@ -256,28 +292,8 @@ public class SpatialHashMap <O extends ISpatialObject>
 					objectArea.setPassId( passId );
 				}			
 			}
-		}
-		
-		return 42;
-	}
-	
-	/**
-	 * Walks over provided AABB and feeds the sensor with object whose AABBs overlap it
-	 */
-	public ISpatialSensor <O> queryAABB(ISpatialSensor <O> sensor, AABB aabb)
-	{
-		return queryAABB( sensor, aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY() );
-	}
-
-	/**
-	 * Walks over provided AABB and feeds the sensor with object whose AABBs overlap it
-	 */
-	public ISpatialSensor <O> queryAABB(ISpatialSensor <O> sensor, float cx, float cy, float rx, float ry)
-	{
-		iterateOverAABB( cx, cy, rx, ry, 0, sensor, null );
 		
 		return sensor;
-
 	}
 
 	/**
