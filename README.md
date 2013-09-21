@@ -5,27 +5,6 @@ LibGDX
 ------
 https://code.google.com/p/libgdx/wiki/Introduction
 
-Tasks ahead
------------
-
-* Player controls
-	- [ ] movement keys with option to extract key mapping to configuration file
-	- [v] mouse screen scroll and zoom
-	- [ ] con trol modes - battler and builder
-	- [ ] connect spider to mouse crosshair
-	
-* Level layout
-	- [v] add asteroid parameters
-	- [v] fix body to sprite coordinates
-	- [ ] load units
-	
-* Units
-	- [ ] spider
-	- [ ] ant
-	- [ ] 
-	
-* Bugs
-	- [v] returns to menu on game resize
 	
 Project layout
 --------------
@@ -53,6 +32,16 @@ Project layout
 	- objects - ready to use resources (most of them are already in eir/assets)
 	- src - more tools
 	- uiskin - huh, unify, dunno
+	
+	
+Debug
+-----------
+
+* Use JVM params to check of GC calls: 
+	- -XX:+PrintGC -XX:+PrintGCDetails 
+* Hotkeys:
+	- K - hide/show navigation mesh
+	- J - hide/show coordinates grid (binary scale)
 	
 Tools	
 -----
