@@ -8,7 +8,7 @@ import yarangi.java.InvokationMapper;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Represents an axis-aligned bounding box (square, actually).
+ * Represents an axis-aligned bounding box.
  * 
  */
 public class AABB
@@ -19,16 +19,29 @@ public class AABB
 	private Vector2 ref = Vector2.Zero.cpy();
 	
 	/**
-	 * half-width of the square
+	 * half-width of the box
 	 */
 	private float rx;
+	/**
+	 * half-height of the box
+	 */
 	private float ry;
+	
+	/**
+	 * max of rx and ry
+	 */
 	private float rmax;
 	
+	/**
+	 * marker for {@link SpatialHashMap} queries.
+	 */
 	private int passId;
 	
 //	private static InvokationMapper amap = new InvokationMapper();
 	
+	/**
+	 * Pool of AABB objects
+	 */
 	private static Queue <AABB> pool = new LinkedList <AABB> ();
 	
 	private static AABB getAABB()
@@ -101,40 +114,16 @@ public class AABB
 		return this;
 	}
 	
-	/**
-	 * Copy ctor.
-	 * @param aabb
-	 */
-/*	protected AABB(AABB aabb)
-	{
-		this(aabb.ref.x(), aabb.ref.y(), aabb.getRX(), aabb.getRY(), aabb.getOrientation());
-		amap.record();
-	}*/
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public final Vector2 getAnchor() { return ref; }
-
-	/**
-	 * {@inheritDoc}
-	 */
 
 	final public void translate(float dx, float dy) {
 		ref.add(dx, dy);
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public void move(float x, float y) {
 		ref.set( x, y );
 	}
-	
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void fitTo(float radius)
 	{
 		if(radius < 0)
@@ -174,26 +163,12 @@ public class AABB
 		return overlaps( area.getMinX(), area.getMinY(), area.getMaxX(), area.getMaxY() );
 	}
 
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public boolean equals(Object o)
 	{
 		return o == this;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-/*	public AABB clone() { 
-		AABB aabb = getAABB();
-		return aabb.update(this.ref.x, this.ref.y, this.getRX(), this.getRY(), this.getOrientation()); 
-	}*/
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString()
 	{

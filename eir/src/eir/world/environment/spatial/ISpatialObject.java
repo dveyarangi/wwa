@@ -1,7 +1,7 @@
 package eir.world.environment.spatial;
 
 /**
- * Interface for object with shape.
+ * Interface for object with AABB for indexing in {@link SpatialHashMap}.
  */
 public interface ISpatialObject 
 {
@@ -12,5 +12,9 @@ public interface ISpatialObject
 	 */
 	public AABB getArea();
 
+	/**
+	 * Unique (per spatial hashmap) object id for faster hashing
+	 * @return
+	 */
 	public int getId();
 }
