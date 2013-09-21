@@ -2,7 +2,6 @@ package eir.world.environment.spatial;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import yarangi.math.FastMath;
@@ -11,18 +10,22 @@ import yarangi.math.FastMath;
  * Straightforward implementation of spatial hash map.
  * 
  * Note: cannot be used in multi-threaded environment, due to passId optimization (and lack of any type of synchronization).
- * TODO: refactor to extend {@link GridMap}
  * @param <O>
  */
 public class SpatialHashMap <O extends ISpatialObject>
 {
 	/**
-	 * buckets array.
+	 * buckets array
+	 * see {@link #hash(int, int)} for indices here
 	 * TODO: hashmap is slow!!!
 	 */
 	protected Set <O> [] map;
 
-	
+	/**
+	 * This is cache of object location;
+	 * For each indexed object, we keep copy of it's AABB, so when object asks for AABB 
+	 * update, the hashmap can fix buckets accordingly.
+	 */
 	private TIntObjectHashMap<AABB> aabbs = new TIntObjectHashMap<AABB> ();
 	
 	/**
@@ -44,6 +47,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * 1/cellSize, to speed up some calculations
 	 */
 	private float invCellsize;
+	
 	/** 
 	 * cellSize/2
 	 */
@@ -139,6 +143,10 @@ public class SpatialHashMap <O extends ISpatialObject>
 		return ((x+halfGridWidth)*6184547 + (y+halfGridHeight)* 2221069) % size;
 	}
 
+	/**
+	 * Adds spatial object to the indexer.
+	 * @param object
+	 */
 	protected void addObject(O object) 
 	{
 		
@@ -153,6 +161,11 @@ public class SpatialHashMap <O extends ISpatialObject>
 		aabbs.put( object.getId(), transition );
 	}
 
+	/**
+	 * Removes spatial object from the indexer
+	 * @param object
+	 * @return
+	 */
 	protected O removeObject(O object) 
 	{
 		
@@ -168,9 +181,9 @@ public class SpatialHashMap <O extends ISpatialObject>
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Update object index
+	 * @param object
 	 */
-
 	protected void updateObject(O object) 
 	{
 		
@@ -178,32 +191,23 @@ public class SpatialHashMap <O extends ISpatialObject>
 		iterateOverAABB( transition, 2, null, object );
 		transition.copyFrom( object.getArea() );
 		iterateOverAABB( transition, 1, null, object );
-		
-		
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * TODO: slow
+	 * Iterates over specified aabb and performs operation specified by "odeToJava" parameter.
+	 * 
+	 * @param aabb
+	 * @param odeToJava
+	 * @param sensor
+	 * @param object
+	 * @return
 	 */
-/*	@Override
-	public ISpatialSensor <O> query(ISpatialSensor <O> sensor, Area area)
-	{
-		if(area == null)
-			throw new IllegalArgumentException("Area cannot be null.");
-		
-		queryingConsumer.setSensor( sensor );
-		queryingConsumer.setQueryId(getNextPassId());
-		area.iterate( cellSize, queryingConsumer );
-
-		return sensor;
-	}*/
-	public int iterateOverAABB( AABB aabb, int odeToJava, ISpatialSensor <O> sensor, O object)
+	private int iterateOverAABB( AABB aabb, int odeToJava, ISpatialSensor <O> sensor, O object)
 	{
 		return iterateOverAABB( aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY(), odeToJava, sensor, object );
 	}
 	
-	public int iterateOverAABB( float cx, float cy, float rx, float ry, int odeToJava, ISpatialSensor <O> sensor, O object)
+	private int iterateOverAABB( float cx, float cy, float rx, float ry, int odeToJava, ISpatialSensor <O> sensor, O object)
 	{
 		float minx = cx - rx;
 		float miny = cy - ry;
@@ -257,11 +261,17 @@ public class SpatialHashMap <O extends ISpatialObject>
 		return 42;
 	}
 	
+	/**
+	 * Walks over provided AABB and feeds the sensor with object whose AABBs overlap it
+	 */
 	public ISpatialSensor <O> queryAABB(ISpatialSensor <O> sensor, AABB aabb)
 	{
 		return queryAABB( sensor, aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY() );
 	}
 
+	/**
+	 * Walks over provided AABB and feeds the sensor with object whose AABBs overlap it
+	 */
 	public ISpatialSensor <O> queryAABB(ISpatialSensor <O> sensor, float cx, float cy, float rx, float ry)
 	{
 		iterateOverAABB( cx, cy, rx, ry, 0, sensor, null );
@@ -270,23 +280,14 @@ public class SpatialHashMap <O extends ISpatialObject>
 
 	}
 
-	protected final int getNextPassId()
-	{
-		return ++passId;
-	}
-	
-	public final int toGridIndex(float value)
-	{
-		return FastMath.round(value * invCellsize);
-	}
-	
-	public final boolean isInvalidIndex(int x, int y)
-	{
-		return (x < -halfGridWidth || x > halfGridWidth || y < -halfGridHeight || y > halfGridHeight); 
-	}
-	
 	/**
-	 * {@inheritDoc}
+	 * Walks over provided circle and feeds the sensor with object whose AABBs overlap it
+	 * 
+	 * @param sensor
+	 * @param x
+	 * @param y
+	 * @param radius
+	 * @return
 	 */
 	public final ISpatialSensor <O> queryRadius(ISpatialSensor <O> sensor, float x, float y, float radius)
 	{
@@ -335,6 +336,16 @@ public class SpatialHashMap <O extends ISpatialObject>
 		
 		return sensor;
 	}
+	
+	/**
+	 * Walks over provided line and feeds the sensor with object whose AABBs it crosses
+	 * 
+	 * @param sensor
+	 * @param x
+	 * @param y
+	 * @param radius
+	 * @return
+	 */
 	
 	public final ISpatialSensor <O> queryLine(ISpatialSensor <O> sensor, float ox, float oy, float dx, float dy)
 	{
@@ -405,4 +416,21 @@ public class SpatialHashMap <O extends ISpatialObject>
 		
 		return sensor;
 	}
+	
+
+	protected final int getNextPassId()
+	{
+		return ++passId;
+	}
+	
+	public final int toGridIndex(float value)
+	{
+		return FastMath.round(value * invCellsize);
+	}
+	
+	public final boolean isInvalidIndex(int x, int y)
+	{
+		return (x < -halfGridWidth || x > halfGridWidth || y < -halfGridHeight || y > halfGridHeight); 
+	}
+	
 }
