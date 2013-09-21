@@ -37,8 +37,8 @@ public class Debug
 	
 	private BitmapFont font;
 	
-	private boolean drawCoordinateGrid = false;
-	private boolean drawNavMesh = true;
+	public boolean drawCoordinateGrid = false;
+	public boolean drawNavMesh = false;
 	
 	private static Map <String, Long> timings = new HashMap <String, Long> ();
 

@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
+import eir.debug.Debug;
 import eir.resources.GameFactory;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
@@ -212,11 +213,15 @@ public class Ant implements Poolable
 				size/region.getRegionWidth(), 
 				size/region.getRegionWidth(), angle);
 		stateTime += delta;
-		
-		if(stateTime - screamTime < 1)
-			font.draw( batch, "Yarr!", position.x, position.y );
-		if(targetNode != null)
-		font.draw( batch, String.valueOf( targetNode.index ), position.x+2, position.y-2 );
+
+		// TODO: remove debug rendering
+		if(Debug.debug.drawNavMesh)
+		{
+			if(stateTime - screamTime < 1)
+				font.draw( batch, "Yarr!", position.x, position.y );
+			if(targetNode != null)
+				font.draw( batch, String.valueOf( targetNode.index ), position.x+2, position.y-2 );
+		}
 	}
 	
 	public void setTargetNode(NavNode targetNode)
