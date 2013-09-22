@@ -20,8 +20,8 @@ import eir.input.GameGestureListener;
 import eir.input.GameInputProcessor;
 import eir.input.UIInputProcessor;
 import eir.resources.GameFactory;
-import eir.resources.Level;
 import eir.world.Asteroid;
+import eir.world.Level;
 import eir.world.Web;
 import eir.world.environment.NavNode;
 import eir.world.unit.Ant;
@@ -43,21 +43,19 @@ public class GameScreen extends AbstractScreen
 	
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
-	
-	private GameFactory gameFactory;
-	
 
 	private Level level; 
 
 	private float w, h;
 	
 	private List <Spider> spiders = new LinkedList <Spider> ();
-	private List <Ant> ants = new LinkedList <Ant> ();
-
 	
 	public GameScreen(EirGame game)
 	{
 		super( game );
+		
+		GameFactory.init();
+		
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
 
@@ -66,12 +64,9 @@ public class GameScreen extends AbstractScreen
 		batch = new SpriteBatch();
 		
 		shapeRenderer = new ShapeRenderer();
-		
-		this.gameFactory = new GameFactory();
 
-
-		level = gameFactory.loadLevel( "levels/level_exodus_01.dat" );
-		level.init(gameFactory);
+		level = GameFactory.loadLevel( "levels/level_exodus_01.dat" );
+		level.init();
 
 		camController = new CameraController(camera, level);
 		
@@ -84,7 +79,7 @@ public class GameScreen extends AbstractScreen
 		// infest Nir:
 		for(int i = 0; i < 15; i ++)
 		{
-			spiders.add(new Spider( gameFactory, level.getAsteroids().get(2), 
+			spiders.add(new Spider( level.getAsteroids().get(2), 
 					RandomUtil.N( 10 ) + 5, // size 
 					RandomUtil.N( 25 ), // location
 					(RandomUtil.N(2)==1? 1:-1) *(RandomUtil.R( 20 )+5) ) // speed
@@ -94,15 +89,13 @@ public class GameScreen extends AbstractScreen
 		// increasing infestation
 		for(int i = 0; i < 150; i ++)
 		{
-			NavNode startingNode = gameFactory.getNavMesh().getNode( 
+			NavNode startingNode = level.getNavMesh().getNode( 
 					RandomUtil.N( 30 ) + 60 );
-			Ant ant = Ant.getAnt( gameFactory, startingNode );
-			
-			ants.add( ant );
+			level.addAnt(startingNode);
 		}
 
 		
-		Debug.init( gameFactory, level, camera );
+		Debug.init( level, camera );
 	}
 
 	@Override
@@ -110,6 +103,8 @@ public class GameScreen extends AbstractScreen
 	{
 		super.render( delta );
 		camController.cameraStep(delta);
+		
+		level.update( delta );
 		
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
@@ -126,6 +121,7 @@ public class GameScreen extends AbstractScreen
 		batch.begin();
 		
 		batch.draw( level.getBackgroundTexture(), -level.getWidth()/2, -level.getHeight()/2, level.getWidth(), level.getHeight() );
+		
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
 		{
@@ -151,9 +147,8 @@ public class GameScreen extends AbstractScreen
 			spider.draw( batch );
 		}
 		
-		for(Ant ant : ants)
+		for(Ant ant : level.getAnts())
 		{
-			ant.update(delta);
 			ant.draw( delta, batch );
 		}
 		
@@ -207,7 +202,7 @@ public class GameScreen extends AbstractScreen
 		shapeRenderer.dispose();
 		
 		// dispose textures and stuff:
-		gameFactory.dispose();
+		GameFactory.dispose();
 		
 	}
 

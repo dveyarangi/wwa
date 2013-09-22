@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-import eir.resources.Level;
+import eir.world.Level;
 
 /**
  * handles input for game

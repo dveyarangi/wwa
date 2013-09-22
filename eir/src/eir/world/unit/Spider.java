@@ -33,7 +33,7 @@ public class Spider
 	private Sprite sprite;
 	
 	
-	public Spider(GameFactory factory, Asteroid asteroid, float size, float surfaceIdx, float speed)
+	public Spider(Asteroid asteroid, float size, float surfaceIdx, float speed)
 	{
 		this.asteroid = asteroid;
 		
@@ -43,7 +43,7 @@ public class Spider
 		position = new Vector2();
 		asteroid.getModel().getSurfacePoint( surfaceIdx, position );
 		
-		sprite = new Sprite(factory.loadTexture( "models/spider_placeholder.png" ));
+		sprite = new Sprite(GameFactory.loadTexture( "models/spider_placeholder.png" ));
 		sprite.setOrigin( sprite.getWidth()/2, sprite.getHeight()/2 );
 		sprite.setScale( size / sprite.getWidth() );
 		

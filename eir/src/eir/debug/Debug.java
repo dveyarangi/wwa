@@ -15,7 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import eir.resources.GameFactory;
-import eir.resources.Level;
+import eir.world.Level;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 
@@ -30,8 +30,7 @@ public class Debug
 	
 	public static Debug debug;
 	
-	
-	private GameFactory factory;
+	public Level level;
 
 	private CoordinateGrid debugGrid;
 	
@@ -53,16 +52,16 @@ public class Debug
     
     private FPSLogger fpsLogger = new FPSLogger();
 	
-	public static void init(GameFactory factory, Level level, OrthographicCamera camera)
+	public static void init( Level level, OrthographicCamera camera)
 	{
-		debug = new Debug( factory, level, camera );
+		debug = new Debug(  level, camera );
 	}
 	
-	private Debug(GameFactory factory, Level level, OrthographicCamera camera)
+	private Debug( Level level, OrthographicCamera camera)
 	{
-		this.factory = factory;
+		this.level = level;
 		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
-		font = factory.loadFont("skins//fonts//default", 0.05f);
+		font = GameFactory.loadFont("skins//fonts//default", 0.05f);
 	}
 	
 	public void update(float delta)
@@ -124,7 +123,7 @@ public class Debug
 	private void drawNavMesh(SpriteBatch batch, ShapeRenderer shape)
 	{
 		
-		NavMesh navMesh = factory.getNavMesh();
+		NavMesh navMesh = level.getNavMesh();
 		NavNode srcNode;
 		
 		shape.begin(ShapeType.FilledCircle);

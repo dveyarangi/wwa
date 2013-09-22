@@ -21,8 +21,7 @@ import com.badlogic.gdx.math.Vector2;
 import eir.resources.BodyLoader.Model;
 import eir.resources.BodyLoader.RigidBodyModel;
 import eir.world.Asteroid;
-import eir.world.environment.FloydWarshalRoutes;
-import eir.world.environment.NavMesh;
+import eir.world.Level;
 
 
 /**
@@ -37,6 +36,8 @@ public class GameFactory
 	
 	private static final String MODELS_PATH = "models/";
 	
+	private static GameFactory instance;
+	
 	/**
 	 * Loaded textures by name (filename, actually)
 	 */
@@ -46,29 +47,37 @@ public class GameFactory
 	 */
 	private final Map <String, TextureAtlas> atlasCache = new HashMap <String, TextureAtlas> (); 
 	
-	private final NavMesh navMesh;
+	private static Level level;
 	
-	public GameFactory()
+	
+	private GameFactory() { }
+	
+	public static void init()
 	{
-		this.navMesh = new FloydWarshalRoutes();
+		if(instance != null)
+			throw new IllegalStateException("Game factory is already initialized.");
+		
+		instance = new GameFactory();
 	}
 	
 	
-	public void dispose()
+	public static void dispose()
 	{
 		log("Disposing textures");
-		for(Texture texture : textureCache.values())
+		for(Texture texture : instance.textureCache.values())
 		{
 			texture.dispose();
 		}
 		log("Disposing atlases");
-		for(TextureAtlas atlas : atlasCache.values())
+		for(TextureAtlas atlas : instance.atlasCache.values())
 		{
 			atlas.dispose();
 		}	
+		
+		instance.level = null;
 	}
 
-	private void log(String message)
+	private static void log(String message)
 	{
 		Gdx.app.log( TAG, message);
 	}
@@ -77,26 +86,27 @@ public class GameFactory
 	 * @param string
 	 * @return
 	 */
-	public Level loadLevel(String levelName)
+	public static Level loadLevel(String levelName)
 	{
 		LevelLoader loader = new LevelLoader();
-		return loader.readLevel( this, levelName );	
+		level = loader.readLevel( levelName );
+		return level;
 	}
 	
-	private final String createBodyPath(String modelId)
+	private static final String createBodyPath(String modelId)
 	{
 		return new StringBuilder()
 			.append( MODELS_PATH ).append( modelId ).append(".bog")
 			.toString();
 	}
-	private final String createImagePath(String modelId)
+	private static final String createImagePath(String modelId)
 	{
 		return new StringBuilder()
 			.append( MODELS_PATH ).append( modelId ).append(".png")
 			.toString();
 	}
 	
-	public PolygonalModel loadAsteroidModel(Asteroid asteroid, String modelId) 
+	public static PolygonalModel loadAsteroidModel(Asteroid asteroid, String modelId) 
 	{
 		String modelFile = createBodyPath(modelId);
 		log("Loading asteroid model file [" + modelFile + "]");
@@ -105,23 +115,15 @@ public class GameFactory
 		RigidBodyModel bodyModel = model.rigidBodies.get( 0 );
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 		
-		
-		
 		return new PolygonalModel( 
-				navMesh, bodyModel.origin, vertices, bodyModel.polygons,
+				level.getNavMesh(), bodyModel.origin, vertices, bodyModel.polygons,
 				asteroid.getSize(), 
 				asteroid.getPosition(), 
 				asteroid.getAngle());
 
 	} 
-/*	public Sprite createSprite(String textureFile, Vector2 position, Vector2 origin, float width, float height, float degrees)
-	{
-		Sprite sprite = loadTexture( textureFile );
-	sprite.setOrigin( sprite.getWidth()/2, sprite.getHeight()/2 );
-	sprite.setScale( width / sprite.getWidth(), height/ );
-	}*/
 	
-	public Sprite createSprite(String modelId, Vector2 position, Vector2 origin, float width, float height, float degrees)
+	public static Sprite createSprite(String modelId, Vector2 position, Vector2 origin, float width, float height, float degrees)
 	{
 		Texture texture = loadTexture( createImagePath(modelId) );
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -170,19 +172,19 @@ public class GameFactory
 	 * @param size
 	 * @return
 	 */
-	public Texture loadTexture(String textureFile)
+	public static Texture loadTexture(String textureFile)
 	{
-		Texture texture = textureCache.get( textureFile );
+		Texture texture = instance.textureCache.get( textureFile );
 		if(texture == null)
 		{
 			texture = new Texture(Gdx.files.internal(textureFile));
-			textureCache.put(textureFile, texture);
+			instance.textureCache.put(textureFile, texture);
 			log("Loaded texture [" + textureFile + "]" );
 		}
 		return texture;
 	}
 	
-	NumberFormat ANIMA_NUMBERING = new DecimalFormat( "0000" );
+	static NumberFormat ANIMA_NUMBERING = new DecimalFormat( "0000" );
 	
 	public TextureAtlas loadTextureAtlas(String atlasName)
 	{
@@ -196,9 +198,9 @@ public class GameFactory
 		return atlas;
 	}
 	
-	public Animation loadAnimation(String atlasName, String regionName)
+	public static Animation loadAnimation(String atlasName, String regionName)
 	{
-		TextureAtlas atlas = loadTextureAtlas( atlasName );
+		TextureAtlas atlas = instance.loadTextureAtlas( atlasName );
 		
 		int size = atlas.getRegions().size;
 		TextureRegion[] frames = new TextureRegion[size];
@@ -214,22 +216,12 @@ public class GameFactory
 		return animation;
 	}
 
-
-	/**
-	 * 
-	 */
-	public NavMesh getNavMesh()
-	{
-		return navMesh;
-	}
-
-
 	/**
 	 * TODO: cache!
 	 * @param string
 	 * @return
 	 */
-	public BitmapFont loadFont(String fontName, float scale)
+	public static BitmapFont loadFont(String fontName, float scale)
 	{
 		BitmapFont font =  new BitmapFont(
 				 Gdx.files.internal(fontName + ".fnt"), 

@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
@@ -35,11 +33,11 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 import eir.world.Asteroid;
+import eir.world.Level;
 
 /**
  * @author dveyarangi
@@ -163,7 +161,7 @@ public class LevelLoader
 	 * @param levelName
 	 * @return
 	 */
-	public Level readLevel(final GameFactory factory, String levelId)
+	public Level readLevel(String levelId)
 	{
 		final LoadingContext context = new LoadingContext();
 		
@@ -200,7 +198,7 @@ public class LevelLoader
 				{
 					String textureFile = elem.getAsString();
 					
-					return factory.loadTexture( textureFile );
+					return GameFactory.loadTexture( textureFile );
 				}
 			})
 			.create();

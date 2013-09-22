@@ -43,7 +43,7 @@ public class Web
 		targetSprite.draw(spriteBatch);
 	}
 	
-	public void init( GameFactory factory)
+	public void init(Level level)
 	{	
 		Asteroid sourceAst = source.getAsteroid();
 		Asteroid targetAst = target.getAsteroid();
@@ -51,7 +51,7 @@ public class Web
 		NavNode sourceNode = sourceAst.getModel().getNavNode(source.getNavNodeIdx());
 		NavNode targetNode = targetAst.getModel().getNavNode(target.getNavNodeIdx());
 		
-		factory.getNavMesh().linkNodes( sourceNode, targetNode );
+		level.getNavMesh().linkNodes( sourceNode, targetNode );
 		
 /*		Vector2 src = Vector2.tmp .set( source.getX() - 0.5f, source.getY() - 0.5f).rotate(sourceAst.getAngle()).add(0.5f,0.5f);
 		Vector2 tar = Vector2.tmp2.set( target.getX() - 0.5f, target.getY() - 0.5f).rotate(targetAst.getAngle()).add(0.5f,0.5f);

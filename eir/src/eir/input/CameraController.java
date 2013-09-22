@@ -3,7 +3,7 @@ package eir.input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 
-import eir.resources.Level;
+import eir.world.Level;
 
 /**
  * controls camera 

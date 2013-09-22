@@ -66,12 +66,13 @@ public class Asteroid
 	
 	/**
 	 * This is required to initialize sprite and model
+	 * @param level 
 	 * @param factory
 	 */
-	public void init(GameFactory factory)
+	public void init(Level level)
 	{
-		model = factory.loadAsteroidModel( this, modelId );
-		sprite = factory.createSprite( modelId, position, model.getOrigin(), size, size, angle );
+		model = GameFactory.loadAsteroidModel( this, modelId );
+		sprite = GameFactory.createSprite( modelId, position, model.getOrigin(), size, size, angle );
 	}
 	
 	/**
