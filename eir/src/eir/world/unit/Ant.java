@@ -15,16 +15,19 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 
 import eir.debug.Debug;
 import eir.resources.GameFactory;
+import eir.world.Level;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 import eir.world.environment.Route;
+import eir.world.environment.spatial.AABB;
+import eir.world.environment.spatial.ISpatialObject;
 
 /**
  * @author dveyarangi
  *
  */
-public class Ant implements Poolable
+public class Ant implements Poolable, ISpatialObject
 {
 	private static Pool<Ant> pool = new Pool<Ant> () {
 
@@ -36,23 +39,25 @@ public class Ant implements Poolable
 		
 	};
 	
-	public static Ant getAnt(GameFactory factory, NavNode node)
+	public static Ant getAnt(Level level, NavNode node)
 	{
 		if(font == null)
 		{
-			 font = factory.loadFont("skins//fonts//default", 0.05f);
+			 font = GameFactory.loadFont("skins//fonts//default", 0.05f);
 		}
-		Ant ant = pool.obtain();
-		if(ant.position == null)
-			ant.position = new Vector2();
 		
-		ant.mesh = factory.getNavMesh();
+		Ant ant = pool.obtain();
+		
+		ant.id = level.createObjectId();
+		
+		ant.body = AABB.createSquare( node.getPoint().x, node.getPoint().y, ant.size );
+		
+		ant.mesh = level.getNavMesh();
 		
 		ant.currNode = node;
-		ant.position.set( node.getPoint().x, node.getPoint().y );
 		
 		if(ant.animation == null)
-			ant.animation = factory.loadAnimation( 
+			ant.animation = GameFactory.loadAnimation( 
 					RandomUtil.oneOf(2) ?
 							"anima//ant//blob_black.atlas" : 
 							"anima//ant//blob_black.atlas", 
@@ -61,15 +66,17 @@ public class Ant implements Poolable
 		return ant;
 	}
 	
-	public static void freeAnt(Ant ant)
+	public static void free(Ant ant)
 	{
+		ant.body.free( );
 		pool.free( ant );
 	}
 	
 	private static BitmapFont font;
 
+	private int id;
 	
-	private Vector2 position;
+	private AABB body;
 	
 	private NavMesh mesh;
 	private NavNode currNode, nextNode, targetNode;
@@ -85,13 +92,7 @@ public class Ant implements Poolable
 	private float angle;
 	
 	private float screamTime;
-	/**
-	 * TODO: raise CONTACT_DISTANCE if u raise the speed,
-	 * otherwise they will go astray. 
-	 */
 	private float speed = 10f;
-	
-	private static float CONTACT_DISTANCE = 2;
 	
 	private Ant()
 	{
@@ -128,7 +129,7 @@ public class Ant implements Poolable
 			nextNode = route.next(); // picking next
 			
 			nodeOffset = 0;
-			velocity.set( nextNode.getPoint() ).sub( position ).nor().mul( speed );			
+			velocity.set( nextNode.getPoint() ).sub( body.getAnchor() ).nor().mul( speed );			
 			angle = velocity.angle();
 		}
 		
@@ -163,48 +164,12 @@ public class Ant implements Poolable
 		}
 		
 		nodeOffset = edge.getLength()+travelDistance;
-		position.set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
+		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
 	}
-/*	public void update(float delta)
-	{
-		if(delta > 1)
-			return;
-		if(nextNode == null)
-		{
-			// either we reached next node, or we do not have target
-			if(route == null || !route.hasNext())
-			{
-				if(route != null)
-					screamTime = stateTime;
-				// pick a random target
-				targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
-				route = mesh.getShortestRoute( currNode, targetNode );
-			}
-			
-			
-			// updating course to the next node
-			nextNode = route.next();
-			
-			// update course:
-			velocity.set( nextNode.getPoint() ).sub( position ).nor().mul( speed );
-			angle = velocity.angle();
-		}
-		
-		// moving ant toward the next nav node 
-		// TODO: this is bad method, because if ant speed is too big it may skip 
-		// the next node and never return to the navmesh
-		position.add( velocity.tmp().mul( delta ) );
-		
-		if(position.tmp().sub( nextNode.getPoint() ).len2() < CONTACT_DISTANCE)
-		{
-			currNode = nextNode;
-			nextNode = null;
-		}
-
-	}*/
 
 	public void draw(float delta, SpriteBatch batch)
 	{
+		Vector2 position = body.getAnchor();
 		TextureRegion region = animation.getKeyFrame( stateTime, true );
 		batch.draw( region, 
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
@@ -229,5 +194,11 @@ public class Ant implements Poolable
 		this.targetNode = targetNode;
 		route = mesh.getShortestRoute( currNode, targetNode);
 	}
+
+	@Override
+	public AABB getArea() { return body; }
+
+	@Override
+	public int getId() { return id; }
 	
 }

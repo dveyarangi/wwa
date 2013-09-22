@@ -52,10 +52,15 @@ public class AABB
 			return pool.poll();
 	}
 	
-	public static void release(AABB aabb)
-	{
-		pool.add( aabb );
-	}
+	/**
+	 * Returns specified AABB to the pool.
+	 */
+	public static void free(AABB aabb) { pool.add( aabb ); }
+	
+	/**
+	 * Returns this AABB to the pool.
+	 */
+	public void free() { AABB.free( this ); }
 
 	public static AABB createSquare(float x, float y, float r)
 	{
@@ -232,5 +237,6 @@ public class AABB
 	{
 		throw new UnsupportedOperationException();
 	}
+
 
 }

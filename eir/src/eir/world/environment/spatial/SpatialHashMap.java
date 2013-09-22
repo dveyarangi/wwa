@@ -63,6 +63,10 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 */
 	private int passId;
 	
+	public SpatialHashMap(String name, float cellSize, float width, float height)
+	{
+		this(name, (int)(width*height/(cellSize*cellSize)), cellSize, width, height);
+	}
 	/**
 	 * 
 	 * @param size amount of buckets
@@ -147,7 +151,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * Adds spatial object to the indexer.
 	 * @param object
 	 */
-	protected void addObject(O object) 
+	public void add(O object) 
 	{
 		
 		AABB transition = aabbs.get( object.getId() );
@@ -166,7 +170,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * @param object
 	 * @return
 	 */
-	protected O removeObject(O object) 
+	public O remove(O object) 
 	{
 		
 		AABB transition = aabbs.get( object.getId() );
@@ -177,6 +181,8 @@ public class SpatialHashMap <O extends ISpatialObject>
 		
 		aabbs.remove( object.getId() );
 		
+		AABB.free( transition );
+		
 		return object;
 	}
 
@@ -185,7 +191,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * Update object index
 	 * @param object
 	 */
-	protected void updateObject(O object) 
+	public void update(O object) 
 	{
 		
 		AABB transition = aabbs.get( object.getId() );
