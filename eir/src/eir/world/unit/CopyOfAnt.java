@@ -1,6 +1,3 @@
-/**
- * 
- */
 package eir.world.unit;
 
 import yarangi.numbers.RandomUtil;
@@ -20,41 +17,37 @@ import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 import eir.world.environment.Route;
-import eir.world.environment.spatial.AABB;
-import eir.world.environment.spatial.ISpatialObject;
 
 /**
- * @author dveyarangi
+ * @author Ni
  *
  */
-public class Ant implements Poolable, ISpatialObject
+public class CopyOfAnt implements Poolable
 {
-	private static Pool<Ant> pool = new Pool<Ant> () {
+	private static Pool<CopyOfAnt> pool = new Pool<CopyOfAnt> () {
 
 		@Override
-		protected Ant newObject()
+		protected CopyOfAnt newObject()
 		{
-			return new Ant();
+			return new CopyOfAnt();
 		}
 		
 	};
 	
-	public static Ant getAnt(Level level, NavNode node)
+	public static CopyOfAnt getAnt(Level level, NavNode node)
 	{
 		if(font == null)
 		{
 			 font = GameFactory.loadFont("skins//fonts//default", 0.05f);
 		}
-		
-		Ant ant = pool.obtain();
-		
-		ant.id = level.createObjectId();
-		
-		ant.body = AABB.createSquare( node.getPoint().x, node.getPoint().y, ant.size );
+		CopyOfAnt ant = pool.obtain();
+		if(ant.position == null)
+			ant.position = new Vector2();
 		
 		ant.mesh = level.getNavMesh();
 		
 		ant.currNode = node;
+		ant.position.set( node.getPoint().x, node.getPoint().y );
 		
 		if(ant.animation == null)
 			ant.animation = GameFactory.loadAnimation( 
@@ -66,17 +59,15 @@ public class Ant implements Poolable, ISpatialObject
 		return ant;
 	}
 	
-	public static void free(Ant ant)
+	public static void freeAnt(CopyOfAnt ant)
 	{
-		ant.body.free( );
 		pool.free( ant );
 	}
 	
 	private static BitmapFont font;
 
-	private int id;
 	
-	private AABB body;
+	private Vector2 position;
 	
 	private NavMesh mesh;
 	private NavNode currNode, nextNode, targetNode;
@@ -94,8 +85,8 @@ public class Ant implements Poolable, ISpatialObject
 	private float screamTime;
 	
 	private float speed = 10f;
-
-	private Ant()
+	
+	private CopyOfAnt()
 	{
 		stateTime = RandomUtil.R( 10 );
 	}
@@ -103,9 +94,6 @@ public class Ant implements Poolable, ISpatialObject
 	@Override
 	public void reset()
 	{
-		body.free();
-		body = null;
-		
 		screamTime = stateTime;
 		route = null;
 		nextNode = null;
@@ -133,7 +121,7 @@ public class Ant implements Poolable, ISpatialObject
 			nextNode = route.next(); // picking next
 			
 			nodeOffset = 0;
-			velocity.set( nextNode.getPoint() ).sub( body.getAnchor() ).nor().mul( speed );			
+			velocity.set( nextNode.getPoint() ).sub( position ).nor().mul( speed );			
 			angle = velocity.angle();
 		}
 		
@@ -168,12 +156,12 @@ public class Ant implements Poolable, ISpatialObject
 		}
 		
 		nodeOffset = edge.getLength()+travelDistance;
-		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
+		position.set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
 	}
+	
 
 	public void draw(float delta, SpriteBatch batch)
 	{
-		Vector2 position = body.getAnchor();
 		TextureRegion region = animation.getKeyFrame( stateTime, true );
 		batch.draw( region, 
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
@@ -198,11 +186,5 @@ public class Ant implements Poolable, ISpatialObject
 		this.targetNode = targetNode;
 		route = mesh.getShortestRoute( currNode, targetNode);
 	}
-
-	@Override
-	public AABB getArea() { return body; }
-
-	@Override
-	public int getId() { return id; }
 	
 }
