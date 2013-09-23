@@ -1,5 +1,7 @@
 package eir.world.environment;
 
+import gnu.trove.iterator.TIntObjectIterator;
+
 
 /**
  * calculates all shortest routes for a given nav mesh
@@ -53,19 +55,34 @@ public class FloydWarshalRoutes extends NavMesh
 			}
 		}
 		
-		for( NavNode cur : nodes )
+		TIntObjectIterator<NavEdge> it = edges.iterator();
+		
+		while( it.hasNext() )
 		{
-			for( NavNode neighbour : cur.getNeighbors() )
-			{
-				int i = cur.index;
-				int j = neighbour.index;
-				
-				lastdists[i][j] = cur.getPoint().dst(neighbour.getPoint());
-				dists[i][j] = cur.getPoint().dst(neighbour.getPoint());
-				
-				lastpreds[i][j] = neighbour;
-			}
+			it.advance();
+			NavEdge e = it.value();
+			int i = e.getNode1().index;
+			int j = e.getNode2().index;
+			
+			lastdists[i][j] = e.getLength();
+			dists[i][j] = e.getLength();
+			
+			lastpreds[i][j] = e.getNode2();
 		}
+		
+//		for( NavNode cur : nodes )
+//		{
+//			for( NavNode neighbour : cur.getNeighbors() )
+//			{
+//				int i = cur.index;
+//				int j = neighbour.index;
+//				
+//				lastdists[i][j] = cur.getPoint().dst(neighbour.getPoint());
+//				dists[i][j] = cur.getPoint().dst(neighbour.getPoint());
+//				
+//				lastpreds[i][j] = neighbour;
+//			}
+//		}
 		
 		for( int k=0 ; k<n ; k++ )
 		{
