@@ -1,6 +1,3 @@
-/**
- * 
- */
 package eir.world.unit;
 
 import yarangi.numbers.RandomUtil;
@@ -21,28 +18,28 @@ import eir.world.environment.NavNode;
 import eir.world.environment.Route;
 
 /**
- * @author dveyarangi
+ * @author Ni
  *
  */
-public class Ant implements Poolable
+public class CopyOfAnt implements Poolable
 {
-	private static Pool<Ant> pool = new Pool<Ant> () {
+	private static Pool<CopyOfAnt> pool = new Pool<CopyOfAnt> () {
 
 		@Override
-		protected Ant newObject()
+		protected CopyOfAnt newObject()
 		{
-			return new Ant();
+			return new CopyOfAnt();
 		}
 		
 	};
 	
-	public static Ant getAnt(GameFactory factory, NavNode node)
+	public static CopyOfAnt getAnt(GameFactory factory, NavNode node)
 	{
 		if(font == null)
 		{
 			 font = factory.loadFont("skins//fonts//default", 0.05f);
 		}
-		Ant ant = pool.obtain();
+		CopyOfAnt ant = pool.obtain();
 		if(ant.position == null)
 			ant.position = new Vector2();
 		
@@ -61,7 +58,7 @@ public class Ant implements Poolable
 		return ant;
 	}
 	
-	public static void freeAnt(Ant ant)
+	public static void freeAnt(CopyOfAnt ant)
 	{
 		pool.free( ant );
 	}
@@ -88,7 +85,7 @@ public class Ant implements Poolable
 	
 	private float speed = 10f;
 	
-	private Ant()
+	private CopyOfAnt()
 	{
 		stateTime = RandomUtil.R( 10 );
 	}
