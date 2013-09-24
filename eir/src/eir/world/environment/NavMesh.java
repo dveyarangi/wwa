@@ -56,11 +56,11 @@ public abstract class NavMesh
 		na.addNeighbour(nb);
 		nb.addNeighbour(na);
 		
-		int edgeIdx = getEdgeIdx(na.index, nb.index);
+		int edgeIdx = getEdgeIdx(na.id, nb.id);
 		if(!edges.contains( edgeIdx ))
 		{
 			edges.put( edgeIdx, new NavEdge( na, nb ) );
-			edges.put( getEdgeIdx(nb.index, na.index), new NavEdge( nb, na ) );
+			edges.put( getEdgeIdx(nb.id, na.id), new NavEdge( nb, na ) );
 		}
 	}
 	
@@ -70,7 +70,7 @@ public abstract class NavMesh
 	}
 	public NavEdge getEdge(NavNode na, NavNode nb)
 	{
-		return getEdge( na.index, nb.index );
+		return getEdge( na.id, nb.id );
 	}
 	
 	public abstract Route getShortestRoute( NavNode from, NavNode to );

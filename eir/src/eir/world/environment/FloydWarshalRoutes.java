@@ -11,6 +11,7 @@ import gnu.trove.iterator.TIntObjectIterator;
 public class FloydWarshalRoutes extends NavMesh
 {
 	protected NavNode[][] routes;
+	protected float[][] dists;
 	
 	public FloydWarshalRoutes()
 	{
@@ -61,28 +62,14 @@ public class FloydWarshalRoutes extends NavMesh
 		{
 			it.advance();
 			NavEdge e = it.value();
-			int i = e.getNode1().index;
-			int j = e.getNode2().index;
+			int i = e.getNode1().id;
+			int j = e.getNode2().id;
 			
 			lastdists[i][j] = e.getLength();
 			dists[i][j] = e.getLength();
 			
 			lastpreds[i][j] = e.getNode2();
 		}
-		
-//		for( NavNode cur : nodes )
-//		{
-//			for( NavNode neighbour : cur.getNeighbors() )
-//			{
-//				int i = cur.index;
-//				int j = neighbour.index;
-//				
-//				lastdists[i][j] = cur.getPoint().dst(neighbour.getPoint());
-//				dists[i][j] = cur.getPoint().dst(neighbour.getPoint());
-//				
-//				lastpreds[i][j] = neighbour;
-//			}
-//		}
 		
 		for( int k=0 ; k<n ; k++ )
 		{
@@ -115,17 +102,29 @@ public class FloydWarshalRoutes extends NavMesh
 			dists = tmpdists;
 		}
 		
-		routes = lastpreds;
+		this.routes = lastpreds;
+		this.dists = lastdists;
 	}
 	
 	/**
 	 * find the shortest route between node from and to
-	 * @return ordered list starting at a and ending at b using shortest route / null if no route
+	 * @return Route starting at a and ending at b using shortest route
 	 */
 	public Route getShortestRoute( NavNode from, NavNode to )
 	{
 		Route r = Route.routesPool.obtain();
 		r.set(this, from, to);
 		return r;
+	}
+	
+	/**
+	 * returns the shortest distance between from and to
+	 * @param From
+	 * @param to
+	 * @return
+	 */
+	public float distance( NavNode From, NavNode to )
+	{
+		return dists[From.id][to.id];
 	}
 }

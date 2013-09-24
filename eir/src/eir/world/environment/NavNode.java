@@ -6,9 +6,6 @@ package eir.world.environment;
 import java.util.HashSet;
 import java.util.Set;
 
-import yarangi.math.IVector2D;
-import yarangi.math.Vector2D;
-
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -16,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
  * @author dveyarangi
  *
  */
-public class NavNode implements IVector2D
+public class NavNode
 {
 	private Vector2 point;
 	private Vector2 rawPoint;
@@ -24,7 +21,7 @@ public class NavNode implements IVector2D
 	/**
 	 * index of this node in navmesh
 	 */
-	public final int index;
+	public final int id;
 	
 	/**
 	 * List of all connected nodes
@@ -33,7 +30,7 @@ public class NavNode implements IVector2D
 	
 	NavNode(Vector2 point, Vector2 rawPoint, int index)
 	{
-		this.index = index;
+		this.id = index;
 		this.point = point;
 		this.rawPoint = rawPoint;
 		this.neighbours = new HashSet <NavNode> ();
@@ -58,60 +55,10 @@ public class NavNode implements IVector2D
 		return neighbours;
 	}
 	
-	/* (non-Javadoc)
-	 * @see yarangi.math.IVector2D#abs()
-	 */
-	@Override
-	public double abs()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see yarangi.math.IVector2D#crossZComponent(yarangi.math.IVector2D)
-	 */
-	@Override
-	public double crossZComponent(IVector2D arg0)
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see yarangi.math.IVector2D#crossZComponent(double, double)
-	 */
-	@Override
-	public double crossZComponent(double arg0, double arg1)
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Vector2D left()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Vector2D minus(IVector2D arg0)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double x() {	return point.x; }
-
-	@Override
-	public double y() {	return point.y; }
-	
 	public String toString()
 	{
 		return new StringBuilder()
-			.append("navnode [").append(index)
+			.append("navnode [").append(id)
 			.append(" (").append(getPoint()).append(")]")
 			.toString();
 	}

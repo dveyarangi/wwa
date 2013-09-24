@@ -48,7 +48,7 @@ public class Route implements Poolable
 		this.navMesh = navMesh;
 		this.from = from;
 		this.to = to;
-		hasNext = ( navMesh.routes[from.index][to.index]==null ) ? false : true;
+		hasNext = ( navMesh.routes[from.id][to.id]==null ) ? false : true;
 		first = true;
 	}
 	
@@ -64,8 +64,8 @@ public class Route implements Poolable
 			first = false;
 			return from;
 		}
-		from = navMesh.routes[from.index][to.index];
-		hasNext = ( navMesh.routes[from.index][to.index]==null || from==to ) ? false : true;
+		from = navMesh.routes[from.id][to.id];
+		hasNext = ( navMesh.routes[from.id][to.id]==null || from==to ) ? false : true;
 		return from;
 	}
 	

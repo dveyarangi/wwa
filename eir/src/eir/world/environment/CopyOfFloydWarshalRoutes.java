@@ -95,9 +95,9 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 		{
 			for(NavNode neigh : node.getNeighbors())
 			{
-				dist[node.index][neigh.index] = dist[node.index][neigh.index] = node.getPoint().dst(neigh.getPoint());
-				next[node.index][neigh.index] = neigh.index;
-				next[neigh.index][node.index] = node.index;
+				dist[node.id][neigh.id] = dist[node.id][neigh.id] = node.getPoint().dst(neigh.getPoint());
+				next[node.id][neigh.id] = neigh.id;
+				next[neigh.id][node.id] = node.id;
 			}
 		}
 		
@@ -113,7 +113,7 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 		NavNode node = getNode(idx);
 		for(NavNode neigh : node.getNeighbors())
 		{
-			if(neigh.index == jdx)
+			if(neigh.id == jdx)
 				return true;
 		}
 		

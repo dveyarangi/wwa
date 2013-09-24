@@ -3,13 +3,7 @@
  */
 package eir.resources;
 
-import java.util.LinkedList;
 import java.util.List;
-
-import yarangi.math.IVector2D;
-import yarangi.math.UnorderedPair;
-import yarangi.math.triangulation.Delaunay2D;
-import yarangi.math.triangulation.TriangleStore;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -107,7 +101,7 @@ public class PolygonalModel
 		nodes = new NavNode[len];
 
 		NavNode currNode = navMesh.insertNode( vertices[0], rawVertices[0] );
-		int startingIdx = currNode.index;
+		int startingIdx = currNode.id;
 		NavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
 		{
@@ -134,29 +128,6 @@ public class PolygonalModel
 			
 			maxSurfaceIdx ++;
 		}
-		
-		Delaunay2D d2d = new Delaunay2D();
-		
-		for(List<Vector2> poly : polygons)
-		{
-			List <NavNode> polyNodes = new LinkedList <NavNode> ();
-			for(Vector2 polyPoint : poly)
-			{
-				for(NavNode node : nodes)
-				{
-					if(polyPoint.equals( node.getRawPoint() ))
-					{
-						polyNodes.add( node );
-					}
-				}
-			}
-			TriangleStore store = d2d.triangulate( polyNodes );
-			for(UnorderedPair<IVector2D> link : store.getLinks())
-			{
-				navMesh.linkNodes( (NavNode)link.getFirst(), (NavNode)link.getSecond() );
-			}
-		}
-
 	}
 	
 	/**

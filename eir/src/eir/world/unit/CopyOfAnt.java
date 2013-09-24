@@ -177,7 +177,7 @@ public class CopyOfAnt implements Poolable
 			if(stateTime - screamTime < 1)
 				font.draw( batch, "Yarr!", position.x, position.y );
 			if(targetNode != null)
-				font.draw( batch, String.valueOf( targetNode.index ), position.x+2, position.y-2 );
+				font.draw( batch, String.valueOf( targetNode.id ), position.x+2, position.y-2 );
 		}
 	}
 	
