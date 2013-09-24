@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
-import eir.world.environment.FloydWarshalRoutes;
+import eir.resources.GameFactory;
+import eir.world.environment.FloydWarshal;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 import eir.world.environment.spatial.ISpatialObject;
@@ -62,7 +63,7 @@ public class Level
 
 	public Level()
 	{
-		navMesh = new FloydWarshalRoutes();
+		navMesh = new FloydWarshal();
 		ants = new HashSet <Ant> ();
 	}
 	

@@ -8,12 +8,12 @@ import gnu.trove.iterator.TIntObjectIterator;
  * @author Ni
  *
  */
-public class FloydWarshalRoutes extends NavMesh
+public class FloydWarshal extends NavMesh
 {
 	protected NavNode[][] routes;
 	protected float[][] dists;
 	
-	public FloydWarshalRoutes()
+	public FloydWarshal()
 	{
 	}
 	
@@ -62,8 +62,8 @@ public class FloydWarshalRoutes extends NavMesh
 		{
 			it.advance();
 			NavEdge e = it.value();
-			int i = e.getNode1().id;
-			int j = e.getNode2().id;
+			int i = e.getNode1().idx;
+			int j = e.getNode2().idx;
 			
 			lastdists[i][j] = e.getLength();
 			dists[i][j] = e.getLength();
@@ -110,9 +110,10 @@ public class FloydWarshalRoutes extends NavMesh
 	 * find the shortest route between node from and to
 	 * @return Route starting at a and ending at b using shortest route
 	 */
-	public Route getShortestRoute( NavNode from, NavNode to )
+	@Override
+	public FloydWarshalRoute getShortestRoute( NavNode from, NavNode to )
 	{
-		Route r = Route.routesPool.obtain();
+		FloydWarshalRoute r = FloydWarshalRoute.routesPool.obtain();
 		r.set(this, from, to);
 		return r;
 	}
@@ -125,6 +126,6 @@ public class FloydWarshalRoutes extends NavMesh
 	 */
 	public float distance( NavNode From, NavNode to )
 	{
-		return dists[From.id][to.id];
+		return dists[From.idx][to.idx];
 	}
 }

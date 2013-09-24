@@ -95,9 +95,9 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 		{
 			for(NavNode neigh : node.getNeighbors())
 			{
-				dist[node.id][neigh.id] = dist[node.id][neigh.id] = node.getPoint().dst(neigh.getPoint());
-				next[node.id][neigh.id] = neigh.id;
-				next[neigh.id][node.id] = node.id;
+				dist[node.idx][neigh.idx] = dist[node.idx][neigh.idx] = node.getPoint().dst(neigh.getPoint());
+				next[node.idx][neigh.idx] = neigh.idx;
+				next[neigh.idx][node.idx] = node.idx;
 			}
 		}
 		
@@ -113,7 +113,7 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 		NavNode node = getNode(idx);
 		for(NavNode neigh : node.getNeighbors())
 		{
-			if(neigh.id == jdx)
+			if(neigh.idx == jdx)
 				return true;
 		}
 		
@@ -125,9 +125,9 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 	 * find the shortest route between node from and to
 	 * @return ordered list starting at a and ending at b using shortest route / null if no route
 	 */
-	public Route getShortestRoute( NavNode from, NavNode to )
+	public FloydWarshalRoute getShortestRoute( NavNode from, NavNode to )
 	{
-		Route r = Route.routesPool.obtain();
+		FloydWarshalRoute r = FloydWarshalRoute.routesPool.obtain();
 //		r.set(this, from, to);
 		return r;
 	}
