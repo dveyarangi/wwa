@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
-import eir.resources.GameFactory;
 import eir.world.environment.FloydWarshalRoutes;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;

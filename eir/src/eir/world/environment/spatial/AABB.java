@@ -19,18 +19,10 @@ public class AABB
 	private Vector2 ref = Vector2.Zero.cpy();
 	
 	/**
-	 * half-width of the box
+	 * Size
 	 */
-	private float rx;
-	/**
-	 * half-height of the box
-	 */
-	private float ry;
-	
-	/**
-	 * max of rx and ry
-	 */
-	private float rmax;
+	private Vector2 dim = Vector2.Zero.cpy();
+
 	
 	/**
 	 * marker for {@link SpatialHashMap} queries.
@@ -112,14 +104,14 @@ public class AABB
 	protected AABB update(float x, float y, float rx, float ry)
 	{
 		this.ref.set( x, y );
-		rmax = Math.max(rx, ry);
-		this.rx = rx;
-		this.ry = ry;
+		this.dim.set( rx, ry );
 
 		return this;
 	}
 	
 	public final Vector2 getAnchor() { return ref; }
+	
+	public final Vector2 getDimensions() { return dim; }
 
 	final public void translate(float dx, float dy) {
 		ref.add(dx, dy);
@@ -134,31 +126,30 @@ public class AABB
 		if(radius < 0)
 			throw new IllegalArgumentException("AABB radius must be positive.");
 		
-		if(rx > ry) 
+		if(dim.x > dim.y) 
 		{
-			rx = radius;
-			ry *= rx/radius;  
+			dim.x = radius;
+			dim.y *= dim.y/radius;  
 		}
 		else
 		{
-			rx *= rx/radius;  
-			ry = radius;
+			dim.x *= dim.x/radius;  
+			dim.y = radius;
 
 		}
-		this.rmax = radius;
 	}
 	
 	public final boolean overlaps(float minx, float miny, float maxx, float maxy)
 	{
-		return ( (maxx >= ref.x-rx && maxx <= ref.x+rx) ||
-			     (minx >= ref.x-rx && minx <= ref.x+rx) ||
-			     (minx >= ref.x-rx && maxx <= ref.x+rx) ||
-			     (minx <= ref.x-rx && maxx >= ref.x+rx)    
+		return ( (maxx >= ref.x-dim.x && maxx <= ref.x+dim.x) ||
+			     (minx >= ref.x-dim.x && minx <= ref.x+dim.x) ||
+			     (minx >= ref.x-dim.x && maxx <= ref.x+dim.x) ||
+			     (minx <= ref.x-dim.x && maxx >= ref.x+dim.x)    
 			  ) && ( 
-			     (maxy >= ref.y-ry && maxy <= ref.y+ry) ||
-			     (miny >= ref.y-ry && miny <= ref.y+ry) ||
-			     (miny >= ref.y-ry && maxy <= ref.y+ry) ||
-			     (miny <= ref.y-ry && maxy >= ref.y+ry)    
+			     (maxy >= ref.y-dim.y && maxy <= ref.y+dim.y) ||
+			     (miny >= ref.y-dim.y && miny <= ref.y+dim.y) ||
+			     (miny >= ref.y-dim.y && maxy <= ref.y+dim.y) ||
+			     (miny <= ref.y-dim.y && maxy >= ref.y+dim.y)    
 			   );
 
 	}
@@ -177,17 +168,17 @@ public class AABB
 	@Override
 	public String toString()
 	{
-		return "AABB [loc:" + ref.x + ":" + ref.y + "; r:(" + rx +"," +ry +");]"; 
+		return "AABB [loc:" + ref.x + ":" + ref.y + "; r:(" + dim.x +"," +dim.y +");]"; 
 	}
 
 
-	public final float getMinX() { return ref.x - rx; }
-	public final float getMaxX() { return ref.x + rx; }
-	public final float getMinY() { return ref.y - ry; }
-	public final float getMaxY() { return ref.y + ry; }
+	public final float getMinX() { return ref.x - dim.x; }
+	public final float getMaxX() { return ref.x + dim.x; }
+	public final float getMinY() { return ref.y - dim.y; }
+	public final float getMaxY() { return ref.y + dim.y; }
 
-	public final float getRX() {return rx; }
-	public final float getRY() {return ry; }
+	public final float getRX() {return dim.x; }
+	public final float getRY() {return dim.y; }
 	public final float getCenterX()
 	{
 		return ref.x;
@@ -213,9 +204,7 @@ public class AABB
 	public AABB copyFrom(AABB aabb)
 	{
 		this.ref.set( aabb.ref );
-		this.rx = aabb.rx;
-		this.ry = aabb.ry;
-		this.rmax = aabb.rmax;
+		this.dim.set( aabb.dim );
 		return this;
 	}
 	/**
