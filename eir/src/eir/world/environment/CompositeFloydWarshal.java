@@ -1,6 +1,7 @@
 package eir.world.environment;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import java.util.ArrayList;
+
 
 
 
@@ -12,17 +13,23 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 public class CompositeFloydWarshal extends FloydWarshal
 {
 	
-	TIntObjectHashMap<FloydWarshal> subMaps;
+//	TIntObjectHashMap<FloydWarshal> subMaps;
+	ArrayList<FloydWarshal> subMaps;
 	
 	public CompositeFloydWarshal()
 	{
-		subMaps = new TIntObjectHashMap<FloydWarshal>();
+		subMaps = new ArrayList<FloydWarshal>();
+//		subMaps = new TIntObjectHashMap<FloydWarshal>();
 	}
 	
 	public void addSubNavMesh( FloydWarshal navMesh )
 	{
-		
+		subMaps.add(navMesh);
 	}
 	
-	
+	@Override
+	public void linkNodes(NavNode na, NavNode nb)
+	{
+		super.linkNodes(na, nb);
+	}
 }

@@ -13,11 +13,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Level;
+import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
+import gnu.trove.iterator.TIntObjectIterator;
 
 /**
  * @author dveyarangi
@@ -71,12 +74,9 @@ public class Debug
 		if(sampleIdx >= SAMPLES-1)
 		{
 			float maxDelta = Float.MIN_VALUE;
-			float deltaSum = 0;
 			for(int idx = 0; idx < SAMPLES; idx ++)
 			{
 				float sample = deltas[idx];
-				
-				deltaSum += sample;
 				
 				if(isFirstBatch)
 					continue;
@@ -145,16 +145,28 @@ public class Debug
 		batch.end();
 		
 		shape.begin(ShapeType.Line);
-		for(int fidx = 0; fidx < navMesh.getNodesNum(); fidx ++)
+		shape.setColor( 0, 1, 0, 0.5f );
+		
+		TIntObjectIterator<NavEdge> i = navMesh.getEdgesIterator();
+		i.advance();
+		while( i.hasNext() )
 		{
-			srcNode = navMesh.getNode( fidx );
-
-			shape.setColor( 0, 1, 0, 0.5f );
-			for(NavNode tarNode : srcNode.getNeighbors())
-			{
-				shape.line( srcNode.getPoint().x, srcNode.getPoint().y, tarNode.getPoint().x, tarNode.getPoint().y);
-			}
+			NavEdge e = i.value();
+			Vector2 p1 = e.getNode1().getPoint();
+			Vector2 p2 = e.getNode2().getPoint();
+			shape.line(p1.x, p1.y, p2.x, p2.y);
+			i.advance();
 		}
+//		for(int fidx = 0; fidx < navMesh.getNodesNum(); fidx ++)
+//		{
+//			srcNode = navMesh.getNode( fidx );
+//
+//			shape.setColor( 0, 1, 0, 0.5f );
+//			for(NavNode tarNode : srcNode.getNeighbors())
+//			{
+//				shape.line( srcNode.getPoint().x, srcNode.getPoint().y, tarNode.getPoint().x, tarNode.getPoint().y);
+//			}
+//		}
 		shape.end();
 	}
 	

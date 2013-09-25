@@ -3,6 +3,7 @@
  */
 package eir.world.environment;
 
+import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.ArrayList;
@@ -53,8 +54,8 @@ public abstract class NavMesh
 	
 	public void linkNodes(NavNode na, NavNode nb)
 	{
-		na.addNeighbour(nb);
-		nb.addNeighbour(na);
+//		na.addNeighbour(nb);
+//		nb.addNeighbour(na);
 		
 		int edgeIdx = getEdgeIdx(na.idx, nb.idx);
 		if(!edges.contains( edgeIdx ))
@@ -68,6 +69,7 @@ public abstract class NavMesh
 	{
 		return edges.get( getEdgeIdx( node1Idx, node2Idx ) );
 	}
+	
 	public NavEdge getEdge(NavNode na, NavNode nb)
 	{
 		return getEdge( na.idx, nb.idx );
@@ -79,5 +81,10 @@ public abstract class NavMesh
 	protected final int getEdgeIdx(int node1Idx, int node2Idx)
 	{
 		return node1Idx + (node2Idx+1) * MAX_NODES;
+	}
+	
+	public TIntObjectIterator<NavEdge> getEdgesIterator()
+	{
+		return edges.iterator();
 	}
 }
