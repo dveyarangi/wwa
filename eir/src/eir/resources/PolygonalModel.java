@@ -101,7 +101,7 @@ public class PolygonalModel
 		nodes = new NavNode[len];
 
 		NavNode currNode = navMesh.insertNode( vertices[0], rawVertices[0] );
-		int startingIdx = currNode.id;
+		int startingIdx = currNode.idx;
 		NavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
 		{

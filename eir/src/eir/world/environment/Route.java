@@ -1,81 +1,28 @@
 package eir.world.environment;
 
-import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
-
 /**
- * represents a route across a graph <br>
+ * base class for routes on nav meshes
  * @author Ni
  *
  */
-public class Route implements Poolable
+public abstract class Route implements Poolable
 {
-	public static final Pool<Route> routesPool =
-			new Pool<Route>()
-			{
-				@Override
-				protected Route newObject()
-				{
-					return new Route();
-				}
-			};
-	
-	private FloydWarshalRoutes navMesh;
-	private NavNode from;
-	private NavNode to;
-	private boolean hasNext;
-	private boolean first;
-
-	public Route()
-	{
-		this.navMesh = null;
-		this.from = null;
-		this.to = null;
-		hasNext = false;
-		first = true;
-	}
-	
+	/**
+	 * has another node en route?
+	 * @return
+	 */
+	public abstract boolean hasNext();
 	
 	/**
-	 * prepare for acquire!
-	 * @param navMesh
-	 * @param from
-	 * @param to
+	 * get next node if available
+	 * @return
 	 */
-	public void set( FloydWarshalRoutes navMesh, NavNode from, NavNode to )
-	{
-		this.navMesh = navMesh;
-		this.from = from;
-		this.to = to;
-		hasNext = ( navMesh.routes[from.id][to.id]==null ) ? false : true;
-		first = true;
-	}
+	public abstract NavNode next();
 	
-	public boolean hasNext()
-	{
-		return hasNext;
-	}
-	
-	public NavNode next()
-	{
-		if( first )
-		{
-			first = false;
-			return from;
-		}
-		from = navMesh.routes[from.id][to.id];
-		hasNext = ( navMesh.routes[from.id][to.id]==null || from==to ) ? false : true;
-		return from;
-	}
-	
-	@Override
-	public void reset()
-	{
-		this.navMesh = null;
-		this.from = null;
-		this.to = null;
-		hasNext = false;
-		first = false;
-	}
+	/**
+	 * recycle this route. <b>MAKE SURE NOT TO KEEP THE REF AFTER CALLING</b>
+	 */
+	public abstract void recycle();
 }

@@ -56,11 +56,11 @@ public abstract class NavMesh
 		na.addNeighbour(nb);
 		nb.addNeighbour(na);
 		
-		int edgeIdx = getEdgeIdx(na.id, nb.id);
+		int edgeIdx = getEdgeIdx(na.idx, nb.idx);
 		if(!edges.contains( edgeIdx ))
 		{
 			edges.put( edgeIdx, new NavEdge( na, nb ) );
-			edges.put( getEdgeIdx(nb.id, na.id), new NavEdge( nb, na ) );
+			edges.put( getEdgeIdx(nb.idx, na.idx), new NavEdge( nb, na ) );
 		}
 	}
 	
@@ -70,10 +70,10 @@ public abstract class NavMesh
 	}
 	public NavEdge getEdge(NavNode na, NavNode nb)
 	{
-		return getEdge( na.id, nb.id );
+		return getEdge( na.idx, nb.idx );
 	}
 	
-	public abstract Route getShortestRoute( NavNode from, NavNode to );
+	public abstract FloydWarshalRoute getShortestRoute( NavNode from, NavNode to );
 
 
 	protected final int getEdgeIdx(int node1Idx, int node2Idx)

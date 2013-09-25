@@ -19,7 +19,7 @@ import eir.world.Level;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
-import eir.world.environment.Route;
+import eir.world.environment.FloydWarshalRoute;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
 
@@ -80,7 +80,7 @@ public class Ant implements Poolable, ISpatialObject
 	
 	private NavMesh mesh;
 	private NavNode currNode, nextNode, targetNode;
-	private Route route;
+	private FloydWarshalRoute route;
 	// offset from current node on the nav edge
 	private float nodeOffset;
 	
@@ -189,7 +189,7 @@ public class Ant implements Poolable, ISpatialObject
 			if(stateTime - screamTime < 1)
 				font.draw( batch, "Yarr!", position.x, position.y );
 			if(targetNode != null)
-				font.draw( batch, String.valueOf( targetNode.id ), position.x+2, position.y-2 );
+				font.draw( batch, String.valueOf( targetNode.idx ), position.x+2, position.y-2 );
 		}
 	}
 	
