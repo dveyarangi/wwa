@@ -129,8 +129,8 @@ public class PolygonalModel
 			navMesh.linkNodes( currNode, prevNode, NavEdge.Type.LAND );
 			
 			maxSurfaceIdx ++;
-			navMesh.endAsteroid();
 		}
+		navMesh.endAsteroid();
 	}
 	
 	/**
