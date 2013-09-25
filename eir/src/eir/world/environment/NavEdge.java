@@ -11,7 +11,10 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class NavEdge
 {
-
+	public enum Type { WEB, LAND };
+	
+	public final Type type;
+	
 	/**
 	 * indexes of navnodes connected by this edge
 	 */
@@ -37,8 +40,9 @@ public class NavEdge
 	 */
 	private final float length;
 
-	protected NavEdge(NavNode node1, NavNode node2)
+	protected NavEdge(NavNode node1, NavNode node2, Type type)
 	{
+		this.type = type;
 		this.node1 = node1;
 		this.node2 = node2;
 		

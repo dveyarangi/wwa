@@ -27,9 +27,9 @@ public class CompositeFloydWarshal extends FloydWarshal
 		subMaps.add(navMesh);
 	}
 	
-	@Override
-	public void linkNodes(NavNode na, NavNode nb)
-	{
-		super.linkNodes(na, nb);
-	}
+//	@Override
+//	public void linkNodes(NavNode na, NavNode nb)
+//	{
+//		super.linkNodes(na, nb);
+//	}
 }

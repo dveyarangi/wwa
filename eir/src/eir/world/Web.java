@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.resources.GameFactory;
+import eir.world.environment.NavEdge;
 import eir.world.environment.NavNode;
 
 
@@ -51,7 +51,7 @@ public class Web
 		NavNode sourceNode = sourceAst.getModel().getNavNode(source.getNavNodeIdx());
 		NavNode targetNode = targetAst.getModel().getNavNode(target.getNavNodeIdx());
 		
-		level.getNavMesh().linkNodes( sourceNode, targetNode );
+		level.getNavMesh().linkNodes( sourceNode, targetNode, NavEdge.Type.WEB );
 		
 /*		Vector2 src = Vector2.tmp .set( source.getX() - 0.5f, source.getY() - 0.5f).rotate(sourceAst.getAngle()).add(0.5f,0.5f);
 		Vector2 tar = Vector2.tmp2.set( target.getX() - 0.5f, target.getY() - 0.5f).rotate(targetAst.getAngle()).add(0.5f,0.5f);

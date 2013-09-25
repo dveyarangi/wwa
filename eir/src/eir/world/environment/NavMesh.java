@@ -9,6 +9,8 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.ArrayList;
 import java.util.List;
 
+import yarangi.math.Edge;
+
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -52,16 +54,16 @@ public abstract class NavMesh
 		return node;
 	}
 	
-	public void linkNodes(NavNode na, NavNode nb)
+	public void linkNodes( NavNode na, NavNode nb, NavEdge.Type type )
 	{
-//		na.addNeighbour(nb);
-//		nb.addNeighbour(na);
+		na.addNeighbour(nb);
+		nb.addNeighbour(na);
 		
 		int edgeIdx = getEdgeIdx(na.idx, nb.idx);
 		if(!edges.contains( edgeIdx ))
 		{
-			edges.put( edgeIdx, new NavEdge( na, nb ) );
-			edges.put( getEdgeIdx(nb.idx, na.idx), new NavEdge( nb, na ) );
+			edges.put( edgeIdx, new NavEdge( na, nb, type ) );
+			edges.put( getEdgeIdx(nb.idx, na.idx), new NavEdge( nb, na, type ) );
 		}
 	}
 	
