@@ -9,8 +9,6 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.ArrayList;
 import java.util.List;
 
-import yarangi.math.Edge;
-
 import com.badlogic.gdx.math.Vector2;
 
 /**

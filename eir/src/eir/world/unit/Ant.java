@@ -19,7 +19,7 @@ import eir.world.Level;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
-import eir.world.environment.FloydWarshalRoute;
+import eir.world.environment.Route;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
 
@@ -80,7 +80,7 @@ public class Ant implements Poolable, ISpatialObject
 	
 	private NavMesh mesh;
 	private NavNode currNode, nextNode, targetNode;
-	private FloydWarshalRoute route;
+	private Route route;
 	// offset from current node on the nav edge
 	private float nodeOffset;
 	
