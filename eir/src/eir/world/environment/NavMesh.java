@@ -21,6 +21,9 @@ public abstract class NavMesh
 	 * List of all participating nodes
 	 */
 	protected List <NavNode> nodes;
+	protected ArrayList<int[]> indexRange;
+	
+	private int[] cur;
 	
 	protected TIntObjectHashMap<NavEdge> edges;
 	
@@ -34,6 +37,7 @@ public abstract class NavMesh
 	{
 		nodes = new ArrayList<NavNode> ();
 		edges = new TIntObjectHashMap <NavEdge> ();
+		indexRange = new ArrayList<int[]>();
 	}
 	
 	public abstract void init();
@@ -41,6 +45,25 @@ public abstract class NavMesh
 	public int getNodesNum() { return nodes.size(); }
 	
 	public NavNode getNode(int idx) { return nodes.get( idx ); }
+	
+	/**
+	 *  call when start adding nodes belonging to same batch
+	 */
+	public void beginAsteroid()
+	{
+		cur = new int[2];
+		cur[0] = nextNodeIndex;
+	}
+	
+	/**
+	 * call when finished adding  nodes belonging to same batch
+	 */
+	public void endAsteroid()
+	{
+		cur[1] = nextNodeIndex;
+		indexRange.add(cur);
+		cur = null;
+	}
 	
 	public NavNode insertNode(Vector2 point, Vector2 rawPoint)
 	{
