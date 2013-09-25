@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
+import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 
@@ -124,7 +125,7 @@ public class PolygonalModel
 				currNode = navMesh.insertNode( b, rawVertices[(idx+1)%len] );
 			else
 				currNode = navMesh.getNode(startingIdx);
-			navMesh.linkNodes( currNode, prevNode );
+			navMesh.linkNodes( currNode, prevNode, NavEdge.Type.LAND );
 			
 			maxSurfaceIdx ++;
 		}
