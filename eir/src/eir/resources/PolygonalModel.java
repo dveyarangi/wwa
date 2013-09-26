@@ -101,6 +101,7 @@ public class PolygonalModel
 		
 		nodes = new NavNode[len];
 
+		navMesh.beginAsteroid();
 		NavNode currNode = navMesh.insertNode( vertices[0], rawVertices[0] );
 		int startingIdx = currNode.idx;
 		NavNode prevNode;
@@ -129,6 +130,7 @@ public class PolygonalModel
 			
 			maxSurfaceIdx ++;
 		}
+		navMesh.endAsteroid();
 	}
 	
 	/**
