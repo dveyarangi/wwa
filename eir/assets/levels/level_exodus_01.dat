@@ -100,7 +100,7 @@
 				  "angle" : "0",
 				  "size" : "100",
 				  "modelId" : "exodus_01/exodus_01_red_right_palm"
-				},			
+/*				},			
 				
 			    #######
 				{ 
@@ -179,10 +179,169 @@
 				  "angle" : "90",
 				  "size" : "100",
 				  "modelId" : "exodus_01/exodus_01_blue_right_palm"
-				}			
+				},	
 				
 				
+				#######
 				
+				{ 
+				  "name" : "yellow_head",
+				  "position" : { "x":"120",  "y":"-49" },
+				  "angle" : "180",
+				  "size" : "115",
+				  "modelId" : "exodus_01/exodus_01_red_head"
+				},			
+				{ 
+				  "name" : "yellow_back",
+				  "position" : { "x":"249",  "y":"-91" },
+				  "angle" : "180",
+				  "size" : "170",
+				  "modelId" : "exodus_01/exodus_01_red_back"
+				},				
+				{ 
+				  "name" : "yellow_ass",
+				  "position" : { "x":"374",  "y":"8" },
+				  "angle" : "180",
+				  "size" : "110",
+				  "modelId" : "exodus_01/exodus_01_red_ass"
+				},					
+				{ 
+				  "name" : "grasp_03",
+				  "position" : { "x":"180",  "y":"-271" },
+				  "angle" : "180",
+				  "size" : "70",
+				  "modelId" : "exodus_01/exodus_01_grasp"
+				},					
+				{ 
+				  "name" : "yellow_left_foot",
+				  "position" : { "x":"619",  "y":"-38" },
+				  "angle" : "180",
+				  "size" : "105",
+				  "modelId" : "exodus_01/exodus_01_red_left_foot"
+				},					
+				{ 
+				  "name" : "yellow_left_leg",
+				  "position" : { "x":"483",  "y":"-33" },
+				  "angle" : "180",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_red_left_leg"
+				},					
+				{ 
+				  "name" : "yellow_left_palm",
+				  "position" : { "x":"224",  "y":"-197" },
+				  "angle" : "180",
+				  "size" : "86",
+				  "modelId" : "exodus_01/exodus_01_red_left_palm"
+				},					
+				{ 
+				  "name" : "yellow_right_arm",
+				  "position" : { "x":"234",  "y":"-12" },
+				  "angle" : "180",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_red_right_arm"
+				},					
+				{  
+				  "name" : "yellow_right_foot",
+				  "position" : { "x":"586",  "y":"180" },
+				  "angle" : "180",
+				  "size" : "105",
+				  "modelId" : "exodus_01/exodus_01_red_right_foot"
+				},				
+				{ 
+				  "name" : "yellow_right_leg",
+				  "position" : { "x":"485",  "y":"105" },
+				  "angle" : "180",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_red_right_leg"
+				},				
+				{ 
+				  "name" : "yellow_right_palm",
+				  "position" : { "x":"277",  "y":"87" },
+				  "angle" : "180",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_red_right_palm"
+				},
+				
+								
+			    #######
+				{ 
+				  "name" : "green_head",
+				  "position" : { "y":"120",  "x":"49" },
+				  "angle" : "-90",
+				  "size" : "125",
+				  "modelId" : "exodus_01/exodus_01_blue_head"
+				},			
+				{ 
+				  "name" : "green__back",
+				  "position" : { "y":"249",  "x":"91" },
+				  "angle" : "-90",
+				  "size" : "170",
+				  "modelId" : "exodus_01/exodus_01_blue_back"
+				},				
+				{ 
+				  "name" : "green__ass",
+				  "position" : { "y":"374",  "x":"-8" },
+				  "angle" : "-90",
+				  "size" : "110",
+				  "modelId" : "exodus_01/exodus_01_blue_ass"
+				},					
+				{ 
+				  "name" : "grasp_04",
+				  "position" : { "y":"180",  "x":"271" },
+				  "angle" : "-90",
+				  "size" : "70",
+				  "modelId" : "exodus_01/exodus_01_grasp"
+				},					
+				{ 
+				  "name" : "green_left_foot",
+				  "position" : { "y":"619",  "x":"38" },
+				  "angle" : "-90",
+				  "size" : "105",
+				  "modelId" : "exodus_01/exodus_01_blue_left_foot"
+				},					
+				{ 
+				  "name" : "green_left_leg",
+				  "position" : { "y":"483",  "x":"33" },
+				  "angle" : "-90",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_blue_left_leg"
+				},					
+				{ 
+				  "name" : "green_left_palm",
+				  "position" : { "y":"224",  "x":"197" },
+				  "angle" : "-90",
+				  "size" : "86",
+				  "modelId" : "exodus_01/exodus_01_blue_left_palm"
+				},					
+				{ 
+				  "name" : "green_right_arm",
+				  "position" : { "y":"234",  "x":"12" },
+				  "angle" : "-90",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_blue_right_arm"
+				},					
+				{  
+				  "name" : "green_right_foot",
+				  "position" : { "y":"586",  "x":"-180" },
+				  "angle" : "-90",
+				  "size" : "105",
+				  "modelId" : "exodus_01/exodus_01_blue_right_foot"
+				},				
+				{ 
+				  "name" : "green_right_leg",
+				  "position" : { "y":"485",  "x":"-105" },
+				  "angle" : "-90",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_blue_right_leg"
+				},				
+				{ 
+				  "name" : "green_right_palm",
+				  "position" : { "y":"277",  "x":"-87" },
+				  "angle" : "-90",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_blue_right_palm"
+				  */
+				}
 				],
 			
 			"webs" : [
