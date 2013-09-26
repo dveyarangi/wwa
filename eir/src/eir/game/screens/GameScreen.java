@@ -90,7 +90,7 @@ public class GameScreen extends AbstractScreen
 		for(int i = 0; i < 150; i ++)
 		{
 			NavNode startingNode = level.getNavMesh().getNode( 
-					RandomUtil.N( 30 ) + 60 );
+					RandomUtil.N( 90 ) );
 			level.addAnt(startingNode);
 		}
 

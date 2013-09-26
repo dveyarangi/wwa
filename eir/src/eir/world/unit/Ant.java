@@ -119,7 +119,7 @@ public class Ant implements Poolable, ISpatialObject
 		if(nextNode == null)
 		{
 			// either we reached next node, or we do not have target
-			if(route == null || !route.hasNext())
+			while(route == null || !route.hasNext())
 			{
 				if(route != null)
 					screamTime = stateTime;

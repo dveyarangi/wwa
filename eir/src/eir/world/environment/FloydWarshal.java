@@ -41,15 +41,10 @@ public class FloydWarshal extends NavMesh
 			{	
 				if( i!=j )
 				{
-					dists[i][j] = Float.MAX_VALUE;
-					lastdists[i][j] = Float.MAX_VALUE;
-					preds[i][j] = null;
-					lastpreds[i][j] = null;
+					lastdists[i][j] = Float.POSITIVE_INFINITY;
 				}
 				else
 				{
-					dists[i][j] = 0;
-					preds[i][j] = nodes.get(i);
 					lastdists[i][j] = 0;
 					lastpreds[i][j] = nodes.get(i);
 				}
@@ -66,42 +61,47 @@ public class FloydWarshal extends NavMesh
 			int j = e.getNode2().idx;
 			
 			lastdists[i][j] = e.getLength();
-			dists[i][j] = e.getLength();
-			
 			lastpreds[i][j] = e.getNode2();
 		}
 		
-		for( int k=0 ; k<n ; k++ )
+//		circle "forward"
+		for( int[] c : indexRange )
 		{
-			for( int i=0 ; i<n ; i++ )
+			for( int i=c[0]+2 ; i<c[1] ; i++ )
 			{
-				for( int j=0 ; j<n ; j++ )
+				for( int j=i-2 ; j>=0 ; j-- )
 				{
-					float contendor = lastdists[i][k] + lastdists[k][j];
-					
-					if( lastdists[i][j]>contendor )
-					{
-						dists[i][j] = contendor;						
-						preds[i][j] = lastpreds[i][k];
-					}
-					else
-					{
-						dists[i][j] = lastdists[i][j];
-						preds[i][j] = lastpreds[i][j];
-					}
+					lastpreds[i][j] = lastpreds[j][i] = lastpreds[j][i-1];
+					lastdists[i][j] = lastdists[j][i] = lastdists[j][i-1] + lastdists[j+1][i];
 				}
 			}
-			
-			// swap buffers
-			tmppreds = lastpreds;
-			lastpreds = preds;
-			preds = tmppreds;
-			
-			tmpdists = lastdists;
-			lastdists = dists;
-			dists = tmpdists;
 		}
 		
+		System.out.println("-------------------------------------");
+		for( int i=0 ; i<33 ; i++ )
+		{
+			for( int j=0 ; j<33 ; j++ )
+			{
+				if( lastpreds[i][j]==null)
+					System.out.print("null\t");
+				else
+					System.out.print(lastpreds[i][j].idx+"\t");
+			}
+			System.out.println();
+		}
+//		for( int i=0 ; i<33 ; i++ )
+//		{
+//			for( int j=0 ; j<33 ; j++ )
+//			{
+//				if( lastdists[i][j]==Float.POSITIVE_INFINITY)
+//					System.out.print("inf\t");
+//				else
+//					System.out.printf("%3.0f\t", lastdists[i][j]);
+//			}
+//			System.out.println();
+//		}
+		
+//		System.exit(0);
 		this.routes = lastpreds;
 		this.dists = lastdists;
 	}
