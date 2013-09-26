@@ -72,6 +72,7 @@ public class Asteroid
 	public void init(Level level)
 	{
 		model = GameFactory.loadAsteroidModel( this, modelId );
+		System.out.println(modelId);
 		sprite = GameFactory.createSprite( modelId, position, model.getOrigin(), size, size, angle );
 	}
 	

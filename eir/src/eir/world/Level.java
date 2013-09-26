@@ -16,6 +16,7 @@ import eir.world.environment.NavNode;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.Ant;
+import eir.world.unit.Spider;
 
 public class Level
 {
@@ -60,6 +61,8 @@ public class Level
 	 * List of ants
 	 */
 	private Set <Ant> ants;
+	
+	private Spider playerSpider;
 
 	public Level()
 	{
@@ -93,6 +96,8 @@ public class Level
 		{
 			web.init( this );
 		}
+		
+//		spider = new Spider( asteroid, size, surfaceIdx, speed );
 
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
