@@ -81,7 +81,7 @@ public class Web
 		sourceSprite.rotate( angle );
 		threadSprite.rotate( angle );
 		
-		float scale = 0.1f; // different sizes of webs?
+		float scale = v.len()/1000; // different sizes of webs?
 		
 		sourceSprite.setScale(scale);
 		targetSprite.setScale(scale);
