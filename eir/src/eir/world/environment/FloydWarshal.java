@@ -26,12 +26,12 @@ public class FloydWarshal extends NavMesh
 	{
 		int n = nodes.size();
 		
-		float[][] dists = new float[n][n];
-		float[][] lastdists = new float[n][n];
+		float[][] ccwdists = new float[n][n];
+		float[][] cwdists = new float[n][n];
 		float[][] tmpdists = null;
 		
-		NavNode[][] preds = new NavNode[n][n];
-		NavNode[][] lastpreds = new NavNode[n][n];
+		NavNode[][] ccwpreds = new NavNode[n][n];
+		NavNode[][] cwpreds = new NavNode[n][n];
 		
 		NavNode[][] tmppreds = null;
 		
@@ -41,12 +41,12 @@ public class FloydWarshal extends NavMesh
 			{	
 				if( i!=j )
 				{
-					lastdists[i][j] = Float.POSITIVE_INFINITY;
+					cwdists[i][j] = Float.POSITIVE_INFINITY;
 				}
 				else
 				{
-					lastdists[i][j] = 0;
-					lastpreds[i][j] = nodes.get(i);
+					cwdists[i][j] = 0;
+					cwpreds[i][j] = nodes.get(i);
 				}
 			}
 		}
@@ -60,35 +60,48 @@ public class FloydWarshal extends NavMesh
 			int i = e.getNode1().idx;
 			int j = e.getNode2().idx;
 			
-			lastdists[i][j] = e.getLength();
-			lastpreds[i][j] = e.getNode2();
+			cwdists[i][j] = e.getLength();
+			cwpreds[i][j] = e.getNode2();
 		}
 		
-//		circle "forward"
+//		circle "clock wise"
 		for( int[] c : indexRange )
 		{
 			for( int i=c[0]+2 ; i<c[1] ; i++ )
 			{
 				for( int j=i-2 ; j>=0 ; j-- )
 				{
-					lastpreds[i][j] = lastpreds[j][i] = lastpreds[j][i-1];
-					lastdists[i][j] = lastdists[j][i] = lastdists[j][i-1] + lastdists[j+1][i];
+					cwpreds[i][j] = cwpreds[j][i] = cwpreds[j][i-1];
+					cwdists[i][j] = cwdists[j][i] = cwdists[j][i-1] + cwdists[j+1][i];
 				}
 			}
 		}
 		
-		System.out.println("-------------------------------------");
-		for( int i=0 ; i<33 ; i++ )
+//		circle "counter clock wise"
+		for( int[] c : indexRange )
 		{
-			for( int j=0 ; j<33 ; j++ )
+			for( int i=c[0]+2 ; i<c[1] ; i++ )
 			{
-				if( lastpreds[i][j]==null)
-					System.out.print("null\t");
-				else
-					System.out.print(lastpreds[i][j].idx+"\t");
+				for( int j=i-2 ; j>=0 ; j-- )
+				{
+					cwpreds[i][j] = cwpreds[j][i] = cwpreds[j][i-1];
+					cwdists[i][j] = cwdists[j][i] = cwdists[j][i-1] + cwdists[j+1][i];
+				}
 			}
-			System.out.println();
 		}
+		
+//		System.out.println("-------------------------------------");
+//		for( int i=0 ; i<33 ; i++ )
+//		{
+//			for( int j=0 ; j<33 ; j++ )
+//			{
+//				if( lastpreds[i][j]==null)
+//					System.out.print("null\t");
+//				else
+//					System.out.print(lastpreds[i][j].idx+"\t");
+//			}
+//			System.out.println();
+//		}
 //		for( int i=0 ; i<33 ; i++ )
 //		{
 //			for( int j=0 ; j<33 ; j++ )
@@ -102,8 +115,8 @@ public class FloydWarshal extends NavMesh
 //		}
 		
 //		System.exit(0);
-		this.routes = lastpreds;
-		this.dists = lastdists;
+		this.routes = cwpreds;
+		this.dists = cwdists;
 	}
 	
 	/**
