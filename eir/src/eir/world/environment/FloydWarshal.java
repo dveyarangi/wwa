@@ -71,24 +71,25 @@ public class FloydWarshal extends NavMesh
 			{
 				for( int j=i-2 ; j>=0 ; j-- )
 				{
-					cwpreds[i][j] = cwpreds[j][i] = cwpreds[j][i-1];
-					cwdists[i][j] = cwdists[j][i] = cwdists[j][i-1] + cwdists[j+1][i];
+					cwpreds[j][i] = cwpreds[j][i-1];
+					cwdists[j][i] = cwdists[j][i-1] + cwdists[j+1][i];
 				}
 			}
 		}
 		
+		//TODO do this thing
 //		circle "counter clock wise"
-		for( int[] c : indexRange )
-		{
-			for( int i=c[0]+2 ; i<c[1] ; i++ )
-			{
-				for( int j=i-2 ; j>=0 ; j-- )
-				{
-					cwpreds[i][j] = cwpreds[j][i] = cwpreds[j][i-1];
-					cwdists[i][j] = cwdists[j][i] = cwdists[j][i-1] + cwdists[j+1][i];
-				}
-			}
-		}
+//		for( int[] c : indexRange )
+//		{
+//			for( int i=c[0]+2 ; i<c[1] ; i++ )
+//			{
+//				for( int j=i-2 ; j>=0 ; j-- )
+//				{
+//					cwpreds[j][i] = cwpreds[j][i-1];
+//					cwdists[j][i] = cwdists[j][i-1] + cwdists[j+1][i];
+//				}
+//			}
+//		}
 		
 //		System.out.println("-------------------------------------");
 //		for( int i=0 ; i<33 ; i++ )
