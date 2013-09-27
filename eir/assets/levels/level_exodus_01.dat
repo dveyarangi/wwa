@@ -3,10 +3,10 @@
 			"name" : "level_exodus_01",
 			
 			# width of the game world in tiles
-			"width" : "1024",
+			"width" : "1536",
 			
 			# length of the game world in tiles
-			"height" : "1024",
+			"height" : "1536",
 			
 			"initialNodeIdx" : 89,
 			
@@ -17,35 +17,178 @@
 			########################################
 			# asteroids
 			"asteroids" : [
-				
 				{ 
-				  "name" : "sad_head_02",
-				  "position" : { "x":"200",  "y":"200" },
-				  "angle" : "-250",
-				  "size" : "200",
-				  "modelId" : "asteroid_head_02"
-				},
-				{  
-				  "name" : "sad_head_01",
-				  "position" : { "x":"50",  "y":"0"}, 
+				  "name" : "center",
+				  "position" : { "x":"0",  "y":"0" },
 				  "angle" : "0",
-				  "size" : "50",				 
-				  "modelId" : "asteroid_head_01"
-				  
-				},				  
+				  "size" : "32",
+				  "modelId" : "exodus_01/exodus_01_center"
+				},
 				{ 
-				  "name" : "sad_head_04",
-				  "position" : { "x":"250",  "y":"-100" },
+				  "name" : "red_head",
+				  "position" : { "x":"-120",  "y":"49" },
+				  "angle" : "0",
+				  "size" : "115",
+				  "modelId" : "exodus_01/exodus_01_red_head"
+				},			
+				{ 
+				  "name" : "red_back",
+				  "position" : { "x":"-249",  "y":"91" },
+				  "angle" : "0",
+				  "size" : "170",
+				  "modelId" : "exodus_01/exodus_01_red_back"
+				},				
+				{ 
+				  "name" : "red_ass",
+				  "position" : { "x":"-374",  "y":"-8" },
+				  "angle" : "0",
+				  "size" : "110",
+				  "modelId" : "exodus_01/exodus_01_red_ass"
+				},					
+				{ 
+				  "name" : "grasp_01",
+				  "position" : { "x":"-180",  "y":"271" },
+				  "angle" : "0",
+				  "size" : "70",
+				  "modelId" : "exodus_01/exodus_01_grasp"
+				},					
+				{ 
+				  "name" : "red_left_foot",
+				  "position" : { "x":"-619",  "y":"38" },
+				  "angle" : "0",
+				  "size" : "105",
+				  "modelId" : "exodus_01/exodus_01_red_left_foot"
+				},					
+				{ 
+				  "name" : "red_left_leg",
+				  "position" : { "x":"-483",  "y":"33" },
 				  "angle" : "0",
 				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_red_left_leg"
+				},					
+				{ 
+				  "name" : "red_left_palm",
+				  "position" : { "x":"-224",  "y":"197" },
+				  "angle" : "0",
+				  "size" : "86",
+				  "modelId" : "exodus_01/exodus_01_red_left_palm"
+				},					
+				{ 
+				  "name" : "red_right_arm",
+				  "position" : { "x":"-234",  "y":"12" },
+				  "angle" : "0",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_red_right_arm"
+				},					
+				{  
+				  "name" : "red_right_foot",
+				  "position" : { "x":"-586",  "y":"-180" },
+				  "angle" : "0",
+				  "size" : "105",
+				  "modelId" : "exodus_01/exodus_01_red_right_foot"
+				},				
+				{ 
+				  "name" : "red_right_leg",
+				  "position" : { "x":"-485",  "y":"-105" },
+				  "angle" : "0",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_red_right_leg"
+				},				
+				{ 
+				  "name" : "red_right_palm",
+				  "position" : { "x":"-277",  "y":"-87" },
+				  "angle" : "0",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_red_right_palm"
+				},			
+				
+			    #######
+				{ 
+				  "name" : "blue_head",
+				  "position" : { "y":"-120",  "x":"-49" },
+				  "angle" : "65",
+				  "size" : "125",
 				  "modelId" : "asteroid_head_04"
-				}				  
-			],
+				},			
+				{ 
+				  "name" : "blue_back",
+				  "position" : { "y":"-249",  "x":"-91" },
+				  "angle" : "90",
+				  "size" : "170",
+				  "modelId" : "exodus_01/exodus_01_blue_back"
+				},				
+				{ 
+				  "name" : "blue_ass",
+				  "position" : { "y":"-374",  "x":"8" },
+				  "angle" : "90",
+				  "size" : "110",
+				  "modelId" : "exodus_01/exodus_01_blue_ass"
+				},					
+				{ 
+				  "name" : "grasp_02",
+				  "position" : { "y":"-180",  "x":"-271" },
+				  "angle" : "90",
+				  "size" : "70",
+				  "modelId" : "exodus_01/exodus_01_grasp"
+				},					
+				{ 
+				  "name" : "blue_left_foot",
+				  "position" : { "y":"-619",  "x":"-38" },
+				  "angle" : "90",
+				  "size" : "105",
+				  "modelId" : "exodus_01/exodus_01_blue_left_foot"
+				},					
+				{ 
+				  "name" : "blue_left_leg",
+				  "position" : { "y":"-483",  "x":"-33" },
+				  "angle" : "90",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_blue_left_leg"
+				},					
+				{ 
+				  "name" : "blue_left_palm",
+				  "position" : { "y":"-224",  "x":"-197" },
+				  "angle" : "90",
+				  "size" : "86",
+				  "modelId" : "exodus_01/exodus_01_blue_left_palm"
+				},					
+				{ 
+				  "name" : "blue_right_arm",
+				  "position" : { "y":"-234",  "x":"-12" },
+				  "angle" : "90",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_blue_right_arm"
+				},					
+				{  
+				  "name" : "blue_right_foot",
+				  "position" : { "y":"-586",  "x":"180" },
+				  "angle" : "90",
+				  "size" : "105",
+				  "modelId" : "exodus_01/exodus_01_blue_right_foot"
+				},				
+				{ 
+				  "name" : "blue_right_leg",
+				  "position" : { "y":"-485",  "x":"105" },
+				  "angle" : "90",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_blue_right_leg"
+				},				
+				{ 
+				  "name" : "blue_right_palm",
+				  "position" : { "y":"-277",  "x":"87" },
+				  "angle" : "90",
+				  "size" : "100",
+				  "modelId" : "exodus_01/exodus_01_blue_right_palm"
+				}			
+				
+				
+				
+				],
 			
 			"webs" : [
 				{
-					"source" : { "asteroid" : "sad_head_02", "navIdx" : 27 },
-					"target" : { "asteroid" : "sad_head_01", "navIdx" : 21 },
+					"source" : { "asteroid" : "red_ass", "navIdx" : 8 },
+					"target" : { "asteroid" : "red_right_leg", "navIdx" : 32 },
 
 					"threadTexture" : "models/web_thread_01.png",
 					"sourceTexture" : "models/web_source_01.png",
@@ -53,8 +196,8 @@
 					
 				},
 				{
-					"source" : { "asteroid" : "sad_head_02", "navIdx" : 7 },
-					"target" : { "asteroid" : "sad_head_04", "navIdx" : 29 },
+					"source" : { "asteroid" : "red_right_foot", "navIdx" : 28 },
+					"target" : { "asteroid" : "red_right_leg", "navIdx" : 8 },
 					"threadTexture" : "models/web_thread_02.png",
 					"sourceTexture" : "models/web_source_02.png",
 					"targetTexture" : "models/web_target_02.png"
