@@ -116,7 +116,7 @@ public class Ant implements Poolable, ISpatialObject
 	public void update(float delta)
 	{
 
-/*		if(nextNode == null)
+		if(nextNode == null)
 		{
 			// either we reached next node, or we do not have target
 			while(route == null || !route.hasNext())
@@ -168,7 +168,7 @@ public class Ant implements Poolable, ISpatialObject
 		}
 		
 		nodeOffset = edge.getLength()+travelDistance;
-		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );*/
+		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
 	}
 
 	public void draw(float delta, SpriteBatch batch)
