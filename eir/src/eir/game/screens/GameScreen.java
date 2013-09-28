@@ -89,6 +89,8 @@ public class GameScreen extends AbstractScreen
 		shapeRenderer.setProjectionMatrix( inputController.getCamera().projection);
 		shapeRenderer.setTransformMatrix( inputController.getCamera().view );
 		
+		
+		
 		level.draw(batch);
 		
 		//////////////////////////////////////////////////////////////////
@@ -97,6 +99,8 @@ public class GameScreen extends AbstractScreen
 		Debug.debug.update( delta );
 		Debug.debug.draw(batch, shapeRenderer);
 		
+		
+		inputController.draw( batch, shapeRenderer );
 		
 		batch.begin();
 		

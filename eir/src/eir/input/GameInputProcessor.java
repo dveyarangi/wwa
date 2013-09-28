@@ -5,10 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.unit.Spider;
 
@@ -33,6 +38,8 @@ public class GameInputProcessor implements InputProcessor
 	
 	private boolean dragging = false;
 	
+	private Texture crosshair;
+	
 	public GameInputProcessor(Level level)
 	{
 
@@ -50,6 +57,8 @@ public class GameInputProcessor implements InputProcessor
 		this.level = level;
 		
 		this.playerSpider = level.getPlayerSpider();
+		
+		this.crosshair = GameFactory.loadTexture( "skins/crosshair.png" );
 	}
 
 	@Override
@@ -182,6 +191,19 @@ public class GameInputProcessor implements InputProcessor
 	    pointerPosition2.x = pointerPosition3.x;
 	    
 	    pointerPosition2.y = pointerPosition3.y;		camController.update( delta );
+	}
+	
+	public void draw(SpriteBatch batch, ShapeRenderer renderer)
+	{
+		batch.begin();
+		batch.draw( crosshair, pointerPosition2.x-2, pointerPosition2.y-2, 4, 4 );
+		batch.end();
+		
+		renderer.setColor( 0, 1, 0, 0.1f );
+		renderer.begin( ShapeType.Line );
+		renderer.line( playerSpider.getPosition().x, playerSpider.getPosition().y, 
+					pointerPosition2.x, pointerPosition2.y );
+		renderer.end();
 	}
 
 	/**
