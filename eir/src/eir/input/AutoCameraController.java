@@ -72,9 +72,9 @@ public class AutoCameraController implements ICameraController
 		
 		scrollTarget.div( 2 ).add( playerPos );
 		
-		camera.position.x = scrollTarget.x;
-		camera.position.y = scrollTarget.y;
-		camera.zoom = zoomTarget;
+		camera.position.x += (scrollTarget.x - camera.position.x) / 2;
+		camera.position.y += (scrollTarget.y - camera.position.y) / 2;
+		camera.zoom += (zoomTarget - camera.zoom) / 10;
 		
 //		System.out.println(distance + " " +  + " " + zoomTarget);
 		
@@ -116,8 +116,6 @@ public class AutoCameraController implements ICameraController
 			zoomTarget /= 0.9f;
 		else
 			zoomTarget *= 0.9f;
-		
-		update(0);
 		
 	}
 

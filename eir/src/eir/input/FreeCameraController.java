@@ -11,7 +11,7 @@ import eir.world.Level;
  * @author Ni
  *
  */
-public class CameraController
+public class FreeCameraController implements ICameraController
 {
 	public final OrthographicCamera camera;
 	
@@ -27,7 +27,7 @@ public class CameraController
 	
 	private Vector2 lastPosition;
 	
-	public CameraController(int w, int h, Level level)
+	public FreeCameraController(int w, int h, Level level)
 	{
 		
 		this.camera = new OrthographicCamera( w, h );
@@ -173,4 +173,12 @@ public class CameraController
 		camera.position.x = lastPosition.x;
 		camera.position.y = lastPosition.y;
 	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eir.input.ICameraController#getCamera()
+	 */
+	@Override
+	public OrthographicCamera getCamera() { return camera; }
 }

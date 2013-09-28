@@ -47,8 +47,8 @@ public class GameInputProcessor implements InputProcessor
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
 
-//		camController = new CameraController(w, h, level);		
-		camController = new AutoCameraController(this, w, h, level);		
+		camController = new CameraController(w, h, level);		
+//		camController = new AutoCameraController(this, w, h, level);		
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
@@ -121,7 +121,6 @@ public class GameInputProcessor implements InputProcessor
 		{
 			lastx = screenX;
 			lasty = screenY;
-			dragging = true;
 			camController.setUnderUserControl(true);
 		}
 		
@@ -142,12 +141,9 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
-		if( dragging )
-		{
-			camController.injectLinearImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
-			lastx = screenX;
-			lasty = screenY;
-		}
+		camController.injectLinearImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
+		lastx = screenX;
+		lasty = screenY;
 		
 		return true;
 	}
@@ -164,14 +160,10 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean scrolled(int amount)
 	{
-		if( !dragging )
-		{
-			camController.injectLinearImpulse(-amount*(lastx - camController.getCamera().viewportWidth/2)*2, 
+		camController.injectLinearImpulse(-amount*(lastx - camController.getCamera().viewportWidth/2)*2, 
 										 	   amount*(lasty - camController.getCamera().viewportHeight/2)*2, 
 										 	   amount*1.2f);
-			return true;
-		}
-		return false;
+		return true;
 	}
 	
 	public OrthographicCamera getCamera() { return camController.getCamera(); }
