@@ -3,8 +3,6 @@
  */
 package eir.world.unit;
 
-import yarangi.numbers.RandomUtil;
-
 import com.badlogic.gdx.math.Vector2;
 
 
@@ -15,7 +13,13 @@ import com.badlogic.gdx.math.Vector2;
 public class HomingBehavior implements IBulletBehavior
 {
 
-
+	private Weapon weapon;
+	
+	public HomingBehavior(Weapon weapon)
+	{
+		this.weapon = weapon;
+	}
+	
 	@Override
 	public void update(float delta, Bullet bullet)
 	{
@@ -27,8 +31,9 @@ public class HomingBehavior implements IBulletBehavior
 				.mul( 1000 * delta );
 		
 		bullet.getVelocity().add( force );
-		if(bullet.getVelocity().len2() > 10000)
-			bullet.getVelocity().nor().mul( 100 );
+		if(bullet.getVelocity().len2() > weapon.speed*weapon.speed)
+			bullet.getVelocity().nor().mul( weapon.speed );
+		bullet.angle = force.angle();
 		
 		// hit:
 		if(bullet.getBody().getAnchor().dst2( bullet.getTarget() ) < 10)

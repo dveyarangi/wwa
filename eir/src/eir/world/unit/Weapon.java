@@ -5,8 +5,10 @@ package eir.world.unit;
 
 import yarangi.numbers.RandomUtil;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.resources.GameFactory;
 import eir.world.Level;
 
 /**
@@ -17,18 +19,20 @@ public class Weapon
 {
 	//////////////////////////////////
 	// properties
-	private float speed = 100;
+	public final float speed = 100;
 	
-	private float size = 1;
+	public final int size = 4;
 	
 	private int burstSize = 7;
-	private float magazineReloadTime = 0.5f;
+	private float magazineReloadTime = 1f;
 	private float reloadingTime = 0.05f;
 	
 	private float accuracy = 360f;
 	
-	private IBulletBehavior bulletBehavior = new HomingBehavior();
+	public final IBulletBehavior bulletBehavior = new HomingBehavior(this);
 //	private IBulletBehavior bulletBehavior = new MassDriverBehavior();
+	
+	public final Sprite bulletSprite;
 	
 	////////////////////////////////
 	// state
@@ -42,6 +46,10 @@ public class Weapon
 	public Weapon()
 	{
 		this.weaponDir = new Vector2();
+		bulletSprite = new Sprite(GameFactory.loadTexture("models/rocket.png"));
+		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
+		bulletSprite.setScale( size / bulletSprite.getWidth() );
+
 	}
 	
 	public Bullet createBullet(Level level, Vector2 weaponPos, Vector2 targetPos)
@@ -57,9 +65,7 @@ public class Weapon
 		float angle = RandomUtil.STD( weaponDir.angle(), accuracy);
 		weaponDir.setAngle( angle );
 		
-		Bullet bullet = Bullet.getBullet( level, bulletBehavior,
-				"fireball",
-				size, 
+		Bullet bullet = Bullet.getBullet( level, this, 
 				weaponPos.x, weaponPos.y, 
 				weaponDir.x * speed, weaponDir.y*speed,
 				targetPos);

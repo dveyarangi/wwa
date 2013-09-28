@@ -34,7 +34,7 @@ public class Bullet implements Poolable, ISpatialObject
 		}
 	};
 	
-	public static Bullet getBullet(Level level, IBulletBehavior behavior, String modelId, float size, float x, float y, float dx, float dy, Vector2 target)
+	public static Bullet getBullet(Level level, Weapon weapon, float x, float y, float dx, float dy, Vector2 target)
 	{
 
 		Bullet bullet = pool.obtain();
@@ -48,12 +48,10 @@ public class Bullet implements Poolable, ISpatialObject
 		bullet.velocity.set(dx, dy);
 		bullet.target.set( target );
 		
-		bullet.behavior = behavior;
+		bullet.behavior = weapon.bulletBehavior;
+		bullet.sprite = weapon.bulletSprite;
+		bullet.size = weapon.size;
 		
-		if(bullet.sprite == null)
-			bullet.sprite = GameFactory.createSprite(modelId, 
-					bullet.body.getAnchor(), size/2, size/2, size, size, 0);
-
 		return bullet;
 	}
 	
@@ -92,6 +90,8 @@ public class Bullet implements Poolable, ISpatialObject
 	
 	private Vector2 target;
 	
+	float angle;
+	
 	private Bullet()
 	{
 		body = AABB.createSquare(0, 0, 0);
@@ -127,12 +127,14 @@ public class Bullet implements Poolable, ISpatialObject
 	
 	public void draw( SpriteBatch batch )
 	{
-		sprite.setPosition( body.getCenterX()-sprite.getWidth()/2, 
-							body.getCenterY()-sprite.getHeight()/2);
+		sprite.setPosition( body.getCenterX()-sprite.getOriginX(), 
+							body.getCenterY()-sprite.getOriginY());
+		sprite.setRotation( angle );
+		
 		sprite.draw( batch );
 		
 		if(behavior.requiresTarget() && target != null)
-			batch.draw( crosshair, target.x-2, target.y-2, 4, 4 );
+			batch.draw( crosshair, target.x-2, target.y-2, 4, 4);
 	}
 
 	Vector2 getVelocity() { return velocity; }
