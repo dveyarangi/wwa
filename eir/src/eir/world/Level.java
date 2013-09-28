@@ -274,9 +274,8 @@ public class Level
 	 * @param playerSpider2
 	 * @param pointerPosition2
 	 */
-	public void shoot(Spider spider, Vector2 targetPos)
+	public void shoot(Spider spider, Bullet bullet)
 	{
-		Bullet bullet = spider.shoot( targetPos );
 		bullets.add( bullet );
 		spatialIndex.add( bullet );
 	}

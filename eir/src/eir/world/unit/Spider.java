@@ -40,6 +40,8 @@ public class Spider
 	
 	private boolean walkCW, walkCCW, walkUp, walkDown;
 	
+	private Vector2 shootingTarget;
+	
 	private Weapon weapon;
 	
 	public Spider(Level level, Asteroid asteroid, float surfaceIdx, float size, float speed)
@@ -69,6 +71,15 @@ public class Spider
 			surfaceIdx = asteroid.getModel().getStepSurfaceIndex( surfaceIdx, delta*speed );
 		
 		asteroid.getModel().getSurfacePoint( surfaceIdx, position );
+		
+		weapon.update( delta );
+		
+		if(shootingTarget != null)
+		{
+			Bullet bullet = weapon.createBullet( level, position, shootingTarget );
+			if(bullet != null) // is reloaded
+			level.shoot( this, bullet);
+		}
 	}
 
 
@@ -89,21 +100,19 @@ public class Spider
 	}
 
 	/**
-	 * @param pointerPosition2
-	 */
-	public Bullet shoot(Vector2 targetPos)
-	{
-		
-		return weapon.createBullet( level, position, targetPos );
-
-	}
-
-	/**
 	 * @return
 	 */
 	public Vector2 getPosition()
 	{
 		return position;
+	}
+
+	/**
+	 * @param b
+	 */
+	public void setShootingTarget(Vector2 targetPos)
+	{
+		this.shootingTarget = targetPos;
 	}
 
 

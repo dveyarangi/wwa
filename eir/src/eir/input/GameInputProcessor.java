@@ -125,7 +125,7 @@ public class GameInputProcessor implements InputProcessor
 			camController.setUnderUserControl(true);
 		}
 		
-		level.shoot(playerSpider, pointerPosition2);
+		playerSpider.setShootingTarget( pointerPosition2 );
 
 		return true;
 	}
@@ -135,6 +135,7 @@ public class GameInputProcessor implements InputProcessor
 	{
 		dragging = false;
 		camController.setUnderUserControl(false);
+		playerSpider.setShootingTarget( null );
 		return true;
 	}
 
@@ -147,6 +148,7 @@ public class GameInputProcessor implements InputProcessor
 			lastx = screenX;
 			lasty = screenY;
 		}
+		
 		return true;
 	}
 
