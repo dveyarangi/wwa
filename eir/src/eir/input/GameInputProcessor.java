@@ -59,6 +59,8 @@ public class GameInputProcessor implements InputProcessor
 		this.playerSpider = level.getPlayerSpider();
 		
 		this.crosshair = GameFactory.loadTexture( "skins/crosshair.png" );
+		lastx = (int) camController.getCamera().viewportWidth/2;
+		lasty = (int) camController.getCamera().viewportHeight/2;
 	}
 
 	@Override
@@ -190,7 +192,8 @@ public class GameInputProcessor implements InputProcessor
 	    camController.getCamera().unproject( pointerPosition3 );
 	    pointerPosition2.x = pointerPosition3.x;
 	    
-	    pointerPosition2.y = pointerPosition3.y;		camController.update( delta );
+	    pointerPosition2.y = pointerPosition3.y;		
+	    camController.update( delta );
 	}
 	
 	public void draw(SpriteBatch batch, ShapeRenderer renderer)

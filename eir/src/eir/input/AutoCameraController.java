@@ -3,8 +3,10 @@
  */
 package eir.input;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import eir.world.Level;
 
@@ -40,6 +42,7 @@ public class AutoCameraController implements ICameraController
 		
 		scrollTarget = new Vector2();
 		
+
 	}
 	
 	public void update( float delta )
@@ -47,8 +50,18 @@ public class AutoCameraController implements ICameraController
 		Vector2 spiderPos = level.getPlayerSpider().getPosition();
 		Vector2 pointerPos = inputProcessor.getCrosshairPosition();
 		
+		updateCameraPosition( spiderPos, pointerPos ); 
+
+		// calculating matrices:
+		camera.update();
+
+
+	}
+	
+	private void updateCameraPosition(Vector2 playerPos, Vector2 pointerPos)
+	{
 		
-		scrollTarget.set( pointerPos ).sub( spiderPos );
+		scrollTarget.set( pointerPos ).sub( playerPos );
 	/*	float dz = 0.9f;
 		float distance = scrollTarget.len();
 		if(distance > camera.zoom * camera.viewportHeight * dz)
@@ -57,7 +70,7 @@ public class AutoCameraController implements ICameraController
 		if(distance < camera.zoom * camera.viewportHeight * 0.1)
 			zoomTarget *= 0.001f*delta;*/
 		
-		scrollTarget.div( 2 ).add( spiderPos );
+		scrollTarget.div( 2 ).add( playerPos );
 		
 		camera.position.x = scrollTarget.x;
 		camera.position.y = scrollTarget.y;
@@ -69,15 +82,8 @@ public class AutoCameraController implements ICameraController
 		lastPosition.x = camera.position.x;
 		lastPosition.y = camera.position.y;
 		
-		// calculating matrices:
-		camera.update();
-		
-//		Vector3 tmp = new Vector3(pointerPos.x, pointerPos.y, 0);
-//		camera.project( tmp );
-		
-//		Gdx.input.setCursorPosition( (int)tmp.x, (int)tmp.y );
-
 	}
+	
 	
 	/**
 	 * @param width
@@ -88,6 +94,10 @@ public class AutoCameraController implements ICameraController
 		camera.setToOrtho( false, width, height );
 		camera.position.x = lastPosition.x;
 		camera.position.y = lastPosition.y;
+		
+		// move cursor to the spider to avoid the initial camera jump:
+		Gdx.input.setCursorPosition( (int)camera.viewportWidth/2, (int)camera.viewportHeight/2 );
+		updateCameraPosition( lastPosition, lastPosition );
 	}
 
 	@Override
