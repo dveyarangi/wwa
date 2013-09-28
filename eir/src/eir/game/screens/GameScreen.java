@@ -162,7 +162,7 @@ public class GameScreen extends AbstractScreen
 		super.resize( width, height );
 		this.w = width;
 		this.h = height;
-		camera.setToOrtho( false, width, height );
+		camController.resize(width, height);
 	}
 
 	@Override

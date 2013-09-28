@@ -1,6 +1,7 @@
 package eir.input;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import eir.world.Level;
@@ -24,13 +25,16 @@ public class CameraController
 	
 	private boolean underUserControl = false;
 	
+	private Vector2 lastPosition;
+	
 	public CameraController( OrthographicCamera camera, Level level )
 	{
 		this.camera = camera;
 		
-		camera.position.x = level.getInitialPoint().x;
-		camera.position.y = level.getInitialPoint().y;
-		camera.zoom = level.getInitialZoom();
+		lastPosition = level.getAsteroid(level.getInitialConfig().getAsteroidName()).getModel().getNavNode( level.getInitialConfig().getSurfaceIdx()).getPoint();
+		camera.position.x = lastPosition.x;
+		camera.position.y = lastPosition.y;
+		camera.zoom = level.getInitialConfig().getZoom();
 		this.level = level;
 	}
 	
@@ -136,6 +140,8 @@ public class CameraController
 		else
 			camera.position.y = nexty;
 		
+		lastPosition.x = camera.position.x;
+		lastPosition.y = camera.position.y;
 		camera.update();
 	}
 	
@@ -147,5 +153,17 @@ public class CameraController
 			v.set(0,0,0);
 			a.set(0,0,0);
 		}
+	}
+
+
+	/**
+	 * @param width
+	 * @param height
+	 */
+	public void resize(int width, int height)
+	{
+		camera.setToOrtho( false, width, height );
+		camera.position.x = lastPosition.x;
+		camera.position.y = lastPosition.y;
 	}
 }

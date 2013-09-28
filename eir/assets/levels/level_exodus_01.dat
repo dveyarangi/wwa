@@ -8,9 +8,14 @@
 			# length of the game world in tiles
 			"height" : "1536",
 			
-			"initialNodeIdx" : 89,
+			"initialConfig" : {
 			
-			"initialZoom" : 0.2,
+				"nodeIdx" : 5,
+			
+				"zoom" : 0.2,
+				
+				"asteroid" : "grasp_01"
+			},
 			
 			"backgroundTexture" : "levels/level_exodus_01.png",
 			

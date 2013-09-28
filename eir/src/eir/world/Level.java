@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
-import eir.resources.GameFactory;
 import eir.world.environment.FloydWarshal;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
@@ -27,18 +26,13 @@ public class Level
 	 */
 	private int width, height;
 	
+	private InitialConfig initialConfig;
+	
 	/**
 	 * Level background texture
 	 */
 	private Texture backgroundTexture;
-	
-	/**
-	 * Level initial settings
-	 * TODO: extract to LevelInitialConfig classs
-	 */
-	private float initialZoom;
-	private int initialNodeIdx;
-	private NavNode initialNode;
+
 	
 	/**
 	 * Indexer for ants and bullets.
@@ -97,16 +91,17 @@ public class Level
 			web.init( this );
 		}
 		
-//		spider = new Spider( asteroid, size, surfaceIdx, speed );
-
-		// nav mesh initiated after this point
-		////////////////////////////////////////////////////
-		
 		Debug.startTiming("navmesh");
 		navMesh.init();
 		Debug.stopTiming("navmesh");
 		
-		initialNode = navMesh.getNode( initialNodeIdx );
+		
+		Asteroid initialAsteroid = getAsteroid( initialConfig.getAsteroidName() );
+			
+		playerSpider = new Spider( initialAsteroid, 10, initialConfig.getSurfaceIdx(), 1 );
+
+		// nav mesh initiated after this point
+		////////////////////////////////////////////////////
 	}
 
 	/**
@@ -126,11 +121,6 @@ public class Level
 	 */
 	public float getWidth() { return width; }
 
-	/**
-	 * @return
-	 */
-	public float getInitialZoom() { return initialZoom; }
-	public Vector2 getInitialPoint() { return initialNode.getPoint(); }
 	
 	private void log(String message)
 	{
@@ -186,5 +176,44 @@ public class Level
 	{
 		return OBJECT_ID ++;
 	}
+	
+	
+	public class InitialConfig {
+		
+		/**
+		 * Level initial settings
+		 * TODO: extract to LevelInitialConfig classs
+		 */
+		private float zoom;
+		private int nodeIdx;
+		private String asteroid;		
+		/**
+		 * @return
+		 */
+		public float getZoom() { return zoom; }
+		public int getSurfaceIdx() { return nodeIdx; }
+		public String getAsteroidName() { return asteroid; }
+		public Vector2 getPoint() 
+		{
+			Asteroid a = getAsteroid(asteroid);
+			
+			return a.getModel().getNavNode( nodeIdx ).getPoint();
+		}
+	}
 
+	public Asteroid getAsteroid(String name)
+	{
+		for(Asteroid asteroid : asteroids)
+		{
+			if(asteroid.getName().equals( name ))
+				return asteroid;
+		}
+		
+		return null;
+	}
+
+	public InitialConfig getInitialConfig()
+	{
+		return initialConfig;
+	}
 }
