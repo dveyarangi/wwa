@@ -3,9 +3,8 @@
  */
 package eir.world;
 
-import yarangi.numbers.RandomUtil;
-
-import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -33,7 +32,7 @@ public class Bullet implements Poolable, ISpatialObject
 		}
 	};
 	
-	public static Bullet getBullet(Level level, float x, float y, float dx, float dy)
+	public static Bullet getBullet(Level level, String modelId, float size, float x, float y, float dx, float dy)
 	{
 
 		Bullet bullet = pool.obtain();
@@ -45,12 +44,9 @@ public class Bullet implements Poolable, ISpatialObject
 		
 		bullet.velocity.set(dx, dy);
 		
-		if(bullet.animation == null)
-			bullet.animation = GameFactory.loadAnimation( 
-					RandomUtil.oneOf(2) ?
-							"anima//ant//blob_black.atlas" : 
-							"anima//ant//blob_black.atlas", 
-							"blob" );
+		if(bullet.sprite == null)
+			bullet.sprite = GameFactory.createSprite(modelId, 
+					bullet.body.getAnchor(), 0.5f, 0.5f, size, size, 0);
 
 		return bullet;
 	}
@@ -79,9 +75,7 @@ public class Bullet implements Poolable, ISpatialObject
 	 */
 	private Vector2 velocity;
 	
-	
-	private Animation animation;
-
+	private Sprite sprite;
 	
 	private Bullet()
 	{
@@ -105,5 +99,21 @@ public class Bullet implements Poolable, ISpatialObject
 
 	@Override
 	public void reset()	{ }
+
+	/**
+	 * @param delta
+	 */
+	public void update(float delta)
+	{
+		float dx = velocity.x * delta;
+		float dy = velocity.y * delta; 
+		body.getAnchor().add( velocity.x * delta, velocity.y * delta );
+		sprite.setPosition( sprite.getX()+dx, sprite.getY() + dy);
+	}
+	
+	public void draw( SpriteBatch batch )
+	{
+		sprite.draw( batch );
+	}
 
 }

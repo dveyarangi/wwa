@@ -48,6 +48,8 @@ public class Ant implements Poolable, ISpatialObject
 		
 		Ant ant = pool.obtain();
 		
+		ant.level = level;
+		
 		ant.id = level.createObjectId();
 		
 		ant.body = AABB.createSquare( node.getPoint().x, node.getPoint().y, ant.size );
@@ -71,6 +73,8 @@ public class Ant implements Poolable, ISpatialObject
 		ant.body.free( );
 		pool.free( ant );
 	}
+	
+	private Level level;
 	
 	private static BitmapFont font;
 
@@ -169,6 +173,7 @@ public class Ant implements Poolable, ISpatialObject
 		
 		nodeOffset = edge.getLength()+travelDistance;
 		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );*/
+		
 	}
 
 	public void draw(float delta, SpriteBatch batch)

@@ -1,11 +1,14 @@
 package eir.world;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
@@ -25,6 +28,7 @@ public class Level
 	 * Level dimensions
 	 */
 	private int width, height;
+	private float halfWidth, halfHeight;
 	
 	private InitialConfig initialConfig;
 	
@@ -57,11 +61,14 @@ public class Level
 	private Set <Ant> ants;
 	
 	private Spider playerSpider;
+	
+	private List <Bullet> bullets;
 
 	public Level()
 	{
 		navMesh = new FloydWarshal();
 		ants = new HashSet <Ant> ();
+		bullets = new LinkedList <Bullet> ();
 	}
 	
 	public List <Asteroid> getAsteroids() { return asteroids;}
@@ -75,6 +82,9 @@ public class Level
 	 */
 	public void init()
 	{
+	
+		halfWidth = width / 2;
+		halfHeight = height / 2;
 		
 		spatialIndex = new SpatialHashMap<ISpatialObject>( 
 				name+ "-spatial", 
@@ -98,7 +108,7 @@ public class Level
 		
 		Asteroid initialAsteroid = getAsteroid( initialConfig.getAsteroidName() );
 			
-		playerSpider = new Spider( initialAsteroid, 10, initialConfig.getSurfaceIdx(), 1 );
+		playerSpider = new Spider( this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 20 );
 
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
@@ -158,6 +168,47 @@ public class Level
 			ant.update(delta);
 			spatialIndex.update( ant );
 		}
+		
+		Iterator <Bullet> iterator = bullets.iterator();
+		while(iterator.hasNext())
+		{
+			Bullet bullet = iterator.next();
+			bullet.update( delta );
+			if(!inWorldBounds(bullet.getArea().getAnchor()))
+			{
+				spatialIndex.remove( bullet );
+				iterator.remove();
+			}
+			else
+			{
+				spatialIndex.update( bullet );
+			}
+		}
+	}
+	
+	public void draw(SpriteBatch batch)
+	{
+		batch.begin();
+		
+		batch.draw( getBackgroundTexture(), -getWidth()/2, -getHeight()/2, getWidth(), getHeight() );
+		
+		// TODO: clipping?
+		for(Asteroid asteroid : getAsteroids())
+		{
+			asteroid.draw( batch );
+		}
+		
+		for( Web web : getWebs() )
+		{
+			web.draw( batch );
+		}
+		
+		for(Bullet bullet : bullets)
+		{
+			bullet.draw( batch );
+		}
+		
+		batch.end();		
 	}
 
 	/**
@@ -193,12 +244,6 @@ public class Level
 		public float getZoom() { return zoom; }
 		public int getSurfaceIdx() { return nodeIdx; }
 		public String getAsteroidName() { return asteroid; }
-		public Vector2 getPoint() 
-		{
-			Asteroid a = getAsteroid(asteroid);
-			
-			return a.getModel().getNavNode( nodeIdx ).getPoint();
-		}
 	}
 
 	public Asteroid getAsteroid(String name)
@@ -215,5 +260,30 @@ public class Level
 	public InitialConfig getInitialConfig()
 	{
 		return initialConfig;
+	}
+
+	/**
+	 * @return
+	 */
+	public Spider getPlayerSpider()
+	{
+		return playerSpider;
+	}
+
+	/**
+	 * @param playerSpider2
+	 * @param pointerPosition2
+	 */
+	public void shoot(Spider spider, Vector2 targetPos)
+	{
+		Bullet bullet = spider.shoot( targetPos );
+		bullets.add( bullet );
+		spatialIndex.add( bullet );
+	}
+	
+	public boolean inWorldBounds(Vector2 position)
+	{
+		return position.x < halfWidth  && position.x > -halfWidth
+			&& position.y < halfHeight && position.y > -halfHeight;	
 	}
 }
