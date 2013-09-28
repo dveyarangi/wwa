@@ -47,9 +47,6 @@ public class AutoCameraController implements ICameraController
 	
 	public void update( float delta )
 	{
-		camera.zoom = zoomTarget;
-		camera.update();
-		
 		Vector2 spiderPos = level.getPlayerSpider().getPosition();
 		Vector2 pointerPos = inputProcessor.getCrosshairPosition();
 		
@@ -67,6 +64,7 @@ public class AutoCameraController implements ICameraController
 		
 		camera.position.x = scrollTarget.x;
 		camera.position.y = scrollTarget.y;
+		camera.zoom = zoomTarget;
 		
 //		System.out.println(distance + " " +  + " " + zoomTarget);
 		
