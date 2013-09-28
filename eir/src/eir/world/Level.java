@@ -108,7 +108,7 @@ public class Level
 		
 		Asteroid initialAsteroid = getAsteroid( initialConfig.getAsteroidName() );
 			
-		playerSpider = new Spider( this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 20 );
+		playerSpider = new Spider( this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 40 );
 
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////

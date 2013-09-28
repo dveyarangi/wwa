@@ -10,11 +10,11 @@
 			
 			"initialConfig" : {
 			
-				"nodeIdx" : 5,
+				"nodeIdx" : 22,
 			
-				"zoom" : 0.2,
+				"zoom" : 0.1,
 				
-				"asteroid" : "grasp_01"
+				"asteroid" : "red_ass"
 			},
 			
 			"backgroundTexture" : "levels/level_exodus_01.png",
