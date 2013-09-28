@@ -64,21 +64,20 @@ public class FloydWarshal extends NavMesh
 			cwpreds[i][j] = e.getNode2();
 		}
 		
-//		circle "clock wise"
 		for( int[] c : indexRange )
 		{
-			for( int i=c[0]+2 ; i<c[1] ; i++ )
+			for( int i=c[0] ; i<c[1]-2 ; i++ )
 			{
-				for( int j=i-2 ; j>=0 ; j-- )
+				for( int j=i ; j>=0 ; j-- )
 				{
-					cwpreds[j][i] = cwpreds[j][i-1];
-					cwdists[j][i] = cwdists[j][i-1] + cwdists[j+1][i];
+					// clockwise
+					cwpreds[j][i+2] = cwpreds[j][i+1];
+					cwdists[j][i+2] = cwdists[j][i+1] + cwdists[j+1][i+1];
 				}
 			}
 		}
 		
-		//TODO do this thing
-//		circle "counter clock wise"
+//		original
 //		for( int[] c : indexRange )
 //		{
 //			for( int i=c[0]+2 ; i<c[1] ; i++ )
@@ -96,24 +95,24 @@ public class FloydWarshal extends NavMesh
 //		{
 //			for( int j=0 ; j<33 ; j++ )
 //			{
-//				if( lastpreds[i][j]==null)
+//				if( cwpreds[i][j]==null)
 //					System.out.print("null\t");
 //				else
-//					System.out.print(lastpreds[i][j].idx+"\t");
+//					System.out.print(cwpreds[i][j].idx+"\t");
 //			}
 //			System.out.println();
 //		}
-//		for( int i=0 ; i<33 ; i++ )
-//		{
-//			for( int j=0 ; j<33 ; j++ )
-//			{
-//				if( lastdists[i][j]==Float.POSITIVE_INFINITY)
-//					System.out.print("inf\t");
-//				else
-//					System.out.printf("%3.0f\t", lastdists[i][j]);
-//			}
-//			System.out.println();
-//		}
+		for( int i=0 ; i<33 ; i++ )
+		{
+			for( int j=0 ; j<33 ; j++ )
+			{
+				if( cwdists[i][j]==Float.POSITIVE_INFINITY)
+					System.out.print("inf\t");
+				else
+					System.out.printf("%3.0f\t", cwdists[i][j]);
+			}
+			System.out.println();
+		}
 		
 //		System.exit(0);
 		this.routes = cwpreds;
