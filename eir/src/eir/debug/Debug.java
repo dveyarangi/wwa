@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.environment.NavEdge;
@@ -55,15 +56,18 @@ public class Debug
     
     private FPSLogger fpsLogger = new FPSLogger();
 	
-	public static void init( Level level, OrthographicCamera camera)
+	public static void init( Level level, GameInputProcessor inputController )
 	{
-		debug = new Debug(  level, camera );
+		debug = new Debug(  level, inputController  );
 	}
 	
-	private Debug( Level level, OrthographicCamera camera)
+	private Debug( Level level, GameInputProcessor inputController)
 	{
 		this.level = level;
-		debugGrid = new CoordinateGrid( level.getWidth(), level.getHeight(), camera );
+		debugGrid = new CoordinateGrid( 
+				level.getWidth(), level.getHeight(), 
+				inputController.getCamera() );
+		
 		font = GameFactory.loadFont("skins//fonts//default", 0.05f);
 	}
 	

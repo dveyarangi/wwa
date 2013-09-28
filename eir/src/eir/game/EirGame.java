@@ -30,7 +30,6 @@ public class EirGame extends Game
     {
         Gdx.app.log( LOG, "Creating game on " + Gdx.app.getType() );
 
-         
     }
 
     @Override
@@ -86,4 +85,6 @@ public class EirGame extends Game
         Gdx.app.log( LOG, "Disposing game" );
 
     }
+    
+ 
 }

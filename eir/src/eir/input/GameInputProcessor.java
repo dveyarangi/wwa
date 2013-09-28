@@ -1,10 +1,16 @@
 package eir.input;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import eir.world.Level;
+import eir.world.unit.Spider;
 
 /**
  * handles input for game
@@ -13,33 +19,86 @@ import eir.world.Level;
  */
 public class GameInputProcessor implements InputProcessor
 {
+	private InputMultiplexer inputMultiplexer;
+	
 	private final CameraController camController;
+	
 	private final OrthographicCamera camera;
+	
 	private final Level level;
 	
-	private int lastx = -1;
-	private int lasty = -1;
+	private final Spider playerSpider;
+	
+	private int lastx, lasty;
+	private Vector3 pointerPosition3 = new Vector3();
+	private Vector2 pointerPosition2 = new Vector2();
 	
 	private boolean dragging = false;
 	
-	public GameInputProcessor(CameraController camController, Level level)
+	public GameInputProcessor(Level level)
 	{
-		this.camController = camController;
-		this.camera = camController.camera;
+
+		
+		int w = Gdx.graphics.getWidth();
+		int h = Gdx.graphics.getHeight();
+		
+		camera = new OrthographicCamera( w, h );
+
+		camController = new CameraController(camera, level);		
+		inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer.addProcessor( new UIInputProcessor() );
+		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
+		inputMultiplexer.addProcessor( this );
+
 		this.level = level;
+		
+		this.playerSpider = level.getPlayerSpider();
 	}
 
 	@Override
 	public boolean keyDown(int keycode)
 	{
-		return false;
+		switch(keycode)
+		{
+		case Input.Keys.A:
+			playerSpider.walkCCW(true);
+			break;
+		case Input.Keys.D:
+			playerSpider.walkCW(true);
+			break;
+		case Input.Keys.W:
+			playerSpider.walkUp(true);
+			break;
+		case Input.Keys.S:
+			playerSpider.walkDown(true);
+			break;
+		default:
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean keyUp(int keycode)
 	{
-		return false;
-	}
+		switch(keycode)
+		{
+		case Input.Keys.A:
+			playerSpider.walkCCW(false);
+			break;
+		case Input.Keys.D:
+			playerSpider.walkCW(false);
+			break;
+		case Input.Keys.W:
+			playerSpider.walkUp(false);
+			break;
+		case Input.Keys.S:
+			playerSpider.walkDown(false);
+			break;
+		default:
+			return false;
+		}
+		return true;	}
 
 	@Override
 	public boolean keyTyped(char character)
@@ -57,6 +116,9 @@ public class GameInputProcessor implements InputProcessor
 			dragging = true;
 			camController.setUnderUserControl(true);
 		}
+		
+		level.shoot(playerSpider, pointerPosition2);
+
 		return true;
 	}
 
@@ -77,7 +139,6 @@ public class GameInputProcessor implements InputProcessor
 			lastx = screenX;
 			lasty = screenY;
 		}
-		
 		return true;
 	}
 
@@ -86,6 +147,11 @@ public class GameInputProcessor implements InputProcessor
 	{
 		lastx = screenX;
 		lasty = screenY;
+		pointerPosition3.x = screenX;
+		pointerPosition3.y = screenY;
+	    camController.camera.unproject( pointerPosition3 );
+	    pointerPosition2.x = pointerPosition3.x;
+	    pointerPosition2.y = pointerPosition3.y;
 		return true;
 	}
 
@@ -104,4 +170,33 @@ public class GameInputProcessor implements InputProcessor
 	
 	public OrthographicCamera getCamera() { return camera; }
 
+	/**
+	 * 
+	 */
+	public void show()
+	{
+		Gdx.input.setInputProcessor( inputMultiplexer );
+	}
+
+	/**
+	 * @param delta
+	 */
+	public void update(float delta)
+	{
+		camController.update( delta );
+	}
+
+	/**
+	 * @param width
+	 * @param height
+	 */
+	public void resize(int width, int height)
+	{
+		camController.resize(width, height);
+	}
+	
+	public Vector2 getCrosshairPosition()
+	{
+		return pointerPosition2;
+	}
 }

@@ -31,7 +31,9 @@ public class CameraController
 	{
 		this.camera = camera;
 		
-		lastPosition = level.getAsteroid(level.getInitialConfig().getAsteroidName()).getModel().getNavNode( level.getInitialConfig().getSurfaceIdx()).getPoint();
+		lastPosition = level.getAsteroid(level.getInitialConfig().getAsteroidName())
+					.getModel().getNavNode( 
+						level.getInitialConfig().getSurfaceIdx()).getPoint().cpy();
 		camera.position.x = lastPosition.x;
 		camera.position.y = lastPosition.y;
 		camera.zoom = level.getInitialConfig().getZoom();
@@ -54,7 +56,7 @@ public class CameraController
 	 * will step the camera +call camera.update()
 	 * @param delta
 	 */
-	public void cameraStep( float delta )
+	public void update( float delta )
 	{	
 		if( !underUserControl )
 		{
@@ -140,8 +142,11 @@ public class CameraController
 		else
 			camera.position.y = nexty;
 		
+		// storing last camera position:
 		lastPosition.x = camera.position.x;
 		lastPosition.y = camera.position.y;
+		
+		// calculating matrices:
 		camera.update();
 	}
 	
