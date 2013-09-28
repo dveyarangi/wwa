@@ -18,6 +18,7 @@ import eir.world.environment.NavNode;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.Ant;
+import eir.world.unit.Bullet;
 import eir.world.unit.Spider;
 
 public class Level
@@ -174,7 +175,7 @@ public class Level
 		{
 			Bullet bullet = iterator.next();
 			bullet.update( delta );
-			if(!inWorldBounds(bullet.getArea().getAnchor()))
+			if(!inWorldBounds(bullet.getArea().getAnchor()) || !bullet.isAlive())
 			{
 				spatialIndex.remove( bullet );
 				iterator.remove();

@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Asteroid;
-import eir.world.Bullet;
 import eir.world.Level;
 
 /**

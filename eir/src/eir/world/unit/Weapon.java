@@ -7,7 +7,6 @@ import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.world.Bullet;
 import eir.world.Level;
 
 /**
@@ -22,9 +21,12 @@ public class Weapon
 	
 	private float size = 1;
 	
-	private float reloadingTime = 0.07f;
+	private float reloadingTime = 0.2f;
 	
-	private float accuracy = 5f;
+	private float accuracy = 180f;
+	
+	private IBulletBehavior bulletBehavior = new HomingBehavior();
+//	private IBulletBehavior bulletBehavior = new MassDriverBehavior();
 	
 	////////////////////////////////
 	// state
@@ -47,10 +49,12 @@ public class Weapon
 		float angle = RandomUtil.STD( weaponDir.angle(), accuracy);
 		weaponDir.setAngle( angle );
 		
-		Bullet bullet = Bullet.getBullet( level, "fireball",
+		Bullet bullet = Bullet.getBullet( level, bulletBehavior,
+				"fireball",
 				size, 
 				weaponPos.x, weaponPos.y, 
-				weaponDir.x * speed, weaponDir.y*speed );
+				weaponDir.x * speed, weaponDir.y*speed,
+				targetPos);
 		
 		timeToReload = reloadingTime;
 		
