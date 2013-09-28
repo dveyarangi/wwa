@@ -47,8 +47,8 @@ public class GameInputProcessor implements InputProcessor
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
 
-		camController = new CameraController(w, h, level);		
-//		camController = new AutoCameraController(this, w, h, level);		
+//		camController = new CameraController(w, h, level);		
+		camController = new AutoCameraController(this, w, h, level);		
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );

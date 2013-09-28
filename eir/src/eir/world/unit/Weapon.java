@@ -3,6 +3,8 @@
  */
 package eir.world.unit;
 
+import yarangi.numbers.RandomUtil;
+
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Bullet;
@@ -20,7 +22,9 @@ public class Weapon
 	
 	private float size = 1;
 	
-	private float reloadingTime = 0.1f;
+	private float reloadingTime = 0.07f;
+	
+	private float accuracy = 5f;
 	
 	////////////////////////////////
 	// state
@@ -40,6 +44,8 @@ public class Weapon
 			return null;
 		
 		weaponDir.set( targetPos ).sub( weaponPos ).nor();
+		float angle = RandomUtil.STD( weaponDir.angle(), accuracy);
+		weaponDir.setAngle( angle );
 		
 		Bullet bullet = Bullet.getBullet( level, "fireball",
 				size, 
