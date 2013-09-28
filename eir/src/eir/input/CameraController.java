@@ -27,9 +27,10 @@ public class CameraController
 	
 	private Vector2 lastPosition;
 	
-	public CameraController( OrthographicCamera camera, Level level )
+	public CameraController(int w, int h, Level level)
 	{
-		this.camera = camera;
+		
+		this.camera = new OrthographicCamera( w, h );
 		
 		lastPosition = level.getAsteroid(level.getInitialConfig().getAsteroidName())
 					.getModel().getNavNode( 
@@ -40,7 +41,8 @@ public class CameraController
 		this.level = level;
 	}
 	
-	
+
+
 	/**
 	 * inject linear impulse for camera 
 	 * @param x left/right

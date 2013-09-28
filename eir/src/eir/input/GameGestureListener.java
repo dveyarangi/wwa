@@ -5,9 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public class GameGestureListener implements GestureListener
 {
-	private final CameraController camController;
+	private final ICameraController camController;
 	
-	public GameGestureListener(CameraController camController)
+	public GameGestureListener(ICameraController camController)
 	{
 		this.camController = camController;
 	}

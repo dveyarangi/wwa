@@ -98,5 +98,13 @@ public class Spider
 
 	}
 
+	/**
+	 * @return
+	 */
+	public Vector2 getPosition()
+	{
+		return position;
+	}
+
 
 }

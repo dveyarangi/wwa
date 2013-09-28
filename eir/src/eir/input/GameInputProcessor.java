@@ -21,9 +21,7 @@ public class GameInputProcessor implements InputProcessor
 {
 	private InputMultiplexer inputMultiplexer;
 	
-	private final CameraController camController;
-	
-	private final OrthographicCamera camera;
+	private final ICameraController camController;
 	
 	private final Level level;
 	
@@ -41,10 +39,9 @@ public class GameInputProcessor implements InputProcessor
 		
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
-		
-		camera = new OrthographicCamera( w, h );
 
-		camController = new CameraController(camera, level);		
+//		camController = new CameraController(w, h, level);		
+		camController = new AutoCameraController(this, w, h, level);		
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
@@ -147,11 +144,7 @@ public class GameInputProcessor implements InputProcessor
 	{
 		lastx = screenX;
 		lasty = screenY;
-		pointerPosition3.x = screenX;
-		pointerPosition3.y = screenY;
-	    camController.camera.unproject( pointerPosition3 );
-	    pointerPosition2.x = pointerPosition3.x;
-	    pointerPosition2.y = pointerPosition3.y;
+
 		return true;
 	}
 
@@ -160,15 +153,15 @@ public class GameInputProcessor implements InputProcessor
 	{
 		if( !dragging )
 		{
-			camController.injectLinearImpulse(-amount*(lastx - camera.viewportWidth/2)*2, 
-										 	   amount*(lasty - camera.viewportHeight/2)*2, 
+			camController.injectLinearImpulse(-amount*(lastx - camController.getCamera().viewportWidth/2)*2, 
+										 	   amount*(lasty - camController.getCamera().viewportHeight/2)*2, 
 										 	   amount*1.2f);
 			return true;
 		}
 		return false;
 	}
 	
-	public OrthographicCamera getCamera() { return camera; }
+	public OrthographicCamera getCamera() { return camController.getCamera(); }
 
 	/**
 	 * 
@@ -183,7 +176,12 @@ public class GameInputProcessor implements InputProcessor
 	 */
 	public void update(float delta)
 	{
-		camController.update( delta );
+		pointerPosition3.x = lastx;
+		pointerPosition3.y = lasty;
+	    camController.getCamera().unproject( pointerPosition3 );
+	    pointerPosition2.x = pointerPosition3.x;
+	    
+	    pointerPosition2.y = pointerPosition3.y;		camController.update( delta );
 	}
 
 	/**
