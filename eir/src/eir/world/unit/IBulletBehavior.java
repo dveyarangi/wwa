@@ -11,4 +11,5 @@ package eir.world.unit;
 public interface IBulletBehavior
 {
 	public void update(float delta, Bullet bullet);
+	public boolean requiresTarget();
 }

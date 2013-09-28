@@ -24,7 +24,7 @@ public class HomingBehavior implements IBulletBehavior
 		bullet.getBody().getAnchor().add( dx, dy );
 		
 		Vector2 force = bullet.getTarget().tmp().sub( bullet.getBody().getAnchor() ).nor()
-				.mul( RandomUtil.STD( 600, 100) *delta );
+				.mul( 1000 * delta );
 		
 		bullet.getVelocity().add( force );
 		if(bullet.getVelocity().len2() > 10000)
@@ -36,4 +36,7 @@ public class HomingBehavior implements IBulletBehavior
 			bullet.setIsAlive(false);
 		}
 	}
+
+
+	@Override public boolean requiresTarget() {	return true; }
 }

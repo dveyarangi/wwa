@@ -19,4 +19,6 @@ public class MassDriverBehavior implements IBulletBehavior
 		float dy = bullet.getVelocity().y * delta; 
 		bullet.getBody().getAnchor().add( dx, dy );
 	}
+
+	@Override public boolean requiresTarget() { return false; }
 }

@@ -3,6 +3,7 @@
  */
 package eir.world.unit;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -45,7 +46,7 @@ public class Bullet implements Poolable, ISpatialObject
 		bullet.body.getDimensions().set( bullet.size, bullet.size );
 		
 		bullet.velocity.set(dx, dy);
-		bullet.target = target;
+		bullet.target.set( target );
 		
 		bullet.behavior = behavior;
 		
@@ -62,6 +63,9 @@ public class Bullet implements Poolable, ISpatialObject
 	}
 	
 	//////////////////////////////////////////////////////////////////
+	
+	private static Texture crosshair = GameFactory.loadTexture( "skins/crosshair.png" );
+
 	
 	/**
 	 * level object id
@@ -127,6 +131,8 @@ public class Bullet implements Poolable, ISpatialObject
 							body.getCenterY()-sprite.getHeight()/2);
 		sprite.draw( batch );
 		
+		if(behavior.requiresTarget() && target != null)
+			batch.draw( crosshair, target.x-2, target.y-2, 4, 4 );
 	}
 
 	Vector2 getVelocity() { return velocity; }

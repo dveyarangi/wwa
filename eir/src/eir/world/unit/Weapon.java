@@ -21,9 +21,11 @@ public class Weapon
 	
 	private float size = 1;
 	
-	private float reloadingTime = 0.2f;
+	private int burstSize = 7;
+	private float magazineReloadTime = 0.5f;
+	private float reloadingTime = 0.05f;
 	
-	private float accuracy = 180f;
+	private float accuracy = 360f;
 	
 	private IBulletBehavior bulletBehavior = new HomingBehavior();
 //	private IBulletBehavior bulletBehavior = new MassDriverBehavior();
@@ -35,6 +37,8 @@ public class Weapon
 	
 	private float timeToReload = 0;
 	
+	private int bulletsInMagazine = burstSize;
+	
 	public Weapon()
 	{
 		this.weaponDir = new Vector2();
@@ -43,7 +47,11 @@ public class Weapon
 	public Bullet createBullet(Level level, Vector2 weaponPos, Vector2 targetPos)
 	{
 		if(timeToReload > 0)
+		{
 			return null;
+		}
+		if(bulletsInMagazine == 0)
+			bulletsInMagazine = burstSize;
 		
 		weaponDir.set( targetPos ).sub( weaponPos ).nor();
 		float angle = RandomUtil.STD( weaponDir.angle(), accuracy);
@@ -56,7 +64,11 @@ public class Weapon
 				weaponDir.x * speed, weaponDir.y*speed,
 				targetPos);
 		
-		timeToReload = reloadingTime;
+		bulletsInMagazine --;
+		if(bulletsInMagazine > 0)
+			timeToReload = reloadingTime;
+		else
+			timeToReload = magazineReloadTime;
 		
 		return bullet;
 	}
