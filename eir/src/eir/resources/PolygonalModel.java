@@ -234,4 +234,12 @@ public class PolygonalModel
 		return ((int)normalSurfaceIdx(surfaceIdx)) % len;
 
 	}
+
+	/**
+	 * @return
+	 */
+	public int getSize()
+	{
+		return vertices.length;
+	}
 }

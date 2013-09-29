@@ -17,7 +17,6 @@ import com.badlogic.gdx.math.Vector3;
 import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.environment.NavEdge;
-import eir.world.environment.NavEdge.Type;
 import eir.world.environment.NavNode;
 import eir.world.unit.Spider;
 
@@ -86,18 +85,25 @@ public class GameInputProcessor implements InputProcessor
 	{
 		switch(keycode)
 		{
+		
 		case Input.Keys.A:
 			playerSpider.walkCCW(true);
 			break;
+			
 		case Input.Keys.D:
 			playerSpider.walkCW(true);
 			break;
+			
 		case Input.Keys.W:
+			
 			playerSpider.walkUp(true);
+			
 			break;
+			
 		case Input.Keys.S:
-			playerSpider.walkDown(true);
+				playerSpider.walkDown(true);
 			break;
+			
 		case Input.Keys.SPACE:
 			if(camController == freeController)
 			{
