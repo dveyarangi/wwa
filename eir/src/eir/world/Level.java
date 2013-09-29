@@ -64,12 +64,16 @@ public class Level
 	private Spider playerSpider;
 	
 	private List <Bullet> bullets;
+	
+	
+	private List <Effect> effects;
 
 	public Level()
 	{
 		navMesh = new FloydWarshal();
 		ants = new HashSet <Ant> ();
 		bullets = new LinkedList <Bullet> ();
+		effects = new LinkedList <Effect> ();
 	}
 	
 	public List <Asteroid> getAsteroids() { return asteroids;}
@@ -157,6 +161,11 @@ public class Level
 		ants.remove( ant );
 		spatialIndex.remove( ant );
 	}
+	
+	public void addEffect(Effect effect)
+	{
+		effects.add( effect );
+	}
 
 	/**
 	 * @param delta
@@ -170,21 +179,39 @@ public class Level
 			spatialIndex.update( ant );
 		}
 		
-		Iterator <Bullet> iterator = bullets.iterator();
-		while(iterator.hasNext())
+		Iterator <Bullet> bulletIt = bullets.iterator();
+		while(bulletIt.hasNext())
 		{
-			Bullet bullet = iterator.next();
+			Bullet bullet = bulletIt.next();
 			bullet.update( delta );
 			if(!inWorldBounds(bullet.getArea().getAnchor()) || !bullet.isAlive())
 			{
 				spatialIndex.remove( bullet );
-				iterator.remove();
+				bulletIt.remove();
+				Bullet.free( bullet );
+				
+				Effect hitEffect = bullet.weapon.createHitEffect( bullet );
+				if(hitEffect != null)
+				effects.add( hitEffect );
 			}
 			else
 			{
 				spatialIndex.update( bullet );
 			}
 		}
+		Iterator <Effect> effectIt = effects.iterator();
+		while(effectIt.hasNext())
+		{
+			Effect effect = effectIt.next();
+			effect.update( delta );
+			if(!effect.isAlive())
+			{
+
+				effectIt.remove();
+				Effect.free( effect );
+			}
+
+		}	
 	}
 	
 	public void draw(SpriteBatch batch)
@@ -207,6 +234,11 @@ public class Level
 		for(Bullet bullet : bullets)
 		{
 			bullet.draw( batch );
+		}
+		
+		for(Effect effect : effects)
+		{
+			effect.draw( batch );
 		}
 		
 		batch.end();		

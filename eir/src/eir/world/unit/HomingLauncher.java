@@ -8,6 +8,7 @@ import yarangi.numbers.RandomUtil;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import eir.resources.GameFactory;
+import eir.world.Effect;
 
 /**
  * @author dveyarangi
@@ -18,6 +19,9 @@ public class HomingLauncher extends IWeapon
 	private Sprite bulletSprite;
 	
 	private IBulletBehavior bulletBehavior;
+	
+	private static final String HIT_EFFECT_ATLAS_FILE = "anima//effects//explosion//explosion01.atlas";
+	private static final String HIT_EFFECT_ATLAS_ID = "explosion01";
 	
 	public HomingLauncher()
 	{
@@ -60,5 +64,15 @@ public class HomingLauncher extends IWeapon
 	{
 		return RandomUtil.STD( weaponDir.angle(), getAccuracy());
 			//+ 20 + (getBurstSize() - bulletsInMagazine) * 6;
+	}
+
+	/* (non-Javadoc)
+	 * @see eir.world.unit.IWeapon#createHitEffect()
+	 */
+	@Override
+	public Effect createHitEffect(Bullet bullet)
+	{
+		return Effect.getEffect( HIT_EFFECT_ATLAS_FILE, HIT_EFFECT_ATLAS_ID, 
+				15, bullet.getBody().getAnchor(), RandomUtil.N( 360 ), 3 );
 	}
 }

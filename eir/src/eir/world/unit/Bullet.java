@@ -48,12 +48,8 @@ public class Bullet implements Poolable, ISpatialObject
 		bullet.velocity.set(dx, dy);
 		bullet.target.set( target );
 		
-		bullet.behavior = weapon.getBulletBehavior();
-		bullet.sprite = weapon.getBulletSprite();
-		bullet.size = weapon.getSize();
-		
 		bullet.lifetime = 0;
-		
+		bullet.weapon = weapon;
 		return bullet;
 	}
 	
@@ -84,13 +80,11 @@ public class Bullet implements Poolable, ISpatialObject
 	 */
 	private Vector2 velocity;
 	
-	private Sprite sprite;
-	
-	private IBulletBehavior behavior;
-	
 	private boolean isAlive;
 	
 	private Vector2 target;
+	
+	public IWeapon weapon;
 	
 	float angle;
 	
@@ -127,18 +121,19 @@ public class Bullet implements Poolable, ISpatialObject
 	public void update(float delta)
 	{
 		lifetime += delta;
-		behavior.update( delta, this );
+		weapon.getBulletBehavior().update( delta, this );
 	}
 	
 	public void draw( SpriteBatch batch )
 	{
+		Sprite sprite = weapon.getBulletSprite();
 		sprite.setPosition( body.getCenterX()-sprite.getOriginX(), 
 							body.getCenterY()-sprite.getOriginY());
 		sprite.setRotation( angle );
 		
 		sprite.draw( batch );
 		
-		if(behavior.requiresTarget() && target != null)
+		if(weapon.getBulletBehavior().requiresTarget() && target != null)
 			batch.draw( crosshair, target.x-2, target.y-2, 4, 4);
 	}
 

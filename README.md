@@ -47,4 +47,4 @@ Tools
 -----
 * Body editor "aurelienribon.bodyeditor.ui.Main" in eir-workbench
 * To convert font to libgdx format - execute "eir-workbench/lib/hiero.jar"
-* Use TexturePacker to pack images into TextureAtlas format
+* Use TexturePacker to pack images into TextureAtlas format - execute "eir-workbench/lib/gdx-texturepacker.jar"

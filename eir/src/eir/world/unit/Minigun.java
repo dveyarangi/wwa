@@ -9,6 +9,7 @@ import yarangi.numbers.RandomUtil;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import eir.resources.GameFactory;
+import eir.world.Effect;
 
 /**
  * @author dveyarangi
@@ -61,5 +62,14 @@ public class Minigun extends IWeapon
 	protected float createAngle()
 	{
 		return RandomUtil.STD( weaponDir.angle(), getAccuracy());
+	}
+
+
+
+	@Override
+	public Effect createHitEffect(Bullet bullet)
+	{
+	// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -27,7 +27,6 @@ public class HomingBehavior implements IBulletBehavior
 		float dy = bullet.getVelocity().y * delta; 
 		bullet.getBody().getAnchor().add( dx, dy );
 		
-		System.out.println(bullet.lifetime);
 		if(bullet.lifetime < 0.4)
 		{
 			bullet.getVelocity().mul( 0.95f );
@@ -44,7 +43,7 @@ public class HomingBehavior implements IBulletBehavior
 			bullet.angle = force.angle();
 		}
 		// hit:
-		if(bullet.getBody().getAnchor().dst2( bullet.getTarget() ) < 10)
+		if(bullet.getBody().getAnchor().dst2( bullet.getTarget() ) < 1)
 		{
 			bullet.setIsAlive(false);
 		}

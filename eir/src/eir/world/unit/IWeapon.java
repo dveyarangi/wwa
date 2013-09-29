@@ -8,6 +8,7 @@ import yarangi.numbers.RandomUtil;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.world.Effect;
 import eir.world.Level;
 
 /**
@@ -118,6 +119,11 @@ public abstract class IWeapon
 	 * @return
 	 */
 	public float getMaxSpeed() { return getSpeed(); }
+
+	/**
+	 * @return
+	 */
+	public abstract Effect createHitEffect(Bullet bullet);
 
 
 
