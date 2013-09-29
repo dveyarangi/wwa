@@ -6,7 +6,9 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
@@ -39,8 +41,10 @@ public class GameInputProcessor implements InputProcessor
 	private Vector2 pointerPosition2 = new Vector2();
 	
 	private boolean dragging = false;
-	
-	private Texture crosshair;
+
+	private static Animation crosshair = GameFactory.loadAnimation( "anima//ui//crosshair01.atlas", "crosshair" );
+
+	private float lifeTime = 0;
 	
 	public GameInputProcessor(Level level)
 	{
@@ -64,7 +68,6 @@ public class GameInputProcessor implements InputProcessor
 		
 		this.playerSpider = level.getPlayerSpider();
 		
-		this.crosshair = GameFactory.loadTexture( "skins/crosshair.png" );
 		lastx = (int) camController.getCamera().viewportWidth/2;
 		lasty = (int) camController.getCamera().viewportHeight/2;
 	}
@@ -212,12 +215,19 @@ public class GameInputProcessor implements InputProcessor
 	    
 	    pointerPosition2.y = pointerPosition3.y;		
 	    camController.update( delta );
+		lifeTime += delta;
 	}
 	
 	public void draw(SpriteBatch batch, ShapeRenderer renderer)
 	{
 		batch.begin();
-		batch.draw( crosshair, pointerPosition2.x-2, pointerPosition2.y-2, 4, 4 );
+		TextureRegion crossHairregion = crosshair.getKeyFrame( lifeTime, true );
+		batch.draw( crossHairregion, 
+				pointerPosition2.x-crossHairregion.getRegionWidth()/2, pointerPosition2.y-crossHairregion.getRegionHeight()/2,
+				crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2, 
+				crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(), 
+				5f/crossHairregion.getRegionWidth(), 
+				5f/crossHairregion.getRegionWidth(), 0);
 		batch.end();
 		
 		renderer.setColor( 0, 1, 0, 0.1f );

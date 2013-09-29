@@ -6,9 +6,8 @@ package eir.world.unit;
 
 import yarangi.numbers.RandomUtil;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Animation;
 
-import eir.resources.GameFactory;
 import eir.world.Effect;
 
 /**
@@ -22,7 +21,7 @@ public class Minigun extends IWeapon
 	private static final String HIT_EFFECT_ATLAS_FILE = "anima//effects//explosion//explosion04.atlas";
 	private static final String HIT_EFFECT_ATLAS_ID = "explosion04";
 	
-	private Sprite bulletSprite;
+	private Animation bulletAnimation;
 	
 	private IBulletBehavior bulletBehavior;
 	
@@ -30,9 +29,9 @@ public class Minigun extends IWeapon
 	
 	public Minigun()
 	{
-		bulletSprite = new Sprite(GameFactory.loadTexture("models/fireball.png"));
-		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
-		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );
+//		bulletSprite = new Sprite(GameFactory.loadTexture("models/fireball.png"));
+//		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
+//		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );
 		
 		bulletBehavior = new MassDriverBehavior();
 		
@@ -41,7 +40,7 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public int getSize() { return 1; }
+	public float getSize() { return 1; }
 
 
 	@Override
@@ -60,7 +59,7 @@ public class Minigun extends IWeapon
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
 
 	@Override
-	public Sprite getBulletSprite() { return bulletSprite; }
+	public Animation getBulletAnimation() { return bulletAnimation; }
 
 	@Override
 	public float getSpeed() { return 100; }

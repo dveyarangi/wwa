@@ -17,7 +17,7 @@ public class TexturePacker
 	         TexturePacker2.
 	         process("anima\\crosshair", // source dir
 	        		 "anima\\crosshair\\",  // target dir
-	        		 "crosshair01" // atlas name
+	        		 "crosshair02" // atlas name
 	        		 );
 	 }
 }
