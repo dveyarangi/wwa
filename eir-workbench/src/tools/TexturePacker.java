@@ -17,7 +17,7 @@ public class TexturePacker
 	         TexturePacker2.
 	         process("anima\\explosion01", // source dir
 	        		 "anima\\explosion01\\res",  // target dir
-	        		 "explosion01" // atlas name
+	        		 "explosion02" // atlas name
 	        		 );
 	 }
 }

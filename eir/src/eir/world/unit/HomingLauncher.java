@@ -20,8 +20,8 @@ public class HomingLauncher extends IWeapon
 	
 	private IBulletBehavior bulletBehavior;
 	
-	private static final String HIT_EFFECT_ATLAS_FILE = "anima//effects//explosion//explosion01.atlas";
-	private static final String HIT_EFFECT_ATLAS_ID = "explosion01";
+	private static final String HIT_EFFECT_ATLAS_FILE = "anima//effects//explosion//explosion02.atlas";
+	private static final String HIT_EFFECT_ATLAS_ID = "explosion02";
 	
 	public HomingLauncher()
 	{
