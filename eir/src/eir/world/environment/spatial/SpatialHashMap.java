@@ -185,6 +185,76 @@ public class SpatialHashMap <O extends ISpatialObject>
 		
 		return object;
 	}
+	
+/*	public void addLine(float ox, float oy, float dx, float dy)
+	{
+		int currGridx = toGridIndex(ox);
+		int currGridy = toGridIndex(oy);
+		float tMaxX, tMaxY;
+		float tDeltaX, tDeltaY;
+		int stepX, stepY;
+		if(dx > 0)
+		{
+			tMaxX = ((currGridx*cellSize + halfCellSize) - ox) / dx;
+			tDeltaX = cellSize / dx;
+			stepX = 1;
+		}					
+		else
+		if(dx < 0)
+		{
+			tMaxX = ((currGridx*cellSize - halfCellSize) - ox) / dx;
+			tDeltaX = -cellSize / dx;
+			stepX = -1;
+		}
+		else { tMaxX = Float.MAX_VALUE; tDeltaX = 0; stepX = 0;}
+		
+		if(dy > 0)
+		{
+			tMaxY = ((currGridy*cellSize + halfCellSize) - oy) / dy;
+			tDeltaY = cellSize / dy;
+			stepY = 1;
+		}
+		else
+		if(dy < 0)
+		{
+			tMaxY = ((currGridy*cellSize - halfCellSize) - oy) / dy;
+			tDeltaY = -cellSize / dy;
+			stepY = -1;
+		}
+		else { tMaxY = Float.MAX_VALUE; tDeltaY = 0; stepY = 0;}
+		
+		// marks entity area to avoid reporting entity multiple times
+		int passId = getNextPassId();
+		Set <O> cell;
+		while(tMaxX <= 1 || tMaxY <= 1)
+		{
+			if(tMaxX < tMaxY)
+			{
+				tMaxX += tDeltaX;
+				currGridx += stepX;
+			}
+			else
+			{
+				tMaxY += tDeltaY;
+				currGridy += stepY;
+			}
+			cell = map[hash(currGridx, currGridy)];
+			for(O object : cell)
+			{
+				if(object.getArea().getPassId() == passId)
+					continue;
+				
+				AABB aabb = object.getArea();
+				if(aabb.crosses(ox, oy, dx, dy))
+					if(sensor.objectFound(object))
+						break;
+				
+				object.getArea().setPassId( passId );
+			}	
+		}		
+		
+		return sensor;	
+	}*/
 
 	/**
 	 * TODO: this method must be optimized by all casts.

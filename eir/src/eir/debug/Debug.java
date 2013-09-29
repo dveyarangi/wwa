@@ -38,10 +38,13 @@ public class Debug
 
 	private CoordinateGrid debugGrid;
 	
+	private SpatialHashMapLook spatialGrid;
+	
 	private BitmapFont font;
 	
 	public boolean drawCoordinateGrid = false;
 	public boolean drawNavMesh = false;
+	public boolean drawSpatialHashmap = false;
 	
 	private static Map <String, Long> timings = new HashMap <String, Long> ();
 
@@ -67,6 +70,8 @@ public class Debug
 		debugGrid = new CoordinateGrid( 
 				level.getWidth(), level.getHeight(), 
 				inputController.getCamera() );
+		
+		spatialGrid = new SpatialHashMapLook( level.getSpatialIndex() );
 		
 		font = GameFactory.loadFont("skins//fonts//default", 0.05f);
 	}
@@ -118,6 +123,9 @@ public class Debug
 		
 		if(drawCoordinateGrid)
 			debugGrid.draw( batch, shape );
+		
+		if(drawSpatialHashmap)
+			spatialGrid.draw( shape );
 		
 		if(drawNavMesh)
 			drawNavMesh( batch, shape );
@@ -176,6 +184,7 @@ public class Debug
 	
 	public static void toggleNavMesh() { debug.drawNavMesh =! debug.drawNavMesh; }
 	public static void toggleCoordinateGrid() { debug.drawCoordinateGrid =! debug.drawCoordinateGrid; }
+	public static void toggleSpatialGrid() { debug.drawSpatialHashmap =! debug.drawSpatialHashmap; }
 
 
 	public static void startTiming(String processName)

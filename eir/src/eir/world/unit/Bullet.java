@@ -138,8 +138,8 @@ public class Bullet implements Poolable, ISpatialObject
 		
 		sprite.draw( batch );
 		
-		if(weapon.getBulletBehavior().requiresTarget() && target != null)
-			batch.draw( crosshair, target.x-2, target.y-2, 4, 4);
+//		if(weapon.getBulletBehavior().requiresTarget() && target != null)
+//			batch.draw( crosshair, target.x-2, target.y-2, 4, 4);
 	}
 
 	Vector2 getVelocity() { return velocity; }

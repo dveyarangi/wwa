@@ -52,7 +52,7 @@ public class Ant implements Poolable, ISpatialObject
 		
 		ant.id = level.createObjectId();
 		
-		ant.body = AABB.createSquare( node.getPoint().x, node.getPoint().y, ant.size );
+		ant.body = AABB.createSquare( node.getPoint().x, node.getPoint().y, ant.size/2 );
 		
 		ant.mesh = level.getNavMesh();
 		

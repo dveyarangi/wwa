@@ -318,4 +318,12 @@ public class Level
 		return position.x < halfWidth  && position.x > -halfWidth
 			&& position.y < halfHeight && position.y > -halfHeight;	
 	}
+
+	/**
+	 * @return
+	 */
+	public SpatialHashMap getSpatialIndex()
+	{
+		return spatialIndex;
+	}
 }
