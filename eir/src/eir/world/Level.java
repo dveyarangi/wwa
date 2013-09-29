@@ -13,8 +13,10 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
 import eir.world.environment.FloydWarshal;
+import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
+import eir.world.environment.NavEdge.Type;
 import eir.world.environment.spatial.AntCollider;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
@@ -347,5 +349,46 @@ public class Level
 	public SpatialHashMap <ISpatialObject> getSpatialIndex()
 	{
 		return spatialIndex;
+	}
+
+	/**
+	 * @param sourceNode
+	 * @param targetNode
+	 */
+	public void toggleWeb(NavNode sourceNode, NavNode targetNode)
+	{
+		
+		if(sourceNode.getAsteroid() == targetNode.getAsteroid())
+			return;
+		
+		NavEdge edge = getNavMesh().getEdge( sourceNode, targetNode );
+		
+		if(edge == null)
+		{
+			Web web = new Web(sourceNode, targetNode, 
+  			"models/web_thread_01.png",
+			"models/web_source_01.png",
+			"models/web_target_01.png"	
+			);
+			
+			webs.add( web );
+			web.init( this );
+//			getNavMesh().linkNodes( sourceNode, targetNode, Type.WEB );
+
+		}
+		else
+		{
+			System.out.println("removing web: " + sourceNode + " <---> " + targetNode);
+			Iterator <Web> webIt = webs.iterator();
+			while(webIt.hasNext())
+			{
+				Web web = webIt.next();
+				if((web.getSource().isSame( sourceNode ) && web.getTarget().isSame( targetNode ))
+				|| (web.getTarget().isSame( sourceNode ) && web.getSource().isSame( targetNode )))
+					webIt.remove();
+			}
+			
+			getNavMesh().unlinkNodes( sourceNode, targetNode );
+		}	
 	}
 }

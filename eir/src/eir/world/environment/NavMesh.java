@@ -3,6 +3,7 @@
  */
 package eir.world.environment;
 
+import eir.world.Asteroid;
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
@@ -65,12 +66,12 @@ public abstract class NavMesh
 		cur = null;
 	}
 	
-	public NavNode insertNode(Vector2 point, Vector2 rawPoint)
+	public NavNode insertNode(Asteroid asteroid, int idx, Vector2 point, Vector2 rawPoint)
 	{
 		if(nodes.size() >= MAX_NODES) // sanity; overflow may break edges mapping
 			throw new IllegalStateException("Reached max node capacity.");
 		
-		NavNode node = new NavNode(point, rawPoint, nextNodeIndex++);
+		NavNode node = new NavNode(asteroid, idx, point, rawPoint, nextNodeIndex++);
 		nodes.add( node );
 		return node;
 	}

@@ -116,7 +116,8 @@ public class GameFactory
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 		
 		return new PolygonalModel( 
-				level.getNavMesh(), bodyModel.origin, vertices, bodyModel.polygons,
+				level.getNavMesh(), asteroid, 
+				bodyModel.origin, vertices, bodyModel.polygons,
 				asteroid.getSize(), 
 				asteroid.getPosition(), 
 				asteroid.getAngle());

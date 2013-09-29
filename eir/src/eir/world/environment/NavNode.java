@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 
+import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
@@ -32,12 +33,18 @@ public class NavNode implements ISpatialObject
 	 */
 	private Set <NavNode> neighbours;
 	
+	private Asteroid asteroid;
+	
+	private int asteroidIdx;
+	
 	private AABB pickingArea;
 	
 	private int spatialId;
 	
-	NavNode(Vector2 point, Vector2 rawPoint, int idx)
+	NavNode(Asteroid asteroid, int asteroidIdx ,Vector2 point, Vector2 rawPoint, int idx)
 	{
+		this.asteroid = asteroid;
+		this.asteroidIdx = asteroidIdx;
 		this.idx = idx;
 		this.point = point;
 		this.rawPoint = rawPoint;
@@ -97,4 +104,7 @@ public class NavNode implements ISpatialObject
 	{
 		neighbours.remove( node );
 	}
+	
+	public Asteroid getAsteroid() { return asteroid; }
+	public int getAsteroidIdx() { return asteroidIdx; }
 }

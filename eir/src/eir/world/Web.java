@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.resources.GameFactory;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavNode;
 
@@ -30,11 +31,23 @@ public class Web
 	private Sprite targetSprite;
 	private Sprite threadSprite;
 	
-/*	public Web( String source, String target )
+	public Web() {}
+	
+	public Web( NavNode source, NavNode target, String threadTexture, String sourceTexture, String targetTexture )
 	{
-		this.source = source;
-		this.target = target;
-	}*/
+		this.source = new Anchor();
+		this.source.asteroid = source.getAsteroid();
+		this.source.navIdx = source.getAsteroidIdx();
+		
+		this.target = new Anchor();
+		this.target.asteroid = target.getAsteroid();
+		this.target.navIdx = target.getAsteroidIdx();
+		
+		this.sourceTexture = GameFactory.loadTexture( sourceTexture );
+		this.targetTexture = GameFactory.loadTexture( targetTexture );
+		this.threadTexture = GameFactory.loadTexture( threadTexture );
+		
+	}
 	
 	public void draw( SpriteBatch spriteBatch )
 	{
@@ -108,6 +121,12 @@ public class Web
 		public Asteroid getAsteroid() {	return asteroid; }
 		
 		public int getNavNodeIdx() { return navIdx; }
+		
+		public boolean isSame(NavNode node)
+		{
+			return node.getAsteroid() == getAsteroid()
+				&& node.getAsteroidIdx() == navIdx;
+		}
 	}
 }
 

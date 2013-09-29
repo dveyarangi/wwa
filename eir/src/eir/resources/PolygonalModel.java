@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
+import eir.world.Asteroid;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
@@ -68,7 +69,7 @@ public class PolygonalModel
 	 * @param body
 	 * @param sprite
 	 */
-	public PolygonalModel(NavMesh navMesh, Vector2 origin, Vector2 [] rawVertices, List<List<Vector2>> polygons, float size, Vector2 position, float angle)
+	public PolygonalModel(NavMesh navMesh, Asteroid asteroid, Vector2 origin, Vector2 [] rawVertices, List<List<Vector2>> polygons, float size, Vector2 position, float angle)
 	{
 		super();
 		this.origin = origin;
@@ -102,13 +103,14 @@ public class PolygonalModel
 		nodes = new NavNode[len];
 
 		navMesh.beginAsteroid();
-		NavNode currNode = navMesh.insertNode( vertices[0], rawVertices[0] );
+		NavNode currNode = navMesh.insertNode( asteroid, 0, vertices[0], rawVertices[0] );
 		int startingIdx = currNode.idx;
 		NavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
 		{
+			int nidx = (idx+1)%len;
 			Vector2 a = vertices[idx];
-			Vector2 b = vertices[(idx+1)%len];
+			Vector2 b = vertices[nidx];
 			
 			directions[idx] = new Vector2( b.x-a.x, b.y-a.y ).nor();
 			
@@ -122,8 +124,8 @@ public class PolygonalModel
 			nodes[idx] = currNode;
 			prevNode = currNode;
 			
-			if((idx+1)%len != 0)
-				currNode = navMesh.insertNode( b, rawVertices[(idx+1)%len] );
+			if(nidx != 0)
+				currNode = navMesh.insertNode(asteroid, nidx,  b, rawVertices[nidx] );
 			else
 				currNode = navMesh.getNode(startingIdx);
 			navMesh.linkNodes( currNode, prevNode, NavEdge.Type.LAND );

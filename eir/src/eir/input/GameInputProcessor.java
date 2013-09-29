@@ -158,17 +158,7 @@ public class GameInputProcessor implements InputProcessor
 				NavNode sourceNode = playerSpider.getClosestNode();
 				NavNode targetNode = pickingSensor.getNode();
 				
-				NavEdge edge = level.getNavMesh().getEdge( sourceNode, targetNode );
-				if(edge == null)
-				{
-					System.out.println("creating web: " + sourceNode + " <---> " + targetNode);
-					level.getNavMesh().linkNodes( sourceNode, targetNode, Type.WEB );
-				}
-				else
-				{
-					System.out.println("removing web: " + sourceNode + " <---> " + targetNode);
-					level.getNavMesh().unlinkNodes( sourceNode, targetNode );
-				}
+				level.toggleWeb(sourceNode, targetNode);
 			}
 		}
 		
