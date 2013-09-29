@@ -13,28 +13,22 @@ public class FloydWarshal extends NavMesh
 {
 	protected NavNode[][] routes;
 	
-	protected float[][] dists;
-	protected NavNode[] cwpreds;
-	protected NavNode[] ccwpreds;
-	
+	// distantces inside the same asteroid
+	protected float[] localdists;
 	
 	public FloydWarshal()
 	{
 	}
 	
+	/**
+	 * initialize in asteroid routes and initial floyd warshal 
+	 */
 	public void init()
-	{
-		calculate();
-	}
-	
-	public void calculate()
 	{
 		int n = nodes.size();
 		
-		float[] dists = new float[n];
-		
-		NavNode[] cwpreds = new NavNode[n];
-		NavNode[] ccwpreds = new NavNode[n];
+		// for navigation between nodes inside the same asteroid
+		localdists = new float[n];
 		
 		TIntObjectIterator<NavEdge> it = edges.iterator();
 		
@@ -50,24 +44,104 @@ public class FloydWarshal extends NavMesh
 			int b = e.getNode2().idx;
 			
 			if( a>b )
-				dists[a] = e.getLength();
+				localdists[a] = e.getLength();
 			else
-				dists[b] = e.getLength();
+				localdists[b] = e.getLength();
 		}
 		
 		for( int[] c : indexRange )
 		{
-			dists[c[1]] = dists[c[0]];
-			dists[c[0]] = 0;
+			localdists[c[1]] = localdists[c[0]];
 			
-			for( int i=c[0]+1 ; i<=c[1] ; i++ )
+			for( int i=c[0]+2 ; i<=c[1] ; i++ )
 			{
-				dists[i] += dists[i-1];
+				localdists[i] += localdists[i-1];
 			}
 		}
 		
-		System.exit(0);
-//		this.dists = cwdists;
+		reFloydWarshal();
+	}
+	
+	/**
+	 * recalculate floyd warshal routes
+	 */
+	public void reFloydWarshal()
+	{
+		int n = nodes.size();
+		
+		float[][] dists = new float[n][n];
+		float[][] lastdists = new float[n][n];
+		float[][] tmpdists = null;
+		
+		NavNode[][] preds = new NavNode[n][n];
+		NavNode[][] lastpreds = new NavNode[n][n];
+		
+		NavNode[][] tmppreds = null;
+		
+		for( int i=0 ; i<n ; i++ )
+		{
+			for( int j=0 ; j<n ; j++ )
+			{	
+				if( i!=j )
+				{
+					lastdists[i][j] = Float.POSITIVE_INFINITY;
+				}
+				else
+				{
+					lastdists[i][j] = 0;
+					lastpreds[i][j] = nodes.get(i);
+				}
+			}
+		}	
+		
+		TIntObjectIterator<NavEdge> it = edges.iterator();
+		
+		while( it.hasNext() )
+		{
+			it.advance();
+			NavEdge e = it.value();
+			int i = e.getNode1().idx;
+			int j = e.getNode2().idx;
+			
+			lastdists[i][j] = e.getLength();
+			lastpreds[i][j] = e.getNode2();
+		}
+		
+		for( int[] c : indexRange )
+		{
+			for( int k=c[0] ; k<c[1] ; k++ )
+			{
+				for( int i=c[0] ; i<c[1] ; i++ )
+				{
+					for( int j=c[0] ; j<c[1] ; j++ )
+					{
+						float contendor = lastdists[i][k] + lastdists[k][j];
+						
+						if( lastdists[i][j]>contendor && contendor!=0 )
+						{
+							dists[i][j] = contendor;
+							preds[i][j] = lastpreds[i][k];
+						}
+						else
+						{
+							dists[i][j] = lastdists[i][j];
+							preds[i][j] = lastpreds[i][j];
+						}
+					}
+				}
+				
+				// swap buffers
+				tmppreds = lastpreds;
+				lastpreds = preds;
+				preds = tmppreds;
+				
+				tmpdists = lastdists;
+				lastdists = dists;
+				dists = tmpdists;
+			}
+		}
+		
+		this.routes = lastpreds;
 	}
 	
 	/**
@@ -88,8 +162,8 @@ public class FloydWarshal extends NavMesh
 	 * @param to
 	 * @return
 	 */
-	public float distance( NavNode From, NavNode to )
-	{
-		return dists[From.idx][to.idx];
-	}
+//	public float distance( NavNode From, NavNode to )
+//	{
+//		return dists[From.idx][to.idx];
+//	}
 }

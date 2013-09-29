@@ -87,7 +87,7 @@ public class GameScreen extends AbstractScreen
 		}
 		
 		// increasing infestation
-		for(int i = 0; i < 150; i ++)
+		for(int i = 0; i < 3; i ++)
 		{
 			NavNode startingNode = level.getNavMesh().getNode( 
 					RandomUtil.N( 90 ) );
