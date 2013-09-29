@@ -41,7 +41,7 @@ public class Spider
 	
 	private Vector2 shootingTarget;
 	
-	private Weapon weapon;
+	private IWeapon weapon;
 	
 	public Spider(Level level, Asteroid asteroid, float surfaceIdx, float size, float speed)
 	{
@@ -59,7 +59,8 @@ public class Spider
 		sprite.setOrigin( sprite.getWidth()/2, sprite.getHeight()/2 );
 		sprite.setScale( size / sprite.getWidth() );
 		
-		weapon = new Weapon();
+//		weapon = new Minigun();
+		weapon = new HomingLauncher();
 	}
 	
 	public void update(float delta)

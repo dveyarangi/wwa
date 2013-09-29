@@ -13,9 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 public class HomingBehavior implements IBulletBehavior
 {
 
-	private Weapon weapon;
+	private Minigun weapon;
 	
-	public HomingBehavior(Weapon weapon)
+	public HomingBehavior(Minigun weapon)
 	{
 		this.weapon = weapon;
 	}
@@ -32,8 +32,8 @@ public class HomingBehavior implements IBulletBehavior
 				.mul( 500 * bullet.lifetime * bullet.lifetime * delta );
 		
 		bullet.getVelocity().add( force );
-		if(bullet.getVelocity().len2() > weapon.speed*weapon.speed)
-			bullet.getVelocity().nor().mul( weapon.speed );
+		if(bullet.getVelocity().len2() > weapon.getSpeed()*weapon.getSpeed())
+			bullet.getVelocity().nor().mul( weapon.getSpeed() );
 		bullet.angle = force.angle();
 		
 		// hit:

@@ -34,7 +34,7 @@ public class Bullet implements Poolable, ISpatialObject
 		}
 	};
 	
-	public static Bullet getBullet(Level level, Weapon weapon, float x, float y, float dx, float dy, Vector2 target)
+	public static Bullet getBullet(Level level, IWeapon weapon, float x, float y, float dx, float dy, Vector2 target)
 	{
 
 		Bullet bullet = pool.obtain();
@@ -48,9 +48,9 @@ public class Bullet implements Poolable, ISpatialObject
 		bullet.velocity.set(dx, dy);
 		bullet.target.set( target );
 		
-		bullet.behavior = weapon.bulletBehavior;
-		bullet.sprite = weapon.bulletSprite;
-		bullet.size = weapon.size;
+		bullet.behavior = weapon.getBulletBehavior();
+		bullet.sprite = weapon.getBulletSprite();
+		bullet.size = weapon.getSize();
 		
 		bullet.lifetime = 0;
 		
