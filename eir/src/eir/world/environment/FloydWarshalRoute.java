@@ -47,7 +47,19 @@ public class FloydWarshalRoute extends Route
 		this.navMesh = navMesh;
 		this.from = from;
 		this.to = to;
-		hasNext = ( navMesh.routes[from.idx][to.idx]==null ) ? false : true;
+		
+		hasNext = false;
+		
+		for( int[] cur : navMesh.indexRange )
+		{
+			if( from.idx<=cur[0] && to.idx<=cur[1] )
+			{
+				hasNext = true;
+				break;
+			}
+		}
+		
+//		hasNext = ( navMesh.routes[from.idx][to.idx]==null ) ? false : true;
 		first = true;
 	}
 	

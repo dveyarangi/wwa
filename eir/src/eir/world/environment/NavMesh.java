@@ -60,7 +60,7 @@ public abstract class NavMesh
 	 */
 	public void endAsteroid()
 	{
-		cur[1] = nextNodeIndex;
+		cur[1] = nextNodeIndex-1;
 		indexRange.add(cur);
 		cur = null;
 	}

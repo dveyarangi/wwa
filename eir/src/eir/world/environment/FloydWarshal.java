@@ -1,5 +1,6 @@
 package eir.world.environment;
 
+import eir.world.environment.NavEdge.Type;
 import gnu.trove.iterator.TIntObjectIterator;
 
 
@@ -11,7 +12,11 @@ import gnu.trove.iterator.TIntObjectIterator;
 public class FloydWarshal extends NavMesh
 {
 	protected NavNode[][] routes;
+	
 	protected float[][] dists;
+	protected NavNode[] cwpreds;
+	protected NavNode[] ccwpreds;
+	
 	
 	public FloydWarshal()
 	{
@@ -26,97 +31,43 @@ public class FloydWarshal extends NavMesh
 	{
 		int n = nodes.size();
 		
-		float[][] ccwdists = new float[n][n];
-		float[][] cwdists = new float[n][n];
-		float[][] tmpdists = null;
+		float[] dists = new float[n];
 		
-		NavNode[][] ccwpreds = new NavNode[n][n];
-		NavNode[][] cwpreds = new NavNode[n][n];
-		
-		NavNode[][] tmppreds = null;
-		
-		for( int i=0 ; i<n ; i++ )
-		{
-			for( int j=0 ; j<n ; j++ )
-			{	
-				if( i!=j )
-				{
-					cwdists[i][j] = Float.POSITIVE_INFINITY;
-				}
-				else
-				{
-					cwdists[i][j] = 0;
-					cwpreds[i][j] = nodes.get(i);
-				}
-			}
-		}
+		NavNode[] cwpreds = new NavNode[n];
+		NavNode[] ccwpreds = new NavNode[n];
 		
 		TIntObjectIterator<NavEdge> it = edges.iterator();
 		
 		while( it.hasNext() )
 		{
 			it.advance();
-			NavEdge e = it.value();
-			int i = e.getNode1().idx;
-			int j = e.getNode2().idx;
 			
-			cwdists[i][j] = e.getLength();
-			cwpreds[i][j] = e.getNode2();
+			if( it.value().type==Type.WEB )
+				continue;
+			
+			NavEdge e = it.value();
+			int a = e.getNode1().idx;
+			int b = e.getNode2().idx;
+			
+			if( a>b )
+				dists[a] = e.getLength();
+			else
+				dists[b] = e.getLength();
 		}
 		
 		for( int[] c : indexRange )
 		{
-			for( int i=c[0] ; i<c[1]-2 ; i++ )
+			dists[c[1]] = dists[c[0]];
+			dists[c[0]] = 0;
+			
+			for( int i=c[0]+1 ; i<=c[1] ; i++ )
 			{
-				for( int j=i ; j>=0 ; j-- )
-				{
-					// clockwise
-					cwpreds[j][i+2] = cwpreds[j][i+1];
-					cwdists[j][i+2] = cwdists[j][i+1] + cwdists[j+1][i+1];
-				}
+				dists[i] += dists[i-1];
 			}
 		}
 		
-//		original
-//		for( int[] c : indexRange )
-//		{
-//			for( int i=c[0]+2 ; i<c[1] ; i++ )
-//			{
-//				for( int j=i-2 ; j>=0 ; j-- )
-//				{
-//					cwpreds[j][i] = cwpreds[j][i-1];
-//					cwdists[j][i] = cwdists[j][i-1] + cwdists[j+1][i];
-//				}
-//			}
-//		}
-		
-//		System.out.println("-------------------------------------");
-//		for( int i=0 ; i<33 ; i++ )
-//		{
-//			for( int j=0 ; j<33 ; j++ )
-//			{
-//				if( cwpreds[i][j]==null)
-//					System.out.print("null\t");
-//				else
-//					System.out.print(cwpreds[i][j].idx+"\t");
-//			}
-//			System.out.println();
-//		}
-		for( int i=0 ; i<33 ; i++ )
-		{
-			for( int j=0 ; j<33 ; j++ )
-			{
-				if( cwdists[i][j]==Float.POSITIVE_INFINITY)
-					System.out.print("inf\t");
-				else
-					System.out.printf("%3.0f\t", cwdists[i][j]);
-			}
-			System.out.println();
-		}
-		
-//		System.exit(0);
-		this.routes = cwpreds;
-		this.dists = cwdists;
+		System.exit(0);
+//		this.dists = cwdists;
 	}
 	
 	/**
