@@ -29,8 +29,8 @@ public class Weapon
 	
 	private float accuracy = 10f;
 	
-	public final IBulletBehavior bulletBehavior = new HomingBehavior(this);
-//	private IBulletBehavior bulletBehavior = new MassDriverBehavior();
+//	public final IBulletBehavior bulletBehavior = new HomingBehavior(this);
+	public final IBulletBehavior bulletBehavior = new MassDriverBehavior();
 	
 	public final Sprite bulletSprite;
 	
@@ -67,8 +67,10 @@ public class Weapon
 		
 		Bullet bullet = Bullet.getBullet( level, this, 
 				weaponPos.x, weaponPos.y, 
-				weaponDir.x * speed, weaponDir.y*speed,
+			 	weaponDir.x * speed, weaponDir.y*speed,
 				targetPos);
+		
+		bullet.angle = weaponDir.angle();
 		
 		bulletsInMagazine --;
 		if(bulletsInMagazine > 0)
