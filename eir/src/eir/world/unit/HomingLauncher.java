@@ -5,6 +5,7 @@ package eir.world.unit;
 
 import yarangi.numbers.RandomUtil;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import eir.resources.GameFactory;
@@ -16,20 +17,23 @@ import eir.world.Effect;
  */
 public class HomingLauncher extends IWeapon
 {
-	private Sprite bulletSprite;
+	private Animation bulletAnimation;
 	
 	private IBulletBehavior bulletBehavior;
 	
 	private Damage bulletDamage;
 	
-	private static final String HIT_EFFECT_ATLAS_FILE = "anima//effects//explosion//explosion03.atlas";
-	private static final String HIT_EFFECT_ATLAS_ID = "explosion03";
+	private static final String BULLET_ATLAS_FILE_01 = "anima//bullets//rocket01.atlas";
+	private static final String BULLET_ATLAS_ID_01 = "bullet";
+	private static final String HIT_EFFECT_ATLAS_FILE_01 = "anima//effects//explosion//explosion03.atlas";
+	private static final String HIT_EFFECT_ATLAS_ID_01 = "explosion03";
+	private static final String HIT_EFFECT_ATLAS_FILE_02 = "anima//effects//explosion//explosion05.atlas";
+	private static final String HIT_EFFECT_ATLAS_ID_02 = "explosion05";
 	
 	public HomingLauncher()
 	{
-		bulletSprite = new Sprite(GameFactory.loadTexture("models/rocket.png"));
-		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
-		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );
+		bulletAnimation = GameFactory.loadAnimation(
+				BULLET_ATLAS_FILE_01, BULLET_ATLAS_ID_01 );
 		
 		bulletBehavior = new HomingBehavior(this);
 		
@@ -37,7 +41,7 @@ public class HomingLauncher extends IWeapon
 	}
 	
 	@Override
-	public int getSize() { return 4; }
+	public float getSize() { return 2; }
 
 
 	@Override
@@ -56,7 +60,7 @@ public class HomingLauncher extends IWeapon
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
 
 	@Override
-	public Sprite getBulletSprite() { return bulletSprite; }
+	public Animation getBulletAnimation() { return bulletAnimation; }
 
 	@Override
 	public float getSpeed() { return 50; }
@@ -70,14 +74,16 @@ public class HomingLauncher extends IWeapon
 			//+ 20 + (getBurstSize() - bulletsInMagazine) * 6;
 	}
 
-	/* (non-Javadoc)
-	 * @see eir.world.unit.IWeapon#createHitEffect()
-	 */
 	@Override
 	public Effect createHitEffect(Bullet bullet)
 	{
-		return Effect.getEffect( HIT_EFFECT_ATLAS_FILE, HIT_EFFECT_ATLAS_ID, 
-				25, bullet.getBody().getAnchor(), RandomUtil.N( 360 ), 1 );
+		if(RandomUtil.oneOf( 5 ))
+			return Effect.getEffect( HIT_EFFECT_ATLAS_FILE_01, HIT_EFFECT_ATLAS_ID_01, 
+					RandomUtil.STD( 25, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
+		else
+			return Effect.getEffect( HIT_EFFECT_ATLAS_FILE_02, HIT_EFFECT_ATLAS_ID_02, 
+					RandomUtil.STD( 10, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
+
 	}
 
 	@Override

@@ -1,0 +1,117 @@
+
+rocket01.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bullet.0000
+  rotate: false
+  xy: 1, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0001
+  rotate: false
+  xy: 35, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0002
+  rotate: false
+  xy: 69, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0003
+  rotate: false
+  xy: 103, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0004
+  rotate: false
+  xy: 137, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0005
+  rotate: false
+  xy: 171, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0006
+  rotate: false
+  xy: 205, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0007
+  rotate: false
+  xy: 239, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0008
+  rotate: false
+  xy: 273, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0009
+  rotate: false
+  xy: 307, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0011
+  rotate: false
+  xy: 307, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0013
+  rotate: false
+  xy: 307, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0010
+  rotate: false
+  xy: 341, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0012
+  rotate: false
+  xy: 341, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0014
+  rotate: false
+  xy: 375, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+bullet.0015
+  rotate: false
+  xy: 409, 1
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1

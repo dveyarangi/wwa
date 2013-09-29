@@ -5,6 +5,7 @@ package eir.world.unit;
 
 import yarangi.numbers.RandomUtil;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
@@ -80,7 +81,7 @@ public abstract class IWeapon
 	/**
 	 * @return the size
 	 */
-	public abstract int getSize();
+	public abstract float getSize();
 	/**
 	 * @return the burstSize
 	 */
@@ -108,7 +109,7 @@ public abstract class IWeapon
 	/**
 	 * @return the bulletSprite
 	 */
-	public abstract Sprite getBulletSprite();
+	public abstract Animation getBulletAnimation();
 
 	/**
 	 * @return the speed

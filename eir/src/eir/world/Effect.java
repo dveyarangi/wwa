@@ -33,6 +33,8 @@ public class Effect implements Poolable
 	{
 		Effect effect = pool.obtain();
 		
+		effect.reset();
+		
 		effect.animation = GameFactory.loadAnimation(animationId, atlasId );
 		
 		effect.size = size;

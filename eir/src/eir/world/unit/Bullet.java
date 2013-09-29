@@ -4,8 +4,10 @@
 package eir.world.unit;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -19,6 +21,7 @@ import eir.world.environment.spatial.ISpatialObject;
  * @author dveyarangi
  *
  */
+@SuppressWarnings("unused")
 public class Bullet implements Poolable, ISpatialObject
 {
 	//////////////////////////////////////////////////////////////////
@@ -40,6 +43,7 @@ public class Bullet implements Poolable, ISpatialObject
 		Bullet bullet = pool.obtain();
 		bullet.reset();
 		bullet.id = level.createObjectId();
+		bullet.size = weapon.getSize();
 		
 		bullet.body.getAnchor().set( x, y );
 		bullet.body.getDimensions().set( bullet.size, bullet.size );
@@ -57,7 +61,7 @@ public class Bullet implements Poolable, ISpatialObject
 	
 	//////////////////////////////////////////////////////////////////
 	
-	private static Texture crosshair = GameFactory.loadTexture( "skins/crosshair.png" );
+	private static Animation crosshair = GameFactory.loadAnimation( "anima//ui//crosshair01.atlas", "crosshair" );
 
 	
 	/**
@@ -65,7 +69,7 @@ public class Bullet implements Poolable, ISpatialObject
 	 */
 	private int id;
 	
-	private int size = 1;
+	private float size = 1;
 
 	/**
 	 * Collision box
@@ -132,15 +136,25 @@ public class Bullet implements Poolable, ISpatialObject
 	
 	public void draw( SpriteBatch batch )
 	{
-		Sprite sprite = weapon.getBulletSprite();
-		sprite.setPosition( body.getCenterX()-sprite.getOriginX(), 
-							body.getCenterY()-sprite.getOriginY());
-		sprite.setRotation( angle );
+		Vector2 position = body.getAnchor();
+		TextureRegion region = weapon.getBulletAnimation().getKeyFrame( lifetime, true );
+		batch.draw( region, 
+				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
+				region.getRegionWidth()/2,region.getRegionHeight()/2, 
+				region.getRegionWidth(), region.getRegionHeight(), 
+				size/region.getRegionWidth(), 
+				size/region.getRegionWidth(), angle+90);
 		
-		sprite.draw( batch );
-		
-//		if(weapon.getBulletBehavior().requiresTarget() && target != null)
-//			batch.draw( crosshair, target.x-2, target.y-2, 4, 4);
+		if(weapon.getBulletBehavior().requiresTarget() && target != null)
+		{
+			TextureRegion crossHairregion = crosshair.getKeyFrame( lifetime, true );
+			batch.draw( crossHairregion, 
+					target.x-crossHairregion.getRegionWidth()/2, target.y-crossHairregion.getRegionHeight()/2,
+					crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2, 
+					crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(), 
+					5f/crossHairregion.getRegionWidth(), 
+					5f/crossHairregion.getRegionWidth(), angle);
+		}
 	}
 
 	Vector2 getVelocity() { return velocity; }

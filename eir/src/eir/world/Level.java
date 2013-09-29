@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
+import eir.resources.GameFactory;
 import eir.world.environment.FloydWarshal;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
@@ -186,6 +187,9 @@ public class Level
 			{
 				antIt.remove();
 				spatialIndex.remove( ant );
+				Effect hitEffect = ant.getDeathEffect();
+				if(hitEffect != null)
+					effects.add( hitEffect );
 				Ant.free( ant );
 			}
 			

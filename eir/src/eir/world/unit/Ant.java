@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 
 import eir.debug.Debug;
 import eir.resources.GameFactory;
+import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
@@ -68,6 +69,9 @@ public class Ant implements Poolable, ISpatialObject
 
 		return ant;
 	}
+	
+	private static final String HIT_EFFECT_ATLAS_FILE_02 = "anima//effects//explosion//explosion02.atlas";
+	private static final String HIT_EFFECT_ATLAS_ID_02 = "explosion02";
 	
 	public static void free(Ant ant)
 	{
@@ -228,6 +232,15 @@ public class Ant implements Poolable, ISpatialObject
 	public void hit(Damage damage)
 	{
 		isAlive = false;
+	}
+
+	/**
+	 * @return
+	 */
+	public Effect getDeathEffect()
+	{
+		return Effect.getEffect( HIT_EFFECT_ATLAS_FILE_02, HIT_EFFECT_ATLAS_ID_02, 
+				10, body.getAnchor(), RandomUtil.N( 360 ), 1 );
 	}
 	
 }
