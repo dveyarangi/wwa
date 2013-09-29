@@ -125,6 +125,6 @@ public abstract class IWeapon
 	 */
 	public abstract Effect createHitEffect(Bullet bullet);
 
-
+	public abstract float getLifeDuration();
 
 }

@@ -121,6 +121,11 @@ public class Bullet implements Poolable, ISpatialObject
 	public void update(float delta)
 	{
 		lifetime += delta;
+		if(lifetime > weapon.getLifeDuration())
+		{
+			isAlive = false;
+			return;
+		}
 		weapon.getBulletBehavior().update( delta, this );
 	}
 	

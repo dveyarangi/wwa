@@ -18,6 +18,10 @@ import eir.world.Effect;
 public class Minigun extends IWeapon
 {
 	
+	
+	private static final String HIT_EFFECT_ATLAS_FILE = "anima//effects//explosion//explosion04.atlas";
+	private static final String HIT_EFFECT_ATLAS_ID = "explosion04";
+	
 	private Sprite bulletSprite;
 	
 	private IBulletBehavior bulletBehavior;
@@ -65,11 +69,16 @@ public class Minigun extends IWeapon
 	}
 
 
-
 	@Override
 	public Effect createHitEffect(Bullet bullet)
 	{
-	// TODO Auto-generated method stub
-		return null;
+		return Effect.getEffect( HIT_EFFECT_ATLAS_FILE, HIT_EFFECT_ATLAS_ID, 
+				10, bullet.getBody().getAnchor(), RandomUtil.N( 360 ), 3 );
+	}
+
+	@Override
+	public float getLifeDuration()
+	{
+		return 1;
 	}
 }
