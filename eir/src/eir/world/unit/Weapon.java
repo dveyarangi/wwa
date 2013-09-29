@@ -24,10 +24,10 @@ public class Weapon
 	public final int size = 4;
 	
 	private int burstSize = 7;
-	private float magazineReloadTime = 1f;
-	private float reloadingTime = 0.05f;
+	private float magazineReloadTime = 0.5f;
+	private float reloadingTime = 0.02f;
 	
-	private float accuracy = 360f;
+	private float accuracy = 10f;
 	
 	public final IBulletBehavior bulletBehavior = new HomingBehavior(this);
 //	private IBulletBehavior bulletBehavior = new MassDriverBehavior();

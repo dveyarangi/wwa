@@ -52,6 +52,8 @@ public class Bullet implements Poolable, ISpatialObject
 		bullet.sprite = weapon.bulletSprite;
 		bullet.size = weapon.size;
 		
+		bullet.lifetime = 0;
+		
 		return bullet;
 	}
 	
@@ -92,6 +94,8 @@ public class Bullet implements Poolable, ISpatialObject
 	
 	float angle;
 	
+	float lifetime;
+	
 	private Bullet()
 	{
 		body = AABB.createSquare(0, 0, 0);
@@ -122,6 +126,7 @@ public class Bullet implements Poolable, ISpatialObject
 	 */
 	public void update(float delta)
 	{
+		lifetime += delta;
 		behavior.update( delta, this );
 	}
 	
