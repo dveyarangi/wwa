@@ -26,6 +26,8 @@ public class Minigun extends IWeapon
 	
 	private IBulletBehavior bulletBehavior;
 	
+	private Damage bulletDamage;
+	
 	public Minigun()
 	{
 		bulletSprite = new Sprite(GameFactory.loadTexture("models/fireball.png"));
@@ -33,6 +35,8 @@ public class Minigun extends IWeapon
 		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );
 		
 		bulletBehavior = new MassDriverBehavior();
+		
+		bulletDamage = new Damage();
 	}
 
 
@@ -80,5 +84,12 @@ public class Minigun extends IWeapon
 	public float getLifeDuration()
 	{
 		return 1;
+	}
+
+
+	@Override
+	public Damage getDamage()
+	{
+		return bulletDamage;
 	}
 }

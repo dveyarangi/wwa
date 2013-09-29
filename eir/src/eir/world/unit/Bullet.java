@@ -38,17 +38,14 @@ public class Bullet implements Poolable, ISpatialObject
 	{
 
 		Bullet bullet = pool.obtain();
-		
+		bullet.reset();
 		bullet.id = level.createObjectId();
-		bullet.isAlive = true;
 		
 		bullet.body.getAnchor().set( x, y );
 		bullet.body.getDimensions().set( bullet.size, bullet.size );
 		
 		bullet.velocity.set(dx, dy);
 		bullet.target.set( target );
-		
-		bullet.lifetime = 0;
 		bullet.weapon = weapon;
 		return bullet;
 	}
@@ -113,7 +110,11 @@ public class Bullet implements Poolable, ISpatialObject
 	}
 
 	@Override
-	public void reset()	{ }
+	public void reset()	
+	{ 
+		this.isAlive = true;
+		this.lifetime = 0;
+	}
 
 	/**
 	 * @param delta
@@ -151,4 +152,13 @@ public class Bullet implements Poolable, ISpatialObject
 	 * @return
 	 */
 	public boolean isAlive() { return isAlive; }
+
+	/**
+	 * @return
+	 */
+	public Damage getDamage()
+	{
+		isAlive = false;
+		return weapon.getDamage();
+	}
 }

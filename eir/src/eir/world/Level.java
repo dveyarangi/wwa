@@ -15,7 +15,9 @@ import eir.debug.Debug;
 import eir.world.environment.FloydWarshal;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
+import eir.world.environment.spatial.AntCollider;
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.environment.spatial.ISpatialSensor;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.Ant;
 import eir.world.unit.Bullet;
@@ -67,6 +69,8 @@ public class Level
 	
 	
 	private List <Effect> effects;
+	
+	private AntCollider antCollider;
 
 	public Level()
 	{
@@ -74,6 +78,7 @@ public class Level
 		ants = new HashSet <Ant> ();
 		bullets = new LinkedList <Bullet> ();
 		effects = new LinkedList <Effect> ();
+		antCollider = new AntCollider();
 	}
 	
 	public List <Asteroid> getAsteroids() { return asteroids;}
@@ -154,13 +159,7 @@ public class Level
 		
 		return ant;
 	}
-	
-	public void removeAnt(Ant ant)
-	{
-		Ant.free( ant );
-		ants.remove( ant );
-		spatialIndex.remove( ant );
-	}
+
 	
 	public void addEffect(Effect effect)
 	{
@@ -173,18 +172,33 @@ public class Level
 	public void update(float delta)
 	{
 
-		for(Ant ant : ants)
+		Iterator <Ant> antIt = ants.iterator();
+		while(antIt.hasNext())
 		{
+			Ant ant = antIt.next();
 			ant.update(delta);
+			
 			spatialIndex.update( ant );
+			
+			antCollider.setAnt( ant );
+			spatialIndex.queryAABB(antCollider, ant.getArea() );
+			if(!ant.isAlive())
+			{
+				antIt.remove();
+				spatialIndex.remove( ant );
+				Ant.free( ant );
+			}
+			
 		}
 		
 		Iterator <Bullet> bulletIt = bullets.iterator();
 		while(bulletIt.hasNext())
 		{
 			Bullet bullet = bulletIt.next();
-			bullet.update( delta );
-			if(!inWorldBounds(bullet.getArea().getAnchor()) || !bullet.isAlive())
+			if(bullet.isAlive())
+				bullet.update( delta );
+			if(!inWorldBounds(bullet.getArea().getAnchor()) 
+			|| !bullet.isAlive())
 			{
 				spatialIndex.remove( bullet );
 				bulletIt.remove();
@@ -192,7 +206,7 @@ public class Level
 				
 				Effect hitEffect = bullet.weapon.createHitEffect( bullet );
 				if(hitEffect != null)
-				effects.add( hitEffect );
+					effects.add( hitEffect );
 			}
 			else
 			{
@@ -212,6 +226,8 @@ public class Level
 			}
 
 		}	
+		
+		
 	}
 	
 	public void draw(SpriteBatch batch)

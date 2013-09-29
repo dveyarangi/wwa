@@ -47,6 +47,7 @@ public class Ant implements Poolable, ISpatialObject
 		}
 		
 		Ant ant = pool.obtain();
+		ant.reset();
 		
 		ant.level = level;
 		
@@ -82,6 +83,8 @@ public class Ant implements Poolable, ISpatialObject
 	
 	private AABB body;
 	
+	public int owner = 1;
+	
 	private NavMesh mesh;
 	private NavNode currNode, nextNode, targetNode;
 	private Route route;
@@ -98,6 +101,8 @@ public class Ant implements Poolable, ISpatialObject
 	private float screamTime;
 	
 	private float speed = 10f;
+	
+	private boolean isAlive = true;
 
 	private Ant()
 	{
@@ -107,14 +112,13 @@ public class Ant implements Poolable, ISpatialObject
 	@Override
 	public void reset()
 	{
-		body.free();
-		body = null;
-		
 		screamTime = stateTime;
 		route = null;
 		nextNode = null;
 		velocity.set( 0,0 );
 		stateTime = RandomUtil.R( 10 );
+		isAlive = true;
+
 	}
 	
 	public void update(float delta)
@@ -209,5 +213,21 @@ public class Ant implements Poolable, ISpatialObject
 
 	@Override
 	public int getId() { return id; }
+
+	/**
+	 * @return
+	 */
+	public boolean isAlive()
+	{
+		return isAlive;
+	}
+
+	/**
+	 * @param damage
+	 */
+	public void hit(Damage damage)
+	{
+		isAlive = false;
+	}
 	
 }

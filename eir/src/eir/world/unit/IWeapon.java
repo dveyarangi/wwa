@@ -127,4 +127,9 @@ public abstract class IWeapon
 
 	public abstract float getLifeDuration();
 
+	/**
+	 * 
+	 */
+	public abstract Damage getDamage();
+
 }

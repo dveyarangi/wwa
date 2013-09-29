@@ -20,6 +20,8 @@ public class HomingLauncher extends IWeapon
 	
 	private IBulletBehavior bulletBehavior;
 	
+	private Damage bulletDamage;
+	
 	private static final String HIT_EFFECT_ATLAS_FILE = "anima//effects//explosion//explosion03.atlas";
 	private static final String HIT_EFFECT_ATLAS_ID = "explosion03";
 	
@@ -30,6 +32,8 @@ public class HomingLauncher extends IWeapon
 		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );
 		
 		bulletBehavior = new HomingBehavior(this);
+		
+		bulletDamage = new Damage();
 	}
 	
 	@Override
@@ -40,10 +44,10 @@ public class HomingLauncher extends IWeapon
 	public int getBurstSize() { return 7; }
 
 	@Override
-	public float getMagazineReloadTime() { return 0.5f; }
+	public float getMagazineReloadTime() { return 1f; }
 
 	@Override
-	public float getReloadingTime() { return 0.01f; }
+	public float getReloadingTime() { return 0.05f; }
 
 	@Override
 	public float getAccuracy() { return 20; }
@@ -80,5 +84,11 @@ public class HomingLauncher extends IWeapon
 	public float getLifeDuration()
 	{
 		return 50;
+	}
+
+	@Override
+	public Damage getDamage()
+	{
+		return bulletDamage;
 	}
 }

@@ -20,6 +20,8 @@ public class UIInputProcessor implements InputProcessor
 			Debug.toggleCoordinateGrid();
 		if(keycode == Keys.K)
 			Debug.toggleNavMesh();
+		if(keycode == Keys.L)
+			Debug.toggleSpatialGrid();
 		
 			
 		return false;
