@@ -26,7 +26,8 @@ public class GameInputProcessor implements InputProcessor
 {
 	private InputMultiplexer inputMultiplexer;
 	
-	private final ICameraController freeController, autoController;
+	private final AutoCameraController autoController;
+	private final FreeCameraController freeController;
 	private ICameraController camController;
 	
 	private final Level level;
@@ -87,9 +88,14 @@ public class GameInputProcessor implements InputProcessor
 			break;
 		case Input.Keys.SPACE:
 			if(camController == freeController)
+			{
+				autoController.zoomTarget = camController.getCamera().zoom;
 				camController = autoController;
+			}
 			else
+			{
 				camController = freeController;
+			}
 			break;
 		default:
 			return false;
@@ -128,14 +134,16 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{
-		if( button==Input.Buttons.LEFT )
+		if( button==Input.Buttons.RIGHT )
 		{
 			lastx = screenX;
 			lasty = screenY;
 			camController.setUnderUserControl(true);
+			dragging = true;
 		}
 		
-		playerSpider.setShootingTarget( pointerPosition2 );
+		if(button == Input.Buttons.LEFT)		
+			playerSpider.setShootingTarget( pointerPosition2 );
 
 		return true;
 	}
@@ -143,17 +151,21 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
-		dragging = false;
-		camController.setUnderUserControl(false);
-		playerSpider.setShootingTarget( null );
+		if(button == Input.Buttons.RIGHT)
+		{
+			dragging = false;
+			camController.setUnderUserControl(false);
+		}
+		if(button == Input.Buttons.LEFT)
+			playerSpider.setShootingTarget( null );
 		return true;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
-		System.out.println(pointer);
-		camController.injectLinearImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
+		if(dragging)
+			camController.injectLinearImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
 		lastx = screenX;
 		lasty = screenY;
 		

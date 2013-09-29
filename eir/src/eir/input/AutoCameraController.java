@@ -25,7 +25,7 @@ public class AutoCameraController implements ICameraController
 	private Vector2 lastPosition;
 	
 	private Vector2 scrollTarget;
-	private float zoomTarget;
+	public float zoomTarget;
 	
 	public AutoCameraController(OrthographicCamera camera, GameInputProcessor inputProcessor, Level level)
 	{
