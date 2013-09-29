@@ -3,6 +3,8 @@
  */
 package eir.world.unit;
 
+import yarangi.numbers.RandomUtil;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import eir.resources.GameFactory;
@@ -11,7 +13,7 @@ import eir.resources.GameFactory;
  * @author dveyarangi
  *
  */
-public class HomingLauncher extends Minigun
+public class HomingLauncher extends IWeapon
 {
 	private Sprite bulletSprite;
 	
@@ -40,7 +42,7 @@ public class HomingLauncher extends Minigun
 	public float getReloadingTime() { return 0.05f; }
 
 	@Override
-	public float getAccuracy() { return 10; }
+	public float getAccuracy() { return 20; }
 
 	@Override
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
@@ -49,5 +51,14 @@ public class HomingLauncher extends Minigun
 	public Sprite getBulletSprite() { return bulletSprite; }
 
 	@Override
-	public float getSpeed() { return 100; }
+	public float getSpeed() { return 50; }
+	@Override
+	public float getMaxSpeed() { return 100; }
+
+	@Override
+	protected float createAngle()
+	{
+		return RandomUtil.STD( weaponDir.angle(), getAccuracy());
+			//+ 20 + (getBurstSize() - bulletsInMagazine) * 6;
+	}
 }

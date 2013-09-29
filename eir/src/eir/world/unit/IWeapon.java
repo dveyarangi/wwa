@@ -24,8 +24,8 @@ public abstract class IWeapon
 	////////////////////////////////
 	// state
 	protected Vector2 weaponDir;
-	private float timeToReload;
-	private int bulletsInMagazine;
+	protected float timeToReload;
+	protected int bulletsInMagazine;
 
 	/**
 	 * 
@@ -47,7 +47,7 @@ public abstract class IWeapon
 			bulletsInMagazine = getBurstSize();
 		
 		weaponDir.set( targetPos ).sub( weaponPos ).nor();
-		float angle = RandomUtil.STD( weaponDir.angle(), getAccuracy());
+		float angle = createAngle();
 		weaponDir.setAngle( angle );
 		
 		Bullet bullet = Bullet.getBullet( level, this, 
@@ -65,6 +65,11 @@ public abstract class IWeapon
 		
 		return bullet;
 	}
+
+	/**
+	 * @return
+	 */
+	protected abstract float createAngle();
 
 	public void update(float delta)
 	{
@@ -108,6 +113,11 @@ public abstract class IWeapon
 	 * @return the speed
 	 */
 	public abstract float getSpeed();
+
+	/**
+	 * @return
+	 */
+	public float getMaxSpeed() { return getSpeed(); }
 
 
 

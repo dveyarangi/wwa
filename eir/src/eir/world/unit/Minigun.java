@@ -4,6 +4,8 @@
 package eir.world.unit;
 
 
+import yarangi.numbers.RandomUtil;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import eir.resources.GameFactory;
@@ -53,4 +55,11 @@ public class Minigun extends IWeapon
 
 	@Override
 	public float getSpeed() { return 100; }
+
+
+	@Override
+	protected float createAngle()
+	{
+		return RandomUtil.STD( weaponDir.angle(), getAccuracy());
+	}
 }
