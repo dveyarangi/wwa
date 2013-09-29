@@ -27,10 +27,10 @@ public class FreeCameraController implements ICameraController
 	
 	private Vector2 lastPosition;
 	
-	public FreeCameraController(int w, int h, Level level)
+	public FreeCameraController(OrthographicCamera camera, Level level)
 	{
 		
-		this.camera = new OrthographicCamera( w, h );
+		this.camera = camera;
 		
 		lastPosition = level.getAsteroid(level.getInitialConfig().getAsteroidName())
 					.getModel().getNavNode( 

@@ -27,10 +27,10 @@ public class AutoCameraController implements ICameraController
 	private Vector2 scrollTarget;
 	private float zoomTarget;
 	
-	public AutoCameraController(GameInputProcessor inputProcessor, int w, int h, Level level)
+	public AutoCameraController(OrthographicCamera camera, GameInputProcessor inputProcessor, Level level)
 	{
+		this.camera = camera;
 		this.inputProcessor = inputProcessor;
-		this.camera = new OrthographicCamera( w, h );
 		
 		lastPosition = level.getAsteroid(level.getInitialConfig().getAsteroidName())
 					.getModel().getNavNode( 

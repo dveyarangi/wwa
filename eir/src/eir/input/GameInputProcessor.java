@@ -26,7 +26,8 @@ public class GameInputProcessor implements InputProcessor
 {
 	private InputMultiplexer inputMultiplexer;
 	
-	private final ICameraController camController;
+	private final ICameraController freeController, autoController;
+	private ICameraController camController;
 	
 	private final Level level;
 	
@@ -46,9 +47,13 @@ public class GameInputProcessor implements InputProcessor
 		
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
+		OrthographicCamera camera = new OrthographicCamera( w, h );
 
-//		camController = new CameraController(w, h, level);		
-		camController = new AutoCameraController(this, w, h, level);		
+		freeController = new FreeCameraController(camera, level);		
+		autoController = new AutoCameraController(camera, this, level);	
+		
+		camController = autoController;
+		
 		inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor( new UIInputProcessor() );
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
@@ -79,6 +84,12 @@ public class GameInputProcessor implements InputProcessor
 			break;
 		case Input.Keys.S:
 			playerSpider.walkDown(true);
+			break;
+		case Input.Keys.SPACE:
+			if(camController == freeController)
+				camController = autoController;
+			else
+				camController = freeController;
 			break;
 		default:
 			return false;
@@ -141,6 +152,7 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
+		System.out.println(pointer);
 		camController.injectLinearImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
 		lastx = screenX;
 		lasty = screenY;
@@ -209,7 +221,8 @@ public class GameInputProcessor implements InputProcessor
 	 */
 	public void resize(int width, int height)
 	{
-		camController.resize(width, height);
+		autoController.resize(width, height);
+		freeController.resize(width, height);
 	}
 	
 	public Vector2 getCrosshairPosition()
