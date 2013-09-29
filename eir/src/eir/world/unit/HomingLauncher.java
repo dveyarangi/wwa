@@ -6,7 +6,6 @@ package eir.world.unit;
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;

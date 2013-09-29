@@ -12,13 +12,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
-import eir.resources.GameFactory;
 import eir.world.environment.FloydWarshal;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 import eir.world.environment.spatial.AntCollider;
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.environment.spatial.ISpatialSensor;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.Ant;
 import eir.world.unit.Bullet;
@@ -116,7 +114,11 @@ public class Level
 		navMesh.init();
 		Debug.stopTiming("navmesh");
 		
-		
+		for(int idx = 0; idx < navMesh.getNodesNum(); idx ++)
+		{
+			navMesh.getNode( idx ).init( this );
+			spatialIndex.add( navMesh.getNode( idx ) );
+		}
 		Asteroid initialAsteroid = getAsteroid( initialConfig.getAsteroidName() );
 			
 		playerSpider = new Spider( this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 40 );
@@ -342,7 +344,7 @@ public class Level
 	/**
 	 * @return
 	 */
-	public SpatialHashMap getSpatialIndex()
+	public SpatialHashMap <ISpatialObject> getSpatialIndex()
 	{
 		return spatialIndex;
 	}

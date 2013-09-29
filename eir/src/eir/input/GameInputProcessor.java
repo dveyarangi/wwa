@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +16,9 @@ import com.badlogic.gdx.math.Vector3;
 
 import eir.resources.GameFactory;
 import eir.world.Level;
+import eir.world.environment.NavEdge;
+import eir.world.environment.NavEdge.Type;
+import eir.world.environment.NavNode;
 import eir.world.unit.Spider;
 
 /**
@@ -46,6 +48,10 @@ public class GameInputProcessor implements InputProcessor
 
 	private float lifeTime = 0;
 	
+	private PickingSensor pickingSensor;
+	
+	private NavNode sourceNode, targetNode;
+	
 	public GameInputProcessor(Level level)
 	{
 
@@ -70,6 +76,9 @@ public class GameInputProcessor implements InputProcessor
 		
 		lastx = (int) camController.getCamera().viewportWidth/2;
 		lasty = (int) camController.getCamera().viewportHeight/2;
+		
+		pickingSensor = new PickingSensor();
+		
 	}
 
 	@Override
@@ -143,6 +152,24 @@ public class GameInputProcessor implements InputProcessor
 			lasty = screenY;
 			camController.setUnderUserControl(true);
 			dragging = true;
+			
+			if(sourceNode == null && pickingSensor.getNode() != null)
+			{
+				NavNode sourceNode = playerSpider.getClosestNode();
+				NavNode targetNode = pickingSensor.getNode();
+				
+				NavEdge edge = level.getNavMesh().getEdge( sourceNode, targetNode );
+				if(edge == null)
+				{
+					System.out.println("creating web: " + sourceNode + " <---> " + targetNode);
+					level.getNavMesh().linkNodes( sourceNode, targetNode, Type.WEB );
+				}
+				else
+				{
+					System.out.println("removing web: " + sourceNode + " <---> " + targetNode);
+					level.getNavMesh().unlinkNodes( sourceNode, targetNode );
+				}
+			}
 		}
 		
 		if(button == Input.Buttons.LEFT)		
@@ -216,6 +243,12 @@ public class GameInputProcessor implements InputProcessor
 	    pointerPosition2.y = pointerPosition3.y;		
 	    camController.update( delta );
 		lifeTime += delta;
+		pickingSensor.clear();
+		level.getSpatialIndex().queryAABB( pickingSensor, 
+				pointerPosition2.x, 
+				pointerPosition2.y, 3, 3 );
+		
+		
 	}
 	
 	public void draw(SpriteBatch batch, ShapeRenderer renderer)
@@ -235,6 +268,19 @@ public class GameInputProcessor implements InputProcessor
 		renderer.line( playerSpider.getPosition().x, playerSpider.getPosition().y, 
 					pointerPosition2.x, pointerPosition2.y );
 		renderer.end();
+		
+		if(pickingSensor.getNode() != null)
+		{
+			Vector2 point = pickingSensor.getNode().getPoint();
+			batch.begin();
+			crossHairregion = crosshair.getKeyFrame( lifeTime, true );
+			batch.draw( crossHairregion, 
+					point.x-crossHairregion.getRegionWidth()/2, point.y-crossHairregion.getRegionHeight()/2,
+					crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2, 
+					crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(), 
+					5f/crossHairregion.getRegionWidth(), 
+					5f/crossHairregion.getRegionWidth(), 0);
+			batch.end();		}
 	}
 
 	/**

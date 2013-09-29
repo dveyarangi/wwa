@@ -8,12 +8,16 @@ import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 
+import eir.world.Level;
+import eir.world.environment.spatial.AABB;
+import eir.world.environment.spatial.ISpatialObject;
+
 /**
  * That aint public on purpose, all modifications should go through {@link NavMesh}
  * @author dveyarangi
  *
  */
-public class NavNode
+public class NavNode implements ISpatialObject
 {
 	private Vector2 point;
 	private Vector2 rawPoint;
@@ -28,16 +32,27 @@ public class NavNode
 	 */
 	private Set <NavNode> neighbours;
 	
+	private AABB pickingArea;
+	
+	private int spatialId;
+	
 	NavNode(Vector2 point, Vector2 rawPoint, int idx)
 	{
 		this.idx = idx;
 		this.point = point;
 		this.rawPoint = rawPoint;
 		this.neighbours = new HashSet <NavNode> ();
+		
+		this.pickingArea = AABB.createSquare( point, 0.1f );
 	}
 	
 	public Vector2 getPoint() { return point; }
 	public Vector2 getRawPoint() { return rawPoint; }
+	
+	public void init(Level level)
+	{
+		spatialId = level.createObjectId();
+	}
 
 	/**
 	 * @param nb
@@ -61,5 +76,25 @@ public class NavNode
 			.append("navnode [").append(idx)
 			.append(" (").append(getPoint()).append(")]")
 			.toString();
+	}
+
+	@Override
+	public AABB getArea()
+	{
+		return pickingArea;
+	}
+
+	@Override
+	public int getId()
+	{
+		return spatialId;
+	}
+
+	/**
+	 * @param nb
+	 */
+	public void removeNeighbour(NavNode node)
+	{
+		neighbours.remove( node );
 	}
 }

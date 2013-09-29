@@ -87,7 +87,23 @@ public abstract class NavMesh
 			edges.put( getEdgeIdx(nb.idx, na.idx), new NavEdge( nb, na, type ) );
 		}
 	}
-	
+
+	/**
+	 * @param sourceNode
+	 * @param targetNode
+	 */
+	public void unlinkNodes(NavNode na, NavNode nb)
+	{
+		na.removeNeighbour(nb);
+		nb.removeNeighbour(na);
+		int edgeIdx = getEdgeIdx(na.idx, nb.idx);
+		if(edges.contains( edgeIdx ))
+		{
+			edges.remove( edgeIdx );
+			edges.remove( getEdgeIdx(nb.idx, na.idx) );
+		}
+		
+	}	
 	public NavEdge getEdge(int node1Idx, int node2Idx)
 	{
 		return edges.get( getEdgeIdx( node1Idx, node2Idx ) );
@@ -110,4 +126,5 @@ public abstract class NavMesh
 	{
 		return edges.iterator();
 	}
+
 }

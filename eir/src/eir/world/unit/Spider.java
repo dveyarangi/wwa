@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import eir.resources.GameFactory;
 import eir.world.Asteroid;
 import eir.world.Level;
+import eir.world.environment.NavNode;
 
 /**
  * Spider
@@ -80,6 +81,11 @@ public class Spider
 			if(bullet != null) // is reloaded
 			level.shoot( this, bullet);
 		}
+	}
+	
+	public NavNode getClosestNode()
+	{
+		return asteroid.getModel().getNavNode( Math.round( surfaceIdx ) );
 	}
 
 
