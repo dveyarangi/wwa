@@ -16,7 +16,6 @@ import eir.world.environment.FloydWarshal;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
-import eir.world.environment.NavEdge.Type;
 import eir.world.environment.spatial.AntCollider;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;

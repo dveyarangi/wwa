@@ -6,6 +6,7 @@ import java.util.Set;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
+import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 
 import yarangi.math.FastMath;
@@ -19,11 +20,9 @@ import yarangi.math.FastMath;
 public class SpatialHashMapLook
 {
 	
-	private int gridMeshId;
+	private SpatialHashMap <ISpatialObject> map;
 	
-	private SpatialHashMap map;
-	
-	public SpatialHashMapLook(SpatialHashMap map)
+	public SpatialHashMapLook(SpatialHashMap <ISpatialObject> map)
 	{
 		this.map = map;
 	}
@@ -52,7 +51,7 @@ public class SpatialHashMapLook
 
 		renderer.end();
 		
-		Set bucket = null;
+		Set <ISpatialObject> bucket = null;
 		for(float y = miny; y <= maxy; y += map.getCellSize())
 		{
 			cellY = FastMath.round(y / map.getCellSize());
@@ -68,7 +67,7 @@ public class SpatialHashMapLook
 				}
 //				if(bucket.size() > 0)
 				if(bucket != null)
-				for(Object chunk : bucket)
+				for(ISpatialObject chunk : bucket)
 				{
 //					System.out.println(chunk);
 //					if(chunk.overlaps(x, y, x+map.getCellSize(), y+map.getCellSize()))

@@ -74,7 +74,7 @@ public class GameFactory
 			atlas.dispose();
 		}	
 		
-		instance.level = null;
+		GameFactory.level = null;
 	}
 
 	private static void log(String message)

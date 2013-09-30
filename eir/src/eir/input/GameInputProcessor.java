@@ -16,7 +16,6 @@ import com.badlogic.gdx.math.Vector3;
 
 import eir.resources.GameFactory;
 import eir.world.Level;
-import eir.world.environment.NavEdge;
 import eir.world.environment.NavNode;
 import eir.world.unit.Spider;
 
@@ -48,8 +47,6 @@ public class GameInputProcessor implements InputProcessor
 	private float lifeTime = 0;
 	
 	private PickingSensor pickingSensor;
-	
-	private NavNode sourceNode, targetNode;
 	
 	public GameInputProcessor(Level level)
 	{
@@ -159,7 +156,7 @@ public class GameInputProcessor implements InputProcessor
 			camController.setUnderUserControl(true);
 			dragging = true;
 			
-			if(sourceNode == null && pickingSensor.getNode() != null)
+			if(pickingSensor.getNode() != null)
 			{
 				NavNode sourceNode = playerSpider.getClosestNode();
 				NavNode targetNode = pickingSensor.getNode();
