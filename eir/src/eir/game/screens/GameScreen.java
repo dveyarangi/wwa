@@ -56,14 +56,6 @@ public class GameScreen extends AbstractScreen
 			);
 		}*/
 		
-		// increasing infestation
-		for(int i = 0; i < 150; i ++)
-		{
-			NavNode startingNode = level.getNavMesh().getNode( 
-					RandomUtil.N( 30 ) + 60 );
-			level.addAnt(startingNode);
-		}
-		
 		inputController = new GameInputProcessor( level );
 
 		

@@ -5,8 +5,6 @@ package eir.world.environment;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.world.environment.NavEdge.Type;
-
 /**
  * @author dveyarangi
  *

@@ -26,8 +26,12 @@ public class AntCollider implements ISpatialSensor<ISpatialObject>
 		if(object instanceof Ant)
 		{
 			Ant ant = (Ant) object;
-			if(ant.owner != collidingAnt.owner)
+			if(ant.getFaction().getOwnerId() != collidingAnt.getFaction().getOwnerId())
+			{
+				collidingAnt.hit(ant.getDamage());
+				ant.hit(collidingAnt.getDamage());
 				return true;
+			}
 		}
 		if(object instanceof Bullet)
 		{

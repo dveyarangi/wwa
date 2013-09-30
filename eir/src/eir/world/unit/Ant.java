@@ -5,7 +5,6 @@ package eir.world.unit;
 
 import yarangi.numbers.RandomUtil;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,7 +15,6 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import eir.debug.Debug;
 import eir.resources.GameFactory;
 import eir.world.Effect;
-import eir.world.Level;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
@@ -40,7 +38,7 @@ public class Ant implements Poolable, ISpatialObject
 		
 	};
 	
-	public static Ant getAnt(Level level, NavNode node)
+	public static Ant getAnt(Faction faction )
 	{
 		if(font == null)
 		{
@@ -50,22 +48,15 @@ public class Ant implements Poolable, ISpatialObject
 		Ant ant = pool.obtain();
 		ant.reset();
 		
-		ant.level = level;
+		ant.faction = faction;
 		
-		ant.id = level.createObjectId();
+		ant.currNode = faction.getSpawnNode();
+				
+		ant.id = faction.getLevel().createObjectId();
+
+		ant.body = AABB.createSquare( ant.currNode.getPoint().x, ant.currNode.getPoint().y, ant.size/2 );
 		
-		ant.body = AABB.createSquare( node.getPoint().x, node.getPoint().y, ant.size/2 );
-		
-		ant.mesh = level.getNavMesh();
-		
-		ant.currNode = node;
-		
-		if(ant.animation == null)
-			ant.animation = GameFactory.loadAnimation( 
-					RandomUtil.oneOf(2) ?
-							"anima//ant//blob_black.atlas" : 
-							"anima//ant//blob_black.atlas", 
-							"blob" );
+		ant.mesh = faction.getLevel().getNavMesh();
 
 		return ant;
 	}
@@ -79,7 +70,7 @@ public class Ant implements Poolable, ISpatialObject
 		pool.free( ant );
 	}
 	
-	private Level level;
+	private Faction faction;
 	
 	private static BitmapFont font;
 
@@ -87,15 +78,12 @@ public class Ant implements Poolable, ISpatialObject
 	
 	private AABB body;
 	
-	public int owner = 1;
-	
 	private NavMesh mesh;
 	private NavNode currNode, nextNode, targetNode;
 	private Route route;
 	// offset from current node on the nav edge
 	private float nodeOffset;
 	
-	private Animation animation;
 	private float stateTime;
 	
 	private float size = 5;
@@ -107,6 +95,8 @@ public class Ant implements Poolable, ISpatialObject
 	private float speed = 10f;
 	
 	private boolean isAlive = true;
+	
+	private Damage damage = new Damage();
 
 	private Ant()
 	{
@@ -128,21 +118,27 @@ public class Ant implements Poolable, ISpatialObject
 	public void update(float delta)
 	{
 
-/*		if(nextNode == null)
+		if(nextNode == null)
 		{
-			// either we reached next node, or we do not have target
-			if(route == null || !route.hasNext())
+			do
 			{
-				if(route != null)
-					screamTime = stateTime;
-				// pick a random target
-				targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
-				route = mesh.getShortestRoute( currNode, targetNode );
+				// either we reached next node, or we do not have target
+				if(route == null || !route.hasNext())
+				{
+					if(route != null)
+						screamTime = stateTime;
+					// pick a random target
+					targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
+					route = mesh.getShortestRoute( currNode, targetNode );
+				}
+	
+				route.next(); // skipping the source
+				if(!route.hasNext())
+					route = null;
+				else
+				nextNode = route.next(); // picking next
 			}
-			
-			
-			route.next(); // skipping the source
-			nextNode = route.next(); // picking next
+			while(route == null);
 			
 			nodeOffset = 0;
 			velocity.set( nextNode.getPoint() ).sub( body.getAnchor() ).nor().mul( speed );			
@@ -180,14 +176,14 @@ public class Ant implements Poolable, ISpatialObject
 		}
 		
 		nodeOffset = edge.getLength()+travelDistance;
-		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );*/
+		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
 		
 	}
 
 	public void draw(float delta, SpriteBatch batch)
 	{
 		Vector2 position = body.getAnchor();
-		TextureRegion region = animation.getKeyFrame( stateTime, true );
+		TextureRegion region = faction.getAntAnimation().getKeyFrame( stateTime, true );
 		batch.draw( region, 
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
 				region.getRegionWidth()/2,region.getRegionHeight()/2, 
@@ -242,5 +238,11 @@ public class Ant implements Poolable, ISpatialObject
 		return Effect.getEffect( HIT_EFFECT_ATLAS_FILE_02, HIT_EFFECT_ATLAS_ID_02, 
 				10, body.getAnchor(), RandomUtil.N( 360 ), 1 );
 	}
-	
+
+	public Faction getFaction() { return faction; }
+
+	/**
+	 * @return
+	 */
+	public Damage getDamage() {	return damage; }
 }

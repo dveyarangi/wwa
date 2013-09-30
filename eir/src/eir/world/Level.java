@@ -21,6 +21,7 @@ import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.Ant;
 import eir.world.unit.Bullet;
+import eir.world.unit.Faction;
 import eir.world.unit.Spider;
 
 public class Level
@@ -63,6 +64,8 @@ public class Level
 	 */
 	private Set <Ant> ants;
 	
+	private static final int PLAYER_ID = 1;
+	private static final int ENEMY_ID = 2;
 	private Spider playerSpider;
 	
 	private List <Bullet> bullets;
@@ -71,6 +74,8 @@ public class Level
 	private List <Effect> effects;
 	
 	private AntCollider antCollider;
+	
+	private Faction whiteFaction, blackFaction;
 
 	public Level()
 	{
@@ -79,6 +84,7 @@ public class Level
 		bullets = new LinkedList <Bullet> ();
 		effects = new LinkedList <Effect> ();
 		antCollider = new AntCollider();
+		
 	}
 	
 	public List <Asteroid> getAsteroids() { return asteroids;}
@@ -122,10 +128,14 @@ public class Level
 		}
 		Asteroid initialAsteroid = getAsteroid( initialConfig.getAsteroidName() );
 			
-		playerSpider = new Spider( this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 40 );
+		playerSpider = new Spider( PLAYER_ID, this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 40 );
 
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
+		
+		
+		whiteFaction = new Faction( PLAYER_ID, this, getAsteroid( "red_left_foot" ), "anima//ant//blob_white.atlas" );
+		blackFaction = new Faction( ENEMY_ID, this, getAsteroid( "red_head" ), "anima//ant//blob_black.atlas" );
 	}
 
 	/**
@@ -154,9 +164,9 @@ public class Level
 	/**
 	 * @param startingNode
 	 */
-	public Ant addAnt(NavNode startingNode)
+	public Ant addAnt(Faction faction)
 	{
-		Ant ant = Ant.getAnt( this, startingNode );
+		Ant ant = Ant.getAnt( faction );
 		
 		ants.add( ant );
 		spatialIndex.add( ant );
@@ -176,6 +186,9 @@ public class Level
 	public void update(float delta)
 	{
 
+		whiteFaction.update( delta );
+		blackFaction.update( delta );
+		
 		Iterator <Ant> antIt = ants.iterator();
 		while(antIt.hasNext())
 		{
@@ -197,7 +210,7 @@ public class Level
 			}
 			
 		}
-		
+
 		Iterator <Bullet> bulletIt = bullets.iterator();
 		while(bulletIt.hasNext())
 		{

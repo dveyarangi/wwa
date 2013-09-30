@@ -19,6 +19,8 @@ import eir.world.environment.NavNode;
  */
 public class Spider
 {
+	private int ownerId;
+	
 	private Level level;
 	
 	private float size;
@@ -48,9 +50,9 @@ public class Spider
 	
 	private NavEdge web;
 	
-	public Spider(Level level, Asteroid asteroid, float surfaceIdx, float size, float speed)
+	public Spider(int ownerId, Level level, Asteroid asteroid, float surfaceIdx, float size, float speed)
 	{
-		
+		this.ownerId = ownerId;
 		this.level = level;
 		this.asteroid = asteroid;
 		
@@ -67,6 +69,8 @@ public class Spider
 //		weapon = new Minigun();
 		weapon = new HomingLauncher();
 	}
+	
+	public int getOwnerId() { return ownerId; }
 	
 	public void update(float delta)
 	{
