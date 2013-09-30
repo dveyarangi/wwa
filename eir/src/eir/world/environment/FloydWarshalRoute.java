@@ -51,31 +51,25 @@ public class FloydWarshalRoute extends Route
 		
 		hasNext = false;
 		
-		for( int[] cur : navMesh.indexRange )
+		if( from.aIdx == to.aIdx )
 		{
-			if( from.idx>=cur[0] && from.idx<=cur[1] && to.idx>=cur[0] && to.idx<=cur[1] )
-			{
-				range = cur;
-				hasNext = true;
-				
-				float cwlen=0, ccwlen=0;
-				
-				if( from.idx < to.idx )
-				{	
-					cwlen  = (from.idx==cur[0]) ? navMesh.localdists[to.idx] : navMesh.localdists[to.idx] - navMesh.localdists[from.idx];
-					ccwlen = navMesh.localdists[cur[1]] - navMesh.localdists[to.idx] + navMesh.localdists[from.idx];
-				}
-				else
-				{
-					// TODO think this part over
-					ccwlen = (from.idx==cur[0]) ? navMesh.localdists[to.idx] : navMesh.localdists[to.idx] - navMesh.localdists[from.idx];
-					cwlen  = navMesh.localdists[cur[1]] - navMesh.localdists[to.idx] + navMesh.localdists[from.idx];
-				}
-				
-				dir = (cwlen<ccwlen) ? 1 : -1;
-				
-				break;
+			range = navMesh.indexRange.get(from.aIdx);
+			hasNext = true;
+			
+			float cwlen=0, ccwlen=0;
+			
+			if( from.idx < to.idx )
+			{	
+				cwlen  = (from.idx==range[0]) ? navMesh.localdists[to.idx] : navMesh.localdists[to.idx] - navMesh.localdists[from.idx];
+				ccwlen = navMesh.localdists[range[1]] - navMesh.localdists[to.idx] + navMesh.localdists[from.idx];
 			}
+			else
+			{
+				ccwlen = (to.idx==range[0]) ? navMesh.localdists[from.idx] : navMesh.localdists[from.idx] - navMesh.localdists[to.idx];
+				cwlen  = navMesh.localdists[range[1]] - navMesh.localdists[from.idx] + navMesh.localdists[to.idx];
+			}
+			
+			dir = (cwlen<ccwlen) ? 1 : -1;
 		}
 	}
 	

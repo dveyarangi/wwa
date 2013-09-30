@@ -7,7 +7,6 @@ import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -20,7 +19,7 @@ public abstract class NavMesh
 	/**
 	 * List of all participating nodes
 	 */
-	protected List <NavNode> nodes;
+	protected ArrayList<NavNode> nodes;
 	protected ArrayList<int[]> indexRange;
 	
 	private int[] cur;
@@ -28,10 +27,6 @@ public abstract class NavMesh
 	protected TIntObjectHashMap<NavEdge> edges;
 	
 	private static final int MAX_NODES = 1000000;
-	/** 
-	 * Node index incremental 
-	 */
-	private int nextNodeIndex = 0;	
 	
 	public NavMesh()
 	{
@@ -52,7 +47,7 @@ public abstract class NavMesh
 	public void beginAsteroid()
 	{
 		cur = new int[2];
-		cur[0] = nextNodeIndex;
+		cur[0] = nodes.size();
 	}
 	
 	/**
@@ -60,7 +55,7 @@ public abstract class NavMesh
 	 */
 	public void endAsteroid()
 	{
-		cur[1] = nextNodeIndex-1;
+		cur[1] = nodes.size()-1;
 		indexRange.add(cur);
 		cur = null;
 	}
@@ -70,7 +65,7 @@ public abstract class NavMesh
 		if(nodes.size() >= MAX_NODES) // sanity; overflow may break edges mapping
 			throw new IllegalStateException("Reached max node capacity.");
 		
-		NavNode node = new NavNode(point, rawPoint, nextNodeIndex++);
+		NavNode node = new NavNode(point, rawPoint, nodes.size(), indexRange.size());
 		nodes.add( node );
 		return node;
 	}
