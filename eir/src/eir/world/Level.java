@@ -206,6 +206,10 @@ public class Level
 				Effect hitEffect = ant.getDeathEffect();
 				if(hitEffect != null)
 					effects.add( hitEffect );
+				
+				// dat questionable construct:
+				ant.getFaction().removeAnt( ant );
+				
 				Ant.free( ant );
 			}
 			

@@ -4,8 +4,10 @@
 package eir.world.unit;
 
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 
@@ -33,7 +35,7 @@ public class Faction
 	
 	public Asteroid homeAsteroid;
 	
-	public List <Ant> ants;
+	public Set <Ant> ants;
 	
 	public float timeToSpawn = 0;
 
@@ -45,7 +47,7 @@ public class Faction
 		this.ownerId = ownerId;
 		this.level = level;
 		this.homeAsteroid = homeAsteroid;
-		this.ants = new LinkedList <Ant> ();
+		this.ants = new HashSet <Ant> ();
 		
 		this.antAnimation = GameFactory.loadAnimation( antAnimationId, "blob" );
 	}
@@ -59,10 +61,16 @@ public class Faction
 		if(timeToSpawn < 0)
 		{
 			
-			level.addAnt( this );
+			if(ants.size() < MAX_ANTS)
+				ants.add( level.addAnt( this ) );
 			
 			timeToSpawn = SPAWN_INTERVAL;
 		}
+	}
+	
+	public void removeAnt( Ant ant )
+	{
+		ants.remove( ant );
 	}
 
 	/**

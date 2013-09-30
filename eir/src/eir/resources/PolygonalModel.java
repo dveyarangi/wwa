@@ -144,6 +144,7 @@ public class PolygonalModel
 		return nodes[navNodeIdx];
 	}
 
+	public int getNavNodesCount() { return nodes.length; }
 	
 	public Vector2 getOrigin()
 	{
