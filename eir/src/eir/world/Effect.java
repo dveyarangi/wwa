@@ -29,13 +29,13 @@ public class Effect implements Poolable
 		}
 	};
 	
-	public static Effect getEffect(String animationId, String atlasId, float size, Vector2 position, float angle, float timeModifier)
+	public static Effect getEffect(int animationId, float size, Vector2 position, float angle, float timeModifier)
 	{
 		Effect effect = pool.obtain();
 		
 		effect.reset();
 		
-		effect.animation = GameFactory.loadAnimation(animationId, atlasId );
+		effect.animation = GameFactory.getAnimation( animationId );
 		
 		effect.size = size;
 		effect.position.set( position );
@@ -44,7 +44,7 @@ public class Effect implements Poolable
 		
 		return effect;
 	}
-	
+		
 	public static void free(Effect effect)
 	{
 		pool.free( effect );

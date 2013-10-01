@@ -42,7 +42,8 @@ public class GameInputProcessor implements InputProcessor
 	
 	private boolean dragging = false;
 
-	private static Animation crosshair = GameFactory.loadAnimation( "anima//ui//crosshair01.atlas", "crosshair" );
+	private static int crosshairId = GameFactory.registerAnimation("anima//ui//crosshair01.atlas", "crosshair");
+	private static Animation crosshair = GameFactory.getAnimation( crosshairId );
 
 	private float lifeTime = 0;
 	

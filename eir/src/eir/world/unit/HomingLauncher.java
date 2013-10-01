@@ -22,17 +22,13 @@ public class HomingLauncher extends IWeapon
 	
 	private Damage bulletDamage;
 	
-	private static final String BULLET_ATLAS_FILE_01 = "anima//bullets//rocket01.atlas";
-	private static final String BULLET_ATLAS_ID_01 = "bullet";
-	private static final String HIT_EFFECT_ATLAS_FILE_01 = "anima//effects//explosion//explosion03.atlas";
-	private static final String HIT_EFFECT_ATLAS_ID_01 = "explosion03";
-	private static final String HIT_EFFECT_ATLAS_FILE_02 = "anima//effects//explosion//explosion05.atlas";
-	private static final String HIT_EFFECT_ATLAS_ID_02 = "explosion05";
+	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
+	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion03.atlas", "explosion03" );
+	private static final int HIT_02_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion05.atlas", "explosion05" );
 	
 	public HomingLauncher()
 	{
-		bulletAnimation = GameFactory.loadAnimation(
-				BULLET_ATLAS_FILE_01, BULLET_ATLAS_ID_01 );
+		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
 		
 		bulletBehavior = new HomingBehavior(this);
 		
@@ -77,10 +73,10 @@ public class HomingLauncher extends IWeapon
 	public Effect createHitEffect(Bullet bullet)
 	{
 		if(RandomUtil.oneOf( 5 ))
-			return Effect.getEffect( HIT_EFFECT_ATLAS_FILE_01, HIT_EFFECT_ATLAS_ID_01, 
+			return Effect.getEffect( HIT_01_AID, 
 					RandomUtil.STD( 25, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
 		else
-			return Effect.getEffect( HIT_EFFECT_ATLAS_FILE_02, HIT_EFFECT_ATLAS_ID_02, 
+			return Effect.getEffect( HIT_02_AID, 
 					RandomUtil.STD( 10, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
 
 	}

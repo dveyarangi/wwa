@@ -5,13 +5,11 @@ package eir.world.unit;
 
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-
 import yarangi.numbers.RandomUtil;
+
+import com.badlogic.gdx.graphics.g2d.Animation;
 
 import eir.resources.GameFactory;
 import eir.world.Asteroid;
@@ -42,14 +40,15 @@ public class Faction
 	public Animation antAnimation;
 	
 
-	public Faction(int ownerId, Level level, Asteroid homeAsteroid, String antAnimationId)
+	public Faction(int ownerId, Level level, Asteroid homeAsteroid, String antAnimationFile)
 	{
 		this.ownerId = ownerId;
 		this.level = level;
 		this.homeAsteroid = homeAsteroid;
 		this.ants = new HashSet <Ant> ();
 		
-		this.antAnimation = GameFactory.loadAnimation( antAnimationId, "blob" );
+		int antAnimationId = GameFactory.registerAnimation( antAnimationFile, "blob" );
+		this.antAnimation = GameFactory.getAnimation( antAnimationId );
 	}
 	
 	public int getOwnerId()	{ return ownerId; }

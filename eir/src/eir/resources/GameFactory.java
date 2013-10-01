@@ -22,6 +22,7 @@ import eir.resources.BodyLoader.Model;
 import eir.resources.BodyLoader.RigidBodyModel;
 import eir.world.Asteroid;
 import eir.world.Level;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 
 /**
@@ -48,7 +49,9 @@ public class GameFactory
 	private final Map <String, TextureAtlas> atlasCache = new HashMap <String, TextureAtlas> (); 
 	
 	private static Level level;
-	
+
+	private static int ANIMATION_ID = 0; 
+	private static TIntObjectHashMap<Animation> animations = new TIntObjectHashMap <Animation> ();
 	
 	private GameFactory() { }
 	
@@ -73,6 +76,9 @@ public class GameFactory
 		{
 			atlas.dispose();
 		}	
+		
+		animations.clear();
+		ANIMATION_ID = 0;
 		
 		GameFactory.level = null;
 	}
@@ -203,7 +209,12 @@ public class GameFactory
 		return atlas;
 	}
 	
-	public static Animation loadAnimation(String atlasName, String regionName)
+	public static Animation getAnimation(int animationId)
+	{
+		return animations.get(animationId);
+	}
+	
+	private static Animation loadAnimation(String atlasName, String regionName)
 	{
 		TextureAtlas atlas = instance.loadTextureAtlas( atlasName );
 		
@@ -217,10 +228,18 @@ public class GameFactory
 				throw new IllegalArgumentException( "Region array " + regionName + " was not found in atlas " + atlasName );
 		}
 		
+		log("Loaded animation [" + atlasName + "] (region " + regionName + ")");
+		
 		Animation animation = new Animation( 0.05f, frames );
 		return animation;
 	}
 
+	public static int registerAnimation(String atlasName, String regionName)
+	{
+		Animation animation = loadAnimation(atlasName, regionName);
+		animations.put(ANIMATION_ID, animation);
+		return ANIMATION_ID ++;
+	}
 	/**
 	 * TODO: cache!
 	 * @param string
@@ -239,6 +258,5 @@ public class GameFactory
 		 return font;
 	}
 
-	
 
 }

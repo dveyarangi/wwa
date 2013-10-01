@@ -61,7 +61,8 @@ public class Bullet implements Poolable, ISpatialObject
 	
 	//////////////////////////////////////////////////////////////////
 	
-	private static Animation crosshair = GameFactory.loadAnimation( "anima//ui//crosshair02.atlas", "crosshair" );
+	private static int crosshairAnimationId = GameFactory.registerAnimation("anima//ui//crosshair02.atlas", "crosshair");
+	private static Animation crosshair = GameFactory.getAnimation( crosshairAnimationId );
 
 	
 	/**

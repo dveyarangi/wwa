@@ -8,6 +8,7 @@ import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 
+import eir.resources.GameFactory;
 import eir.world.Effect;
 
 /**
@@ -18,8 +19,8 @@ public class Minigun extends IWeapon
 {
 	
 	
-	private static final String HIT_EFFECT_ATLAS_FILE = "anima//effects//explosion//explosion04.atlas";
-	private static final String HIT_EFFECT_ATLAS_ID = "explosion04";
+	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
+	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion04.atlas", "explosion04" );
 	
 	private Animation bulletAnimation;
 	
@@ -32,6 +33,8 @@ public class Minigun extends IWeapon
 //		bulletSprite = new Sprite(GameFactory.loadTexture("models/fireball.png"));
 //		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
 //		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );
+		
+		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
 		
 		bulletBehavior = new MassDriverBehavior();
 		
@@ -75,7 +78,7 @@ public class Minigun extends IWeapon
 	@Override
 	public Effect createHitEffect(Bullet bullet)
 	{
-		return Effect.getEffect( HIT_EFFECT_ATLAS_FILE, HIT_EFFECT_ATLAS_ID, 
+		return Effect.getEffect( HIT_01_AID, 
 				10, bullet.getBody().getAnchor(), RandomUtil.N( 360 ), 3 );
 	}
 

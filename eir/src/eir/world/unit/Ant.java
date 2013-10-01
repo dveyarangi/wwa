@@ -60,9 +60,10 @@ public class Ant implements Poolable, ISpatialObject
 
 		return ant;
 	}
-	
-	private static final String HIT_EFFECT_ATLAS_FILE_02 = "anima//effects//explosion//explosion02.atlas";
-	private static final String HIT_EFFECT_ATLAS_ID_02 = "explosion02";
+
+	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas", 
+			"explosion02");
+
 	
 	public static void free(Ant ant)
 	{
@@ -112,6 +113,8 @@ public class Ant implements Poolable, ISpatialObject
 		velocity.set( 0,0 );
 		stateTime = RandomUtil.R( 10 );
 		isAlive = true;
+		
+		nodeOffset = 0;
 
 	}
 	
@@ -154,15 +157,16 @@ public class Ant implements Poolable, ISpatialObject
 			velocity.set( nextNode.getPoint() ).sub( body.getAnchor() ).nor().mul( speed );			
 			angle = velocity.angle();
 		}
+		
+		//////////////////////////////////////
+		// traversing
+		
 		NavEdge edge = mesh.getEdge( currNode, nextNode );
 		if(edge == null)
 		{
 			nextNode = null;
 			return;
 		}
-		
-		//////////////////////////////////////
-		// traversing
 		
 		float travelDistance = speed * delta + // the real travel distance 
 				nodeOffset;
@@ -189,6 +193,10 @@ public class Ant implements Poolable, ISpatialObject
 		}
 		
 		nodeOffset = edge.getLength()+travelDistance;
+		if(nodeOffset < 0) nodeOffset = 0;
+		else
+		if(nodeOffset > edge.getLength()) nodeOffset = edge.getLength();
+		
 		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
 		
 	}
@@ -248,8 +256,7 @@ public class Ant implements Poolable, ISpatialObject
 	 */
 	public Effect getDeathEffect()
 	{
-		return Effect.getEffect( HIT_EFFECT_ATLAS_FILE_02, HIT_EFFECT_ATLAS_ID_02, 
-				10, body.getAnchor(), RandomUtil.N( 360 ), 1 );
+		return Effect.getEffect( hitAnimationId, 10, body.getAnchor(), RandomUtil.N( 360 ), 1 );
 	}
 
 	public Faction getFaction() { return faction; }
