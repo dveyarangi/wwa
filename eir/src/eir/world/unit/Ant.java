@@ -117,43 +117,56 @@ public class Ant implements Poolable, ISpatialObject
 	
 	public void update(float delta)
 	{
-
+		//////////////////////////////////////
+		// destination picking:
 		if(nextNode == null)
 		{
-			do
+			// either we reached next node, or we do not have target
+			if(route == null || !route.hasNext())
 			{
-				// either we reached next node, or we do not have target
-				if(route == null || !route.hasNext())
-				{
-					if(route != null)
-						screamTime = stateTime;
-					// pick a random target
-					targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
-					route = mesh.getShortestRoute( currNode, targetNode );
-				}
-	
-				route.next(); // skipping the source
-				if(!route.hasNext())
-					route = null;
-				else
-				nextNode = route.next(); // picking next
+				if(route != null)
+					screamTime = stateTime;
+				// pick a random target
+				targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
+				route = mesh.getShortestRoute( currNode, targetNode );
 			}
-			while(route == null);
-			
+
+			route.next(); // skipping the source
+			if(!route.hasNext())
+				route = null;
+			else
+				nextNode = route.next(); // picking next
+
+			if(route == null)
+			{
+				int targetIdx = RandomUtil.N( currNode.getNeighbors().size() );
+				for(NavNode aNode : currNode.getNeighbors())
+				{
+					targetIdx --;
+					if(targetIdx < 0)
+					{
+						nextNode = aNode;
+						break;
+					}
+				}
+			}
 			nodeOffset = 0;
 			velocity.set( nextNode.getPoint() ).sub( body.getAnchor() ).nor().mul( speed );			
 			angle = velocity.angle();
 		}
-		
-		float travelDistance = speed * delta + // the real travel distance 
-				nodeOffset;
-		
 		NavEdge edge = mesh.getEdge( currNode, nextNode );
 		if(edge == null)
 		{
 			nextNode = null;
 			return;
 		}
+		
+		//////////////////////////////////////
+		// traversing
+		
+		float travelDistance = speed * delta + // the real travel distance 
+				nodeOffset;
+		
 		
 		while(travelDistance > 0)
 		{
@@ -166,7 +179,7 @@ public class Ant implements Poolable, ISpatialObject
 			}
 			
 			currNode = nextNode;
-			if(!route.hasNext())
+			if(route == null || !route.hasNext())
 			{
 				nextNode = null;
 				break;
