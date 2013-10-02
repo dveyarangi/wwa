@@ -29,10 +29,15 @@ public class NavNode implements ISpatialObject
 	public final int idx;
 	
 	/**
+	 * index of the asteroid containing this nav node 
+	 */
+	public final int aIdx;
+	
+	/**
 	 * List of all connected nodes
 	 */
 	private Set <NavNode> neighbours;
-	
+
 	private Asteroid asteroid;
 	
 	private int asteroidIdx;
@@ -41,13 +46,21 @@ public class NavNode implements ISpatialObject
 	
 	private int spatialId;
 	
-	NavNode(Asteroid asteroid, int asteroidIdx ,Vector2 point, Vector2 rawPoint, int idx)
+	/**
+	 * 
+	 * @param point location of the node
+	 * @param rawPoint location of this node in real space
+	 * @param idx index for this node
+	 * @param aIdx index of the asteroid containing this node
+	 */	
+	NavNode(Asteroid asteroid, int asteroidIdx ,Vector2 point, Vector2 rawPoint, int idx, int aIdx)
 	{
 		this.asteroid = asteroid;
 		this.asteroidIdx = asteroidIdx;
 		this.idx = idx;
 		this.point = point;
 		this.rawPoint = rawPoint;
+		this.aIdx = aIdx;
 		this.neighbours = new HashSet <NavNode> ();
 		
 		this.pickingArea = AABB.createSquare( point, 0.1f );

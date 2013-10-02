@@ -23,16 +23,17 @@ public class FloydWarshalRoute extends Route
 	private FloydWarshal navMesh;
 	private NavNode from;
 	private NavNode to;
+	private int[] range;
+	private int dir;
 	private boolean hasNext;
-	private boolean first;
 
 	public FloydWarshalRoute()
 	{
 		this.navMesh = null;
 		this.from = null;
 		this.to = null;
-		hasNext = false;
-		first = true;
+		this.dir = 0;
+		this.hasNext = false;
 	}
 	
 	
@@ -47,8 +48,29 @@ public class FloydWarshalRoute extends Route
 		this.navMesh = navMesh;
 		this.from = from;
 		this.to = to;
-		hasNext = ( navMesh.routes[from.idx][to.idx]==null ) ? false : true;
-		first = true;
+		
+		hasNext = false;
+		
+		if( from.aIdx == to.aIdx )
+		{
+			range = navMesh.indexRange.get(from.aIdx);
+			hasNext = true;
+			
+			float cwlen=0, ccwlen=0;
+			
+			if( from.idx < to.idx )
+			{	
+				cwlen  = (from.idx==range[0]) ? navMesh.localdists[to.idx] : navMesh.localdists[to.idx] - navMesh.localdists[from.idx];
+				ccwlen = navMesh.localdists[range[1]] - navMesh.localdists[to.idx] + navMesh.localdists[from.idx];
+			}
+			else
+			{
+				ccwlen = (to.idx==range[0]) ? navMesh.localdists[from.idx] : navMesh.localdists[from.idx] - navMesh.localdists[to.idx];
+				cwlen  = navMesh.localdists[range[1]] - navMesh.localdists[from.idx] + navMesh.localdists[to.idx];
+			}
+			
+			dir = (cwlen<ccwlen) ? 1 : -1;
+		}
 	}
 	
 	@Override
@@ -60,14 +82,21 @@ public class FloydWarshalRoute extends Route
 	@Override
 	public NavNode next()
 	{
-		if( first )
+		if( from==to )
 		{
-			first = false;
-			return from;
+			hasNext = false;
+			return to;
 		}
-		from = navMesh.routes[from.idx][to.idx];
-		hasNext = ( navMesh.routes[from.idx][to.idx]==null || from==to ) ? false : true;
-		return from;
+		NavNode lastfrom = from;
+		
+		// stupid modulo for negatives is negative so i added this
+		int mod = from.idx+dir-range[0];
+		int rangesize = range[1]-range[0]+1;
+		mod = (mod<0) ? mod + rangesize : mod;
+		
+		from = navMesh.getNode(mod%rangesize +range[0]);
+		
+		return lastfrom;
 	}
 	
 	@Override
@@ -76,8 +105,8 @@ public class FloydWarshalRoute extends Route
 		this.navMesh = null;
 		this.from = null;
 		this.to = null;
-		hasNext = false;
-		first = false;
+		this.hasNext = false;
+		this.dir = 1;
 	}
 
 

@@ -1,7 +1,5 @@
 package eir.game.screens;
 
-import yarangi.numbers.RandomUtil;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +10,6 @@ import eir.game.EirGame;
 import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
-import eir.world.environment.NavNode;
 import eir.world.unit.Ant;
 import eir.world.unit.Spider;
 
@@ -57,7 +54,6 @@ public class GameScreen extends AbstractScreen
 		}*/
 		
 		inputController = new GameInputProcessor( level );
-
 		
 		Debug.init( level, inputController );
 	}

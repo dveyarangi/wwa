@@ -120,12 +120,14 @@ public class Ant implements Poolable, ISpatialObject
 	
 	public void update(float delta)
 	{
+
 		//////////////////////////////////////
 		// destination picking:
+
 		if(nextNode == null)
 		{
 			// either we reached next node, or we do not have target
-			if(route == null || !route.hasNext())
+			while(route == null || !route.hasNext())
 			{
 				if(route != null)
 					screamTime = stateTime;
@@ -198,7 +200,7 @@ public class Ant implements Poolable, ISpatialObject
 		if(nodeOffset > edge.getLength()) nodeOffset = edge.getLength();
 		
 		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
-		
+
 	}
 
 	public void draw(float delta, SpriteBatch batch)
