@@ -110,7 +110,7 @@ public class Debug
 	public void draw(SpriteBatch batch, ShapeRenderer shape)
 	{
 		// a libgdx helper class that logs the current FPS each second
-		fpsLogger.log();
+		//fpsLogger.log();
 		
 		if(drawCoordinateGrid)
 			debugGrid.draw( batch, shape );

@@ -80,14 +80,15 @@ public class FloydWarshalRoute extends Route
 			return to;
 		}
 		
-		else if (from==tmpto && from!=null)
+		else if ( from==tmpto )
 		{
-			from = navMesh.routes[from.aIdx][to.aIdx];
+//			System.out.println("here!!! "+from.fwIdx+" -> "+to.aIdx+" "+navMesh.routes[from.fwIdx][to.aIdx]);
+			from = navMesh.routes[from.fwIdx][to.aIdx];
 			range = navMesh.indexRange.get(from.aIdx);
+			tmpto = (navMesh.routes[from.aIdx][to.aIdx]==null) ? to : navMesh.routes[from.aIdx][to.aIdx];
 			return from;
 		}
-		
-		else if( from.aIdx==tmpto.aIdx )
+		if( from.aIdx==tmpto.aIdx )
 		{
 			dir = (navMesh.cwDistance(from, tmpto) < navMesh.ccwDistance(from, tmpto)) ? 1 : -1;
 			NavNode lastfrom = from;
@@ -97,7 +98,7 @@ public class FloydWarshalRoute extends Route
 			int rangesize = range[1]-range[0]+1;
 			mod = (mod<0) ? mod + rangesize : mod;
 			
-			from = navMesh.getNode(mod%rangesize +range[0]);
+			from = navMesh.getNode(mod%rangesize + range[0]);
 			
 			return lastfrom;
 		}

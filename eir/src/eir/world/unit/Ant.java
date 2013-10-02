@@ -128,6 +128,15 @@ public class Ant implements Poolable, ISpatialObject
 				route = mesh.getShortestRoute( currNode, targetNode );
 			}
 			
+			Route tmpr = mesh.getShortestRoute( currNode, targetNode );
+			
+			System.out.println("------------------------------");
+			while( tmpr.hasNext() )
+			{
+				NavNode cur = tmpr.next();
+				System.out.println(cur.idx+" in "+cur.aIdx);
+			}
+			System.out.println("------------------------------");
 			
 			route.next(); // skipping the source
 			nextNode = route.next(); // picking next
