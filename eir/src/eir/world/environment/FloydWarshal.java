@@ -142,18 +142,6 @@ public class FloydWarshal extends NavMesh
 			}
 		}
 		
-//		for( int i=0 ; i<n ; i++ )
-//		{
-//			for( int j=0 ; j<n ; j++ )
-//			{
-//				if( lastpreds[i][j]==null )
-//					System.out.print("null\t");
-//				else
-//					System.out.print(lastpreds[i][j].fwIdx+"\t");
-//			}
-//			System.out.println();
-//		}
-		
 		// floyd warshal
 		for( int k=0 ; k<n ; k++ )
 		{
@@ -187,33 +175,6 @@ public class FloydWarshal extends NavMesh
 		}
 		
 		this.routes = lastpreds;
-		
-//		System.out.println("------------------------------------");
-//		for( int i=0 ; i<n ; i++ )
-//		{
-//			for( int j=0 ; j<n ; j++ )
-//			{
-//				if( lastpreds[i][j]==null )
-//					System.out.print("null\t");
-//				else
-//					System.out.print(lastpreds[i][j].fwIdx+"\t");
-//			}
-//			System.out.println();
-//		}
-//		System.exit(0);
-		
-		
-//		for( int i=0 ; i<n ; i++ )
-//		{
-//			for( int j=0 ; j<n ; j++ )
-//			{
-//				if( lastdists[i][j]==Float.POSITIVE_INFINITY )
-//					System.out.print("inf\t");
-//				else
-//					System.out.printf("%5.0f\t",lastdists[i][j]);
-//			}
-//			System.out.println();
-//		}
 	}
 	
 	
