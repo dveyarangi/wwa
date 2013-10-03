@@ -22,6 +22,7 @@ public class FloydWarshalRoute extends Route
 	
 	private FloydWarshal navMesh;
 	private NavNode from;
+	private NavNode tmpto;
 	private NavNode to;
 	private int[] range;
 	private int dir;
@@ -32,6 +33,7 @@ public class FloydWarshalRoute extends Route
 		this.navMesh = null;
 		this.from = null;
 		this.to = null;
+		this.tmpto = null;
 		this.dir = 0;
 		this.hasNext = false;
 	}
@@ -47,30 +49,20 @@ public class FloydWarshalRoute extends Route
 	{
 		this.navMesh = navMesh;
 		this.from = from;
-		this.to = to;
-		
+		this.tmpto = this.to = to;
 		hasNext = false;
 		
-		if( from.aIdx == to.aIdx )
+		if( from.aIdx == tmpto.aIdx )
 		{
-			range = navMesh.indexRange.get(from.aIdx);
 			hasNext = true;
-			
-			float cwlen=0, ccwlen=0;
-			
-			if( from.idx < to.idx )
-			{	
-				cwlen  = (from.idx==range[0]) ? navMesh.localdists[to.idx] : navMesh.localdists[to.idx] - navMesh.localdists[from.idx];
-				ccwlen = navMesh.localdists[range[1]] - navMesh.localdists[to.idx] + navMesh.localdists[from.idx];
-			}
-			else
-			{
-				ccwlen = (to.idx==range[0]) ? navMesh.localdists[from.idx] : navMesh.localdists[from.idx] - navMesh.localdists[to.idx];
-				cwlen  = navMesh.localdists[range[1]] - navMesh.localdists[from.idx] + navMesh.localdists[to.idx];
-			}
-			
-			dir = (cwlen<ccwlen) ? 1 : -1;
 		}
+		else if ( navMesh.routes[from.aIdx][to.aIdx]!=null )
+		{
+			tmpto = navMesh.routes[from.aIdx][to.aIdx];
+			hasNext = true;
+		}
+		
+		range = navMesh.indexRange.get(from.aIdx);
 	}
 	
 	@Override
@@ -87,16 +79,32 @@ public class FloydWarshalRoute extends Route
 			hasNext = false;
 			return to;
 		}
-		NavNode lastfrom = from;
 		
-		// stupid modulo for negatives is negative so i added this
-		int mod = from.idx+dir-range[0];
-		int rangesize = range[1]-range[0]+1;
-		mod = (mod<0) ? mod + rangesize : mod;
+		else if ( from==tmpto )
+		{
+			NavNode lastfrom = from;
+			from = navMesh.routes[from.fwIdx][to.aIdx];
+			range = navMesh.indexRange.get(from.aIdx);
+			tmpto = (navMesh.routes[from.aIdx][to.aIdx]==null) ? to : navMesh.routes[from.aIdx][to.aIdx];
+			return lastfrom;
+		}
 		
-		from = navMesh.getNode(mod%rangesize +range[0]);
+		else if( from.aIdx==tmpto.aIdx )
+		{
+			dir = (navMesh.cwDistance(from, tmpto) < navMesh.ccwDistance(from, tmpto)) ? 1 : -1;
+			NavNode lastfrom = from;
+			
+			// stupid modulo for negatives is negative so i added this
+			int mod = from.idx+dir-range[0];
+			int rangesize = range[1]-range[0]+1;
+			mod = (mod<0) ? mod + rangesize : mod;
+			
+			from = navMesh.getNode(mod%rangesize + range[0]);
+			
+			return lastfrom;
+		}
 		
-		return lastfrom;
+		return null;
 	}
 	
 	@Override
@@ -105,6 +113,7 @@ public class FloydWarshalRoute extends Route
 		this.navMesh = null;
 		this.from = null;
 		this.to = null;
+		this.tmpto = null;
 		this.hasNext = false;
 		this.dir = 1;
 	}

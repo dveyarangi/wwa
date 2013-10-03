@@ -34,6 +34,11 @@ public class NavNode implements ISpatialObject
 	public final int aIdx;
 	
 	/**
+	 * if this node is part of a web, this is its index in fw matrix.
+	 */
+	protected int fwIdx;
+	
+	/**
 	 * List of all connected nodes
 	 */
 	private Set <NavNode> neighbours;
@@ -61,6 +66,7 @@ public class NavNode implements ISpatialObject
 		this.point = point;
 		this.rawPoint = rawPoint;
 		this.aIdx = aIdx;
+		this.fwIdx = -1;
 		this.neighbours = new HashSet <NavNode> ();
 		
 		this.pickingArea = AABB.createSquare( point, 0.1f );

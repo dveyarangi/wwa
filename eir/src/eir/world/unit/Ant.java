@@ -127,7 +127,7 @@ public class Ant implements Poolable, ISpatialObject
 		if(nextNode == null)
 		{
 			// either we reached next node, or we do not have target
-			while(route == null || !route.hasNext())
+			if(route == null || !route.hasNext())
 			{
 				if(route != null)
 					screamTime = stateTime;
@@ -136,6 +136,16 @@ public class Ant implements Poolable, ISpatialObject
 				route = mesh.getShortestRoute( currNode, targetNode );
 			}
 
+			Route tmpr = mesh.getShortestRoute( currNode, targetNode );
+			
+			System.out.println("------------------------------");
+			while( tmpr.hasNext() )
+			{
+				NavNode cur = tmpr.next();
+				System.out.println(cur.idx+" in "+cur.aIdx);
+			}
+			System.out.println("------------------------------");
+			
 			route.next(); // skipping the source
 			if(!route.hasNext())
 				route = null;

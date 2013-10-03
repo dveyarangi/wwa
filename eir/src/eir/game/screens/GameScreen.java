@@ -54,7 +54,7 @@ public class GameScreen extends AbstractScreen
 		}*/
 		
 		inputController = new GameInputProcessor( level );
-		
+
 		Debug.init( level, inputController );
 	}
 
