@@ -73,7 +73,7 @@ public class FloydWarshalRoute extends Route
 	
 	@Override
 	public NavNode next()
-	{		
+	{
 		if( from==to )
 		{
 			hasNext = false;
@@ -82,13 +82,14 @@ public class FloydWarshalRoute extends Route
 		
 		else if ( from==tmpto )
 		{
-//			System.out.println("here!!! "+from.fwIdx+" -> "+to.aIdx+" "+navMesh.routes[from.fwIdx][to.aIdx]);
+			NavNode lastfrom = from;
 			from = navMesh.routes[from.fwIdx][to.aIdx];
 			range = navMesh.indexRange.get(from.aIdx);
 			tmpto = (navMesh.routes[from.aIdx][to.aIdx]==null) ? to : navMesh.routes[from.aIdx][to.aIdx];
-			return from;
+			return lastfrom;
 		}
-		if( from.aIdx==tmpto.aIdx )
+		
+		else if( from.aIdx==tmpto.aIdx )
 		{
 			dir = (navMesh.cwDistance(from, tmpto) < navMesh.ccwDistance(from, tmpto)) ? 1 : -1;
 			NavNode lastfrom = from;
