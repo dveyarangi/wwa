@@ -136,15 +136,14 @@ public class Ant implements Poolable, ISpatialObject
 				route = mesh.getShortestRoute( currNode, targetNode );
 			}
 
-			Route tmpr = mesh.getShortestRoute( currNode, targetNode );
+//			Route tmpr = mesh.getShortestRoute( currNode, targetNode );
 			
-			System.out.println("------------------------------");
-			while( tmpr.hasNext() )
+/*			while( tmpr.hasNext() )
 			{
 				NavNode cur = tmpr.next();
 				System.out.println(cur.idx+" in "+cur.aIdx);
 			}
-			System.out.println("------------------------------");
+			System.out.println("------------------------------");*/
 			
 			route.next(); // skipping the source
 			if(!route.hasNext())
@@ -165,7 +164,7 @@ public class Ant implements Poolable, ISpatialObject
 					}
 				}
 			}
-			nodeOffset = 0;
+			
 			velocity.set( nextNode.getPoint() ).sub( body.getAnchor() ).nor().mul( speed );			
 			angle = velocity.angle();
 		}
@@ -174,11 +173,6 @@ public class Ant implements Poolable, ISpatialObject
 		// traversing
 		
 		NavEdge edge = mesh.getEdge( currNode, nextNode );
-		if(edge == null)
-		{
-			nextNode = null;
-			return;
-		}
 		
 		float travelDistance = speed * delta + // the real travel distance 
 				nodeOffset;
@@ -195,19 +189,30 @@ public class Ant implements Poolable, ISpatialObject
 			}
 			
 			currNode = nextNode;
+			
 			if(route == null || !route.hasNext())
 			{
 				nextNode = null;
+				travelDistance = -edge.getLength();
+				
 				break;
 			}
 			
 			nextNode = route.next();
+			
+			edge = mesh.getEdge( currNode, nextNode );
 		}
 		
-		nodeOffset = edge.getLength()+travelDistance;
-		if(nodeOffset < 0) nodeOffset = 0;
+		if(nextNode != null)
+		{
+			nodeOffset = edge.getLength()+travelDistance;
+			if(nodeOffset < 0) nodeOffset = 0;
+				else
+			if(nodeOffset > edge.getLength()) 
+				nodeOffset = edge.getLength();
+		}
 		else
-		if(nodeOffset > edge.getLength()) nodeOffset = edge.getLength();
+			nodeOffset = 0;
 		
 		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
 
