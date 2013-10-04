@@ -4,20 +4,35 @@ import java.util.ArrayList;
 
 import eir.world.environment.NavEdge.Type;
 import gnu.trove.iterator.TIntObjectIterator;
+import gnu.trove.map.hash.TIntIntHashMap;
 
 
 /**
- * calculates all shortest routes for a given nav mesh
+ * calculates all shortest routes for a given nav mesh<br>
+ * not sure we can call it floyd warshal anymore.. its only partially so.
  * @author Ni
  *
  */
 public class FloydWarshal extends NavMesh
 {
+	/**
+	 * fw shortest routes
+	 */
 	protected NavNode[][] routes;
 	
+	/**
+	 * nodes tagged as web anchors
+	 */
 	protected ArrayList<NavNode> webNodes;
 	
-	// distantces inside the same asteroid
+	/**
+	 * translates node index to floyd warshal matrix index
+	 */
+	protected TIntIntHashMap fwIdx;
+	
+	/**
+	 *  distances inside the same asteroid
+	 */
 	protected float[] localdists;
 	
 	public FloydWarshal()
@@ -82,8 +97,9 @@ public class FloydWarshal extends NavMesh
 		
 		NavNode[][] preds = new NavNode[n][n];
 		NavNode[][] lastpreds = new NavNode[n][n];
-		
 		NavNode[][] tmppreds = null;
+		
+		TIntIntHashMap fwIdx = new TIntIntHashMap();
 		
 		// init dists
 		for( int i=0 ; i<n ; i++ )
@@ -105,9 +121,10 @@ public class FloydWarshal extends NavMesh
 			NavNode node = webNodes.get(i);
 			int[] range = indexRange.get(node.aIdx);
 			
-			node.fwIdx = indexRange.size() + i;
-			lastpreds[node.fwIdx][node.aIdx] = lastpreds[node.aIdx][node.fwIdx] = lastpreds[node.aIdx][node.fwIdx] = node;
-			lastdists[node.fwIdx][node.aIdx] = lastdists[node.aIdx][node.fwIdx] = localdists[range[0]] + localdists[range[1]];
+			int nodefwIdx = indexRange.size() + i;
+			fwIdx.put( node.idx, nodefwIdx );
+			lastpreds[nodefwIdx][node.aIdx] = lastpreds[node.aIdx][nodefwIdx] = lastpreds[node.aIdx][nodefwIdx] = node;
+			lastdists[nodefwIdx][node.aIdx] = lastdists[node.aIdx][nodefwIdx] = localdists[range[0]] + localdists[range[1]];
 		}
 		
 		
@@ -122,8 +139,8 @@ public class FloydWarshal extends NavMesh
 			if( e.type!=NavEdge.Type.WEB )
 				continue;
 			
-			int i = e.getNode1().fwIdx;
-			int j = e.getNode2().fwIdx;
+			int i = fwIdx.get(e.getNode1().idx);
+			int j = fwIdx.get(e.getNode2().idx);
 			
 			lastdists[i][j] = e.getLength();
 			lastpreds[i][j] = e.getNode2();
@@ -137,8 +154,11 @@ public class FloydWarshal extends NavMesh
 				if( from.aIdx != to.aIdx || from==to )
 					continue;
 				
-				lastdists[from.fwIdx][to.fwIdx] = Math.min(cwDistance(from, to), ccwDistance(from, to));
-				lastpreds[from.fwIdx][to.fwIdx] = to;
+				int from_fwIdx = fwIdx.get(from.idx);
+				int to_fwIdx = fwIdx.get(to.idx);
+				
+				lastdists[from_fwIdx][to_fwIdx] = Math.min(cwDistance(from, to), ccwDistance(from, to));
+				lastpreds[from_fwIdx][to_fwIdx] = to;
 			}
 		}
 		
@@ -175,6 +195,7 @@ public class FloydWarshal extends NavMesh
 		}
 		
 		this.routes = lastpreds;
+		this.fwIdx = fwIdx;
 	}
 	
 	
@@ -196,7 +217,7 @@ public class FloydWarshal extends NavMesh
 	 * @return Route starting at a and ending at b using shortest route
 	 */
 	@Override
-	public FloydWarshalRoute getShortestRoute( NavNode from, NavNode to )
+	public Route getShortestRoute( NavNode from, NavNode to )
 	{
 		FloydWarshalRoute r = FloydWarshalRoute.routesPool.obtain();
 		r.set(this, from, to);

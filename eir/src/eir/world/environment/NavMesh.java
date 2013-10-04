@@ -66,6 +66,10 @@ public abstract class NavMesh
 		if(nodes.size() >= MAX_NODES) // sanity; overflow may break edges mapping
 			throw new IllegalStateException("Reached max node capacity.");
 		
+		if( cur==null )
+			throw new IllegalStateException("May not add new nodes outside of asteroid context "
+					+ "(must be between beginAsteroid and endAsteroid calls) ");
+		
 		NavNode node = new NavNode(asteroid, idx, point, rawPoint, nodes.size(), indexRange.size());
 		
 		nodes.add( node );
@@ -111,7 +115,7 @@ public abstract class NavMesh
 		return getEdge( na.idx, nb.idx );
 	}
 	
-	public abstract FloydWarshalRoute getShortestRoute( NavNode from, NavNode to );
+	public abstract Route getShortestRoute( NavNode from, NavNode to );
 
 
 	protected final int getEdgeIdx(int node1Idx, int node2Idx)

@@ -83,7 +83,7 @@ public class FloydWarshalRoute extends Route
 		else if ( from==tmpto )
 		{
 			NavNode lastfrom = from;
-			from = navMesh.routes[from.fwIdx][to.aIdx];
+			from = navMesh.routes[navMesh.fwIdx.get(from.idx)][to.aIdx];
 			range = navMesh.indexRange.get(from.aIdx);
 			tmpto = (navMesh.routes[from.aIdx][to.aIdx]==null) ? to : navMesh.routes[from.aIdx][to.aIdx];
 			return lastfrom;
@@ -91,6 +91,7 @@ public class FloydWarshalRoute extends Route
 		
 		else if( from.aIdx==tmpto.aIdx )
 		{
+			//TODO : calculating dir more than once might be redundant
 			dir = (navMesh.cwDistance(from, tmpto) < navMesh.ccwDistance(from, tmpto)) ? 1 : -1;
 			NavNode lastfrom = from;
 			
@@ -115,7 +116,7 @@ public class FloydWarshalRoute extends Route
 		this.to = null;
 		this.tmpto = null;
 		this.hasNext = false;
-		this.dir = 1;
+		this.dir = 0;
 	}
 
 
