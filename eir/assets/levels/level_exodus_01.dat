@@ -105,7 +105,7 @@
 				  "angle" : "0",
 				  "size" : "100",
 				  "modelId" : "exodus_01/exodus_01_red_right_palm"
-/*				},			
+				},			
 				
 			    #######
 				{ 
@@ -345,7 +345,7 @@
 				  "angle" : "-90",
 				  "size" : "100",
 				  "modelId" : "exodus_01/exodus_01_blue_right_palm"
-				  */
+				  
 				}
 				],
 			

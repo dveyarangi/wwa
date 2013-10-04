@@ -75,7 +75,7 @@ public class Level
 	
 	private AntCollider antCollider;
 	
-	private Faction whiteFaction, blackFaction;
+	private Faction [] factions;
 
 	public Level()
 	{
@@ -134,8 +134,10 @@ public class Level
 		////////////////////////////////////////////////////
 		
 		
-		whiteFaction = new Faction( PLAYER_ID, this, getAsteroid( "red_left_foot" ), "anima//ant//blob_white.atlas" );
-		blackFaction = new Faction( ENEMY_ID, this, getAsteroid( "red_head" ), "anima//ant//blob_black.atlas" );
+		factions = new Faction[] {
+				new Faction( PLAYER_ID, this, getAsteroid( "red_left_foot" ), "anima//ant//blob_white.atlas" ),
+				new Faction( ENEMY_ID, this, getAsteroid( "red_head" ), "anima//ant//blob_black.atlas" )
+		};
 	}
 
 	/**
@@ -186,8 +188,8 @@ public class Level
 	public void update(float delta)
 	{
 
-		whiteFaction.update( delta );
-		blackFaction.update( delta );
+		for(Faction faction : factions)
+			faction.update( delta );
 		
 		Iterator <Ant> antIt = ants.iterator();
 		while(antIt.hasNext())
@@ -391,6 +393,7 @@ public class Level
 			web.init( this );
 //			getNavMesh().linkNodes( sourceNode, targetNode, Type.WEB );
 
+			
 		}
 		else
 		{
