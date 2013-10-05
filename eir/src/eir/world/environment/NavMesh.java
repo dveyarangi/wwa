@@ -3,7 +3,6 @@
  */
 package eir.world.environment;
 
-import eir.world.Asteroid;
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
@@ -21,6 +20,10 @@ public abstract class NavMesh
 	 * List of all participating nodes
 	 */
 	protected ArrayList<NavNode> nodes;
+	
+	/**
+	 * aaa
+	 */
 	protected ArrayList<int[]> indexRange;
 	
 	private int[] cur;
@@ -35,11 +38,32 @@ public abstract class NavMesh
 		edges = new TIntObjectHashMap <NavEdge> ();
 		indexRange = new ArrayList<int[]>();
 	}
-	
+
+	/**
+	 * Called to calculate the nav mesh
+	 */
 	public abstract void init();
 	
+	/**
+	 * Called to update mesh on change.
+	 */
+	public abstract void update();
+
+	/**
+	 * Creates iterator over shortest route from to
+	 */
+	public abstract Route getShortestRoute( NavNode from, NavNode to );
+
+	/**
+	 * Count of all nodes in mesh 
+	 */
 	public int getNodesNum() { return nodes.size(); }
 	
+	/**
+	 * Retrieves node at specified index, with indices in [0, #getNodesNum()]
+	 * @param idx
+	 * @return
+	 */
 	public NavNode getNode(int idx) { return nodes.get( idx ); }
 	
 	/**
@@ -61,7 +85,7 @@ public abstract class NavMesh
 		cur = null;
 	}
 	
-	public NavNode insertNode(Asteroid asteroid, int idx, Vector2 point, Vector2 rawPoint)
+	public NavNode insertNode(NavNodeDescriptor descriptor, Vector2 point, Vector2 rawPoint)
 	{
 		if(nodes.size() >= MAX_NODES) // sanity; overflow may break edges mapping
 			throw new IllegalStateException("Reached max node capacity.");
@@ -70,12 +94,19 @@ public abstract class NavMesh
 			throw new IllegalStateException("May not add new nodes outside of asteroid context "
 					+ "(must be between beginAsteroid and endAsteroid calls) ");
 		
-		NavNode node = new NavNode(asteroid, idx, point, rawPoint, nodes.size(), indexRange.size());
+		NavNode node = new NavNode(descriptor, point, rawPoint, nodes.size(), indexRange.size());
 		
 		nodes.add( node );
 		return node;
 	}
 	
+	/** 
+	 * Adds edge between specified nodes.
+	 * Does not cause nav mesh recalculation, dat is #update()'s task
+	 * @param na
+	 * @param nb
+	 * @param type
+	 */
 	public void linkNodes( NavNode na, NavNode nb, NavEdge.Type type )
 	{
 		na.addNeighbour(nb);
@@ -89,11 +120,13 @@ public abstract class NavMesh
 		}
 	}
 
-	/**
-	 * @param sourceNode
-	 * @param targetNode
+	/** 
+	 * Adds edge between specified nodes.
+	 * Does not cause nav mesh recalculation, dat is #update()'s task
+	 * @param na
+	 * @param nb
 	 */
-	public void unlinkNodes(NavNode na, NavNode nb)
+	public boolean unlinkNodes(NavNode na, NavNode nb)
 	{
 		na.removeNeighbour(nb);
 		nb.removeNeighbour(na);
@@ -102,9 +135,12 @@ public abstract class NavMesh
 		{
 			edges.remove( edgeIdx );
 			edges.remove( getEdgeIdx(nb.idx, na.idx) );
+			return true;
 		}
 		
+		return false;
 	}	
+	
 	public NavEdge getEdge(int node1Idx, int node2Idx)
 	{
 		return edges.get( getEdgeIdx( node1Idx, node2Idx ) );
@@ -114,8 +150,6 @@ public abstract class NavMesh
 	{
 		return getEdge( na.idx, nb.idx );
 	}
-	
-	public abstract Route getShortestRoute( NavNode from, NavNode to );
 
 
 	protected final int getEdgeIdx(int node1Idx, int node2Idx)

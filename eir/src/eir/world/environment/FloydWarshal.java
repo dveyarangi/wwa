@@ -84,10 +84,17 @@ public class FloydWarshal extends NavMesh
 		reFloydWarshal();
 	}
 	
+	
+	@Override
+	public void update()
+	{
+		reFloydWarshal();
+	}	
+
 	/**
 	 * recalculate floyd warshal routes
 	 */
-	public void reFloydWarshal()
+	private void reFloydWarshal()
 	{
 		int n = webNodes.size() + indexRange.size();
 		
@@ -257,4 +264,6 @@ public class FloydWarshal extends NavMesh
 		else
 			return (to.idx==indexRange.get(from.aIdx)[0]) ? localdists[from.idx] : localdists[from.idx] - localdists[to.idx];
 	}
+
+
 }

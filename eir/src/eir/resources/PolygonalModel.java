@@ -11,6 +11,7 @@ import eir.world.Asteroid;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
+import eir.world.environment.NavNodeDescriptor;
 
 /**
  * @author dveyarangi
@@ -103,7 +104,7 @@ public class PolygonalModel
 		nodes = new NavNode[len];
 
 		navMesh.beginAsteroid();
-		NavNode currNode = navMesh.insertNode( asteroid, 0, vertices[0], rawVertices[0] );
+		NavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0], rawVertices[0] );
 		int startingIdx = currNode.idx;
 		NavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
@@ -125,7 +126,7 @@ public class PolygonalModel
 			prevNode = currNode;
 			
 			if(nidx != 0)
-				currNode = navMesh.insertNode(asteroid, nidx,  b, rawVertices[nidx] );
+				currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, nidx),  b, rawVertices[nidx] );
 			else
 				currNode = navMesh.getNode(startingIdx);
 			navMesh.linkNodes( currNode, prevNode, NavEdge.Type.LAND );

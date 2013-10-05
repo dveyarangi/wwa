@@ -131,16 +131,16 @@ public class Spider
 	{
 		if(web.getNode1().getPoint().dst2( position ) < 10d)
 		{
-			asteroid = web.getNode1().getAsteroid();
-			surfaceIdx = web.getNode1().getAsteroidIdx();
+			asteroid = web.getNode1().getDescriptor().getObject();
+			surfaceIdx = web.getNode1().getDescriptor().getIndex();
 			
 			web = null;
 		}
 		else
 		if(web.getNode2().getPoint().dst2( position ) < 10)
 		{
-			asteroid = web.getNode2().getAsteroid();
-			surfaceIdx = web.getNode2().getAsteroidIdx();
+			asteroid = web.getNode2().getDescriptor().getObject();
+			surfaceIdx = web.getNode2().getDescriptor().getIndex();
 			
 			web = null;
 		}

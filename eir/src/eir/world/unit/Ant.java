@@ -168,6 +168,11 @@ public class Ant implements Poolable, ISpatialObject
 		float travelDistance = speed * delta + // the real travel distance 
 				nodeOffset;
 		
+		if(edge == null)
+		{
+			nextNode = null;
+			return;
+		}
 		
 		while(travelDistance > 0)
 		{
@@ -192,6 +197,12 @@ public class Ant implements Poolable, ISpatialObject
 			nextNode = route.next();
 			
 			edge = mesh.getEdge( currNode, nextNode );
+			if(edge == null)
+			{
+				nextNode = null;
+				return;
+			}
+
 		}
 		
 		if(nextNode != null)

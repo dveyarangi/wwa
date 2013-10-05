@@ -117,9 +117,9 @@ public class Level
 			web.init( this );
 		}
 		
-		Debug.startTiming("navmesh");
+		Debug.startTiming("navmesh calculation");
 		navMesh.init();
-		Debug.stopTiming("navmesh");
+		Debug.stopTiming("navmesh calculation");
 		
 		for(int idx = 0; idx < navMesh.getNodesNum(); idx ++)
 		{
@@ -128,7 +128,7 @@ public class Level
 		}
 		Asteroid initialAsteroid = getAsteroid( initialConfig.getAsteroidName() );
 			
-		playerSpider = new Spider( PLAYER_ID, this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 40 );
+		playerSpider = new Spider( PLAYER_ID, this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 80 );
 
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
@@ -376,7 +376,7 @@ public class Level
 	public void toggleWeb(NavNode sourceNode, NavNode targetNode)
 	{
 		
-		if(sourceNode.getAsteroid() == targetNode.getAsteroid())
+		if(sourceNode.getDescriptor().getObject() == targetNode.getDescriptor().getObject())
 			return;
 		
 		NavEdge edge = getNavMesh().getEdge( sourceNode, targetNode );
@@ -391,8 +391,8 @@ public class Level
 			
 			webs.add( web );
 			web.init( this );
-//			getNavMesh().linkNodes( sourceNode, targetNode, Type.WEB );
-
+			
+			
 			
 		}
 		else
@@ -408,6 +408,12 @@ public class Level
 			}
 			
 			getNavMesh().unlinkNodes( sourceNode, targetNode );
-		}	
+		}
+		
+		
+		Debug.startTiming("navmesh calculation");
+		navMesh.update();
+		Debug.stopTiming("navmesh calculation");
+
 	}
 }

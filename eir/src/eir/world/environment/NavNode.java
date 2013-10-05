@@ -20,8 +20,8 @@ import eir.world.environment.spatial.ISpatialObject;
  */
 public class NavNode implements ISpatialObject
 {
-	private Vector2 point;
-	private Vector2 rawPoint;
+	private final Vector2 point;
+	private final Vector2 rawPoint;
 	
 	/**
 	 * index of this node in the in the nav mesh that contains it (unique in mesh)
@@ -38,9 +38,7 @@ public class NavNode implements ISpatialObject
 	 */
 	private Set <NavNode> neighbours;
 
-	private Asteroid asteroid;
-	
-	private int asteroidIdx;
+	private final NavNodeDescriptor descriptor;
 	
 	private AABB pickingArea;
 	
@@ -53,10 +51,9 @@ public class NavNode implements ISpatialObject
 	 * @param idx index for this node
 	 * @param aIdx index of the asteroid containing this node
 	 */	
-	NavNode(Asteroid asteroid, int asteroidIdx ,Vector2 point, Vector2 rawPoint, int idx, int aIdx)
+	NavNode(NavNodeDescriptor descriptor ,Vector2 point, Vector2 rawPoint, int idx, int aIdx)
 	{
-		this.asteroid = asteroid;
-		this.asteroidIdx = asteroidIdx;
+		this.descriptor = descriptor;
 		this.idx = idx;
 		this.point = point;
 		this.rawPoint = rawPoint;
@@ -118,6 +115,5 @@ public class NavNode implements ISpatialObject
 		neighbours.remove( node );
 	}
 	
-	public Asteroid getAsteroid() { return asteroid; }
-	public int getAsteroidIdx() { return asteroidIdx; }
+	public NavNodeDescriptor getDescriptor() { return descriptor; }
 }

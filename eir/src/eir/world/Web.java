@@ -36,12 +36,12 @@ public class Web
 	public Web( NavNode source, NavNode target, String threadTexture, String sourceTexture, String targetTexture )
 	{
 		this.source = new Anchor();
-		this.source.asteroid = source.getAsteroid();
-		this.source.navIdx = source.getAsteroidIdx();
+		this.source.asteroid = source.getDescriptor().getObject();
+		this.source.navIdx = source.getDescriptor().getIndex();
 		
 		this.target = new Anchor();
-		this.target.asteroid = target.getAsteroid();
-		this.target.navIdx = target.getAsteroidIdx();
+		this.target.asteroid = target.getDescriptor().getObject();
+		this.target.navIdx = target.getDescriptor().getIndex();
 		
 		this.sourceTexture = GameFactory.loadTexture( sourceTexture );
 		this.targetTexture = GameFactory.loadTexture( targetTexture );
@@ -98,7 +98,7 @@ public class Web
 		
 		sourceSprite.setScale(scale);
 		targetSprite.setScale(scale);
-		threadSprite.setScale((float) (v.len() - sourceSprite.getWidth()*scale)/threadSprite.getWidth(), scale);
+		threadSprite.setScale((v.len() - sourceSprite.getWidth()*scale)/threadSprite.getWidth(), scale);
 	}
 	
 	public Anchor getSource()
@@ -124,8 +124,8 @@ public class Web
 		
 		public boolean isSame(NavNode node)
 		{
-			return node.getAsteroid() == getAsteroid()
-				&& node.getAsteroidIdx() == navIdx;
+			return node.getDescriptor().getObject() == getAsteroid()
+				&& node.getDescriptor().getIndex() == navIdx;
 		}
 	}
 }
