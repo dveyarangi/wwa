@@ -27,6 +27,7 @@ public class Spider
 	
 	private Vector2 position;
 
+	private Vector2 axis;
 	
 	/**
 	 * currently traversed asteroid, maybe null in transition
@@ -67,7 +68,9 @@ public class Spider
 		sprite.setScale( size / sprite.getWidth() );
 		
 //		weapon = new Minigun();
-		weapon = new HomingLauncher();
+		weapon = new HomingLauncher(this);
+		
+		axis = new Vector2();
 	}
 	
 	public int getOwnerId() { return ownerId; }
@@ -91,6 +94,7 @@ public class Spider
 				surfaceIdx = asteroid.getModel().getStepSurfaceIndex( surfaceIdx, step );
 				
 				asteroid.getModel().getSurfacePoint( surfaceIdx, position );
+				axis.set( asteroid.getModel().getNormal(surfaceIdx) );
 			}
 		}
 		else
@@ -114,6 +118,7 @@ public class Spider
 							.mul(webIdx*web.getLength())
 							.add( web.getNode1().getPoint() );					
 				}
+				axis.set( web.getDirection() );
 			}
 		}
 		
@@ -191,10 +196,7 @@ public class Spider
 	public void draw(SpriteBatch batch)
 	{
 		sprite.setPosition( position.x-sprite.getOriginX(), position.y-sprite.getOriginY() );
-		if(web == null)
-			sprite.setRotation( asteroid.getModel().getNormal(surfaceIdx).angle() + 90 );
-		else
-			sprite.setRotation( web.getDirection().angle() );
+		sprite.setRotation( axis.angle() + 90 );
 		sprite.draw( batch );
 	}
 
@@ -213,6 +215,11 @@ public class Spider
 	{
 		this.shootingTarget = targetPos;
 	}
+
+	/**
+	 * @return
+	 */
+	public Vector2 getAxis() { return axis; }
 
 
 }

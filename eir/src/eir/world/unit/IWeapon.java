@@ -51,9 +51,10 @@ public abstract class IWeapon
 		float angle = createAngle();
 		weaponDir.setAngle( angle );
 		
+		float speed = createSpeed();
 		Bullet bullet = Bullet.getBullet( level, this, 
 				weaponPos.x, weaponPos.y, 
-			 	weaponDir.x * getSpeed(), weaponDir.y*getSpeed(),
+			 	weaponDir.x * speed, weaponDir.y * speed,
 				targetPos);
 		
 		bullet.angle = weaponDir.angle();
@@ -114,12 +115,12 @@ public abstract class IWeapon
 	/**
 	 * @return the speed
 	 */
-	public abstract float getSpeed();
+	public abstract float createSpeed();
 
 	/**
 	 * @return
 	 */
-	public float getMaxSpeed() { return getSpeed(); }
+	public float getMaxSpeed() { return createSpeed(); }
 
 	/**
 	 * @return

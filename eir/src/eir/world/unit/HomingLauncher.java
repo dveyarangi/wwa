@@ -24,13 +24,18 @@ public class HomingLauncher extends IWeapon
 	
 	private float burstAngle;
 	
+	private Spider spider;
+	
+		
 	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
 	private static final int TRAIL_AID = GameFactory.registerAnimation( "anima//effects//smoke//smoke.atlas", "smoke" );
 	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion03.atlas", "explosion03" );
 	private static final int HIT_02_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion05.atlas", "explosion05" );
 	
-	public HomingLauncher()
+	public HomingLauncher(Spider spider)
 	{
+		this.spider = spider;
+		
 		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
 		
 		bulletBehavior = new HomingBehavior(this);
@@ -43,7 +48,7 @@ public class HomingLauncher extends IWeapon
 
 
 	@Override
-	public int getBurstSize() { return 7; }
+	public int getBurstSize() { return 8; }
 
 	@Override
 	public float getMagazineReloadTime() { return 1f; }
@@ -61,17 +66,17 @@ public class HomingLauncher extends IWeapon
 	public Animation getBulletAnimation() { return bulletAnimation; }
 
 	@Override
-	public float getSpeed() { return 50; }
+	public float createSpeed() { return RandomUtil.STD( 50, 10 ); }
 	@Override
 	public float getMaxSpeed() { return 100; }
 
 	@Override
 	protected float createAngle()
 	{
-		if(bulletsInMagazine == getBurstSize())
-		{
-			burstAngle = (RandomUtil.is() ? 90 : -90) + ( 30 - RandomUtil.N( 15 ) );
-		}
+
+//		burstAngle = (weaponDir.crs( spider.getAxis() ) < 0 ? 90 : -90) + 
+//				( 15 - RandomUtil.N( 30 ) );
+		burstAngle = (burstAngle < 0 ? 90 : -90) + ( 15 - RandomUtil.N( 30 ) );
 		
 		return RandomUtil.STD( burstAngle + weaponDir.angle(), getAccuracy());
 	}

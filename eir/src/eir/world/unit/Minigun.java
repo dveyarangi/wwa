@@ -65,7 +65,7 @@ public class Minigun extends IWeapon
 	public Animation getBulletAnimation() { return bulletAnimation; }
 
 	@Override
-	public float getSpeed() { return 100; }
+	public float createSpeed() { return 100; }
 
 
 	@Override
