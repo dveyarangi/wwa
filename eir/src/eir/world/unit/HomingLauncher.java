@@ -57,7 +57,7 @@ public class HomingLauncher extends IWeapon
 	public float getReloadingTime() { return 0.05f; }
 
 	@Override
-	public float getAccuracy() { return 5; }
+	public float getAccuracy() { return 15; }
 
 	@Override
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
@@ -76,7 +76,8 @@ public class HomingLauncher extends IWeapon
 
 //		burstAngle = (weaponDir.crs( spider.getAxis() ) < 0 ? 90 : -90) + 
 //				( 15 - RandomUtil.N( 30 ) );
-		burstAngle = (burstAngle < 0 ? 90 : -90) + ( 15 - RandomUtil.N( 30 ) );
+		int dir = (burstAngle < 0 ? 1 : -1);
+		burstAngle = dir * 90 + dir* (RandomUtil.N( 30 ) );
 		
 		return RandomUtil.STD( burstAngle + weaponDir.angle(), getAccuracy());
 	}
