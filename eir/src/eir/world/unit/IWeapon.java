@@ -26,6 +26,7 @@ public abstract class IWeapon
 	protected float timeToReload;
 	protected int bulletsInMagazine;
 
+
 	/**
 	 * 
 	 */

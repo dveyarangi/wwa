@@ -275,7 +275,7 @@ public class Ant implements Poolable, ISpatialObject
 	 */
 	public Effect getDeathEffect()
 	{
-		return Effect.getEffect( hitAnimationId, 10, body.getAnchor(), RandomUtil.N( 360 ), 1 );
+		return Effect.getEffect( hitAnimationId, 25, body.getAnchor(), RandomUtil.N( 360 ), 1 );
 	}
 
 	public Faction getFaction() { return faction; }

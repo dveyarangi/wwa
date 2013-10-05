@@ -22,6 +22,8 @@ public class HomingLauncher extends IWeapon
 	
 	private Damage bulletDamage;
 	
+	private float burstAngle;
+	
 	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
 	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion03.atlas", "explosion03" );
 	private static final int HIT_02_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion05.atlas", "explosion05" );
@@ -49,7 +51,7 @@ public class HomingLauncher extends IWeapon
 	public float getReloadingTime() { return 0.05f; }
 
 	@Override
-	public float getAccuracy() { return 20; }
+	public float getAccuracy() { return 10; }
 
 	@Override
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
@@ -65,8 +67,12 @@ public class HomingLauncher extends IWeapon
 	@Override
 	protected float createAngle()
 	{
-		return RandomUtil.STD( weaponDir.angle(), getAccuracy());
-			//+ 20 + (getBurstSize() - bulletsInMagazine) * 6;
+		if(bulletsInMagazine == getBurstSize())
+		{
+			burstAngle = (RandomUtil.is() ? 90 : -90) + ( 30 - RandomUtil.N( 15 ) );
+		}
+		
+		return RandomUtil.STD( burstAngle + weaponDir.angle(), getAccuracy());
 	}
 
 	@Override
