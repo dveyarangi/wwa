@@ -102,6 +102,6 @@ public class HomingLauncher extends IWeapon
 	
 	public Effect createTraceEffect(Bullet bullet)
 	{
-		return Effect.getEffect( TRAIL_AID, RandomUtil.N( 6 ) + 3, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), 2 );
+		return Effect.getEffect( TRAIL_AID, RandomUtil.N( 6 ) + 3, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), RandomUtil.STD( 2, 0.15f ) );
 	}
 }
