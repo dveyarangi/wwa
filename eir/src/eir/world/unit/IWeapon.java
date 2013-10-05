@@ -27,6 +27,7 @@ public abstract class IWeapon
 	protected int bulletsInMagazine;
 
 
+	protected Level level;
 	/**
 	 * 
 	 */
@@ -56,6 +57,7 @@ public abstract class IWeapon
 				targetPos);
 		
 		bullet.angle = weaponDir.angle();
+		this.level = level;
 		
 		bulletsInMagazine --;
 		if(bulletsInMagazine > 0)
@@ -123,6 +125,7 @@ public abstract class IWeapon
 	 * @return
 	 */
 	public abstract Effect createHitEffect(Bullet bullet);
+	public abstract Effect createTraceEffect(Bullet bullet);
 
 	public abstract float getLifeDuration();
 
@@ -131,4 +134,5 @@ public abstract class IWeapon
 	 */
 	public abstract Damage getDamage();
 
+	protected Level getLevel() { return level; }
 }

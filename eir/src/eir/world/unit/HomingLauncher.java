@@ -25,6 +25,7 @@ public class HomingLauncher extends IWeapon
 	private float burstAngle;
 	
 	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
+	private static final int TRAIL_AID = GameFactory.registerAnimation( "anima//effects//smoke//smoke.atlas", "smoke" );
 	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion03.atlas", "explosion03" );
 	private static final int HIT_02_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion05.atlas", "explosion05" );
 	
@@ -51,7 +52,7 @@ public class HomingLauncher extends IWeapon
 	public float getReloadingTime() { return 0.05f; }
 
 	@Override
-	public float getAccuracy() { return 10; }
+	public float getAccuracy() { return 5; }
 
 	@Override
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
@@ -97,5 +98,10 @@ public class HomingLauncher extends IWeapon
 	public Damage getDamage()
 	{
 		return bulletDamage;
+	}
+	
+	public Effect createTraceEffect(Bullet bullet)
+	{
+		return Effect.getEffect( TRAIL_AID, 5, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), 2 );
 	}
 }

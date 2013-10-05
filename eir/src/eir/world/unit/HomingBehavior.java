@@ -27,21 +27,20 @@ public class HomingBehavior implements IBulletBehavior
 		float dy = bullet.getVelocity().y * delta; 
 		bullet.getBody().getAnchor().add( dx, dy );
 		
+		Vector2 force = bullet.getTarget().tmp().sub( bullet.getBody().getAnchor() ).nor()
+							.mul( 1000 * bullet.lifetime * bullet.lifetime * delta );
 		if(bullet.lifetime < 0.4)
 		{
 			bullet.getVelocity().mul( 0.95f );
 		}
 		else
 		{
-			Vector2 force = bullet.getTarget().tmp().sub( bullet.getBody().getAnchor() ).nor()
-			.mul( 1000 * bullet.lifetime * bullet.lifetime * delta );
-
 			bullet.getVelocity().add( force );
 			if(bullet.getVelocity().len2() > weapon.getMaxSpeed()*weapon.getMaxSpeed())
 				bullet.getVelocity().nor().mul( weapon.getMaxSpeed() );
-			
-			bullet.angle = force.angle();
 		}
+		
+		bullet.angle = force.angle();
 		// hit:
 		if(bullet.getBody().getAnchor().dst2( bullet.getTarget() ) < 1)
 		{

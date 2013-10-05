@@ -81,6 +81,10 @@ public class Minigun extends IWeapon
 		return Effect.getEffect( HIT_01_AID, 
 				10, bullet.getBody().getAnchor(), RandomUtil.N( 360 ), 3 );
 	}
+	
+	@Override
+	public Effect createTraceEffect(Bullet bullet) { return null; }
+
 
 	@Override
 	public float getLifeDuration()

@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 import eir.resources.GameFactory;
+import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
@@ -156,6 +157,11 @@ public class Bullet implements Poolable, ISpatialObject
 					5f/crossHairregion.getRegionWidth(), 
 					5f/crossHairregion.getRegionWidth(), angle);
 		}
+		
+		Effect effect = weapon.createTraceEffect(this);
+		if(effect != null)
+			weapon.getLevel().addEffect( effect );
+
 	}
 
 	Vector2 getVelocity() { return velocity; }
