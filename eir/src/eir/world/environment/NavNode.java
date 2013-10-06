@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;

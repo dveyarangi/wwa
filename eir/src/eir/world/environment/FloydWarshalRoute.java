@@ -83,7 +83,7 @@ public class FloydWarshalRoute extends Route
 		else if ( from==tmpto )
 		{
 			NavNode lastfrom = from;
-			from = navMesh.routes[navMesh.fwIdx.get(from.idx)][to.aIdx];
+			from = navMesh.routes[navMesh.fwIdx[from.idx]][to.aIdx];
 			range = navMesh.indexRange.get(from.aIdx);
 			tmpto = (navMesh.routes[from.aIdx][to.aIdx]==null) ? to : navMesh.routes[from.aIdx][to.aIdx];
 			return lastfrom;

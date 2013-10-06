@@ -22,12 +22,15 @@ public abstract class NavMesh
 	protected ArrayList<NavNode> nodes;
 	
 	/**
-	 * aaa
+	 * array of index range (low,high) for each registered asteroid
 	 */
 	protected ArrayList<int[]> indexRange;
 	
 	private int[] cur;
 	
+	/**
+	 * i add comment on your thingies too!!
+	 */
 	protected TIntObjectHashMap<NavEdge> edges;
 	
 	private static final int MAX_NODES = 1000000;

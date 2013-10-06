@@ -28,7 +28,7 @@ public class FloydWarshal extends NavMesh
 	/**
 	 * translates node index to floyd warshal matrix index
 	 */
-	protected TIntIntHashMap fwIdx;
+	protected int[] fwIdx;
 	
 	/**
 	 *  distances inside the same asteroid
@@ -106,7 +106,7 @@ public class FloydWarshal extends NavMesh
 		NavNode[][] lastpreds = new NavNode[n][n];
 		NavNode[][] tmppreds = null;
 		
-		TIntIntHashMap fwIdx = new TIntIntHashMap();
+		int[] fwIdx = new int[nodes.size()];
 		
 		// init dists
 		for( int i=0 ; i<n ; i++ )
@@ -129,7 +129,7 @@ public class FloydWarshal extends NavMesh
 			int[] range = indexRange.get(node.aIdx);
 			
 			int nodefwIdx = indexRange.size() + i;
-			fwIdx.put( node.idx, nodefwIdx );
+			fwIdx[node.idx] = nodefwIdx;
 			lastpreds[nodefwIdx][node.aIdx] = lastpreds[node.aIdx][nodefwIdx] = lastpreds[node.aIdx][nodefwIdx] = node;
 			lastdists[nodefwIdx][node.aIdx] = lastdists[node.aIdx][nodefwIdx] = localdists[range[0]] + localdists[range[1]];
 		}
@@ -146,8 +146,8 @@ public class FloydWarshal extends NavMesh
 			if( e.type!=NavEdge.Type.WEB )
 				continue;
 			
-			int i = fwIdx.get(e.getNode1().idx);
-			int j = fwIdx.get(e.getNode2().idx);
+			int i = fwIdx[e.getNode1().idx];
+			int j = fwIdx[e.getNode2().idx];
 			
 			lastdists[i][j] = e.getLength();
 			lastpreds[i][j] = e.getNode2();
@@ -161,8 +161,8 @@ public class FloydWarshal extends NavMesh
 				if( from.aIdx != to.aIdx || from==to )
 					continue;
 				
-				int from_fwIdx = fwIdx.get(from.idx);
-				int to_fwIdx = fwIdx.get(to.idx);
+				int from_fwIdx = fwIdx[from.idx];
+				int to_fwIdx = fwIdx[to.idx];
 				
 				lastdists[from_fwIdx][to_fwIdx] = Math.min(cwDistance(from, to), ccwDistance(from, to));
 				lastpreds[from_fwIdx][to_fwIdx] = to;
@@ -218,6 +218,19 @@ public class FloydWarshal extends NavMesh
 		}
 	}
 	
+	
+	@Override
+	public boolean unlinkNodes(NavNode na, NavNode nb)
+	{
+		if( edges.contains(getEdgeIdx(na.idx, nb.idx)) )
+		{
+			NavEdge e = getEdge(na.idx, nb.idx);
+			webNodes.remove(e.getNode1());
+			webNodes.remove(e.getNode2());
+		}
+		
+		return super.unlinkNodes(na, nb);
+	}
 	
 	/**
 	 * find the shortest route between node from and to
