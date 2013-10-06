@@ -137,11 +137,14 @@ public class Ant implements Poolable, ISpatialObject
 			}
 //			route.next(); // skipping the source
 			if(!route.hasNext())
+			{
+				route.recycle();
 				route = null;
+			}
 			else
 				nextNode = route.next(); // picking next
 
-			if(route == null)
+			if(nextNode == null)
 			{
 				int targetIdx = RandomUtil.N( currNode.getNeighbors().size() );
 				for(NavNode aNode : currNode.getNeighbors())
@@ -189,7 +192,11 @@ public class Ant implements Poolable, ISpatialObject
 			{
 				nextNode = null;
 				travelDistance = -edge.getLength();
-				
+				if(route != null)
+				{
+					route.recycle();
+					route = null;
+				}
 				break;
 			}
 			

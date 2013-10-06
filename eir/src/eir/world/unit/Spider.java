@@ -117,8 +117,8 @@ public class Spider
 					position.set(web.getDirection())
 							.mul(webIdx*web.getLength())
 							.add( web.getNode1().getPoint() );					
+					axis.set( web.getDirection() );
 				}
-				axis.set( web.getDirection() );
 			}
 		}
 		
