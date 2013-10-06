@@ -46,6 +46,7 @@ public class FloydWarshalRoute extends Route
 	{
 		this.navMesh = navMesh;
 		this.from = from;
+		this.to = to;
 		hasNext = false;
 		
 		if( from==null )
@@ -88,6 +89,9 @@ public class FloydWarshalRoute extends Route
 			from = navMesh.routes[navMesh.fwIdx[from.idx]][to.aIdx];
 			return from;
 		}
+		
+		if( tmpto==null )
+			tmpto = to;
 		
 		// otherwise, from and tmpto are on the same asteroid
 		int[] range = navMesh.indexRange.get(from.aIdx);
