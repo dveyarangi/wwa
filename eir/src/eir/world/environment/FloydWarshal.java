@@ -1,10 +1,9 @@
 package eir.world.environment;
 
-import java.util.ArrayList;
-
 import eir.world.environment.NavEdge.Type;
 import gnu.trove.iterator.TIntObjectIterator;
-import gnu.trove.map.hash.TIntIntHashMap;
+
+import java.util.ArrayList;
 
 
 /**
@@ -108,9 +107,11 @@ public class FloydWarshal extends NavMesh
 		
 		int[] fwIdx = new int[nodes.size()];
 		
-		// init dists
+		// inits
 		for( int i=0 ; i<n ; i++ )
 		{
+			fwIdx[i] = -1;
+			
 			for( int j=0 ; j<n ; j++ )
 			{
 				if( i!=j )

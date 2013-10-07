@@ -1,5 +1,7 @@
 package eir.world.environment;
 
+import java.util.NoSuchElementException;
+
 import com.badlogic.gdx.utils.Pool;
 
 
@@ -22,10 +24,7 @@ public class FloydWarshalRoute extends Route
 	
 	private FloydWarshal navMesh;
 	private NavNode from;
-	private NavNode tmpto;
 	private NavNode to;
-	private int[] range;
-	private int dir;
 	private boolean hasNext;
 
 	public FloydWarshalRoute()
@@ -33,8 +32,6 @@ public class FloydWarshalRoute extends Route
 		this.navMesh = null;
 		this.from = null;
 		this.to = null;
-		this.tmpto = null;
-		this.dir = 0;
 		this.hasNext = false;
 	}
 	
@@ -45,24 +42,22 @@ public class FloydWarshalRoute extends Route
 	 * @param from
 	 * @param to
 	 */
-	public void set( FloydWarshal navMesh, NavNode from, NavNode to )
+	protected void set( FloydWarshal navMesh, NavNode from, NavNode to )
 	{
 		this.navMesh = navMesh;
 		this.from = from;
-		this.tmpto = this.to = to;
 		hasNext = false;
 		
-		if( from.aIdx == tmpto.aIdx )
-		{
-			hasNext = true;
-		}
-		else if ( navMesh.routes[from.aIdx][to.aIdx]!=null )
-		{
-			tmpto = navMesh.routes[from.aIdx][to.aIdx];
-			hasNext = true;
-		}
+		if( from==null )
+			throw new IllegalArgumentException("cannot generate path when origin node is null");
+
+		if( to==null )
+			throw new IllegalArgumentException("cannot generate path when target node is null");
 		
-		range = navMesh.indexRange.get(from.aIdx);
+		if( from.aIdx == to.aIdx || navMesh.routes[from.aIdx][to.aIdx]!=null )
+		{
+			hasNext = true;
+		}
 	}
 	
 	@Override
@@ -74,38 +69,38 @@ public class FloydWarshalRoute extends Route
 	@Override
 	public NavNode next()
 	{
+		// next does some redundant things in order to avoid being overly stateful 
+		
+		if( !hasNext )
+			throw new NoSuchElementException("no more elements on this route");
+		
 		if( from==to )
 		{
 			hasNext = false;
 			return to;
 		}
 		
-		else if ( from==tmpto )
+		NavNode tmpto = navMesh.routes[from.aIdx][to.aIdx];
+		
+		// if from==tmpto we've reached the web node
+		if ( from==tmpto )
 		{
-			NavNode lastfrom = from;
 			from = navMesh.routes[navMesh.fwIdx[from.idx]][to.aIdx];
-			range = navMesh.indexRange.get(from.aIdx);
-			tmpto = (navMesh.routes[from.aIdx][to.aIdx]==null) ? to : navMesh.routes[from.aIdx][to.aIdx];
-			return lastfrom;
+			return from;
 		}
 		
-		else if( from.aIdx==tmpto.aIdx )
-		{
-			//TODO : calculating dir more than once might be redundant
-			dir = (navMesh.cwDistance(from, tmpto) < navMesh.ccwDistance(from, tmpto)) ? 1 : -1;
-			NavNode lastfrom = from;
-			
-			// stupid modulo for negatives is negative so i added this
-			int mod = from.idx+dir-range[0];
-			int rangesize = range[1]-range[0]+1;
-			mod = (mod<0) ? mod + rangesize : mod;
-			
-			from = navMesh.getNode(mod%rangesize + range[0]);
-			
-			return lastfrom;
-		}
+		// otherwise, from and tmpto are on the same asteroid
+		int[] range = navMesh.indexRange.get(from.aIdx);
+		int dir = (navMesh.cwDistance(from, tmpto) < navMesh.ccwDistance(from, tmpto)) ? 1 : -1;
 		
-		return null;
+		// stupid modulo for negatives is negative so i added this
+		int mod = from.idx+dir-range[0];
+		int rangesize = range[1]-range[0]+1;
+		mod = (mod<0) ? mod + rangesize : mod;
+		
+		from = navMesh.getNode(mod%rangesize + range[0]);
+		
+		return from;
 	}
 	
 	@Override
@@ -114,9 +109,7 @@ public class FloydWarshalRoute extends Route
 		this.navMesh = null;
 		this.from = null;
 		this.to = null;
-		this.tmpto = null;
 		this.hasNext = false;
-		this.dir = 0;
 	}
 
 
