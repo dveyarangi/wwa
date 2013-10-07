@@ -77,7 +77,7 @@ public class HomingLauncher extends IWeapon
 //		burstAngle = (weaponDir.crs( spider.getAxis() ) < 0 ? 90 : -90) + 
 //				( 15 - RandomUtil.N( 30 ) );
 		int dir = (burstAngle < 0 ? 1 : -1);
-		burstAngle = dir * 90 + dir* (RandomUtil.N( 30 ) );
+		burstAngle = dir * 90 + dir * ( 15 + RandomUtil.STD( 0, 5 ) );
 		
 		return RandomUtil.STD( burstAngle + weaponDir.angle(), getAccuracy());
 	}
