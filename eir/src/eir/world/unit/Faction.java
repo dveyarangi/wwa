@@ -15,6 +15,7 @@ import eir.resources.GameFactory;
 import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.environment.NavNode;
+import eir.world.unit.ai.Scheduler;
 
 /**
  * Player faction
@@ -37,7 +38,9 @@ public class Faction
 	
 	public float timeToSpawn = 0;
 
-	public Animation antAnimation;
+	public final Animation antAnimation;
+	
+	private Scheduler scheduler;
 	
 
 	public Faction(int ownerId, Level level, Asteroid homeAsteroid, String antAnimationFile)
@@ -46,6 +49,7 @@ public class Faction
 		this.level = level;
 		this.homeAsteroid = homeAsteroid;
 		this.ants = new HashSet <Ant> ();
+		this.scheduler = new Scheduler();
 		
 		int antAnimationId = GameFactory.registerAnimation( antAnimationFile, "blob" );
 		this.antAnimation = GameFactory.getAnimation( antAnimationId );
