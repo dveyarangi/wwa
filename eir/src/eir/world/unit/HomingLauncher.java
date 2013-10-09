@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
+import eir.world.unit.spider.Spider;
 
 /**
  * @author dveyarangi

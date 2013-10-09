@@ -11,7 +11,7 @@ import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.unit.Ant;
-import eir.world.unit.Spider;
+import eir.world.unit.spider.Spider;
 
 /**
  * place holder screen for now. does same as application listener from sample
@@ -94,7 +94,7 @@ public class GameScreen extends AbstractScreen
 		
 		Spider playerSpider = level.getPlayerSpider();
 		playerSpider.update(delta);
-		playerSpider.draw(batch);
+		playerSpider.draw(batch, shapeRenderer);
 /*		for(Spider spider : spiders)
 		{
 			spider.update(delta);

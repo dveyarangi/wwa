@@ -22,7 +22,7 @@ import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.Ant;
 import eir.world.unit.Bullet;
 import eir.world.unit.Faction;
-import eir.world.unit.Spider;
+import eir.world.unit.spider.Spider;
 
 public class Level
 {

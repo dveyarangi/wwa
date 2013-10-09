@@ -118,7 +118,7 @@ public class PolygonalModel
 			// TODO: checkout about vertical ones
 			slopes[idx] = directions[idx].y / directions[idx].x;
 			
-			normals[idx] = b.tmp().sub( a ).rotate( 90 ).cpy();
+			normals[idx] = b.tmp().sub( a ).nor().rotate( 90 ).cpy();
 			
 			lengths[idx] = (float)Math.hypot( b.x-a.x, b.y-a.y );
 			
@@ -204,7 +204,7 @@ public class PolygonalModel
 		
 		Vector2 dir = directions[idx];
 		
-		result.set(dir).mul( scaledOffset ).add( vertices[idx] ).cpy();
+		result.set(dir).mul( scaledOffset ).add( vertices[idx] );
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class PolygonalModel
 
 	/**
 	 * @param surfaceIdx
-	 * @return
+	 * @return Normalized normal
 	 */
 	public Vector2 getNormal(float surfaceIdx)
 	{
