@@ -207,8 +207,18 @@ public class Spider
 	}
 
 
-	public void walkCW(boolean walk) { this.walkCW = walk; }
-	public void walkCCW(boolean walk) { this.walkCCW = walk; }
+	public void walkCW(boolean walk) 
+	{ 
+		this.walkCW = walk;
+		if(walk == false)
+			stepCount = 0;
+	}
+	public void walkCCW(boolean walk) 
+	{ 
+		this.walkCCW = walk; 
+		if(walk == false)
+			stepCount = 0;
+	}
 	public void walkUp(boolean walk) 
 	{ 
 		if(web == null)
