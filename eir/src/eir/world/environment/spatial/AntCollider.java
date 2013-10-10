@@ -3,8 +3,8 @@
  */
 package eir.world.environment.spatial;
 
-import eir.world.unit.Ant;
 import eir.world.unit.Bullet;
+import eir.world.unit.ant.Ant;
 
 /**
  * @author dveyarangi

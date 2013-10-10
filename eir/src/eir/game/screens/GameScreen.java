@@ -10,7 +10,7 @@ import eir.game.EirGame;
 import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
-import eir.world.unit.Ant;
+import eir.world.unit.ant.Ant;
 import eir.world.unit.spider.Spider;
 
 /**

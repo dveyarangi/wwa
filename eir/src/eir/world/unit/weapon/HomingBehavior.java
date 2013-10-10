@@ -1,9 +1,11 @@
 /**
  * 
  */
-package eir.world.unit;
+package eir.world.unit.weapon;
 
 import com.badlogic.gdx.math.Vector2;
+
+import eir.world.unit.Bullet;
 
 
 /**

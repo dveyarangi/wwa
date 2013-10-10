@@ -1,13 +1,15 @@
 /**
  * 
  */
-package eir.world.unit;
+package eir.world.unit.weapon;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Effect;
 import eir.world.Level;
+import eir.world.unit.Bullet;
+import eir.world.unit.Damage;
 
 /**
  * @author dveyarangi
@@ -135,5 +137,5 @@ public abstract class IWeapon
 	 */
 	public abstract Damage getDamage();
 
-	protected Level getLevel() { return level; }
+	public Level getLevel() { return level; }
 }

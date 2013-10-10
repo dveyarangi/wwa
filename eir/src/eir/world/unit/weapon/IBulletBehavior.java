@@ -1,7 +1,9 @@
 /**
  * 
  */
-package eir.world.unit;
+package eir.world.unit.weapon;
+
+import eir.world.unit.Bullet;
 
 
 /**

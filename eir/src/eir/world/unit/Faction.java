@@ -15,7 +15,9 @@ import eir.resources.GameFactory;
 import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.environment.NavNode;
+import eir.world.unit.ai.RandomTravelingOrder;
 import eir.world.unit.ai.Scheduler;
+import eir.world.unit.ant.Ant;
 
 /**
  * Player faction
@@ -49,7 +51,9 @@ public class Faction
 		this.level = level;
 		this.homeAsteroid = homeAsteroid;
 		this.ants = new HashSet <Ant> ();
-		this.scheduler = new Scheduler();
+		this.scheduler = new Scheduler( level );
+		
+		scheduler.addOrder(new RandomTravelingOrder(0));
 		
 		int antAnimationId = GameFactory.registerAnimation( antAnimationFile, "blob" );
 		this.antAnimation = GameFactory.getAnimation( antAnimationId );
@@ -97,5 +101,7 @@ public class Faction
 		return homeAsteroid.getModel().getNavNode( 
 				RandomUtil.N( homeAsteroid.getModel().getNavNodesCount() ) );
 	}
+
+	public Scheduler getScheduler() { return scheduler; }
 
 }

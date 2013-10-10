@@ -17,6 +17,7 @@ import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.unit.weapon.IWeapon;
 
 /**
  * @author dveyarangi
@@ -89,9 +90,9 @@ public class Bullet implements Poolable, ISpatialObject
 	
 	public IWeapon weapon;
 	
-	float angle;
+	public float angle;
 	
-	float lifetime;
+	public float lifetime;
 	
 	private Bullet()
 	{
@@ -164,10 +165,10 @@ public class Bullet implements Poolable, ISpatialObject
 
 	}
 
-	Vector2 getVelocity() { return velocity; }
-	AABB getBody() { return body; }
-	Vector2 getTarget() { return target; }
-	void setIsAlive(boolean isAlive) { this.isAlive = false; }
+	public Vector2 getVelocity() { return velocity; }
+	public AABB getBody() { return body; }
+	public Vector2 getTarget() { return target; }
+	public void setIsAlive(boolean isAlive) { this.isAlive = false; }
 
 	/**
 	 * @return

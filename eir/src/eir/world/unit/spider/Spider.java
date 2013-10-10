@@ -14,8 +14,8 @@ import eir.world.Level;
 import eir.world.environment.NavEdge;
 import eir.world.environment.NavNode;
 import eir.world.unit.Bullet;
-import eir.world.unit.HomingLauncher;
-import eir.world.unit.IWeapon;
+import eir.world.unit.weapon.HomingLauncher;
+import eir.world.unit.weapon.IWeapon;
 
 /**
  * Spider

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eir.world.unit;
+package eir.world.unit.weapon;
 
 
 import yarangi.numbers.RandomUtil;
@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
+import eir.world.unit.Bullet;
+import eir.world.unit.Damage;
 
 /**
  * @author dveyarangi

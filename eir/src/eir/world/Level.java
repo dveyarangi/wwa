@@ -19,9 +19,9 @@ import eir.world.environment.NavNode;
 import eir.world.environment.spatial.AntCollider;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
-import eir.world.unit.Ant;
 import eir.world.unit.Bullet;
 import eir.world.unit.Faction;
+import eir.world.unit.ant.Ant;
 import eir.world.unit.spider.Spider;
 
 public class Level

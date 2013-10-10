@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eir.world.unit;
+package eir.world.unit.ant;
 
 import yarangi.numbers.RandomUtil;
 
@@ -15,12 +15,14 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import eir.debug.Debug;
 import eir.resources.GameFactory;
 import eir.world.Effect;
-import eir.world.environment.NavEdge;
 import eir.world.environment.NavMesh;
 import eir.world.environment.NavNode;
 import eir.world.environment.Route;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.unit.Damage;
+import eir.world.unit.Faction;
+import eir.world.unit.ai.Task;
 
 /**
  * @author dveyarangi
@@ -77,27 +79,29 @@ public class Ant implements Poolable, ISpatialObject
 
 	private int id;
 	
-	private AABB body;
+	AABB body;
 	
-	private NavMesh mesh;
-	private NavNode currNode, nextNode, targetNode;
-	private Route route;
+	NavMesh mesh;
+	NavNode currNode, nextNode, targetNode;
+	Route route;
 	// offset from current node on the nav edge
-	private float nodeOffset;
+	float nodeOffset;
 	
 	private float stateTime;
 	
 	private float size = 5;
-	private Vector2 velocity = new Vector2();
-	private float angle;
+	Vector2 velocity = new Vector2();
+	float angle;
 	
 	private float screamTime;
 	
-	private float speed = 10f;
+	float speed = 10f;
 	
 	private boolean isAlive = true;
 	
 	private Damage damage = new Damage();
+	
+	Task task;
 
 	private Ant()
 	{
@@ -115,115 +119,21 @@ public class Ant implements Poolable, ISpatialObject
 		isAlive = true;
 		
 		nodeOffset = 0;
+		
+		task = null;
 
 	}
 	
 	public void update(float delta)
 	{
-
-		//////////////////////////////////////
-		// destination picking:
-
-		if(nextNode == null)
+		if(task == null || task.isFinished())
 		{
-			// either we reached next node, or we do not have target
-			if(route == null || !route.hasNext())
-			{
-				if(route != null)
-					screamTime = stateTime;
-				// pick a random target
-				targetNode = mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
-				route = mesh.getShortestRoute( currNode, targetNode );
-			}
-//			route.next(); // skipping the source
-			if(!route.hasNext())
-			{
-				route.recycle();
-				route = null;
-			}
-			else
-				nextNode = route.next(); // picking next
-
-			if(nextNode == null)
-			{
-				int targetIdx = RandomUtil.N( currNode.getNeighbors().size() );
-				for(NavNode aNode : currNode.getNeighbors())
-				{
-					targetIdx --;
-					if(targetIdx < 0)
-					{
-						nextNode = aNode;
-						break;
-					}
-				}
-			}
-			
-			velocity.set( nextNode.getPoint() ).sub( body.getAnchor() ).nor().mul( speed );			
-			angle = velocity.angle();
-		}
-		
-		//////////////////////////////////////
-		// traversing
-		
-		NavEdge edge = mesh.getEdge( currNode, nextNode );
-		
-		float travelDistance = speed * delta + // the real travel distance 
-				nodeOffset;
-		
-		if(edge == null)
-		{
-			nextNode = null;
-			return;
-		}
-		
-		while(travelDistance > 0)
-		{
-			travelDistance -= edge.getLength();
-			if(travelDistance < 0)
-			{
-				velocity.set( nextNode.getPoint() ).sub( currNode.getPoint() ).nor().mul( speed );			
-				angle = velocity.angle();
-				break;
-			}
-			
-			currNode = nextNode;
-			
-			if(route == null || !route.hasNext())
-			{
-				nextNode = null;
-				travelDistance = -edge.getLength();
-				if(route != null)
-				{
-					route.recycle();
-					route = null;
-				}
-				break;
-			}
-			
-			nextNode = route.next();
-			
-			edge = mesh.getEdge( currNode, nextNode );
-			if(edge == null)
-			{
-				nextNode = null;
+			task = faction.getScheduler().gettaTask( this );
+			if(task == null)
 				return;
-			}
-
 		}
 		
-		if(nextNode != null)
-		{
-			nodeOffset = edge.getLength()+travelDistance;
-			if(nodeOffset < 0) nodeOffset = 0;
-				else
-			if(nodeOffset > edge.getLength()) 
-				nodeOffset = edge.getLength();
-		}
-		else
-			nodeOffset = 0;
-		
-		body.getAnchor().set( edge.getDirection() ).mul( nodeOffset ).add( currNode.getPoint() );
-
+		task.getBehavior().update( delta, task, this );
 	}
 
 	public void draw(float delta, SpriteBatch batch)
@@ -274,6 +184,8 @@ public class Ant implements Poolable, ISpatialObject
 	public void hit(Damage damage)
 	{
 		isAlive = false;
+		task.cancel();
+		task = null;
 	}
 
 	/**
