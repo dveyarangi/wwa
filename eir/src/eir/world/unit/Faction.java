@@ -53,7 +53,7 @@ public class Faction
 		this.ants = new HashSet <Ant> ();
 		this.scheduler = new Scheduler( level );
 		
-		scheduler.addOrder(new RandomTravelingOrder(0));
+		scheduler.addOrder(new RandomTravelingOrder( level.getNavMesh(), 0 ));
 		
 		int antAnimationId = GameFactory.registerAnimation( antAnimationFile, "blob" );
 		this.antAnimation = GameFactory.getAnimation( antAnimationId );

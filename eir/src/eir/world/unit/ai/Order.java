@@ -9,13 +9,24 @@ import eir.world.environment.NavNode;
  */
 public abstract class Order
 {
+	
+	private NavNode sourceNode;
+	private NavNode targetNode;
 
 	private float priority;
 	
-	public Order(float priority)
+	public Order(float priority, NavNode sourceNode, NavNode targetNode)
 	{
+		this.sourceNode = sourceNode;
+		this.targetNode = targetNode;
 		this.priority = priority;
 	}
 	
 	public abstract Task createTask(Scheduler scheduler);
+
+	/**
+	 * @return
+	 */
+	public NavNode getSourceNode() { return sourceNode;	}
+	public NavNode getTargetNode() { return targetNode;	}
 }

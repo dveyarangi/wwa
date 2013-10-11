@@ -128,11 +128,13 @@ public class Ant implements Poolable, ISpatialObject
 	{
 		if(task == null || task.isFinished())
 		{
+			// requesting a new task:
 			task = faction.getScheduler().gettaTask( this );
 			if(task == null)
 				return;
 		}
 		
+		// performing task:
 		task.getBehavior().update( delta, task, this );
 	}
 
@@ -157,12 +159,7 @@ public class Ant implements Poolable, ISpatialObject
 				font.draw( batch, String.valueOf( targetNode.idx ), position.x+2, position.y-2 );
 		}
 	}
-	
-	public void setTargetNode(NavNode targetNode)
-	{
-		this.targetNode = targetNode;
-		route = mesh.getShortestRoute( currNode, targetNode);
-	}
+
 
 	@Override
 	public AABB getArea() { return body; }

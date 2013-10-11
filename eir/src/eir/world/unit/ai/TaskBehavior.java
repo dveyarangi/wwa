@@ -9,7 +9,5 @@ import eir.world.unit.ant.Ant;
  */
 public interface TaskBehavior 
 {
-	public void init( Task task, Ant ant );
-	
 	public void update( float delta, Task task, Ant ant );
 }

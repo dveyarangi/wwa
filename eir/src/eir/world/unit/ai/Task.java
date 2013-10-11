@@ -48,7 +48,8 @@ public abstract class Task
 		return status == Status.CANCELED || status == Status.COMPLETED;
 	}
 
-	public TaskBehavior getBehavior() {
+	public TaskBehavior getBehavior() 
+	{
 		return BehaviorFactory.getBehavior( stage );
 	}
 	

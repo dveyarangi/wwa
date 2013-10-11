@@ -5,14 +5,16 @@ import eir.world.unit.ant.BehaviorFactory.Stage;
 public class TravelingTask extends Task 
 {
 	
-	public TravelingTask(Scheduler scheduler, Order order) {
+	public TravelingTask(Scheduler scheduler, Order order) 
+	{
 		super(scheduler, order);
 		
-		this.stage = Stage.TRAVEL_TO;
+		this.stage = Stage.TRAVEL_TO_SOURCE;
 	}
 
 	@Override
-	public Stage nextStage() {
+	public Stage nextStage() 
+	{
 		stage = null;
 		return null;
 	}
