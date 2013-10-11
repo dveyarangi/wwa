@@ -181,8 +181,11 @@ public class Ant implements Poolable, ISpatialObject
 	public void hit(Damage damage)
 	{
 		isAlive = false;
-		task.cancel();
-		task = null;
+		if(task != null)
+		{
+			task.cancel();
+			task = null;
+		}
 	}
 
 	/**
