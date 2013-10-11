@@ -277,14 +277,14 @@
 				  "modelId" : "exodus_01/exodus_01_blue_head"
 				},			
 				{ 
-				  "name" : "green__back",
+				  "name" : "green_back",
 				  "position" : { "y":"249",  "x":"91" },
 				  "angle" : "-90",
 				  "size" : "170",
 				  "modelId" : "exodus_01/exodus_01_blue_back"
 				},				
 				{ 
-				  "name" : "green__ass",
+				  "name" : "green_ass",
 				  "position" : { "y":"374",  "x":"-8" },
 				  "angle" : "-90",
 				  "size" : "110",
@@ -360,6 +360,42 @@
 					
 				},
 				{
+					"source" : { "asteroid" : "red_ass", "navIdx" : 0 },
+					"target" : { "asteroid" : "red_left_leg", "navIdx" : 19 },
+
+					"threadTexture" : "models/web_thread_01.png",
+					"sourceTexture" : "models/web_source_01.png",
+					"targetTexture" : "models/web_target_01.png"
+					
+				},
+				{
+					"source" : { "asteroid" : "red_left_foot", "navIdx" : 16 },
+					"target" : { "asteroid" : "red_left_leg", "navIdx" : 3 },
+
+					"threadTexture" : "models/web_thread_01.png",
+					"sourceTexture" : "models/web_source_01.png",
+					"targetTexture" : "models/web_target_01.png"
+					
+				},				
+				{
+					"source" : { "asteroid" : "red_back", "navIdx" : 8 },
+					"target" : { "asteroid" : "red_ass", "navIdx" : 23 },
+
+					"threadTexture" : "models/web_thread_01.png",
+					"sourceTexture" : "models/web_source_01.png",
+					"targetTexture" : "models/web_target_01.png"
+					
+				},				
+				{
+					"source" : { "asteroid" : "red_back", "navIdx" : 23 },
+					"target" : { "asteroid" : "red_head", "navIdx" : 2 },
+
+					"threadTexture" : "models/web_thread_01.png",
+					"sourceTexture" : "models/web_source_01.png",
+					"targetTexture" : "models/web_target_01.png"
+					
+				},
+								{
 					"source" : { "asteroid" : "red_right_foot", "navIdx" : 28 },
 					"target" : { "asteroid" : "red_right_leg", "navIdx" : 8 },
 					"threadTexture" : "models/web_thread_02.png",
