@@ -21,9 +21,16 @@ public class RandomTravelingOrder extends Order
 		return new TravelingTask(scheduler, this);
 	}
 	
+	@Override
 	public NavNode getSourceNode() 
 	{ 
-		return mesh.getNode( RandomUtil.N( mesh.getNodesNum() ) );
+		return mesh.getNode(RandomUtil.N( mesh.getNodesNum()) );
+	}
+	
+	@Override
+	public NavNode getTargetNode()
+	{
+		return mesh.getNode(RandomUtil.N( mesh.getNodesNum()) );
 	}
 
 }
