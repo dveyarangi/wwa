@@ -30,8 +30,10 @@ public class Minigun extends IWeapon
 	
 	private Damage bulletDamage;
 	
-	public Minigun()
+	public Minigun(int ownerId)
 	{
+		
+		super(ownerId);
 //		bulletSprite = new Sprite(GameFactory.loadTexture("models/fireball.png"));
 //		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
 //		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );

@@ -82,7 +82,7 @@ public class Spider
 		
 		axis = new Vector2();
 		
-		this.chassis = new Chassis( this, position );
+		this.chassis = new Chassis( this, position, position );
 	}
 	
 	public int getOwnerId() { return ownerId; }
@@ -127,6 +127,10 @@ public class Spider
 		
 		chassis.update( delta );
 	
+		// floating toward chassis center point
+		position.add( chassis.getPosition().tmp().sub( position ).div( 4 ) );
+//		leftLegJoint.set(targetPosition); 
+//		rightLegJoint.set(targetPosition); 
 		
 		weapon.update( delta );
 		

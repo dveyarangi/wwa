@@ -10,6 +10,7 @@ import eir.world.Effect;
 import eir.world.Level;
 import eir.world.unit.Bullet;
 import eir.world.unit.Damage;
+import eir.world.unit.Faction;
 
 /**
  * @author dveyarangi
@@ -27,17 +28,21 @@ public abstract class IWeapon
 	protected Vector2 weaponDir;
 	protected float timeToReload;
 	protected int bulletsInMagazine;
+	
+	protected int ownerId;
 
 
 	protected Level level;
 	/**
 	 * 
 	 */
-	public IWeapon()
+	public IWeapon(int ownerId)
 	{
 		super();
 		
 		weaponDir = new Vector2();
+		
+		this.ownerId = ownerId;
 	}
 
 	public Bullet createBullet(Level level, Vector2 weaponPos, Vector2 targetPos)
@@ -138,4 +143,6 @@ public abstract class IWeapon
 	public abstract Damage getDamage();
 
 	public Level getLevel() { return level; }
+	
+	public int getOwnerId() { return ownerId; }
 }

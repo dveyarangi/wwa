@@ -6,7 +6,6 @@ package eir.world.unit.spider;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
@@ -48,7 +47,7 @@ public class Leg
 	private ParametricLine toeTrajectory = new ParametricLine();
 	private ParametricLine ancleTrajectory = new ParametricLine();
 	
-	private static final float STEP_SPEED = 5f;
+	private static final float STEP_SPEED = 6f;
 	
 	private boolean isLeft;
 	
@@ -66,9 +65,9 @@ public class Leg
 		// dat joint is controlled from outside by spider body movement
 		this.bodyJoint = bodyJoint;
 		
-		this.kneeLength = 7;
+		this.kneeLength = 8;
 		this.ancleLength = 10;
-		this.toeLength = 1;
+		this.toeLength = 1.5f;
 		
 		this.isLeft = isLeft;
 		
@@ -161,7 +160,7 @@ public class Leg
 		toeTexture.draw( batch );
 		
 		batch.draw( legJointTexture, ancleJoint.x-0.5f, ancleJoint.y-0.5f, 1, 1 );
-		batch.draw( legJointTexture, kneeJoint.x-0.75f, kneeJoint.y-0.75f, 1.5f, 1.5f );
+		batch.draw( legJointTexture, kneeJoint.x-0.65f, kneeJoint.y-0.65f, 1.3f, 1.3f );
 		
 		batch.end();
 		

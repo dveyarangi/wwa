@@ -53,6 +53,7 @@ public class Bullet implements Poolable, ISpatialObject
 		bullet.velocity.set(dx, dy);
 		bullet.target.set( target );
 		bullet.weapon = weapon;
+
 		return bullet;
 	}
 	
@@ -183,4 +184,5 @@ public class Bullet implements Poolable, ISpatialObject
 		isAlive = false;
 		return weapon.getDamage();
 	}
+
 }

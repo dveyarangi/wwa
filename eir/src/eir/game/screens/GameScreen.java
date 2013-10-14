@@ -92,7 +92,6 @@ public class GameScreen extends AbstractScreen
 		
 		Spider playerSpider = level.getPlayerSpider();
 		playerSpider.update(delta);
-		playerSpider.draw(batch, shapeRenderer);
 		
 		batch.begin();
 		
@@ -108,6 +107,8 @@ public class GameScreen extends AbstractScreen
 		}
 		
 		batch.end();
+		
+		playerSpider.draw(batch, shapeRenderer);
 		
 	}
 

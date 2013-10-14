@@ -37,6 +37,8 @@ public class HomingLauncher extends IWeapon
 	
 	public HomingLauncher(Spider spider)
 	{
+		super(spider.getOwnerId());
+		
 		this.spider = spider;
 		
 		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
@@ -90,10 +92,10 @@ public class HomingLauncher extends IWeapon
 	{
 		if(RandomUtil.oneOf( 5 ))
 			return Effect.getEffect( HIT_01_AID, 
-					RandomUtil.STD( 25, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
+					RandomUtil.STD( 35, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
 		else
 			return Effect.getEffect( HIT_02_AID, 
-					RandomUtil.STD( 10, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
+					RandomUtil.STD( 20, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
 
 	}
 

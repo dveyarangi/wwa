@@ -6,13 +6,10 @@ package eir.world.unit.spider;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
 
 /**
@@ -25,7 +22,7 @@ public class Chassis
 	
 	private static final int LEGS = 8;
 	
-	private Vector2 position;
+	private Vector2 targetPosition;
 	
 	private Vector2 leftLegJoint;
 	private Vector2 rightLegJoint;
@@ -37,13 +34,13 @@ public class Chassis
 	private static float LEG_DISTANCE = 3.5f;
 	private static float STEP_DISTANCE = LEGS/2 * LEG_DISTANCE;
 
-	public Chassis (Spider spider, Vector2 position)
+	public Chassis (Spider spider, Vector2 leftLegJoint, Vector2 rightLegJoint)
 	{
 		this.spider = spider;
 		
-		this.position = position;
-		leftLegJoint = new Vector2();
-		rightLegJoint = new Vector2();
+		this.targetPosition = new Vector2();
+		this.leftLegJoint = leftLegJoint;
+		this.rightLegJoint = rightLegJoint;
 		
 //		legs = new Leg[LEGS];
 		PolygonalModel model = spider.getAsteroid().getModel();
@@ -72,16 +69,15 @@ public class Chassis
 		}
 		
 		Vector2 offset = Vector2.tmp.set(0,0);
-		position.set( 0,0 );
+		
+		targetPosition.set( 0,0 );
 		for(Leg leg : legs)
 		{
-			offset.add( Vector2.tmp2.set( leg.getAncleJoint() ).sub( leg.getToeJoint() ) );
-			position.add( leg.getAncleJoint() );
+			offset.add( Vector2.tmp2.set( leg.getAncleJoint() ).sub( leg.getToeJoint() ).nor() );
+			targetPosition.add( leg.getAncleJoint() );
 		}
 		
-		position.div( LEGS ).add( offset.div(LEGS).mul( 4 ) );
-		leftLegJoint.set(position); 
-		rightLegJoint.set(position); 
+		targetPosition.div( LEGS ).add( offset.div(LEGS).mul( 4 ) );
 
 	}
 	
@@ -123,5 +119,5 @@ public class Chassis
 		}	
 	}
 	
-	Vector2 getPosition() { return position; }
+	Vector2 getPosition() { return targetPosition; }
 }
