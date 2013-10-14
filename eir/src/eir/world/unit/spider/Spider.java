@@ -3,9 +3,6 @@
  */
 package eir.world.unit.spider;
 
-import java.util.Deque;
-import java.util.LinkedList;
-
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -58,21 +55,10 @@ public class Spider
 	
 	private NavEdge web;
 	
-	private static final int LEGS = 8;
-	private Vector2 leftLegJoint;
-	private Vector2 rightLegJoint;
-//	private Leg [] legs;
+	private Chassis chassis;
 	
-	private Deque <Leg> legs = new LinkedList <Leg> ();
-	
-	private Leg lastLeg;
-	private int stepCount = LEGS;
-	private float timeToStep = 0;
-	private float stepInterval = 0.2f;
-	
-	private static float LEG_DISTANCE = 3.5f;
-	private static float STEP_DISTANCE = LEGS/2 * LEG_DISTANCE;
-	
+	private static Sprite spiderTexture = GameFactory.createSprite( "anima//spider//spider_body.png" );
+
 	public Spider(int ownerId, Level level, Asteroid asteroid, float surfaceIdx, float size, float speed)
 	{
 		this.ownerId = ownerId;
@@ -81,8 +67,10 @@ public class Spider
 		
 		this.size = size;
 		this.speed = 10*speed;
-		this.surfaceIdx = surfaceIdx;
+		
 		position = new Vector2();
+		
+		this.surfaceIdx = surfaceIdx;
 		asteroid.getModel().getSurfacePoint( surfaceIdx, position );
 		
 		sprite = new Sprite(GameFactory.loadTexture( "models/spider_placeholder.png" ));
@@ -93,65 +81,23 @@ public class Spider
 		weapon = new HomingLauncher(this);
 		
 		axis = new Vector2();
-		leftLegJoint = new Vector2();
-		rightLegJoint = new Vector2();
 		
-//		legs = new Leg[LEGS];
-		for(int idx = LEGS/2; idx >= 1; idx --)
-		{
-			legs.addFirst( new Leg( this, leftLegJoint, 
-						asteroid.getModel().getStepSurfaceIndex(
-								surfaceIdx, 3+LEG_DISTANCE*idx ), true) );
-			
-			legs.addFirst( new Leg( this, rightLegJoint, 
-					asteroid.getModel().getStepSurfaceIndex(
-							surfaceIdx, -3-LEG_DISTANCE*(LEGS/2-idx) ), false) );
-		
-			
-		}
+		this.chassis = new Chassis( this, position );
 	}
 	
 	public int getOwnerId() { return ownerId; }
 	
 	public void update(float delta)
 	{
-		timeToStep -= delta;
-		if(timeToStep < 0)
-			timeToStep = 0;
-		
-		for(Leg leg : legs)
-		{
-			leg.update( delta );
-		}
 		
 		if(walkCW || walkCCW)
 		{
-			float step;
-			
 			if(web != null)
 				stepFromWeb();
 			
 			if(web == null)
 			{
-				if(lastLeg == null || !lastLeg.isStepping())
-				{
-					if(walkCW)
-					{
-						step = -STEP_DISTANCE;
-						lastLeg = legs.pollLast();
-						
-						legs.addFirst( lastLeg );
-					}
-					else
-					{
-						step = STEP_DISTANCE;
-						lastLeg = legs.pollFirst();
-						legs.addLast( lastLeg );
-					}
-					lastLeg.startStepTo( 
-							asteroid.getModel().getStepSurfaceIndex(
-										lastLeg.getSurfaceIdx(), step ) );
-				}
+				chassis.step(walkCW);
 			}
 		}
 		else
@@ -179,16 +125,8 @@ public class Spider
 			}
 		}
 		
-		Vector2 offset = Vector2.tmp.set(0,0);
-		position.set( 0,0 );
-		for(Leg leg : legs)
-		{
-			offset.add( Vector2.tmp2.set( leg.getAncleJoint() ).sub( leg.getToeJoint() ) );
-			position.add( leg.getAncleJoint() );
-		}
-		position.div( LEGS ).add( offset.div(LEGS).mul( 4 ) );
-		leftLegJoint.set(position); 
-		rightLegJoint.set(position); 
+		chassis.update( delta );
+	
 		
 		weapon.update( delta );
 		
@@ -277,8 +215,12 @@ public class Spider
 		sprite.setRotation( axis.angle() + 90 );
 		sprite.draw( batch );*/
 		
-		for(Leg leg : legs)
-			leg.draw( batch, shape );
+		chassis.draw(batch, shape);
+				
+		batch.begin();
+//		spiderTexture.setRotation( weapon.get )
+		batch.draw( spiderTexture, position.x-2.5f, position.y-2f, 4, 4 );
+		batch.end();
 	}
 
 	/**
@@ -303,4 +245,9 @@ public class Spider
 	public Vector2 getAxis() { return axis; }
 
 	public Asteroid getAsteroid() { return asteroid; }
+
+	/**
+	 * @return
+	 */
+	float getSurfaceIdx() { return surfaceIdx; }
 }

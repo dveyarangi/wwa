@@ -3,11 +3,13 @@
  */
 package eir.world.unit.spider;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.resources.GameFactory;
 import eir.util.ParametricLine;
 import eir.util.Triangles;
 import eir.world.Asteroid;
@@ -50,8 +52,12 @@ public class Leg
 	
 	private boolean isLeft;
 	
-//	private float toeLength;
-//	private Vector2 toeJoint = new Vector2();
+	
+	private static Sprite legJointTexture = GameFactory.createSprite( "anima//spider//spider_leg_joint.png" );
+	private static Sprite kneeTexture = GameFactory.createSprite( "anima//spider//spider_leg.png" );
+	private static Sprite ancleTexture = GameFactory.createSprite( "anima//spider//spider_leg.png" );
+	private static Sprite toeTexture = GameFactory.createSprite( "anima//spider//spider_toe.png" );
+
 	
 	public Leg(Spider spider, Vector2 bodyJoint, float surfaceIdx, boolean isLeft)
 	{
@@ -98,6 +104,7 @@ public class Leg
 
 		Vector2 normal = Vector2.tmp2.set( asteroid.getModel().getNormal( surfaceIdx ) );
 		ancleTrajectory.set( ancleJoint, normal.mul( -toeLength ).add( stepTarget ) );
+		
 
 	}
 	
@@ -124,15 +131,47 @@ public class Leg
 	
 	public void draw(SpriteBatch batch, ShapeRenderer shape)
 	{
+
 		
-		shape.begin( ShapeType.Line );
 		
+		batch.begin();
+		
+		kneeTexture.setOrigin( kneeTexture.getWidth()/2, 0 );
+		kneeTexture.setScale(1f/kneeTexture.getRegionWidth(), kneeLength/kneeTexture.getRegionHeight()  );
+		kneeTexture.setPosition( bodyJoint.x-kneeTexture.getOriginX(), bodyJoint.y );
+		kneeTexture.setRotation( kneeJoint.tmp().sub( bodyJoint ).angle()-90 );
+
+		kneeTexture.draw( batch );
+		
+		if(!Float.isNaN( kneeJoint.x ))
+		{
+			ancleTexture.setOrigin( ancleTexture.getWidth()/2, 0 );
+			ancleTexture.setScale(1f/ancleTexture.getRegionWidth(), 1f*ancleLength/ancleTexture.getRegionHeight()  );
+			ancleTexture.setPosition( kneeJoint.x-ancleTexture.getOriginX(), kneeJoint.y );
+			ancleTexture.setRotation( ancleJoint.tmp().sub( kneeJoint ).angle()-90 );
+	
+			ancleTexture.draw( batch );
+		}
+		
+		toeTexture.setOrigin( toeTexture.getWidth()/2, 0 );
+		toeTexture.setScale(1f/toeTexture.getRegionWidth(), toeLength/toeTexture.getRegionHeight()  );
+		toeTexture.setPosition( ancleJoint.x-toeTexture.getOriginX(), ancleJoint.y );
+		toeTexture.setRotation( ancleJoint.tmp().sub( toeJoint ).angle()+90 );
+
+		toeTexture.draw( batch );
+		
+		batch.draw( legJointTexture, ancleJoint.x-0.5f, ancleJoint.y-0.5f, 1, 1 );
+		batch.draw( legJointTexture, kneeJoint.x-0.75f, kneeJoint.y-0.75f, 1.5f, 1.5f );
+		
+		batch.end();
+		
+/*		shape.begin( ShapeType.Line );
 		shape.setColor( 1.0f, 0.0f, 0.0f, 1.0f );
 			shape.line( bodyJoint.x, bodyJoint.y, kneeJoint.x, kneeJoint.y );
 			shape.line( kneeJoint.x, kneeJoint.y, ancleJoint.x, ancleJoint.y );
 			shape.line( ancleJoint.x, ancleJoint.y, toeJoint.x, toeJoint.y );
 			
-		shape.end();
+		shape.end();*/
 	}
 
 	/**

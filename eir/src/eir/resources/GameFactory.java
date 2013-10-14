@@ -157,10 +157,17 @@ public class GameFactory
 		return sprite;
 	}
 	
-	public static Sprite createSprite(Texture texture)
+	public static Sprite createSprite(String textureFlie)
 	{
-		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 512);
-		return new Sprite(region);
+		TextureRegion region = new TextureRegion( GameFactory.loadTexture( textureFlie ) );
+		
+		Sprite sprite = new Sprite(region);
+//		float realOX = sprite.getWidth()/2;
+//		float realOY = sprite.getHeight()/2;
+//		sprite.setOrigin(realOX, realOY);
+
+		
+		return sprite;
 	}
 	
 //	public static Web createWeb( Asteroid source, Asteroid target )
