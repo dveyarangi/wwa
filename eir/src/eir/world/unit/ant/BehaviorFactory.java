@@ -5,12 +5,13 @@ import java.util.Map;
 
 import eir.world.unit.ai.TaskBehavior;
 
-public class BehaviorFactory {
+public class BehaviorFactory
+{
 	public static enum Stage
 	{
 		TRAVEL_TO_SOURCE,
 		TRAVEL_TO_TARGET,
-		HARVEST,
+		MINING,
 		UNLOAD,
 		FARM,
 		GUARD
@@ -18,9 +19,11 @@ public class BehaviorFactory {
 	
 	private static Map <Stage, TaskBehavior> behaviors = new HashMap <Stage, TaskBehavior> ();
 	
-	static {
+	static 
+	{
 		behaviors.put(Stage.TRAVEL_TO_SOURCE, new TravelingBehavior.TravelToSourceBehavior());
 		behaviors.put(Stage.TRAVEL_TO_TARGET, new TravelingBehavior.TravelToTargetBehavior());
+		behaviors.put(Stage.MINING, new MiningBehavior());
 	}
 	
 	public static TaskBehavior getBehavior(Stage stage)

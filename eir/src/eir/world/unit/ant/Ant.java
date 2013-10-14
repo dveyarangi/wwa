@@ -134,6 +134,13 @@ public class Ant implements Poolable, ISpatialObject
 				return;
 		}
 		
+		//TODO simple solution for now, if task is finished return it and ask for another
+		if(task.isFinished())
+		{
+			faction.getScheduler().taskComplete(task);
+			task = faction.getScheduler().gettaTask(this);
+		}
+		
 		// performing task:
 		task.getBehavior().update( delta, task, this );
 	}

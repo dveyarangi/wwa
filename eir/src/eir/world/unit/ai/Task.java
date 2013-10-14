@@ -18,7 +18,7 @@ public abstract class Task
 	
 	public static enum Status { ONGOING, COMPLETED, CANCELED };
 	
-	private Status status;
+	protected Status status;
 	
 	public Task(Scheduler scheduler, Order order)
 	{
@@ -36,11 +36,19 @@ public abstract class Task
 		
 	}
 
-	public Order getOrder() { return order; }
+	public Order getOrder() 
+	{ 
+		return order; 
+	}
 
-	void setCanceled() 
+	public void setCanceled() 
 	{
 		status = Status.CANCELED;
+	}
+	
+	public void setCompleted()
+	{
+		status = Status.COMPLETED;
 	}
 	
 	public boolean isFinished()

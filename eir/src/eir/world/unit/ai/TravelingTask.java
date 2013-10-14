@@ -15,8 +15,19 @@ public class TravelingTask extends Task
 	@Override
 	public Stage nextStage() 
 	{
-		stage = null;
-		return null;
+		switch (stage)
+		{
+		case TRAVEL_TO_SOURCE:
+			return stage = Stage.TRAVEL_TO_TARGET;
+			
+		case TRAVEL_TO_TARGET:
+			status = Status.COMPLETED;
+			return stage = null;
+			
+		default:
+			status = Status.CANCELED;
+			return stage = null;
+		}
 	}
 
 }
