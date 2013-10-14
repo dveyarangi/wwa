@@ -3,6 +3,9 @@
  */
 package eir.world.unit.spider;
 
+import java.util.Deque;
+import java.util.LinkedList;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -58,12 +61,17 @@ public class Spider
 	private static final int LEGS = 8;
 	private Vector2 leftLegJoint;
 	private Vector2 rightLegJoint;
-	private Leg [] legs;
+//	private Leg [] legs;
+	
+	private Deque <Leg> legs = new LinkedList <Leg> ();
 	
 	private Leg lastLeg;
 	private int stepCount = LEGS;
 	private float timeToStep = 0;
 	private float stepInterval = 0.2f;
+	
+	private static float LEG_DISTANCE = 3.5f;
+	private static float STEP_DISTANCE = LEGS/2 * LEG_DISTANCE;
 	
 	public Spider(int ownerId, Level level, Asteroid asteroid, float surfaceIdx, float size, float speed)
 	{
@@ -88,13 +96,18 @@ public class Spider
 		leftLegJoint = new Vector2();
 		rightLegJoint = new Vector2();
 		
-		legs = new Leg[LEGS];
-		for(int idx = 0; idx < LEGS; idx ++)
+//		legs = new Leg[LEGS];
+		for(int idx = LEGS/2; idx >= 1; idx --)
 		{
-			int left = idx > LEGS/2-1 ? 1 : -1;
-			legs[idx] = new Leg( this, left > 0 ? leftLegJoint : rightLegJoint, 
+			legs.addFirst( new Leg( this, leftLegJoint, 
 						asteroid.getModel().getStepSurfaceIndex(
-								surfaceIdx,  left * (  2.5f*(idx) ) ), left > 0);
+								surfaceIdx, 3+LEG_DISTANCE*idx ), true) );
+			
+			legs.addFirst( new Leg( this, rightLegJoint, 
+					asteroid.getModel().getStepSurfaceIndex(
+							surfaceIdx, -3-LEG_DISTANCE*(LEGS/2-idx) ), false) );
+		
+			
 		}
 	}
 	
@@ -106,10 +119,11 @@ public class Spider
 		if(timeToStep < 0)
 			timeToStep = 0;
 		
-		for(int idx = 0; idx < LEGS; idx ++)
+		for(Leg leg : legs)
 		{
-			legs[idx].update( delta );
+			leg.update( delta );
 		}
+		
 		if(walkCW || walkCCW)
 		{
 			float step;
@@ -119,23 +133,24 @@ public class Spider
 			
 			if(web == null)
 			{
-				if(walkCW)
-					step = -delta*speed;
-				else
-					step =  delta*speed;
-				
 				if(lastLeg == null || !lastLeg.isStepping())
 				{
-					
-					stepCount += walkCW ? -1 : 1;
-					if(stepCount < 0) stepCount = LEGS-1;
-
-					int legIdx = stepCount % LEGS;
-					lastLeg = legs[legIdx];
-					
-					lastLeg.startStepTo( asteroid.getModel().getStepSurfaceIndex(lastLeg.getSurfaceIdx(), walkCW ? -2.5f : 2.5f ) );
-					
-					timeToStep = stepInterval;
+					if(walkCW)
+					{
+						step = -STEP_DISTANCE;
+						lastLeg = legs.pollLast();
+						
+						legs.addFirst( lastLeg );
+					}
+					else
+					{
+						step = STEP_DISTANCE;
+						lastLeg = legs.pollFirst();
+						legs.addLast( lastLeg );
+					}
+					lastLeg.startStepTo( 
+							asteroid.getModel().getStepSurfaceIndex(
+										lastLeg.getSurfaceIdx(), step ) );
 				}
 			}
 		}
@@ -171,7 +186,7 @@ public class Spider
 			offset.add( Vector2.tmp2.set( leg.getAncleJoint() ).sub( leg.getToeJoint() ) );
 			position.add( leg.getAncleJoint() );
 		}
-		position.div( LEGS ).add( offset.div(LEGS).mul( 5 ) );
+		position.div( LEGS ).add( offset.div(LEGS).mul( 4 ) );
 		leftLegJoint.set(position); 
 		rightLegJoint.set(position); 
 		

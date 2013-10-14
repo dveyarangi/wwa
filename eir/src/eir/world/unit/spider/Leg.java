@@ -46,7 +46,7 @@ public class Leg
 	private ParametricLine toeTrajectory = new ParametricLine();
 	private ParametricLine ancleTrajectory = new ParametricLine();
 	
-	private static final float STEP_SPEED = 10f;
+	private static final float STEP_SPEED = 5f;
 	
 	private boolean isLeft;
 	
@@ -60,7 +60,7 @@ public class Leg
 		// dat joint is controlled from outside by spider body movement
 		this.bodyJoint = bodyJoint;
 		
-		this.kneeLength = 10;
+		this.kneeLength = 7;
 		this.ancleLength = 10;
 		this.toeLength = 1;
 		
