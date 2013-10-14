@@ -59,6 +59,8 @@ public class Spider
 	private Vector2 leftLegJoint;
 	private Vector2 rightLegJoint;
 	private Leg [] legs;
+	
+	private Leg lastLeg;
 	private int stepCount = LEGS;
 	private float timeToStep = 0;
 	private float stepInterval = 0.2f;
@@ -92,7 +94,7 @@ public class Spider
 			int left = idx > LEGS/2-1 ? 1 : -1;
 			legs[idx] = new Leg( this, left > 0 ? leftLegJoint : rightLegJoint, 
 						asteroid.getModel().getStepSurfaceIndex(
-								surfaceIdx,  (left < 0 ? 0 : 7) + (  2.5f*(idx) ) ), left > 0);
+								surfaceIdx,  left * (  2.5f*(idx) ) ), left > 0);
 		}
 	}
 	
@@ -122,16 +124,18 @@ public class Spider
 				else
 					step =  delta*speed;
 				
-				if(!legs[(stepCount-1+LEGS)%LEGS].isStepping())
+				if(lastLeg == null || !lastLeg.isStepping())
 				{
 					
+					stepCount += walkCW ? -1 : 1;
+					if(stepCount < 0) stepCount = LEGS-1;
+
 					int legIdx = stepCount % LEGS;
-					Leg leg = legs[legIdx];
+					lastLeg = legs[legIdx];
 					
-					leg.startStepTo( asteroid.getModel().getStepSurfaceIndex(leg.getSurfaceIdx(), walkCW ? -2.5f : 2.5f ) );
+					lastLeg.startStepTo( asteroid.getModel().getStepSurfaceIndex(lastLeg.getSurfaceIdx(), walkCW ? -2.5f : 2.5f ) );
 					
 					timeToStep = stepInterval;
-					stepCount ++;
 				}
 			}
 		}
@@ -210,14 +214,14 @@ public class Spider
 	public void walkCW(boolean walk) 
 	{ 
 		this.walkCW = walk;
-		if(walk == false)
-			stepCount = 0;
+//		if(walk == false)
+//			stepCount = 0;
 	}
 	public void walkCCW(boolean walk) 
 	{ 
 		this.walkCCW = walk; 
-		if(walk == false)
-			stepCount = 0;
+//		if(walk == false)
+//			stepCount = 0;
 	}
 	public void walkUp(boolean walk) 
 	{ 

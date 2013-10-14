@@ -164,25 +164,28 @@ public class PolygonalModel
 		int idx = ((int) surfaceIdx) % len;
 		
 		// offset scaled by edge length:
-		float scaledOffset = ( surfaceIdx - idx) * lengths[idx];
+		float scaledOffset = ( surfaceIdx - idx ) * lengths[idx];
 		
-		// adding edges lenghts until we are past the stepLen:
-		stepLen -= lengths[idx] - scaledOffset;
+		// rounding to int surface idx in step direction:
+		stepLen -= (dir > 0) ? (lengths[idx] - scaledOffset) : -scaledOffset;
 		int nidx = idx;
 		
+		// adding edges lenghts until we are past the stepLen:
 		// loop is required since step may skip several poly vertices:
-		while(stepLen > 0) 
+		while(dir*stepLen > 0) 
 		{
 			nidx += dir;
 			if(nidx >= len) nidx = 0;
 			else if(nidx < 0) nidx = len-1;
 			
-			stepLen -= lengths[nidx];
+			stepLen -= dir*lengths[nidx];
 		}
 		
-		float newSurfaceIdx = (lengths[nidx] + stepLen) / lengths[nidx] + nidx;
+		float newSurfaceIdx = (dir > 0 ? (lengths[nidx] + stepLen) : stepLen) / lengths[nidx] + nidx;
 		if(newSurfaceIdx < 0)
 			newSurfaceIdx += len;
+		if(newSurfaceIdx >= len)
+			newSurfaceIdx -= len;
 		
 		return newSurfaceIdx;
 	}
