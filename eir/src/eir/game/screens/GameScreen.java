@@ -90,11 +90,12 @@ public class GameScreen extends AbstractScreen
 		
 		inputController.draw( batch, shapeRenderer );
 		
-		batch.begin();
-		
 		Spider playerSpider = level.getPlayerSpider();
 		playerSpider.update(delta);
 		playerSpider.draw(batch, shapeRenderer);
+		
+		batch.begin();
+		
 /*		for(Spider spider : spiders)
 		{
 			spider.update(delta);
