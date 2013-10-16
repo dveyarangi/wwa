@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import eir.resources.GameFactory;
 import eir.world.Level;
-import eir.world.environment.NavNode;
+import eir.world.environment.nav.NavNode;
 import eir.world.unit.spider.Spider;
 
 /**

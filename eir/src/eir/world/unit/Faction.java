@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import eir.resources.GameFactory;
 import eir.world.Asteroid;
 import eir.world.Level;
-import eir.world.environment.NavNode;
+import eir.world.environment.nav.NavNode;
 import eir.world.unit.ai.RandomTravelingOrder;
 import eir.world.unit.ai.Scheduler;
 import eir.world.unit.ant.Ant;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eir.world.environment;
+package eir.world.environment.nav;
 
 import com.badlogic.gdx.math.Vector2;
 

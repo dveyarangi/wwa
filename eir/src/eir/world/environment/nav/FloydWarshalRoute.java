@@ -1,4 +1,4 @@
-package eir.world.environment;
+package eir.world.environment.nav;
 
 import java.util.NoSuchElementException;
 

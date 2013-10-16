@@ -1,6 +1,6 @@
 package eir.world.unit.ai;
 
-import eir.world.environment.NavNode;
+import eir.world.environment.nav.NavNode;
 
 
 /**

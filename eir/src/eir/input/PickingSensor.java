@@ -3,7 +3,7 @@
  */
 package eir.input;
 
-import eir.world.environment.NavNode;
+import eir.world.environment.nav.NavNode;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.ISpatialSensor;
 

@@ -65,7 +65,7 @@ public class GameScreen extends AbstractScreen
 		inputController.update( delta );
 		level.update( delta );
 		
-		Gdx.gl.glClearColor( 0, 0, 0, 1 );
+		Gdx.gl.glClearColor( 0.8f, 0.8f, 1f, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 		
 		// setting renderers to camera view:

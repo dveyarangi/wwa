@@ -1,8 +1,8 @@
 package eir.world.unit.ai;
 
 import yarangi.numbers.RandomUtil;
-import eir.world.environment.NavMesh;
-import eir.world.environment.NavNode;
+import eir.world.environment.nav.NavMesh;
+import eir.world.environment.nav.NavNode;
 
 
 public class RandomTravelingOrder extends Order 

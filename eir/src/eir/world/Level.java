@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
-import eir.world.environment.FloydWarshal;
-import eir.world.environment.NavEdge;
-import eir.world.environment.NavMesh;
-import eir.world.environment.NavNode;
+import eir.world.environment.nav.FloydWarshal;
+import eir.world.environment.nav.NavEdge;
+import eir.world.environment.nav.NavMesh;
+import eir.world.environment.nav.NavNode;
+import eir.world.environment.parallax.Background;
 import eir.world.environment.spatial.AntCollider;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
@@ -36,10 +36,7 @@ public class Level
 	
 	private InitialConfig initialConfig;
 	
-	/**
-	 * Level background texture
-	 */
-	private Texture backgroundTexture;
+	private Background background;
 
 	
 	/**
@@ -136,16 +133,8 @@ public class Level
 		
 		factions = new Faction[] {
 				new Faction( PLAYER_ID, this, getAsteroid( "red_left_foot" ), "anima//ant//blob_white.atlas" ),
-				new Faction( ENEMY_ID, this, getAsteroid( "red_head" ), "anima//ant//blob_black.atlas" )
+				new Faction( ENEMY_ID, this, getAsteroid( "red_right_foot" ), "anima//ant//blob_black.atlas" )
 		};
-	}
-
-	/**
-	 * @return
-	 */
-	public Texture getBackgroundTexture()
-	{
-		return backgroundTexture;
 	}
 
 	/**
@@ -259,8 +248,6 @@ public class Level
 	public void draw(SpriteBatch batch)
 	{
 		batch.begin();
-		
-		batch.draw( getBackgroundTexture(), -getWidth()/2, -getHeight()/2, getWidth(), getHeight() );
 		
 		// TODO: clipping?
 		for(Asteroid asteroid : getAsteroids())

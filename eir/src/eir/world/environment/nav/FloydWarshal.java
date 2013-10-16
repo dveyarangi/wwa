@@ -1,6 +1,6 @@
-package eir.world.environment;
+package eir.world.environment.nav;
 
-import eir.world.environment.NavEdge.Type;
+import eir.world.environment.nav.NavEdge.Type;
 import gnu.trove.iterator.TIntObjectIterator;
 
 import java.util.ArrayList;

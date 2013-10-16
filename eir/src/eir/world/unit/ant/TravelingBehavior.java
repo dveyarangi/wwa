@@ -1,7 +1,7 @@
 package eir.world.unit.ant;
 
-import eir.world.environment.NavEdge;
-import eir.world.environment.NavNode;
+import eir.world.environment.nav.NavEdge;
+import eir.world.environment.nav.NavNode;
 import eir.world.unit.ai.Task;
 import eir.world.unit.ai.TaskBehavior;
 

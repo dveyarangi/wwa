@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
-import eir.world.environment.NavEdge;
-import eir.world.environment.NavNode;
+import eir.world.environment.nav.NavEdge;
+import eir.world.environment.nav.NavNode;
 
 
 /**

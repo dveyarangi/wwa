@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eir.world.environment;
+package eir.world.environment.nav;
 
 /**
  * Additional info to tie on the navnode
