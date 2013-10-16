@@ -73,11 +73,11 @@ public class CoordinateGrid
 			float miny = Math.max( -halfHeight, FastMath.toGrid( screenMinY, step ) );
 			float maxy = Math.min(  halfHeight, FastMath.toGrid( screenMaxY, step ) );
 			
-			for(float x = minx; x < maxx; x += step) 
+			for(float x = minx; x <= maxx; x += step) 
 			{
 				grid.line( x, miny, x, maxy );
 			}
-			for(float y = miny; y < maxy; y += step)
+			for(float y = miny; y <= maxy; y += step)
 			{
 				grid.line( minx, y, maxx, y );
 			}
