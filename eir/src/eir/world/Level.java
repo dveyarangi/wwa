@@ -247,6 +247,8 @@ public class Level
 	
 	public void draw(SpriteBatch batch)
 	{
+
+		
 		batch.begin();
 		
 		// TODO: clipping?
@@ -403,4 +405,7 @@ public class Level
 		Debug.stopTiming("navmesh calculation");
 
 	}
+
+
+	public Background getBackground() { return background; }
 }

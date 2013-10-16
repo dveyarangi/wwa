@@ -20,7 +20,7 @@
 			"background" : { 
 				"layers" : [
 					{	
-						"depth" : 10,
+						"depth" : 2,
 						"texture" : "levels/plasma_01.png"
 					}
 				]

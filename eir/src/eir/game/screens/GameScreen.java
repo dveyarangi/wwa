@@ -41,7 +41,7 @@ public class GameScreen extends AbstractScreen
 
 		level = GameFactory.loadLevel( "levels/level_exodus_01.dat" );
 		level.init();
-
+		
 		
 		// infest Nir:
 /*		for(int i = 0; i < 15; i ++)
@@ -54,6 +54,8 @@ public class GameScreen extends AbstractScreen
 		}*/
 		
 		inputController = new GameInputProcessor( level );
+		
+		level.getBackground().init( inputController );
 
 		Debug.init( level, inputController );
 	}
@@ -67,6 +69,10 @@ public class GameScreen extends AbstractScreen
 		
 		Gdx.gl.glClearColor( 0.8f, 0.8f, 1f, 1 );
 		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
+		
+		
+		level.getBackground().draw( batch );
+		
 		
 		// setting renderers to camera view:
 		// TODO: those are copying matrix arrays, maybe there is a lighter way to do this
@@ -117,6 +123,8 @@ public class GameScreen extends AbstractScreen
 	{
 		super.resize( width, height );
 		inputController.resize( width, height );
+		
+		level.getBackground().resize( width, height );
 	}
 
 	@Override
