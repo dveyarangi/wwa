@@ -14,10 +14,17 @@
 			
 				"zoom" : 0.1,
 				
-				"asteroid" : "red_ass"
+				"asteroid" : "center"
 			},
 			
-			"backgroundTexture" : "levels/level_exodus_01.png",
+			"background" : { 
+				"layers" : [
+					{	
+						"depth" : 10,
+						"texture" : "levels/plasma_01.png"
+					}
+				]
+			},
 			
 			########################################
 			# asteroids
@@ -26,16 +33,16 @@
 				  "name" : "center",
 				  "position" : { "x":"0",  "y":"0" },
 				  "angle" : "0",
-				  "size" : "32",
-				  "modelId" : "exodus_01/exodus_01_center"
+				  "size" : "150",
+				  "modelId" : "asteroid_junkyard_01"
 				},
-				{ 
+/*				{ 
 				  "name" : "red_head",
 				  "position" : { "x":"-120",  "y":"49" },
 				  "angle" : "0",
 				  "size" : "115",
 				  "modelId" : "exodus_01/exodus_01_red_head"
-				},			
+				},	*/		
 				{ 
 				  "name" : "red_back",
 				  "position" : { "x":"-249",  "y":"91" },
@@ -108,13 +115,13 @@
 				},			
 				
 			    #######
-				{ 
+/*				{ 
 				  "name" : "blue_head",
 				  "position" : { "y":"-120",  "x":"-49" },
 				  "angle" : "65",
 				  "size" : "125",
 				  "modelId" : "asteroid_head_04"
-				},			
+				},	*/		
 				{ 
 				  "name" : "blue_back",
 				  "position" : { "y":"-249",  "x":"-91" },
@@ -189,13 +196,13 @@
 				
 				#######
 				
-				{ 
+/*				{ 
 				  "name" : "yellow_head",
 				  "position" : { "x":"120",  "y":"-49" },
 				  "angle" : "180",
 				  "size" : "115",
 				  "modelId" : "exodus_01/exodus_01_red_head"
-				},			
+				},	*/		
 				{ 
 				  "name" : "yellow_back",
 				  "position" : { "x":"249",  "y":"-91" },
@@ -269,13 +276,13 @@
 				
 								
 			    #######
-				{ 
+/*				{ 
 				  "name" : "green_head",
 				  "position" : { "y":"120",  "x":"49" },
 				  "angle" : "-90",
 				  "size" : "125",
 				  "modelId" : "exodus_01/exodus_01_blue_head"
-				},			
+				},	*/		
 				{ 
 				  "name" : "green_back",
 				  "position" : { "y":"249",  "x":"91" },
@@ -386,7 +393,7 @@
 					"targetTexture" : "models/web_target_01.png"
 					
 				},				
-				{
+/*				{
 					"source" : { "asteroid" : "red_back", "navIdx" : 23 },
 					"target" : { "asteroid" : "red_head", "navIdx" : 2 },
 
@@ -394,7 +401,7 @@
 					"sourceTexture" : "models/web_source_01.png",
 					"targetTexture" : "models/web_target_01.png"
 					
-				},
+				},*/
 								{
 					"source" : { "asteroid" : "red_right_foot", "navIdx" : 28 },
 					"target" : { "asteroid" : "red_right_leg", "navIdx" : 8 },
