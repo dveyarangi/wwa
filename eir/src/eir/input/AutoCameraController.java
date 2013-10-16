@@ -61,22 +61,13 @@ public class AutoCameraController implements ICameraController
 	{
 		
 		scrollTarget.set( pointerPos ).sub( playerPos );
-	/*	float dz = 0.9f;
-		float distance = scrollTarget.len();
-		if(distance > camera.zoom * camera.viewportHeight * dz)
-			zoomTarget /= 0.001f*delta;
-		else 
-		if(distance < camera.zoom * camera.viewportHeight * 0.1)
-			zoomTarget *= 0.001f*delta;*/
 		
 		scrollTarget.div( 2 ).add( playerPos );
 		
 		camera.position.x += (scrollTarget.x - camera.position.x) / 2;
 		camera.position.y += (scrollTarget.y - camera.position.y) / 2;
 		camera.zoom += (zoomTarget - camera.zoom) / 10;
-		
-//		System.out.println(distance + " " +  + " " + zoomTarget);
-		
+
 		// storing last camera position:
 		lastPosition.x = camera.position.x;
 		lastPosition.y = camera.position.y;
@@ -116,6 +107,13 @@ public class AutoCameraController implements ICameraController
 		else
 			zoomTarget *= 0.9f;
 		
+		// bounding zoom
+		// TODO: to level config
+		if(zoomTarget > 1.5f)
+			zoomTarget = 1.5f;
+		else
+		if(zoomTarget < 0.05f)
+			zoomTarget = 0.05f;		
 	}
 
 	@Override

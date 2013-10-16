@@ -21,7 +21,14 @@
 				"layers" : [
 					{	
 						"depth" : 2,
-						"texture" : "levels/plasma_01.png"
+						"texture" : "levels/plasma_01.png",
+						"tiling" : false
+					},
+					{	
+						"depth" : 0.9,
+						"texture" : "levels/fog_01.png",
+						"scroll" : { "x" : "500", "y" : "0" },
+						"tiling" : true
 					}
 				]
 			},

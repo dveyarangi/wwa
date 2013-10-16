@@ -49,7 +49,7 @@ public class HomingLauncher extends IWeapon
 	}
 	
 	@Override
-	public float getSize() { return 2; }
+	public float getSize() { return 1; }
 
 
 	@Override
@@ -92,10 +92,10 @@ public class HomingLauncher extends IWeapon
 	{
 		if(RandomUtil.oneOf( 5 ))
 			return Effect.getEffect( HIT_01_AID, 
-					RandomUtil.STD( 35, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
+					RandomUtil.STD( 25, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
 		else
 			return Effect.getEffect( HIT_02_AID, 
-					RandomUtil.STD( 20, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
+					RandomUtil.STD( 10, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
 
 	}
 
@@ -113,6 +113,6 @@ public class HomingLauncher extends IWeapon
 	
 	public Effect createTraceEffect(Bullet bullet)
 	{
-		return Effect.getEffect( TRAIL_AID, RandomUtil.N( 6 ) + 3, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), RandomUtil.STD( 2, 0.15f ) );
+		return Effect.getEffect( TRAIL_AID, RandomUtil.N( 4 ) + 2, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), RandomUtil.STD( 2, 0.15f ) );
 	}
 }

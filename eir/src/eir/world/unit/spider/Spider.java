@@ -16,6 +16,7 @@ import eir.world.environment.nav.NavNode;
 import eir.world.unit.Bullet;
 import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.weapon.Minigun;
 
 /**
  * Spider
@@ -77,7 +78,7 @@ public class Spider
 		sprite.setOrigin( sprite.getWidth()/2, sprite.getHeight()/2 );
 		sprite.setScale( size / sprite.getWidth() );
 		
-//		weapon = new Minigun();
+//		weapon = new Minigun(ownerId);
 		weapon = new HomingLauncher(this);
 		
 		axis = new Vector2();
@@ -128,7 +129,7 @@ public class Spider
 		chassis.update( delta );
 	
 		// floating toward chassis center point
-		position.add( chassis.getPosition().tmp().sub( position ).div( 4 ) );
+		position.add( chassis.getPosition().tmp().sub( position ).div( 10 ) );
 //		leftLegJoint.set(targetPosition); 
 //		rightLegJoint.set(targetPosition); 
 		
