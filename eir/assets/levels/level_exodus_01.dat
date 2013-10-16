@@ -28,7 +28,8 @@
 						"depth" : 0.9,
 						"texture" : "levels/fog_01.png",
 						"scroll" : { "x" : "500", "y" : "0" },
-						"tiling" : true
+						"tiling" : true,
+						"zoomFactor" : 0.9
 					}
 				]
 			},
@@ -416,7 +417,27 @@
 					"sourceTexture" : "models/web_source_02.png",
 					"targetTexture" : "models/web_target_02.png"
 				}
-			]			########################################
+			],
+			
+			"factions" : [
+				{
+					"ownerId" : 1,
+					"homeAsteroid" : "red_left_foot",
+					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"},
+					"maxAnts" : 300,
+					"spawnInterval" : 0.5f
+				},
+				{
+					"ownerId" : 2,
+					"homeAsteroid" : "red_right_foot",
+					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"},
+					"maxAnts" : 300,
+					"spawnInterval" : 0.5f
+				}			]
+			
+			
+			
+						########################################
 
 
 	#############################################################################

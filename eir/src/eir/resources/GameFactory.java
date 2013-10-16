@@ -51,6 +51,7 @@ public class GameFactory
 	private static Level level;
 
 	private static int ANIMATION_ID = 0; 
+	
 	private static TIntObjectHashMap<Animation> animations = new TIntObjectHashMap <Animation> ();
 	
 	private GameFactory() { }
@@ -219,6 +220,11 @@ public class GameFactory
 	public static Animation getAnimation(int animationId)
 	{
 		return animations.get(animationId);
+	}
+	
+	public static String getAnimationName(String atlasName, String regionName)
+	{
+		return atlasName + "/" + regionName;
 	}
 	
 	private static Animation loadAnimation(String atlasName, String regionName)

@@ -11,7 +11,6 @@ import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 
-import eir.resources.GameFactory;
 import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.environment.nav.NavNode;
@@ -26,37 +25,42 @@ import eir.world.unit.ant.Ant;
 public class Faction
 {
 	
-	public static final int MAX_ANTS = 300;
-	
-	public static final float SPAWN_INTERVAL = 0.5f;
-	
+	/////////////////////////////////////////////////////
+	// loaded by LevelLoader
+	//
 	public int ownerId;
 	
-	public Level level;
-	
 	public Asteroid homeAsteroid;
+	
+	public Animation antAnimation;
+	
+	public int maxAnts = 300;
+	
+	public float spawnInterval = 0.5f;
+	
+	/////////////////////////////////////////////////////
+	//
+	
+	public Level level;
 	
 	public Set <Ant> ants;
 	
 	public float timeToSpawn = 0;
-
-	public final Animation antAnimation;
 	
 	private Scheduler scheduler;
 	
 
-	public Faction(int ownerId, Level level, Asteroid homeAsteroid, String antAnimationFile)
+	public Faction()
 	{
-		this.ownerId = ownerId;
+	}
+	
+	public void init(Level level)
+	{
 		this.level = level;
-		this.homeAsteroid = homeAsteroid;
 		this.ants = new HashSet <Ant> ();
 		this.scheduler = new Scheduler( level );
 		
 		scheduler.addOrder(new RandomTravelingOrder( level.getNavMesh(), 0 ));
-		
-		int antAnimationId = GameFactory.registerAnimation( antAnimationFile, "blob" );
-		this.antAnimation = GameFactory.getAnimation( antAnimationId );
 	}
 	
 	public int getOwnerId()	{ return ownerId; }
@@ -68,10 +72,10 @@ public class Faction
 		if(timeToSpawn < 0)
 		{
 			
-			if(ants.size() < MAX_ANTS)
+			if(ants.size() < maxAnts)
 				ants.add( level.addAnt( this ) );
 			
-			timeToSpawn = SPAWN_INTERVAL;
+			timeToSpawn = spawnInterval;
 		}
 	}
 	

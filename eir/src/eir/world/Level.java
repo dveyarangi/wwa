@@ -26,6 +26,9 @@ import eir.world.unit.spider.Spider;
 
 public class Level
 {
+	////////////////////////////////////////////////////////////////
+	// loaded by json:
+	
 	private String name;
 
 	/**
@@ -38,13 +41,6 @@ public class Level
 	
 	private Background background;
 
-	
-	/**
-	 * Indexer for ants and bullets.
-	 */
-	private SpatialHashMap<ISpatialObject> spatialIndex;
-	
-	private NavMesh navMesh;
 
 	/**
 	 * List of asteroids
@@ -55,6 +51,19 @@ public class Level
 	 * List of webs
 	 */
 	private List <Web> webs;
+	
+	
+	private Faction [] factions;
+	
+	////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Indexer for ants and bullets.
+	 */
+	private SpatialHashMap<ISpatialObject> spatialIndex;
+	
+	private NavMesh navMesh;
+	
 	
 	/**
 	 * List of ants
@@ -71,8 +80,7 @@ public class Level
 	private List <Effect> effects;
 	
 	private AntCollider antCollider;
-	
-	private Faction [] factions;
+
 
 	public Level()
 	{
@@ -109,6 +117,11 @@ public class Level
 			asteroid.init( this );
 		}
 		
+		for(Faction faction : factions)
+		{
+			faction.init( this );
+		}
+		
 		for( Web web : webs )
 		{
 			web.init( this );
@@ -130,11 +143,7 @@ public class Level
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
 		
-		
-		factions = new Faction[] {
-				new Faction( PLAYER_ID, this, getAsteroid( "red_left_foot" ), "anima//ant//blob_white.atlas" ),
-				new Faction( ENEMY_ID, this, getAsteroid( "red_right_foot" ), "anima//ant//blob_black.atlas" )
-		};
+
 	}
 
 	/**

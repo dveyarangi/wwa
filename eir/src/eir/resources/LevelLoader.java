@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
@@ -33,6 +34,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
@@ -60,6 +62,10 @@ public class LevelLoader
 	{
 		Map <String, Asteroid> asteroids = 
 				new HashMap <String, Asteroid> ();
+		
+		Map <String, Animation> animations = 
+				new HashMap <String, Animation> ();
+
 
 		/**
 		 * @param asteroidName
@@ -199,6 +205,28 @@ public class LevelLoader
 					String textureFile = elem.getAsString();
 					
 					return GameFactory.loadTexture( textureFile );
+				}
+			})
+			.registerTypeAdapter( Animation.class, new JsonDeserializer<Animation>()
+			{
+				@Override
+				public Animation deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					JsonObject object = elem.getAsJsonObject();
+					String atlasFile = object.get( "atlasFile" ).getAsString();
+					String atlasId = object.get( "atlasId" ).getAsString();
+					String animationName = atlasFile + "/" + atlasId;
+					
+					Animation animation = context.animations.get( animationName );
+					if(animation == null)
+					{
+						int animationId = GameFactory.registerAnimation( atlasFile, atlasId );
+						animation = GameFactory.getAnimation( animationId );
+						context.animations.put( animationName, animation );
+					}
+					
+					return animation;
+					
 				}
 			})
 			.create();
