@@ -7,7 +7,7 @@ import eir.world.unit.ant.Ant;
  * @author Ni
  *
  */
-public interface TaskBehavior 
+public interface TaskBehavior <A extends Ant>
 {
-	public void update( float delta, Task task, Ant ant );
+	public void update( float delta, Task task, A ant );
 }

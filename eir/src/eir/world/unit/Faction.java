@@ -28,12 +28,24 @@ public class Faction
 	/////////////////////////////////////////////////////
 	// loaded by LevelLoader
 	//
+	
+	/**
+	 * unit owner for hits resolving
+	 */
 	public int ownerId;
+	
+	/**
+	 * unit type
+	 */
+	public int unitType;
 	
 	public Asteroid homeAsteroid;
 	
 	public Animation antAnimation;
 	
+	/**
+	 * Max units to spawn
+	 */
 	public int maxAnts = 300;
 	
 	public float spawnInterval = 0.5f;

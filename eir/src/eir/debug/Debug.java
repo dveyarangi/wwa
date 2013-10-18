@@ -52,6 +52,9 @@ public class Debug
 	 * measures delta time average
 	 */
 	private static final int SAMPLES = 60;
+
+	public static final BitmapFont FONT = GameFactory.loadFont("skins//fonts//default", 0.05f);
+;
 	private float [] deltas = new float [SAMPLES]; 
 	private float deltaPeak = 0;
 	private boolean isFirstBatch = true;

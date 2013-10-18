@@ -5,13 +5,13 @@ import eir.world.environment.nav.NavNode;
 import eir.world.unit.ai.Task;
 import eir.world.unit.ai.TaskBehavior;
 
-public abstract class TravelingBehavior implements TaskBehavior 
+public abstract class TravelingBehavior implements TaskBehavior <StickyAnt> 
 {
 
 	public static class TravelToSourceBehavior extends TravelingBehavior
 	{
 		@Override
-		public void update(float delta, Task task, Ant ant)
+		public void update(float delta, Task task, StickyAnt ant)
 		{
 			travelTo( delta, task, ant, task.getOrder().getSourceNode() );
 		}
@@ -20,13 +20,13 @@ public abstract class TravelingBehavior implements TaskBehavior
 	public static class TravelToTargetBehavior extends TravelingBehavior
 	{
 		@Override
-		public void update(float delta, Task task, Ant ant)
+		public void update(float delta, Task task, StickyAnt ant)
 		{
 			travelTo( delta, task, ant, task.getOrder().getTargetNode() );
 		}
 	}
 	
-	protected void travelTo( float delta, Task task, Ant ant, NavNode targetNode )
+	protected void travelTo( float delta, Task task, StickyAnt ant, NavNode targetNode )
 	{
 		if(ant.nextNode == null)
 		{
