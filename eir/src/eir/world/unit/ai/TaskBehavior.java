@@ -1,5 +1,6 @@
 package eir.world.unit.ai;
 
+import eir.world.unit.Unit;
 import eir.world.unit.ant.Ant;
 
 /**
@@ -7,7 +8,7 @@ import eir.world.unit.ant.Ant;
  * @author Ni
  *
  */
-public interface TaskBehavior <A extends Ant>
+public interface TaskBehavior <U extends Unit>
 {
-	public void update( float delta, Task task, A ant );
+	public void update( float delta, Task task, U ant );
 }

@@ -8,6 +8,7 @@ import eir.game.EirGame;
 import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
+import eir.world.unit.Unit;
 import eir.world.unit.ant.Ant;
 import eir.world.unit.spider.Spider;
 
@@ -93,9 +94,9 @@ public class GameScreen extends AbstractScreen
 			spider.draw( batch );
 		}*/
 		
-		for(Ant ant : level.getAnts())
+		for(Unit unit : level.getUnits())
 		{
-			ant.draw( delta, batch );
+			unit.draw( delta, batch );
 		}
 		
 		batch.end();

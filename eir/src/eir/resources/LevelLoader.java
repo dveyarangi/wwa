@@ -43,6 +43,9 @@ import eir.world.Level;
 import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
+import eir.world.unit.Faction;
+import eir.world.unit.UnitsFactory;
+import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
@@ -71,6 +74,7 @@ public class LevelLoader
 		public Map <String, Animation> animations = 
 				new HashMap <String, Animation> ();
 
+		public Map <Integer, Faction> factions = new HashMap <Integer, Faction> ();
 
 		/**
 		 * @param asteroidName
@@ -181,42 +185,8 @@ public class LevelLoader
 		
 		// this is raw gson parser (without custom deserializatiors)
 		// it is used for asteroid reference substitutions
-		final Gson rawGson = new Gson();
-		
-		Gson gson = new GsonBuilder()
-			///////////////////////////////////////////////////////////////
-			// game objects adapters:
-			///////////////////////////////////////////////////////////////
-		
-			// loading asteroids
-			.registerTypeAdapter( Asteroid.class, new JsonDeserializer<Asteroid>()
-			{
-				@Override
-				public Asteroid deserialize(JsonElement elem, Type type, JsonDeserializationContext ctx) throws JsonParseException
-				{
-					Asteroid asteroid;
-					
-					if(elem.isJsonObject()) // creating asteroid by definitions
-					{
-						asteroid = rawGson.fromJson( elem, type );
-						context.addAsteroid(asteroid);
-						
-						asteroid.init( context.navMesh );
-						
-						return asteroid;
-					}
-					
-					// getting asteroid by name reference:
-					String asteroidName = elem.getAsString();
-					
-					asteroid = context.getAsteroid(asteroidName);
-					
-					return asteroid;
-					
-				}
-			})
-
-			.registerTypeAdapter( NavNode.class, new JsonDeserializer<NavNode>()
+		final Gson rawGson = new GsonBuilder()
+		.registerTypeAdapter( NavNode.class, new JsonDeserializer<NavNode>()
 			{
 				@Override
 				public NavNode deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
@@ -228,12 +198,7 @@ public class LevelLoader
 					Asteroid asteroid = context.asteroids.get( asteriodName );
 					return asteroid.getModel().getNavNode( navIdx );
 				}
-			})
-			
-			///////////////////////////////////////////////////////////////
-			// graphic objects adapters:
-			///////////////////////////////////////////////////////////////
-			
+			}) 
 			.registerTypeAdapter( Texture.class, new JsonDeserializer<Texture>()
 			{
 				@Override
@@ -266,9 +231,103 @@ public class LevelLoader
 					return animation;
 					
 				}
-			})			
-			
+			})	
 			.create();
+
+		UnitAdapter unitAdapter = new UnitAdapter();
+		
+		final Gson gson = new GsonBuilder()
+			///////////////////////////////////////////////////////////////
+			// game objects adapters:
+			///////////////////////////////////////////////////////////////
+		
+			// loading asteroids
+			.registerTypeAdapter( Asteroid.class, new JsonDeserializer<Asteroid>()
+			{
+				@Override
+				public Asteroid deserialize(JsonElement elem, Type type, JsonDeserializationContext ctx) throws JsonParseException
+				{
+					Asteroid asteroid;
+					
+					if(elem.isJsonObject()) // creating asteroid by definitions
+					{
+						asteroid = rawGson.fromJson( elem, type );
+						context.addAsteroid(asteroid);
+						
+						asteroid.init( context.navMesh );
+						
+						return asteroid;
+					}
+					
+					// getting asteroid by name reference:
+					String asteroidName = elem.getAsString();
+					
+					asteroid = context.getAsteroid(asteroidName);
+					
+					return asteroid;
+					
+				}
+			})
+
+
+			.registerTypeAdapter( Faction.class, new JsonDeserializer<Faction>()
+			{
+				@Override
+				public Faction deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					Faction faction;
+					
+					if(elem.isJsonObject()) // creating asteroid by definitions
+					{
+						faction = rawGson.fromJson( elem, type );
+						context.factions.put(faction.getOwnerId(), faction);
+						
+						return faction;
+					}
+					
+					// getting asteroid by name reference:
+					int factionId = elem.getAsInt();
+					
+					faction = context.factions.get(factionId);
+					
+					return faction;
+				}
+			})
+			.registerTypeAdapter( NavNode.class, new JsonDeserializer<NavNode>()
+			{
+				@Override
+				public NavNode deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					return rawGson.fromJson( elem, NavNode.class );
+				}
+			})
+			.registerTypeAdapter( Unit.class, unitAdapter)
+			
+			///////////////////////////////////////////////////////////////
+			// graphic objects adapters:
+			///////////////////////////////////////////////////////////////
+			
+			.registerTypeAdapter( Texture.class, new JsonDeserializer<Texture>()
+			{
+				@Override
+				public Texture deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					return rawGson.fromJson( elem, Texture.class );
+				}
+			})
+			
+			.registerTypeAdapter( Animation.class, new JsonDeserializer<Animation>()
+			{
+				@Override
+				public Animation deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					return rawGson.fromJson( elem, Animation.class );
+					
+				}
+			})			
+			.create();
+		
+		unitAdapter.gson = gson;
 		
 		InputStream stream = openFileStream( levelId );
 
@@ -395,5 +454,23 @@ public class LevelLoader
 		catch ( IOException e ) { Gdx.app.error( TAG, "Cannot list files for URL " + dirURL, e ); }
 		
 		throw new UnsupportedOperationException( "Cannot list files for URL " + dirURL );
+	}
+	
+	private static class UnitAdapter implements  JsonDeserializer<Unit>
+	{
+		Gson gson;
+		
+		@Override
+		public Unit deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+		{
+			JsonObject object = elem.getAsJsonObject();
+			int unitType = object.get( "type" ).getAsInt();
+			Class <?> unitClass = UnitsFactory.getUnitClass(unitType);
+			Unit unit = (Unit) gson.fromJson( elem, unitClass );
+			
+			unit.init();
+			
+			return unit;
+		}
 	}
 }

@@ -5,12 +5,9 @@ package eir.world.unit.ant;
 
 import yarangi.numbers.RandomUtil;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pool.Poolable;
 
 import eir.debug.Debug;
 import eir.resources.GameFactory;
@@ -19,35 +16,21 @@ import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.Route;
 import eir.world.environment.spatial.AABB;
-import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
 import eir.world.unit.Faction;
-import eir.world.unit.ai.Task;
+import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
  *
  */
-public abstract class Ant implements Poolable, ISpatialObject
+public class Ant extends Unit
 {
 
 
 	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas", 
 			"explosion02");
 
-	
-	public static void free(Ant ant)
-	{
-		ant.body.free( );
-		AntFactory.free( ant );
-	}
-	
-	private Faction faction;
-
-	private int id;
-	
-	AABB body;
-	
 	NavMesh mesh;
 	Route route;
 	
@@ -59,73 +42,33 @@ public abstract class Ant implements Poolable, ISpatialObject
 	
 	float speed = 10f;
 	
-	protected boolean isAlive = true;
+	private float screamTime;
+	float nodeOffset;
 	
-	protected Damage damage = new Damage();
-	
-	Task task;
+	NavNode nextNode, targetNode;
 
-	Ant()
+	public Ant()
 	{
-		stateTime = RandomUtil.R( 10 );
 	}
 	
-	
-	abstract int getType();
-	
-	void init(Faction faction)
+	public void init()
 	{
-		reset();
-		
-		this.faction = faction;
-		
-		NavNode spawnNode = faction.getSpawnNode();
-				
-		this.id = faction.getLevel().createObjectId();
+		super.init();
 
-		this.body = AABB.createSquare( spawnNode.getPoint().x, spawnNode.getPoint().y, this.size/2 );
+		getBody().copyFrom( AABB.createSquare( position.getPoint().x, position.getPoint().y, this.size/2 ) );
 		
 		this.mesh = faction.getLevel().getNavMesh();
-
-	}
-
-	@Override
-	public void reset()
-	{
-		stateTime = 0;
+		
 		route = null;
 		velocity.set( 0,0 );
 		stateTime = RandomUtil.R( 10 );
-		isAlive = true;
-		
-		task = null;
 
 	}
-	
-	public void update(float delta)
-	{
-		if(task == null || task.isFinished())
-		{
-			// requesting a new task:
-			task = faction.getScheduler().gettaTask( this );
-			if(task == null)
-				return;
-		}
-		
-		//TODO simple solution for now, if task is finished return it and ask for another
-		if(task.isFinished())
-		{
-			faction.getScheduler().taskComplete(task);
-			task = faction.getScheduler().gettaTask(this);
-		}
-		
-		// performing task:
-		task.getBehavior().update( delta, task, this );
-	}
+
 
 	public void draw(float delta, SpriteBatch batch)
 	{
-		Vector2 position = body.getAnchor();
+		Vector2 position = getBody().getAnchor();
 		TextureRegion region = faction.getAntAnimation().getKeyFrame( stateTime, true );
 		batch.draw( region, 
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
@@ -135,33 +78,13 @@ public abstract class Ant implements Poolable, ISpatialObject
 				size/region.getRegionWidth(), angle);
 		stateTime += delta;
 
-	}
-
-
-	@Override
-	public AABB getArea() { return body; }
-
-	@Override
-	public int getId() { return id; }
-
-	/**
-	 * @return
-	 */
-	public boolean isAlive()
-	{
-		return isAlive;
-	}
-
-	/**
-	 * @param damage
-	 */
-	public void hit(Damage damage)
-	{
-		isAlive = false;
-		if(task != null)
+		// TODO: remove debug rendering
+		if(Debug.debug.drawNavMesh)
 		{
-			task.cancel();
-			task = null;
+			if(stateTime - screamTime < 1)
+				Debug.FONT.draw( batch, "Yarr!", position.x, position.y );
+			if(targetNode != null)
+				Debug.FONT.draw( batch, String.valueOf( targetNode.idx ), position.x+2, position.y-2 );
 		}
 	}
 
@@ -170,7 +93,7 @@ public abstract class Ant implements Poolable, ISpatialObject
 	 */
 	public Effect getDeathEffect()
 	{
-		return Effect.getEffect( hitAnimationId, 25, body.getAnchor(), RandomUtil.N( 360 ), 1 );
+		return Effect.getEffect( hitAnimationId, 25, getBody().getAnchor(), RandomUtil.N( 360 ), 1 );
 	}
 
 	public Faction getFaction() { return faction; }
@@ -179,4 +102,5 @@ public abstract class Ant implements Poolable, ISpatialObject
 	 * @return
 	 */
 	public Damage getDamage() {	return damage; }
+
 }

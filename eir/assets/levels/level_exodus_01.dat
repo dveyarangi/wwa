@@ -423,21 +423,28 @@
 				{
 					"ownerId" : 1,
 					"homeAsteroid" : "red_left_foot",
-					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"},
-					"maxAnts" : 300,
-					"spawnInterval" : 0.5f
+					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"}
 				},
 				{
 					"ownerId" : 2,
 					"homeAsteroid" : "red_right_foot",
-					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"},
-					"maxAnts" : 300,
+					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"}
+				}			
+			],
+			
+			"units" : [
+				{
+					"type" : 2,
+					"faction" : 2,
+					"position" : { "asteroid" : "red_left_foot", "navIdx" : 1 },
+					
+					"maxUnits" : 300,
 					"spawnInterval" : 0.5f
-				}			]
+					
+				}
+			]
 			
-			
-			
-						########################################
+		########################################
 
 
 	#############################################################################

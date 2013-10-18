@@ -4,18 +4,19 @@
 package eir.world.environment.spatial;
 
 import eir.world.unit.Bullet;
+import eir.world.unit.Unit;
 import eir.world.unit.ant.Ant;
 
 /**
  * @author dveyarangi
  *
  */
-public class AntCollider implements ISpatialSensor<ISpatialObject>
+public class UnitCollider implements ISpatialSensor<ISpatialObject>
 {
 	
-	private Ant collidingAnt;
+	private Unit collidingAnt;
 	
-	public void setAnt(Ant collidingAnt)
+	public void setAnt(Unit collidingAnt)
 	{
 		this.collidingAnt = collidingAnt;
 	}
@@ -23,9 +24,9 @@ public class AntCollider implements ISpatialSensor<ISpatialObject>
 	@Override
 	public boolean objectFound(ISpatialObject object)
 	{
-		if(object instanceof Ant)
+		if(object instanceof Unit)
 		{
-			Ant ant = (Ant) object;
+			Unit ant = (Unit) object;
 			if(ant.getFaction().getOwnerId() != collidingAnt.getFaction().getOwnerId())
 			{
 				collidingAnt.hit(ant.getDamage());

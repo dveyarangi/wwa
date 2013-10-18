@@ -9,7 +9,7 @@ import eir.world.unit.ai.TaskBehavior;
  * @author Ni
  *
  */
-public class MiningBehavior implements TaskBehavior
+public class MiningBehavior implements TaskBehavior <Ant>
 {
 	@Override
 	public void update(float delta, Task task, Ant ant)

@@ -9,7 +9,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import eir.world.Level;
-import eir.world.unit.ant.Ant;
+import eir.world.unit.Unit;
 
 /**
  * schedules tasks for ant <br>
@@ -47,7 +47,7 @@ public class Scheduler
 	 * @param ant identify yourself!
 	 * @return
 	 */
-	public Task gettaTask( Ant ant )
+	public Task gettaTask( Unit unit )
 	{
 		if(orders.isEmpty())
 			return null;

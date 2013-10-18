@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
@@ -16,13 +17,13 @@ import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.parallax.Background;
-import eir.world.environment.spatial.AntCollider;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
+import eir.world.environment.spatial.UnitCollider;
+import eir.world.unit.UnitsFactory;
 import eir.world.unit.Bullet;
 import eir.world.unit.Faction;
-import eir.world.unit.ant.Ant;
-import eir.world.unit.ant.AntFactory;
+import eir.world.unit.Unit;
 import eir.world.unit.spider.Spider;
 
 public class Level
@@ -70,7 +71,7 @@ public class Level
 	 * List of ants
 	 * TODO: swap to identity set
 	 */
-	private Set <Ant> ants;
+	private Set <Unit> units;
 	
 	private static final int PLAYER_ID = 1;
 	private static final int ENEMY_ID = 2;
@@ -81,22 +82,23 @@ public class Level
 	
 	private List <Effect> effects;
 	
-	private AntCollider antCollider;
+	private UnitCollider collider;
 
+	private Queue <Unit> unitsToAdd = new LinkedList <Unit> ();
 
 	public Level()
 	{
-		ants = new HashSet <Ant> ();
+		units = new HashSet <Unit> ();
 		bullets = new LinkedList <Bullet> ();
 		effects = new LinkedList <Effect> ();
-		antCollider = new AntCollider();
+		collider = new UnitCollider();
 	}
 	
 	public List <Asteroid> getAsteroids() { return asteroids;}
 
 	public List <Web> getWebs() { return webs; }
 	
-	public Set <Ant> getAnts() { return ants; }
+	public Set <Unit> getUnits() { return units; }
 	
 	/**
 	 * @param context 
@@ -114,19 +116,25 @@ public class Level
 				16f, // size of bucket
 				width, height );
 		
+		
 /*		for(Asteroid asteroid : asteroids)
 		{
 			asteroid.init();
 		}*/
+		
+		for( Web web : webs )
+		{
+			web.init( this.getNavMesh() );
+		}
 		
 		for(Faction faction : factions)
 		{
 			faction.init( this );
 		}
 		
-		for( Web web : webs )
+		for(Unit unit : units)
 		{
-			web.init( this.getNavMesh() );
+			addUnit( unit );
 		}
 		
 		Debug.startTiming("navmesh calculation");
@@ -166,14 +174,11 @@ public class Level
 	/**
 	 * @param startingNode
 	 */
-	public Ant addAnt(Faction faction)
+	public Unit addUnit(Unit unit)
 	{
-		Ant ant = AntFactory.getAnt(faction.unitType, faction);
+		unitsToAdd.add(unit);
 		
-		ants.add( ant );
-		spatialIndex.add( ant );
-		
-		return ant;
+		return unit;
 	}
 
 	
@@ -191,28 +196,36 @@ public class Level
 		for(Faction faction : factions)
 			faction.update( delta );
 		
-		Iterator <Ant> antIt = ants.iterator();
-		while(antIt.hasNext())
+		while(!unitsToAdd.isEmpty())
 		{
-			Ant ant = antIt.next();
-			ant.update(delta);
+			Unit unit = unitsToAdd.poll();
+			units.add( unit );
+			spatialIndex.add( unit );
+		}
+				
+		Iterator <Unit> unIt = units.iterator();
+		while(unIt.hasNext())
+		{
+			Unit unit = unIt.next();
+			unit.update(delta);
 			
-			spatialIndex.update( ant );
+			spatialIndex.update( unit );
 			
-			antCollider.setAnt( ant );
-			spatialIndex.queryAABB(antCollider, ant.getArea() );
-			if(!ant.isAlive())
+			collider.setAnt( unit );
+			
+			spatialIndex.queryAABB(collider, unit.getArea() );
+			if(!unit.isAlive())
 			{
-				antIt.remove();
-				spatialIndex.remove( ant );
-				Effect hitEffect = ant.getDeathEffect();
+				unIt.remove();
+				spatialIndex.remove( unit );
+				Effect hitEffect = unit.getDeathEffect();
 				if(hitEffect != null)
 					effects.add( hitEffect );
 				
 				// dat questionable construct:
-				ant.getFaction().removeAnt( ant );
+				unit.getFaction().removeUnit( unit );
 				
-				Ant.free( ant );
+				UnitsFactory.free( unit );
 			}
 			
 		}
@@ -294,11 +307,11 @@ public class Level
 		return navMesh;
 	}
 
-	public int OBJECT_ID = 0;
+	public static int OBJECT_ID = 0;
 	/**
 	 * @return
 	 */
-	public int createObjectId()
+	public static int createObjectId()
 	{
 		return OBJECT_ID ++;
 	}

@@ -5,13 +5,13 @@ import eir.world.environment.nav.NavNode;
 import eir.world.unit.ai.Task;
 import eir.world.unit.ai.TaskBehavior;
 
-public abstract class TravelingBehavior implements TaskBehavior <StickyAnt> 
+public abstract class TravelingBehavior implements TaskBehavior <Ant> 
 {
 
 	public static class TravelToSourceBehavior extends TravelingBehavior
 	{
 		@Override
-		public void update(float delta, Task task, StickyAnt ant)
+		public void update(float delta, Task task, Ant ant)
 		{
 			travelTo( delta, task, ant, task.getOrder().getSourceNode() );
 		}
@@ -20,19 +20,19 @@ public abstract class TravelingBehavior implements TaskBehavior <StickyAnt>
 	public static class TravelToTargetBehavior extends TravelingBehavior
 	{
 		@Override
-		public void update(float delta, Task task, StickyAnt ant)
+		public void update(float delta, Task task, Ant ant)
 		{
 			travelTo( delta, task, ant, task.getOrder().getTargetNode() );
 		}
 	}
 	
-	protected void travelTo( float delta, Task task, StickyAnt ant, NavNode targetNode )
+	protected void travelTo( float delta, Task task, Ant ant, NavNode targetNode )
 	{
 		if(ant.nextNode == null)
 		{
 			// either we reached next node, or we do not have target
 			
-			ant.route = ant.mesh.getShortestRoute(ant.currNode, targetNode);
+			ant.route = ant.mesh.getShortestRoute(ant.position, targetNode);
 			
 			if(!ant.route.hasNext())
 			{
@@ -44,14 +44,14 @@ public abstract class TravelingBehavior implements TaskBehavior <StickyAnt>
 			else
 				ant.nextNode = ant.route.next(); // picking next
 			
-			ant.velocity.set( ant.nextNode.getPoint() ).sub( ant.body.getAnchor() ).nor().mul( ant.speed );			
+			ant.velocity.set( ant.nextNode.getPoint() ).sub( ant.getBody().getAnchor() ).nor().mul( ant.speed );			
 			ant.angle = ant.velocity.angle();
 		}
 		
 		//////////////////////////////////////
 		// traversing
 		
-		NavEdge edge = ant.mesh.getEdge( ant.currNode, ant.nextNode );
+		NavEdge edge = ant.mesh.getEdge( ant.position, ant.nextNode );
 		
 		float travelDistance = ant.speed * delta + // the real travel distance 
 				ant.nodeOffset;
@@ -67,12 +67,12 @@ public abstract class TravelingBehavior implements TaskBehavior <StickyAnt>
 			travelDistance -= edge.getLength();
 			if(travelDistance < 0)
 			{
-				ant.velocity.set( ant.nextNode.getPoint() ).sub( ant.currNode.getPoint() ).nor().mul( ant.speed );			
+				ant.velocity.set( ant.nextNode.getPoint() ).sub( ant.position.getPoint() ).nor().mul( ant.speed );			
 				ant.angle = ant.velocity.angle();
 				break;
 			}
 			
-			ant.currNode = ant.nextNode;
+			ant.position = ant.nextNode;
 			
 			if( ant.route == null || !ant.route.hasNext() )
 			{
@@ -89,7 +89,7 @@ public abstract class TravelingBehavior implements TaskBehavior <StickyAnt>
 			
 			ant.nextNode = ant.route.next();
 			
-			edge = ant.mesh.getEdge( ant.currNode, ant.nextNode );
+			edge = ant.mesh.getEdge( ant.position, ant.nextNode );
 			if(edge == null)
 			{
 				task.setCanceled();
@@ -113,7 +113,8 @@ public abstract class TravelingBehavior implements TaskBehavior <StickyAnt>
 //			task.cancel();
 		}
 		
-		ant.body.getAnchor().set( edge.getDirection() ).mul( ant.nodeOffset ).add( ant.currNode.getPoint() );
+		ant.getBody().getAnchor().set( 
+				edge.getDirection() ).mul( ant.nodeOffset ).add( ant.position.getPoint() );
 	}
 
 }
