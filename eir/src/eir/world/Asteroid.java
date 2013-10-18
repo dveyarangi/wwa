@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
+import eir.world.environment.nav.NavMesh;
 
 /**
  * @author dveyarangi
@@ -66,13 +67,11 @@ public class Asteroid
 	
 	/**
 	 * This is required to initialize sprite and model
-	 * @param level 
 	 * @param factory
 	 */
-	public void init(Level level)
+	public void init(NavMesh mesh)
 	{
-		model = GameFactory.loadAsteroidModel( this, modelId );
-		System.out.println(modelId);
+		model = GameFactory.loadAsteroidModel( mesh, this, modelId );
 		sprite = GameFactory.createSprite( modelId, position, model.getOrigin(), size, size, angle );
 	}
 	

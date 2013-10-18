@@ -40,6 +40,9 @@ import com.google.gson.JsonSyntaxException;
 
 import eir.world.Asteroid;
 import eir.world.Level;
+import eir.world.environment.nav.FloydWarshal;
+import eir.world.environment.nav.NavMesh;
+import eir.world.environment.nav.NavNode;
 
 /**
  * @author dveyarangi
@@ -58,12 +61,14 @@ public class LevelLoader
 	 */
 	private Multimap<String, String> levelTypes;
 	
-	private static class LoadingContext
+	public class LoadingContext
 	{
-		Map <String, Asteroid> asteroids = 
+		public NavMesh navMesh = new FloydWarshal();
+		
+		public Map <String, Asteroid> asteroids = 
 				new HashMap <String, Asteroid> ();
 		
-		Map <String, Animation> animations = 
+		public Map <String, Animation> animations = 
 				new HashMap <String, Animation> ();
 
 
@@ -73,6 +78,9 @@ public class LevelLoader
 		 */
 		public Asteroid getAsteroid(String name)
 		{
+			if(!asteroids.containsKey( name ))
+				throw new IllegalArgumentException("Asteroid " + name + " not defined.");
+
 			return asteroids.get( name );
 		}
 
@@ -176,27 +184,56 @@ public class LevelLoader
 		final Gson rawGson = new Gson();
 		
 		Gson gson = new GsonBuilder()
+			///////////////////////////////////////////////////////////////
+			// game objects adapters:
+			///////////////////////////////////////////////////////////////
+		
+			// loading asteroids
 			.registerTypeAdapter( Asteroid.class, new JsonDeserializer<Asteroid>()
 			{
 				@Override
 				public Asteroid deserialize(JsonElement elem, Type type, JsonDeserializationContext ctx) throws JsonParseException
 				{
 					Asteroid asteroid;
-					if(elem.isJsonObject())
+					
+					if(elem.isJsonObject()) // creating asteroid by definitions
 					{
 						asteroid = rawGson.fromJson( elem, type );
 						context.addAsteroid(asteroid);
+						
+						asteroid.init( context.navMesh );
+						
 						return asteroid;
 					}
+					
+					// getting asteroid by name reference:
 					String asteroidName = elem.getAsString();
 					
 					asteroid = context.getAsteroid(asteroidName);
-					if(asteroid == null)
-						throw new IllegalArgumentException("Asteroid " + asteroidName + " not defined.");
+					
 					return asteroid;
 					
 				}
 			})
+
+			.registerTypeAdapter( NavNode.class, new JsonDeserializer<NavNode>()
+			{
+				@Override
+				public NavNode deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					JsonObject object = elem.getAsJsonObject();
+					String asteriodName = object.get( "asteroid" ).getAsString();
+					int navIdx = object.get( "navIdx" ).getAsInt();
+					
+					Asteroid asteroid = context.asteroids.get( asteriodName );
+					return asteroid.getModel().getNavNode( navIdx );
+				}
+			})
+			
+			///////////////////////////////////////////////////////////////
+			// graphic objects adapters:
+			///////////////////////////////////////////////////////////////
+			
 			.registerTypeAdapter( Texture.class, new JsonDeserializer<Texture>()
 			{
 				@Override
@@ -207,6 +244,7 @@ public class LevelLoader
 					return GameFactory.loadTexture( textureFile );
 				}
 			})
+			
 			.registerTypeAdapter( Animation.class, new JsonDeserializer<Animation>()
 			{
 				@Override
@@ -228,7 +266,8 @@ public class LevelLoader
 					return animation;
 					
 				}
-			})
+			})			
+			
 			.create();
 		
 		InputStream stream = openFileStream( levelId );
@@ -242,6 +281,8 @@ public class LevelLoader
 		catch ( JsonSyntaxException jse ) { Gdx.app.error( TAG,  "Level file is contains errors", jse ); } 
 		catch ( JsonIOException jioe ) { Gdx.app.error( TAG,  "Level file not found or unreadible", jioe ); }
 
+		level.init(context);
+		
 		return level;
 	}
 

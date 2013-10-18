@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.environment.nav.NavEdge;
+import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
 
 
@@ -20,8 +21,8 @@ import eir.world.environment.nav.NavNode;
  */
 public class Web
 {
-	private Anchor source;
-	private Anchor target;
+	private NavNode source;
+	private NavNode target;
 	
 	private Texture threadTexture;
 	private Texture sourceTexture;
@@ -35,13 +36,9 @@ public class Web
 	
 	public Web( NavNode source, NavNode target, String threadTexture, String sourceTexture, String targetTexture )
 	{
-		this.source = new Anchor();
-		this.source.asteroid = source.getDescriptor().getObject();
-		this.source.navIdx = source.getDescriptor().getIndex();
+		this.source = source;
 		
-		this.target = new Anchor();
-		this.target.asteroid = target.getDescriptor().getObject();
-		this.target.navIdx = target.getDescriptor().getIndex();
+		this.target = target;
 		
 		this.sourceTexture = GameFactory.loadTexture( sourceTexture );
 		this.targetTexture = GameFactory.loadTexture( targetTexture );
@@ -56,15 +53,10 @@ public class Web
 		targetSprite.draw(spriteBatch);
 	}
 	
-	public void init(Level level)
+	public void init(NavMesh mesh)
 	{	
-		Asteroid sourceAst = source.getAsteroid();
-		Asteroid targetAst = target.getAsteroid();
 		
-		NavNode sourceNode = sourceAst.getModel().getNavNode(source.getNavNodeIdx());
-		NavNode targetNode = targetAst.getModel().getNavNode(target.getNavNodeIdx());
-		
-		level.getNavMesh().linkNodes( sourceNode, targetNode, NavEdge.Type.WEB );
+		mesh.linkNodes( source, target, NavEdge.Type.WEB );
 		
 /*		Vector2 src = Vector2.tmp .set( source.getX() - 0.5f, source.getY() - 0.5f).rotate(sourceAst.getAngle()).add(0.5f,0.5f);
 		Vector2 tar = Vector2.tmp2.set( target.getX() - 0.5f, target.getY() - 0.5f).rotate(targetAst.getAngle()).add(0.5f,0.5f);
@@ -75,8 +67,8 @@ public class Web
 		tar.set( targetAst.getX() + (tar.x - 0.5f)*targetAst.getSize(), 
 				 targetAst.getY() + (tar.y - 0.5f)*targetAst.getSize() );*/
 		
-		Vector2 src = sourceNode.getPoint();
-		Vector2 tar = targetNode.getPoint();
+		Vector2 src = source.getPoint();
+		Vector2 tar = target.getPoint();
 		
 		sourceSprite = new Sprite( new TextureRegion(this.sourceTexture, 512, 256) );
 		targetSprite = new Sprite( new TextureRegion(this.targetTexture, 512, 256) );
@@ -101,32 +93,15 @@ public class Web
 		threadSprite.setScale((v.len() - sourceSprite.getWidth()*scale)/threadSprite.getWidth(), scale);
 	}
 	
-	public Anchor getSource()
+	public NavNode getSource()
 	{
 		return source;
 	}
 	
-	public Anchor getTarget()
+	public NavNode getTarget()
 	{
 		return target;
 	}
-	
-	public static class Anchor
-	{
-		private Asteroid asteroid;
-		private int navIdx;
-		/**
-		 * @return
-		 */
-		public Asteroid getAsteroid() {	return asteroid; }
-		
-		public int getNavNodeIdx() { return navIdx; }
-		
-		public boolean isSame(NavNode node)
-		{
-			return node.getDescriptor().getObject() == getAsteroid()
-				&& node.getDescriptor().getIndex() == navIdx;
-		}
-	}
+
 }
 

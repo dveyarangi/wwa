@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
-import eir.world.environment.nav.FloydWarshal;
+import eir.resources.LevelLoader.LoadingContext;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
@@ -22,6 +22,7 @@ import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.Bullet;
 import eir.world.unit.Faction;
 import eir.world.unit.ant.Ant;
+import eir.world.unit.ant.AntFactory;
 import eir.world.unit.spider.Spider;
 
 public class Level
@@ -67,6 +68,7 @@ public class Level
 	
 	/**
 	 * List of ants
+	 * TODO: swap to identity set
 	 */
 	private Set <Ant> ants;
 	
@@ -84,12 +86,10 @@ public class Level
 
 	public Level()
 	{
-		navMesh = new FloydWarshal();
 		ants = new HashSet <Ant> ();
 		bullets = new LinkedList <Bullet> ();
 		effects = new LinkedList <Effect> ();
 		antCollider = new AntCollider();
-		
 	}
 	
 	public List <Asteroid> getAsteroids() { return asteroids;}
@@ -99,10 +99,12 @@ public class Level
 	public Set <Ant> getAnts() { return ants; }
 	
 	/**
+	 * @param context 
 	 * @param factory  
 	 */
-	public void init()
+	public void init(LoadingContext context)
 	{
+		navMesh = context.navMesh;
 	
 		halfWidth = width / 2;
 		halfHeight = height / 2;
@@ -112,10 +114,10 @@ public class Level
 				16f, // size of bucket
 				width, height );
 		
-		for(Asteroid asteroid : asteroids)
+/*		for(Asteroid asteroid : asteroids)
 		{
-			asteroid.init( this );
-		}
+			asteroid.init();
+		}*/
 		
 		for(Faction faction : factions)
 		{
@@ -124,7 +126,7 @@ public class Level
 		
 		for( Web web : webs )
 		{
-			web.init( this );
+			web.init( this.getNavMesh() );
 		}
 		
 		Debug.startTiming("navmesh calculation");
@@ -166,7 +168,7 @@ public class Level
 	 */
 	public Ant addAnt(Faction faction)
 	{
-		Ant ant = Ant.getAnt( faction );
+		Ant ant = AntFactory.getAnt(faction.unitType, faction);
 		
 		ants.add( ant );
 		spatialIndex.add( ant );
@@ -388,7 +390,7 @@ public class Level
 			);
 			
 			webs.add( web );
-			web.init( this );
+			web.init( this.getNavMesh() );
 			
 			
 			
@@ -400,8 +402,8 @@ public class Level
 			while(webIt.hasNext())
 			{
 				Web web = webIt.next();
-				if((web.getSource().isSame( sourceNode ) && web.getTarget().isSame( targetNode ))
-				|| (web.getTarget().isSame( sourceNode ) && web.getSource().isSame( targetNode )))
+				if(( web.getSource() == sourceNode ) && ( web.getTarget() == targetNode )
+				|| ( web.getTarget() == sourceNode ) && ( web.getSource() == targetNode ) )
 					webIt.remove();
 			}
 			

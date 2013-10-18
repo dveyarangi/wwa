@@ -22,6 +22,7 @@ import eir.resources.BodyLoader.Model;
 import eir.resources.BodyLoader.RigidBodyModel;
 import eir.world.Asteroid;
 import eir.world.Level;
+import eir.world.environment.nav.NavMesh;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 
@@ -113,7 +114,7 @@ public class GameFactory
 			.toString();
 	}
 	
-	public static PolygonalModel loadAsteroidModel(Asteroid asteroid, String modelId) 
+	public static PolygonalModel loadAsteroidModel(NavMesh mesh, Asteroid asteroid, String modelId) 
 	{
 		String modelFile = createBodyPath(modelId);
 		log("Loading asteroid model file [" + modelFile + "]");
@@ -123,7 +124,7 @@ public class GameFactory
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 		
 		return new PolygonalModel( 
-				level.getNavMesh(), asteroid, 
+				mesh, asteroid, 
 				bodyModel.origin, vertices, bodyModel.polygons,
 				asteroid.getSize(), 
 				asteroid.getPosition(), 

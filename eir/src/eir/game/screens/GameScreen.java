@@ -1,7 +1,5 @@
 package eir.game.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -40,19 +38,7 @@ public class GameScreen extends AbstractScreen
 		shapeRenderer = new ShapeRenderer();
 
 		level = GameFactory.loadLevel( "levels/level_exodus_01.dat" );
-		level.init();
-		
-		
-		// infest Nir:
-/*		for(int i = 0; i < 15; i ++)
-		{
-			spiders.add(new Spider( level.getAsteroids().get(2), 
-					RandomUtil.N( 10 ) + 5, // size 
-					RandomUtil.N( 25 ), // location
-					(RandomUtil.N(2)==1? 1:-1) *(RandomUtil.R( 20 )+5) ) // speed
-			);
-		}*/
-		
+
 		inputController = new GameInputProcessor( level );
 		
 		level.getBackground().init( inputController );
