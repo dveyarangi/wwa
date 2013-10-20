@@ -24,6 +24,7 @@ import eir.world.unit.UnitsFactory;
 import eir.world.unit.Bullet;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
+import eir.world.unit.ai.RandomTravelingOrder;
 import eir.world.unit.spider.Spider;
 
 public class Level
@@ -116,12 +117,6 @@ public class Level
 				16f, // size of bucket
 				width, height );
 		
-		
-/*		for(Asteroid asteroid : asteroids)
-		{
-			asteroid.init();
-		}*/
-		
 		for( Web web : webs )
 		{
 			web.init( this.getNavMesh() );
@@ -130,6 +125,8 @@ public class Level
 		for(Faction faction : factions)
 		{
 			faction.init( this );
+
+			faction.getScheduler().addOrder( "ant", new RandomTravelingOrder( navMesh, 0 ) );
 		}
 		
 		for(Unit unit : units)

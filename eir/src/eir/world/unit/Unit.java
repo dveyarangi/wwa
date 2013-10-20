@@ -3,9 +3,10 @@
  */
 package eir.world.unit;
 
+import yarangi.numbers.RandomUtil;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import yarangi.numbers.RandomUtil;
 import eir.resources.GameFactory;
 import eir.world.Effect;
 import eir.world.Level;
@@ -41,7 +42,6 @@ public abstract class Unit implements ISpatialObject
 	private int id;
 	
 	public float angle;
-	
 	
 	private Task task;
 	
@@ -107,7 +107,7 @@ public abstract class Unit implements ISpatialObject
 		}
 		
 		// performing task:
-		task.getBehavior().update( delta, task, this );
+		task.getBehavior( this ).update( delta, task, this );
 	}
 
 	public abstract void draw( SpriteBatch batch );
@@ -146,4 +146,5 @@ public abstract class Unit implements ISpatialObject
 	public Damage getDamage() {	return damage; }
 
 	public abstract float getSize();
+
 }

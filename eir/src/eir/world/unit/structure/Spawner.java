@@ -5,6 +5,7 @@ package eir.world.unit.structure;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import eir.world.unit.ai.GuardingOrder;
 import eir.world.environment.spatial.AABB;
 import eir.world.unit.Damage;
 import eir.world.unit.Unit;
@@ -37,6 +38,8 @@ public class Spawner extends Unit
 		
 		getBody().copyFrom( AABB.createSquare( position.getPoint().x, position.getPoint().y, this.size/2 ) );
 	
+		faction.getScheduler().addOrder( "birdy", new GuardingOrder( 0, position ) );
+
 	}
 	
 	public void update( float delta )

@@ -3,17 +3,19 @@
  */
 package eir.world.unit;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.badlogic.gdx.utils.IdentityMap;
 import com.badlogic.gdx.utils.Pool;
 
 import eir.world.environment.nav.NavNode;
+import eir.world.unit.ai.TaskStage;
 import eir.world.unit.ant.Ant;
-
+import eir.world.unit.ant.AntFactory;
+import eir.world.unit.ant.MiningBehavior;
+import eir.world.unit.ant.TravelingBehavior;
 import eir.world.unit.structure.Spawner;
+import eir.world.unit.structure.SpawnerFactory;
 import eir.world.unit.wildlings.Birdy;
+import eir.world.unit.wildlings.BirdyFactory;
 
 /**
  * @author dveyarangi
@@ -30,27 +32,12 @@ public class UnitsFactory
 	private static IdentityMap <String, UnitFactory<? extends Unit>> factories = new IdentityMap <String, UnitFactory <? extends Unit>> ();
 	
 	static {
-		factories.put( ANT, new UnitFactory<Ant>() {
-
-			Ant createEmpty() { return new Ant(); }
-
-			Class <Ant>getUnitClass()	{ return Ant.class; }
-			
-		});
+		factories.put( ANT, new AntFactory() );
 		
-		factories.put( BIDRY,new UnitFactory<Birdy>() {
-
-			Birdy createEmpty() { return new Birdy(); }
-
-			Class<Birdy> getUnitClass() { return Birdy.class; }
-		});
+		factories.put( BIDRY,new BirdyFactory() );
 		
-		factories.put( SPAWNER,new UnitFactory<Spawner>() {
+		factories.put( SPAWNER,new SpawnerFactory() );
 
-			Spawner createEmpty() { return new Spawner(); }
-
-			Class<Spawner> getUnitClass() { return Spawner.class; }
-		});
 	}
 	
 	public static <U extends Unit, F extends Faction> U getUnit(String type, NavNode position, Faction faction)
@@ -74,14 +61,15 @@ public class UnitsFactory
 	}
 
 	
-	static abstract class UnitFactory <U>
+	public static abstract class UnitFactory <U extends Unit>
 	{
-		Pool <U> pool = new Pool<U> () { protected U newObject() { return createEmpty(); } };
+		protected Pool <U> pool = new Pool<U> () { protected U newObject() { return createEmpty(); } };
 		
+		protected BehaviorFactory <U> behaviors = new BehaviorFactory <U> ();
 		
-		abstract U createEmpty();
+		protected abstract U createEmpty();
 
-		abstract Class <U> getUnitClass();
+		protected abstract Class <U> getUnitClass();
 	}
 
 
@@ -92,6 +80,15 @@ public class UnitsFactory
 	public static Class<?> getUnitClass(String unitType)
 	{
 		return factories.get( unitType ).getUnitClass();
+	}
+
+
+	/**
+	 * @return
+	 */
+	public static <U extends Unit> BehaviorFactory<U> getBehaviorFactory(String unitType)
+	{
+		return (BehaviorFactory<U>) factories.get( unitType ).behaviors;
 	}
 	
 }

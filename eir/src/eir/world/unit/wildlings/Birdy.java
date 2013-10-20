@@ -21,9 +21,21 @@ public class Birdy extends Unit
 	
 	private float size = 5;
 	
+	float timeToPulse = 0;
+	
+	Vector2 velocity = new Vector2();
+
+	float pulseLength = 1;
+
+	float pulseStreght = 30;
+
+	float pulseDecay = 0.99f;
+	
 	public void init()
 	{
 		super.init();
+		
+		velocity.set(0,0);
 		
 	}
 
@@ -39,11 +51,6 @@ public class Birdy extends Unit
 				getSize()/sprite.getRegionWidth(), angle);
 	}
 
-	@Override
-	public void update(float delta)
-	{
-//		super.update( delta );
-	}
 
 	@Override
 	public float getSize() { return size; }

@@ -49,15 +49,13 @@ public class Faction
 
 	public Faction()
 	{
+		this.units = new HashSet <Unit> ();
+		this.scheduler = new Scheduler( level );
 	}
 	
 	public void init(Level level)
 	{
 		this.level = level;
-		this.units = new HashSet <Unit> ();
-		this.scheduler = new Scheduler( level );
-		
-		scheduler.addOrder(new RandomTravelingOrder( level.getNavMesh(), 0 ));
 	}
 	
 	public int getOwnerId()	{ return ownerId; }

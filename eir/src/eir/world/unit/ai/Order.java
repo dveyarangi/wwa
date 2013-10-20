@@ -10,6 +10,8 @@ import eir.world.environment.nav.NavNode;
 public abstract class Order
 {
 	
+	private String unitType;
+	
 	private NavNode sourceNode;
 	private NavNode targetNode;
 

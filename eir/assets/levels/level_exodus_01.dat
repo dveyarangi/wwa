@@ -473,7 +473,7 @@
 					"faction" : 3,
 					"position" : { "asteroid" : "junkheap", "navIdx" : 1 },
 					"unitType" : "birdy", 
-					"maxUnits" : 20,
+					"maxUnits" : 2,
 					"spawnInterval" : 0.5f
 					
 				}

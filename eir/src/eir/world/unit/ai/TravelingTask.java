@@ -1,6 +1,5 @@
 package eir.world.unit.ai;
 
-import eir.world.unit.ant.BehaviorFactory.Stage;
 
 public class TravelingTask extends Task 
 {
@@ -9,16 +8,16 @@ public class TravelingTask extends Task
 	{
 		super(scheduler, order);
 		
-		this.stage = Stage.TRAVEL_TO_SOURCE;
+		this.stage = TaskStage.TRAVEL_TO_SOURCE;
 	}
 
 	@Override
-	public Stage nextStage() 
+	public TaskStage nextStage() 
 	{
 		switch (stage)
 		{
 		case TRAVEL_TO_SOURCE:
-			return stage = Stage.TRAVEL_TO_TARGET;
+			return stage = TaskStage.TRAVEL_TO_TARGET;
 			
 		case TRAVEL_TO_TARGET:
 			status = Status.COMPLETED;

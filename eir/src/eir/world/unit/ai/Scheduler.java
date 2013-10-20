@@ -1,9 +1,6 @@
 package eir.world.unit.ai;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import yarangi.numbers.RandomUtil;
+import java.util.Collection;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -22,8 +19,10 @@ public class Scheduler
 	
 	private Level level;
 	
-	
-	private List <Order> orders;
+	/**
+	 * Orders by unit types?
+	 */
+	private Multimap <String, Order> orders;
 	
 	private Multimap <Order, Task> tasks;
 	
@@ -32,14 +31,14 @@ public class Scheduler
 	{
 		this.level = level;
 		
-		this.orders = new LinkedList <Order> (); 
+		this.orders = HashMultimap.create(); 
 		
 		tasks = HashMultimap.create();
 	}
 
-	public void addOrder(Order order) 
+	public void addOrder(String unitType, Order order) 
 	{
-		orders.add( order );
+		orders.put( unitType, order );
 	}	
 	
 	/**
@@ -53,7 +52,14 @@ public class Scheduler
 			return null;
 		
 		// TODO: stub; here goes the priority and ant location consideration:
-		Order order = orders.get(  RandomUtil.N(orders.size() ) );
+		
+		
+		// 
+		Collection <Order> unitOrders = orders.get( unit.getType() );
+		if(unitOrders == null)
+			return null;
+		
+		Order order = unitOrders.iterator().next();
 		
 		
 		Task task = order.createTask( this );

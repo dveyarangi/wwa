@@ -1,7 +1,7 @@
 package eir.world.unit.ant;
 
+import eir.world.unit.UnitBehavior;
 import eir.world.unit.ai.Task;
-import eir.world.unit.ai.TaskBehavior;
 
 
 /**
@@ -9,7 +9,7 @@ import eir.world.unit.ai.TaskBehavior;
  * @author Ni
  *
  */
-public class MiningBehavior implements TaskBehavior <Ant>
+public class MiningBehavior implements UnitBehavior <Ant>
 {
 	@Override
 	public void update(float delta, Task task, Ant ant)

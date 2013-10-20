@@ -1,8 +1,10 @@
 package eir.world.unit.ai;
 
+import eir.world.unit.UnitBehavior;
+import eir.world.unit.Unit;
+import eir.world.unit.UnitsFactory;
 
-import eir.world.unit.ant.BehaviorFactory;
-import eir.world.unit.ant.BehaviorFactory.Stage;
+
 
 
 /**
@@ -14,7 +16,7 @@ public abstract class Task
 {
 	protected final Scheduler scheduler;
 	protected final Order order;
-	protected Stage stage;
+	protected TaskStage stage;
 	
 	public static enum Status { ONGOING, COMPLETED, CANCELED };
 	
@@ -22,13 +24,14 @@ public abstract class Task
 	
 	public Task(Scheduler scheduler, Order order)
 	{
+
 		this.scheduler = scheduler;
 		this.order = order;
 		
 		this.status = Status.ONGOING;
 	}
 	
-	public abstract Stage nextStage();
+	public abstract TaskStage nextStage();
 	
 	public void cancel() 
 	{
@@ -56,10 +59,12 @@ public abstract class Task
 		return status == Status.CANCELED || status == Status.COMPLETED;
 	}
 
-	public TaskBehavior getBehavior() 
+	/**
+	 * @return
+	 */
+	public <U extends Unit> UnitBehavior <U> getBehavior(Unit unit)
 	{
-		return BehaviorFactory.getBehavior( stage );
+		return (UnitBehavior<U>) UnitsFactory.getBehaviorFactory( unit.getType() ).getBehavior( stage );
 	}
-	
-	
+
 }
