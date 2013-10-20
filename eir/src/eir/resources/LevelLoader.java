@@ -337,8 +337,11 @@ public class LevelLoader
 		{
 			level = gson.fromJson( new InputStreamReader( stream ), Level.class );
 		} 
-		catch ( JsonSyntaxException jse ) { Gdx.app.error( TAG,  "Level file is contains errors", jse ); } 
-		catch ( JsonIOException jioe ) { Gdx.app.error( TAG,  "Level file not found or unreadible", jioe ); }
+		catch ( JsonSyntaxException jse ) { 
+			Gdx.app.error( TAG,  "Level file is contains errors", jse ); } 
+		catch ( JsonIOException jioe ) { 
+			Gdx.app.error( TAG,  "Level file not found or unreadible", jioe ); 
+		}
 
 		level.init(context);
 		
@@ -464,7 +467,7 @@ public class LevelLoader
 		public Unit deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
 		{
 			JsonObject object = elem.getAsJsonObject();
-			int unitType = object.get( "type" ).getAsInt();
+			String unitType = object.get( "type" ).getAsString().intern();
 			Class <?> unitClass = UnitsFactory.getUnitClass(unitType);
 			Unit unit = (Unit) gson.fromJson( elem, unitClass );
 			

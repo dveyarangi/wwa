@@ -23,7 +23,7 @@ public abstract class Unit implements ISpatialObject
 	///////////////////////////////////////////////
 	// loaded by level loader
 	
-	protected int type;
+	protected String type;
 	
 	protected Faction faction;
 
@@ -40,6 +40,8 @@ public abstract class Unit implements ISpatialObject
 	
 	private int id;
 	
+	public float angle;
+	
 	
 	private Task task;
 	
@@ -54,10 +56,9 @@ public abstract class Unit implements ISpatialObject
 	}
 	
 	
-	public void init(int type, NavNode position, Faction faction)
+	public void init(String type, NavNode position, Faction faction)
 	{
 		this.type = type;
-		
 		this.position = position;
 		this.faction = faction;
 		
@@ -68,7 +69,7 @@ public abstract class Unit implements ISpatialObject
 	
 	public Faction getFaction() { return faction; }
 	
-	public int getType() { return type; }
+	public String getType() { return type; }
 	
 
 	@Override
@@ -82,6 +83,10 @@ public abstract class Unit implements ISpatialObject
 		this.isAlive = true;
 		this.id = Level.createObjectId();
 		this.task = null;
+		
+		this.type = type.intern();
+		
+		body.update( position.getPoint().x, position.getPoint().y, getSize()/2, getSize()/2 );
 	}
 	
 	public void update(float delta)
@@ -105,7 +110,7 @@ public abstract class Unit implements ISpatialObject
 		task.getBehavior().update( delta, task, this );
 	}
 
-	public abstract void draw(float delta, SpriteBatch batch);
+	public abstract void draw( SpriteBatch batch );
 
 	
 	public boolean isAlive() { return isAlive; }
@@ -140,4 +145,5 @@ public abstract class Unit implements ISpatialObject
 	 */
 	public Damage getDamage() {	return damage; }
 
+	public abstract float getSize();
 }

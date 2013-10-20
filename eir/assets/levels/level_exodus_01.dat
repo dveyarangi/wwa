@@ -26,7 +26,7 @@
 					},
 					{	
 						"depth" : 0.9,
-						"texture" : "levels/fog_01.png",
+						"texture" : "levels/fog_02.png",
 						"scroll" : { "x" : "500", "y" : "0" },
 						"tiling" : true,
 						"zoomFactor" : 0.9
@@ -34,21 +34,26 @@
 				]
 			},
 			
-			########################################
-			# asteroids
+		########################################
+		# ASTEROIDS
+		########################################
 			"asteroids" : [
 				{ 
 				  "name" : "center",
 				  "position" : { "x":"0",  "y":"0" },
 				  "angle" : "0",
 				  "size" : "150",
-				  "modelId" : "asteroid_junkyard_01"
+				  "modelId" : "junkyard/asteroid_junkyard_01"
 				},
-/*				{ 
-				  "name" : "red_head",
+				{ 
+				  "name" : "junkheap",
 				  "position" : { "x":"-120",  "y":"49" },
 				  "angle" : "0",
-				  "size" : "115",
+				  "size" : "125",
+				  "modelId" : "junkyard/asteroid_junkyard_02"
+				},
+				/*				{ 
+				  "name" : "red_head",
 				  "modelId" : "exodus_01/exodus_01_red_head"
 				},	*/		
 				{ 
@@ -364,6 +369,9 @@
 				}
 				],
 			
+		########################################
+		# WEBS
+		########################################
 			"webs" : [
 				{
 					"source" : { "asteroid" : "red_ass", "navIdx" : 8 },
@@ -418,27 +426,54 @@
 					"targetTexture" : "models/web_target_02.png"
 				}
 			],
+		########################################
+		# FACTIONS
+		########################################
 			
 			"factions" : [
 				{
 					"ownerId" : 1,
-					"homeAsteroid" : "red_left_foot",
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"}
 				},
 				{
 					"ownerId" : 2,
-					"homeAsteroid" : "red_right_foot",
+					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"}
+				},			
+				{
+					"ownerId" : 3,
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"}
 				}			
 			],
 			
+		########################################
+		# UNITS
+		########################################
 			"units" : [
 				{
-					"type" : 2,
+					"type" : "spawner",
 					"faction" : 2,
 					"position" : { "asteroid" : "red_left_foot", "navIdx" : 1 },
+					"unitType" : "ant",
+					"maxUnits" : 100,
+					"spawnInterval" : 1f
 					
-					"maxUnits" : 300,
+				},
+				{
+					"type" : "spawner",
+					"faction" : 1,
+					"position" : { "asteroid" : "red_right_foot", "navIdx" : 1 },
+					"unitType" : "ant",
+					
+					"maxUnits" : 100,
+					"spawnInterval" : 1f
+					
+				},
+				{
+					"type" : "spawner",
+					"faction" : 3,
+					"position" : { "asteroid" : "junkheap", "navIdx" : 1 },
+					"unitType" : "birdy", 
+					"maxUnits" : 20,
 					"spawnInterval" : 0.5f
 					
 				}

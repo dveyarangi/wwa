@@ -101,7 +101,7 @@ public class AABB
 	 * @param a box orientation (degrees)
 	 */
 	
-	protected AABB update(float x, float y, float rx, float ry)
+	public AABB update(float x, float y, float rx, float ry)
 	{
 		this.ref.set( x, y );
 		this.dim.set( rx, ry );

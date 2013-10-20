@@ -96,7 +96,7 @@ public class GameScreen extends AbstractScreen
 		
 		for(Unit unit : level.getUnits())
 		{
-			unit.draw( delta, batch );
+			unit.draw( batch );
 		}
 		
 		batch.end();

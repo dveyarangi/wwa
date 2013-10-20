@@ -15,7 +15,6 @@ import eir.world.Effect;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.Route;
-import eir.world.environment.spatial.AABB;
 import eir.world.unit.Damage;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
@@ -38,7 +37,6 @@ public class Ant extends Unit
 	
 	protected float size = 5;
 	Vector2 velocity = new Vector2();
-	float angle;
 	
 	float speed = 10f;
 	
@@ -54,8 +52,6 @@ public class Ant extends Unit
 	public void init()
 	{
 		super.init();
-
-		getBody().copyFrom( AABB.createSquare( position.getPoint().x, position.getPoint().y, this.size/2 ) );
 		
 		this.mesh = faction.getLevel().getNavMesh();
 		
@@ -65,8 +61,14 @@ public class Ant extends Unit
 
 	}
 
+	public void update( float delta )
+	{
+		super.update( delta );
+		
+		stateTime += delta;
+	}
 
-	public void draw(float delta, SpriteBatch batch)
+	public void draw(SpriteBatch batch)
 	{
 		Vector2 position = getBody().getAnchor();
 		TextureRegion region = faction.getAntAnimation().getKeyFrame( stateTime, true );
@@ -76,7 +78,6 @@ public class Ant extends Unit
 				region.getRegionWidth(), region.getRegionHeight(), 
 				size/region.getRegionWidth(), 
 				size/region.getRegionWidth(), angle);
-		stateTime += delta;
 
 		// TODO: remove debug rendering
 		if(Debug.debug.drawNavMesh)
@@ -102,5 +103,7 @@ public class Ant extends Unit
 	 * @return
 	 */
 	public Damage getDamage() {	return damage; }
+
+	@Override public float getSize() { return size; }
 
 }
