@@ -190,15 +190,17 @@ public class Level
 	public void update(float delta)
 	{
 
-		for(Faction faction : factions)
-			faction.update( delta );
 		
 		while(!unitsToAdd.isEmpty())
 		{
 			Unit unit = unitsToAdd.poll();
 			units.add( unit );
 			spatialIndex.add( unit );
+			unit.getFaction().addUnit( unit );
 		}
+		
+		for(Faction faction : factions)
+			faction.update( delta );
 				
 		Iterator <Unit> unIt = units.iterator();
 		while(unIt.hasNext())

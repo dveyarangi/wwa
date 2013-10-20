@@ -16,20 +16,25 @@ import eir.world.unit.Unit;
  */
 public class Birdy extends Unit
 {
+	///////////////////////////////////////////
 
 	private static Sprite sprite = GameFactory.createSprite( "anima//gears//birdy.png" );
-	
-	private float size = 5;
-	
-	float timeToPulse = 0;
-	
-	Vector2 velocity = new Vector2();
 
 	float pulseLength = 1;
 
 	float pulseStreght = 30;
 
-	float pulseDecay = 0.99f;
+	float pulseDecay = 0.95f;	
+	
+	private float size = 5;
+	
+	
+	///////////////////////////////////////////
+	
+	float timeToPulse = 0;
+	
+	Vector2 velocity = new Vector2();
+
 	
 	public void init()
 	{
@@ -37,6 +42,7 @@ public class Birdy extends Unit
 		
 		velocity.set(0,0);
 		
+		timeToPulse = 0;
 	}
 
 	@Override
