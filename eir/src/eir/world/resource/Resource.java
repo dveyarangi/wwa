@@ -125,6 +125,9 @@ public class Resource implements Poolable
 
 	public void setAmount(int amount)
 	{
+		if( amount<0 )
+			throw new IllegalArgumentException("resource amount cannot be negative");
+		
 		this.amount = amount;
 	}
 }
