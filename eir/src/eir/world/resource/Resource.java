@@ -26,6 +26,9 @@ public class Resource implements Poolable
 	
 	public static Resource createResource( Type type, int amount )
 	{
+		if( amount<0 )
+			throw new IllegalArgumentException("resource amount cannot be negative");
+		
 		Resource r = pool.obtain();
 		r.amount = amount;
 		r.type = type;
@@ -113,21 +116,21 @@ public class Resource implements Poolable
 		return type;
 	}
 
-	public void setType(Type type)
-	{
-		this.type = type;
-	}
+//	public void setType(Type type)
+//	{
+//		this.type = type;
+//	}
 
 	public int getAmount()
 	{
 		return amount;
 	}
 
-	public void setAmount(int amount)
-	{
-		if( amount<0 )
-			throw new IllegalArgumentException("resource amount cannot be negative");
-		
-		this.amount = amount;
-	}
+//	public void setAmount(int amount)
+//	{
+//		if( amount<0 )
+//			throw new IllegalArgumentException("resource amount cannot be negative");
+//		
+//		this.amount = amount;
+//	}
 }
