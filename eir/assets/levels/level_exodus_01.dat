@@ -471,10 +471,10 @@
 				{
 					"type" : "spawner",
 					"faction" : 3,
-					"position" : { "asteroid" : "center", "navIdx" : 1 },
+					"position" : { "asteroid" : "junkheap", "navIdx" : 200 },
 					"unitType" : "birdy", 
 					"maxUnits" : 10,
-					"spawnInterval" : 0.5f
+					"spawnInterval" : 10f
 					
 				}
 			]
