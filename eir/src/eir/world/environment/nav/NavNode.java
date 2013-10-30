@@ -67,7 +67,7 @@ public class NavNode implements ISpatialObject
 	
 	public void init(Level level)
 	{
-		spatialId = level.createObjectId();
+		spatialId = Level.createObjectId();
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package eir.world.unit.weapon;
 
-import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory.UnitFactory;
 
 public class BulletFactory extends UnitFactory <Bullet>

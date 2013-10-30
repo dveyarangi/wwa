@@ -13,6 +13,8 @@ import eir.world.unit.Unit;
 public class AttackingOrder extends Order
 {
 	private Unit unit;
+	
+	public float timeout = 10;
 
 	/**
 	 * @param priority

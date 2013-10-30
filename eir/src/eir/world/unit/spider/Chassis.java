@@ -7,7 +7,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.PolygonalModel;
@@ -24,9 +23,6 @@ public class Chassis
 	
 	private Vector2 targetPosition;
 	
-	private Vector2 leftLegJoint;
-	private Vector2 rightLegJoint;
-	
 	private Deque <Leg> legs = new LinkedList <Leg> ();
 	
 	private Leg lastLeg;
@@ -39,8 +35,6 @@ public class Chassis
 		this.spider = spider;
 		
 		this.targetPosition = new Vector2();
-		this.leftLegJoint = leftLegJoint;
-		this.rightLegJoint = rightLegJoint;
 		
 //		legs = new Leg[LEGS];
 		PolygonalModel model = spider.getAsteroid().getModel();
@@ -81,11 +75,11 @@ public class Chassis
 
 	}
 	
-	public void draw(SpriteBatch batch, ShapeRenderer shape)
+	public void draw(SpriteBatch batch)
 	{
 		for(Leg leg : legs)
 		{
-			leg.draw( batch, shape );
+			leg.draw( batch );
 		}
 			
 	}

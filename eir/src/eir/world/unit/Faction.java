@@ -7,6 +7,7 @@ package eir.world.unit;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 
 import eir.world.Level;
@@ -35,6 +36,8 @@ public class Faction
 	public int unitType;
 	
 	public Animation antAnimation;
+	
+	public Color color;
 	
 	/////////////////////////////////////////////////////
 	//

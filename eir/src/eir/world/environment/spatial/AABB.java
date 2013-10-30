@@ -3,8 +3,6 @@ package eir.world.environment.spatial;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import yarangi.java.InvokationMapper;
-
 import com.badlogic.gdx.math.Vector2;
 
 /**

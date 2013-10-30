@@ -3,8 +3,6 @@
  */
 package eir.world.unit.wildlings;
 
-import yarangi.numbers.RandomUtil;
-
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.unit.UnitBehavior;

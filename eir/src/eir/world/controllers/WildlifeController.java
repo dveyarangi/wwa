@@ -1,5 +1,8 @@
 package eir.world.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
@@ -12,77 +15,86 @@ public class WildlifeController implements IController
 	
 	private Faction faction;
 	
-	private GuardingOrder guardingOrder;
+	private Map <Unit, GuardingOrder> guardingOrders;
 	
-	private float guardingTimeout;
+	private Map <Unit, AttackingOrder> attackingOrders;
 	
-	private AttackingOrder attackingOrder;
-	
-	private float attackTimeout;
 
 	@Override
 	public void init(Faction faction) {
 		
 		this.faction = faction;
 		
-		guardingOrder = new GuardingOrder(1);
+		guardingOrders = new HashMap <Unit, GuardingOrder> ();
 		
-		attackingOrder = new AttackingOrder(0);
-		
-		guardingOrder.setActive(true);
-		attackingOrder.setActive(false);
+		attackingOrders = new HashMap <Unit, AttackingOrder> ();;
 	
-		faction.getScheduler().addOrder(UnitsFactory.BIDRY, guardingOrder);
-		faction.getScheduler().addOrder(UnitsFactory.BIDRY, attackingOrder);
-		
-		
-		
-		
-//		guardingOrder = new GuardingOrder( 1, faction.getLevel().getNavMesh() );
-		
-//		faction.getScheduler().addOrder( "bidry", guardingOrder );
-	}
-	
-	public Unit pickGuardTarget()
-	{
 		for(Unit unit : faction.getUnits())
 		{
-			if(unit.getType().equals(UnitsFactory.SPAWNER))
+			if(unit.getType() == UnitsFactory.SPAWNER)
 			{
-				return unit;
+				GuardingOrder order = new GuardingOrder(1);
+				order.setTargetNode(unit.anchor);
+				guardingOrders.put(unit, order);
+				faction.getScheduler().addOrder(UnitsFactory.BIDRY, order);
 			}
 		}
-		return null;
+		
 	}
+
 
 	@Override
 	public void yellUnitHit(Unit unit, Unit hitSource) 
 	{
-		if(attackTimeout <= 0 && hitSource.getType() == UnitsFactory.BULLET)
+		if(unit.getType() == UnitsFactory.SPAWNER)
 		{
-			guardingOrder.setActive(false);
-			attackingOrder.setActive(true);
-			attackingOrder.setUnit(((Bullet)hitSource).getWeapon().getOwner());
-			
-			attackTimeout = 20;
+			if(hitSource instanceof Bullet)
+			{
+				Unit target = ((Bullet)hitSource).getWeapon().getOwner();
+				AttackingOrder order = attackingOrders.get(target);
+				if(order != null || hitSource.getType() != UnitsFactory.BULLET)
+				{
+					return;
+				}
+				
+				faction.getScheduler().removeOrder( UnitsFactory.BIDRY, guardingOrders.get(unit) );
+				guardingOrders.remove(unit);
+				
+				order = new AttackingOrder(1);
+				order.setUnit(target);
+				attackingOrders.put(unit, order);
+				faction.getScheduler().addOrder(UnitsFactory.BIDRY, order);
+			}
 		}
 	}
 
 	@Override
 	public void update(float delta) 
 	{
-		guardingTimeout -= delta;
-//		if(quardingTimeout <= 0)
-//		{
-			guardingOrder.setTargetNode( pickGuardTarget().anchor );
-//		}
-		
-		attackTimeout -= delta;
-		
-		if(attackTimeout <= 0)
+		Unit reguardUnit = null;
+		for(Unit attacker : attackingOrders.keySet())
 		{
-			guardingOrder.setActive(true);
-			attackingOrder.setActive(false);
+			AttackingOrder order = attackingOrders.get(attacker);
+			
+			order.timeout -= delta;
+			
+			if(!order.getUnit().isAlive() || order.timeout <= 0)
+			{
+				faction.getScheduler().removeOrder(UnitsFactory.BIDRY, order);
+				reguardUnit = attacker;
+				continue;
+			}
+
+		}
+
+		if(reguardUnit != null)
+		{
+			GuardingOrder order = new GuardingOrder(1);
+			order.setTargetNode(reguardUnit.anchor);
+			guardingOrders.put(reguardUnit, order);
+			faction.getScheduler().addOrder(UnitsFactory.BIDRY, order);
+			
+			attackingOrders.remove(reguardUnit);
 		}
 	}
 

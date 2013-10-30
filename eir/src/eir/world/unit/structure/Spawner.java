@@ -4,9 +4,7 @@
 package eir.world.unit.structure;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import eir.world.unit.Damage;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 
@@ -53,13 +51,13 @@ public class Spawner extends Unit
 
 	public void hit(Unit source)
 	{
+		faction.getController().yellUnitHit( this, source );
 		return; // TODO: spawner is unbreakable for now
 	}
 
 	@Override
-	public void draw(SpriteBatch batch, ShapeRenderer shape)
+	public void draw(SpriteBatch batch)
 	{
-		return; // TODO: spawner is invisible
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package eir.world.unit.ai;
 
+import java.util.ArrayList;
 import java.util.Collection;
+
+import yarangi.numbers.RandomUtil;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-import eir.world.Level;
 import eir.world.unit.Unit;
 
 /**
@@ -56,14 +58,12 @@ public class Scheduler
 			return null;
 		
 		Order order = null;
-		for(Order aOrder : unitOrders)
+		do
 		{
-			if(aOrder.isActive())
-			{
-				order = aOrder;
-				break;
-			}
+			int orderIdx = RandomUtil.N( unitOrders.size() );
+			order = new ArrayList <Order> (unitOrders).get(orderIdx);
 		}
+		while(!order.isActive());
 		
 		Task task = null;
 		
@@ -93,6 +93,18 @@ public class Scheduler
 	{
 		task.setCanceled();
 		tasks.remove(task.getOrder(), task);
+	}
+
+	public void removeOrder(String unitType, Order order) 
+	{
+		for(Task task : tasks.get(order))
+		{
+			task.setCanceled();
+		}
+		
+		tasks.removeAll(order);
+		
+		orders.remove(unitType, order);
 	}
 
 }

@@ -47,7 +47,7 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public float getSize() { return 1; }
+	public float getSize() { return 0.5f; }
 
 
 	@Override
@@ -69,7 +69,7 @@ public class Minigun extends IWeapon
 	public Animation getBulletAnimation() { return bulletAnimation; }
 
 	@Override
-	public float createSpeed() { return 100; }
+	public float createSpeed() { return 150; }
 
 
 	@Override

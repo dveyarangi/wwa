@@ -22,6 +22,8 @@ public class UIInputProcessor implements InputProcessor
 			Debug.toggleNavMesh();
 		if(keycode == Keys.L)
 			Debug.toggleSpatialGrid();
+		if(keycode == Keys.SEMICOLON)
+			Debug.toggleFactions();
 		
 			
 		return false;

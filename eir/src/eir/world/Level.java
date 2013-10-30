@@ -20,11 +20,10 @@ import eir.world.environment.parallax.Background;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.environment.spatial.UnitCollider;
-import eir.world.unit.UnitsFactory;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
+import eir.world.unit.UnitsFactory;
 import eir.world.unit.ai.RandomTravelingOrder;
-import eir.world.unit.spider.Spider;
 
 public class Level
 {
@@ -71,9 +70,7 @@ public class Level
 	 * TODO: swap to identity set
 	 */
 	private Set <Unit> units;
-	
-	private static final int PLAYER_ID = 1;
-	private static final int ENEMY_ID = 2;
+
 	private Unit playerSpider;
 	
 	private List <Effect> effects;
@@ -116,12 +113,6 @@ public class Level
 			web.init( this.getNavMesh() );
 		}
 		
-		for(Faction faction : factions)
-		{
-			faction.init( this );
-
-			faction.getScheduler().addOrder( "ant", new RandomTravelingOrder( navMesh, 0 ) );
-		}
 		
 		for(Unit unit : units)
 		{
@@ -129,6 +120,15 @@ public class Level
 		}
 		
 		addUnit(playerSpider);
+		
+		
+		for(Faction faction : factions)
+		{
+			faction.init( this );
+
+			faction.getScheduler().addOrder( "ant", new RandomTravelingOrder( navMesh, 0 ) );
+		}
+
 		
 		Debug.startTiming("navmesh calculation");
 		navMesh.init();
@@ -167,6 +167,7 @@ public class Level
 	{
 		log("Unit added: " + unit);
 		unitsToAdd.add(unit);
+		unit.getFaction().addUnit( unit );
 		
 		return unit;
 	}
@@ -189,7 +190,6 @@ public class Level
 			Unit unit = unitsToAdd.poll();
 			units.add( unit );
 			spatialIndex.add( unit );
-			unit.getFaction().addUnit( unit );
 		}
 		
 		for(Faction faction : factions)

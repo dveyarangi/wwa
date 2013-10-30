@@ -5,7 +5,6 @@ package eir.world.unit.spider;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
@@ -38,7 +37,7 @@ public class Leg
 	private float targetSurfaceIdx;
 
 	
-	private float stepTime = 0;
+//	private float stepTime = 0;
 	
 	private boolean isStepping = false;
 
@@ -128,7 +127,7 @@ public class Leg
 	}
 	
 	
-	public void draw(SpriteBatch batch, ShapeRenderer shape)
+	public void draw(SpriteBatch batch)
 	{
 
 		

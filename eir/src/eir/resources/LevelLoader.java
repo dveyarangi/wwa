@@ -131,6 +131,7 @@ public class LevelLoader
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private Multimap<String, String> readLevelFiles()
 	{
 		Multimap<String, String> levelTypes = HashMultimap.create();
@@ -386,16 +387,16 @@ public class LevelLoader
 	 */
 	public static void main(String[] args)
 	{
-		// try {
+		try {
 		LevelLoader loader = new LevelLoader();
 
 		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
-//		LevelDescriptor level = loader.readLevel( world, levelName );
+		Level level = loader.readLevel( levelName, new LoadingContext() );
 
-//		System.out.println( "Loaded level descriptor " + level );
+		System.out.println( "Loaded level descriptor " + level );
 
-		// }
-		// finally { System.exit( 0 ); }
+		}
+		finally { System.exit( 0 ); }
 	}
 
 	/**
@@ -486,9 +487,8 @@ public class LevelLoader
 			String unitType = object.get( "type" ).getAsString().intern();
 			Class <?> unitClass = UnitsFactory.getUnitClass(unitType);
 			Unit unit = (Unit) gson.fromJson( elem, unitClass );
-			
-			unit.init();
-			
+
+			unit.init(unitType, unit.anchor, unit.getFaction());
 			return unit;
 		}
 	}

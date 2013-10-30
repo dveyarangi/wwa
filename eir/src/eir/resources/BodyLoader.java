@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.google.gson.Gson;
 
 /**
@@ -21,10 +19,10 @@ public class BodyLoader {
  //       private final Model model;
 
         // Reusable stuff
-        private final List<Vector2> vectorPool = new ArrayList<Vector2>();
-        private final PolygonShape polygonShape = new PolygonShape();
-        private final CircleShape circleShape = new CircleShape();
-        private final Vector2 vec = new Vector2();
+ //       private final List<Vector2> vectorPool = new ArrayList<Vector2>();
+//        private final PolygonShape polygonShape = new PolygonShape();
+ //       private final CircleShape circleShape = new CircleShape();
+ //       private final Vector2 vec = new Vector2();
 
         // -------------------------------------------------------------------------
         // Ctors
@@ -164,13 +162,13 @@ public class BodyLoader {
 
         public static class PolygonModel {
                 public List<Vector2> vertices = new ArrayList<Vector2>();
-                private Vector2[] buffer; // used to avoid allocation in attachFixture()
+ //               private Vector2[] buffer; // used to avoid allocation in attachFixture()
         }
         
         public static enum ShapeType { POLYGON }
         
         public static class ShapeModel {
-        	private ShapeType type;
+ //       	private ShapeType type;
         	public Vector2 [] vertices;
         }
 

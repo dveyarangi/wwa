@@ -85,9 +85,10 @@ public class Task
 	/**
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public <U extends Unit> UnitBehavior <U> getBehavior(Unit unit)
 	{
-		return (UnitBehavior<U>) UnitsFactory.getBehaviorFactory( unit.getType() ).getBehavior( stage );
+		return UnitsFactory.<U>getBehavior( unit.getType(), stage );
 	}
 
 }

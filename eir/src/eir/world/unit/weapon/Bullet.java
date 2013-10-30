@@ -81,7 +81,7 @@ public class Bullet extends Unit
 	}
 	
 	@Override
-	public void draw( SpriteBatch batch, ShapeRenderer shape )
+	public void draw( SpriteBatch batch )
 	{
 		Vector2 position = getBody().getAnchor();
 		TextureRegion region = weapon.getBulletAnimation().getKeyFrame( lifetime, true );

@@ -5,7 +5,6 @@ package eir.world.unit.spider;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
@@ -15,7 +14,6 @@ import eir.world.environment.nav.NavNode;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
 import eir.world.unit.weapon.Bullet;
-import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
 import eir.world.unit.weapon.Minigun;
 /**
@@ -26,7 +24,7 @@ public class Spider extends Unit
 {
 	private Faction faction;
 	
-	private float size;
+	private float size = 10;
 
 	private Vector2 axis;
 	
@@ -206,13 +204,13 @@ public class Spider extends Unit
 	 * Debug rendering method
 	 * @param shape
 	 */
-	public void draw(SpriteBatch batch, ShapeRenderer shape)
+	public void draw(SpriteBatch batch)
 	{
 /*		sprite.setPosition( position.x-sprite.getOriginX(), position.y-sprite.getOriginY() );
 		sprite.setRotation( axis.angle() + 90 );
 		sprite.draw( batch );*/
 		
-		chassis.draw(batch, shape);
+		chassis.draw(batch);
 				
 //		spiderTexture.setRotation( weapon.get )
 		batch.draw( spiderTexture, getBody().getAnchor().x-2.5f, getBody().getAnchor().y-2f, 4, 4 );

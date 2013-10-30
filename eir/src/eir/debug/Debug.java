@@ -20,6 +20,7 @@ import eir.world.Level;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
+import eir.world.unit.Unit;
 import gnu.trove.iterator.TIntObjectIterator;
 
 /**
@@ -44,6 +45,7 @@ public class Debug
 	public boolean drawCoordinateGrid = false;
 	public boolean drawNavMesh = false;
 	public boolean drawSpatialHashmap = false;
+	public boolean drawFactions = false;
 	
 	private static Map <String, Long> timings = new HashMap <String, Long> ();
 
@@ -132,6 +134,13 @@ public class Debug
 		if(drawNavMesh)
 			drawNavMesh( batch, shape );
 		
+		if(drawFactions)
+			for(Unit unit : level.getUnits())
+			{
+				unit.draw( shape );
+			}
+			
+		
 	}
 	
 	private void drawNavMesh(SpriteBatch batch, ShapeRenderer shape)
@@ -187,6 +196,7 @@ public class Debug
 	public static void toggleNavMesh() { debug.drawNavMesh =! debug.drawNavMesh; }
 	public static void toggleCoordinateGrid() { debug.drawCoordinateGrid =! debug.drawCoordinateGrid; }
 	public static void toggleSpatialGrid() { debug.drawSpatialHashmap =! debug.drawSpatialHashmap; }
+	public static void toggleFactions() { debug.drawFactions =! debug.drawFactions; }
 
 
 	public static void startTiming(String processName)

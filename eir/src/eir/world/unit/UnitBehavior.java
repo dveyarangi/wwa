@@ -1,7 +1,6 @@
 package eir.world.unit;
 
 import eir.world.unit.ai.Task;
-import eir.world.unit.ant.Ant;
 
 /**
  * not sure what this one should be doing

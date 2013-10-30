@@ -427,21 +427,25 @@
 					"controller" : {
 					 	"type" : "PlayerController"
 					},
-					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"}
+					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"},
+					"color" : { "r" : 0.8, "g" : 0.8, "b" : 0.8 }
+					
 				},
 				{
 					"ownerId" : 2,
 					"controller" : {
 					 	"type" : "DummyController"
 					},
-					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"}
+					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"},
+					"color" : { "r" : 0.2, "g" : 0.2, "b" : 0.2 }
 				},			
 				{
 					"ownerId" : 3,
 					"controller" : {
 						"type" : "WildlifeController"
 					},
-					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"}
+					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"},
+					"color" : { "r" : 0.5, "g" : 0.5, "b" : 0 }
 				}			
 			],
 			

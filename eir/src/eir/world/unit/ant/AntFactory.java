@@ -15,9 +15,9 @@ public class AntFactory extends UnitFactory <Ant>
 
 	public AntFactory()
 	{
-		behaviors.registerBehavior(TaskStage.TRAVEL_TO_SOURCE, new TravelingBehavior.TravelToSourceBehavior());
-		behaviors.registerBehavior(TaskStage.TRAVEL_TO_TARGET, new TravelingBehavior.TravelToTargetBehavior());
-		behaviors.registerBehavior(TaskStage.MINING, new MiningBehavior());
+		behaviors.put( TaskStage.TRAVEL_TO_SOURCE, new TravelingBehavior.TravelToSourceBehavior() );
+		behaviors.put( TaskStage.TRAVEL_TO_TARGET, new TravelingBehavior.TravelToTargetBehavior() );
+		behaviors.put( TaskStage.MINING, new MiningBehavior() );
 	}
 	
 	protected Ant createEmpty() { return new Ant(); }

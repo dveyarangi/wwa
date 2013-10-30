@@ -1,7 +1,6 @@
 package eir.world.unit.structure;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import eir.world.unit.ResourceCapacitorUnit;
 
@@ -15,7 +14,7 @@ public class ResouceProducer extends ResourceCapacitorUnit
 {
 
 	@Override
-	public void draw(SpriteBatch batch, ShapeRenderer renderer) 
+	public void draw(SpriteBatch batch) 
 	{
 	}
 

@@ -9,8 +9,6 @@ import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.unit.Unit;
-import eir.world.unit.ant.Ant;
-import eir.world.unit.spider.Spider;
 
 /**
  * place holder screen for now. does same as application listener from sample
@@ -77,9 +75,6 @@ public class GameScreen extends AbstractScreen
 		//////////////////////////////////////////////////////////////////
 		// debug rendering
 		
-		Debug.debug.update( delta );
-		Debug.debug.draw(batch, shapeRenderer);
-		
 		
 		inputController.draw( batch, shapeRenderer );
 		
@@ -93,11 +88,14 @@ public class GameScreen extends AbstractScreen
 		
 		for(Unit unit : level.getUnits())
 		{
-			unit.draw( batch, shapeRenderer );
+			unit.draw( batch );
 		}
 		
 		batch.end();
 		
+		Debug.debug.update( delta );
+		Debug.debug.draw(batch, shapeRenderer);
+	
 	}
 
 	@Override

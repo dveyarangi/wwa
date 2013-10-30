@@ -42,6 +42,9 @@ public abstract class Order
 
 	public void setUnit(Unit unit) { this.unit = unit; }
 	public void setActive(boolean isActive) { this.isActive = isActive; }
+	
+	public float getPriority() { return priority; }
+	public String getUnitType() { return unitType; }
 
 	public boolean isActive() { return isActive; }
 }

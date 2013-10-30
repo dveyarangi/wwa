@@ -7,6 +7,7 @@ import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
@@ -122,7 +123,15 @@ public abstract class Unit implements ISpatialObject
 
 	}
 
-	public abstract void draw( SpriteBatch batch, ShapeRenderer shape );
+	public abstract void draw( SpriteBatch batch );
+	
+	public void draw( ShapeRenderer shape )
+	{
+		shape.begin(ShapeType.FilledCircle);
+		shape.setColor(faction.color.r,faction.color.g,faction.color.b,0.5f);
+		shape.filledCircle(getBody().getAnchor().x, getBody().getAnchor().y, getSize() / 2);
+		shape.end();
+	}
 
 	
 	public boolean isAlive() { return isAlive; }

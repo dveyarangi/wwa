@@ -27,6 +27,7 @@ public class NavNodeDescriptor
 	/**
 	 * @return the object
 	 */
+	@SuppressWarnings("unchecked")
 	public <E> E getObject() { return (E)object; }
 
 	/**

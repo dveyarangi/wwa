@@ -31,7 +31,7 @@ public class BirdyAttackingBehavior implements UnitBehavior <Birdy>
 			
 			unit.quantum = true;
 			
-			unit.timeToPulse = unit.pulseLength/2;
+			unit.timeToPulse = unit.pulseLength/4;
 			
 			Vector2 target = task.getOrder().getUnit().getBody().getAnchor();
 			

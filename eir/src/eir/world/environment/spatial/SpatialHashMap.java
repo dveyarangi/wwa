@@ -4,8 +4,8 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import yarangi.math.FastMath;
-import eir.world.unit.ant.Ant;
 
 /**
  * Straightforward implementation of spatial hash map.

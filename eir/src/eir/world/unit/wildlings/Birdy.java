@@ -5,7 +5,6 @@ package eir.world.unit.wildlings;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
@@ -19,7 +18,7 @@ public class Birdy extends Unit
 {
 	///////////////////////////////////////////
 
-	private static Sprite sprite = GameFactory.createSprite( "models//asteroid_head_04.png" );
+	private static Sprite sprite = GameFactory.createSprite( "anima//gears//birdy_02.png" );
 
 	float pulseLength = 1;
 
@@ -50,7 +49,7 @@ public class Birdy extends Unit
 	}
 
 	@Override
-	public void draw(SpriteBatch batch, ShapeRenderer shape)
+	public void draw(SpriteBatch batch)
 	{
 		Vector2 position = getBody().getAnchor();
 		batch.draw( sprite, 

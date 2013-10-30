@@ -63,19 +63,19 @@ public class SpatialHashMapLook
 					bucket = map.getBucket(cellX, cellY);
 				}
 				catch(ArrayIndexOutOfBoundsException e) {
-					
+					// TODO???
 				}
 //				if(bucket.size() > 0)
 				if(bucket != null)
-				for(ISpatialObject chunk : bucket)
-				{
+//				for(ISpatialObject chunk : bucket)
+//				{
 //					System.out.println(chunk);
 //					if(chunk.overlaps(x, y, x+map.getCellSize(), y+map.getCellSize()))
 					{
 						isReal = true;
 						break;
 					}
-				}
+//				}
 				if(bucket == null) {
 					renderer.setColor(1f, 0f, 0.0f, 0.5f);
 					renderer.begin( ShapeType.Line );
