@@ -22,14 +22,13 @@ public class BirdyGuardingBehavior implements UnitBehavior <Birdy>
 	{
 		if(unit.timeToPulse <= 0)
 		{
-			if(unit.quantum)
+			if(++ unit.quantum > 3)
 			{
 				task.nextStage();
-				unit.quantum = false;
+				unit.quantum = 0;
 				return;
 			}
 			
-			unit.quantum = true;
 			unit.timeToPulse = unit.pulseLength;
 			
 			Vector2 target = task.getOrder().getTargetNode().getPoint();

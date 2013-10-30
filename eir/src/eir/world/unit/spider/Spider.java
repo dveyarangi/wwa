@@ -242,4 +242,10 @@ public class Spider extends Unit
 	public float getSize() {
 		return size;
 	}
+	
+	public void hit(Unit source)
+	{
+		faction.getController().yellUnitHit( this, source );
+
+	}
 }
