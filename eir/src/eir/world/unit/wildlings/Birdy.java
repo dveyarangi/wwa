@@ -19,7 +19,7 @@ public class Birdy extends Unit
 {
 	///////////////////////////////////////////
 
-	private static Sprite sprite = GameFactory.createSprite( "anima//gears//birdy.png" );
+	private static Sprite sprite = GameFactory.createSprite( "models//asteroid_head_04.png" );
 
 	float pulseLength = 1;
 
