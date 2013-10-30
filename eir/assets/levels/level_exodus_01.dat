@@ -477,7 +477,7 @@
 					"faction" : 3,
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 200 },
 					"unitType" : "birdy", 
-					"maxUnits" : 50,
+					"maxUnits" : 300,
 					"spawnInterval" : 1.5f
 				},
 				{
@@ -485,7 +485,7 @@
 					"faction" : 3,
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 100 },
 					"unitType" : "birdy", 
-					"maxUnits" : 50,
+					"maxUnits" : 300,
 					"spawnInterval" : 1.5f
 				},
 								{
@@ -493,7 +493,7 @@
 					"faction" : 3,
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 50 },
 					"unitType" : "birdy", 
-					"maxUnits" : 50,
+					"maxUnits" : 300,
 					"spawnInterval" : 1.5f
 				}				
 			],

@@ -4,11 +4,16 @@
 package eir.world.unit;
 
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 import eir.world.Level;
 import eir.world.controllers.IController;
@@ -45,6 +50,7 @@ public class Faction
 	public Level level;
 	
 	public Set <Unit> units;
+	public Multimap <String, Unit> unitsByTypes;
 	
 	private IController controller;
 	
@@ -54,6 +60,7 @@ public class Faction
 	public Faction()
 	{
 		this.units = new HashSet <Unit> ();
+		this.unitsByTypes = HashMultimap.create ();
 		scheduler = new Scheduler();
 	}
 	
@@ -68,12 +75,18 @@ public class Faction
 	public void addUnit( Unit unit )
 	{
 		units.add( unit );
+		unitsByTypes.put( unit.getType(), unit );
 	}
 	
 	public void removeUnit( Unit unit )
 	{
 		units.remove( unit );
-
+		unitsByTypes.remove( unit.getType(), unit );
+	}
+	
+	public Collection <Unit> getUnitsByType( String unitType )
+	{
+		return unitsByTypes.get( unitType );
 	}
 	
 	public void update( float delta )

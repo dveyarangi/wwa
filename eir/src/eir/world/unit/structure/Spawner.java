@@ -14,9 +14,9 @@ import eir.world.unit.UnitsFactory;
  */
 public class Spawner extends Unit
 {
-	private float spawnInterval;
+	public float spawnInterval;
 	
-	private float timeToSpawn;
+	public float timeToSpawn;
 	
 	/**
 	 * Max units to spawn

@@ -14,6 +14,7 @@ import eir.world.environment.nav.NavNode;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
 import eir.world.unit.weapon.Bullet;
+import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
 import eir.world.unit.weapon.Minigun;
 /**

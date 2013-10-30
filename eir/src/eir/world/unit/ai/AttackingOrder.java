@@ -14,7 +14,7 @@ public class AttackingOrder extends Order
 {
 	private Unit unit;
 	
-	public float timeout = 10;
+	public float timeout;
 
 	/**
 	 * @param priority
