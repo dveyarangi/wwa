@@ -1,6 +1,7 @@
 package eir.world.controllers;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import eir.world.unit.Faction;
@@ -71,31 +72,28 @@ public class WildlifeController implements IController
 	@Override
 	public void update(float delta) 
 	{
-		Unit reguardUnit = null;
-		for(Unit attacker : attackingOrders.keySet())
+		Iterator <Map.Entry<Unit, AttackingOrder>> eit = attackingOrders.entrySet().iterator();
+		while(eit.hasNext())
 		{
-			AttackingOrder order = attackingOrders.get(attacker);
+			Map.Entry<Unit, AttackingOrder> entry = eit.next();
+			Unit spawner = entry.getKey();
+			AttackingOrder attackingOrder = entry.getValue();
 			
-			order.timeout -= delta;
+			attackingOrder.timeout -= delta;
 			
-			if(!order.getUnit().isAlive() || order.timeout <= 0)
+			if(!attackingOrder.getUnit().isAlive() || attackingOrder.timeout <= 0)
 			{
-				faction.getScheduler().removeOrder(UnitsFactory.BIDRY, order);
-				reguardUnit = attacker;
-				continue;
+				faction.getScheduler().removeOrder(UnitsFactory.BIDRY, attackingOrder);
+				eit.remove();
+
+				GuardingOrder guardingOrder = new GuardingOrder(1);
+				guardingOrder.setTargetNode(spawner.anchor);
+				guardingOrders.put(spawner, guardingOrder);
+				faction.getScheduler().addOrder(UnitsFactory.BIDRY, guardingOrder);
 			}
 
 		}
 
-		if(reguardUnit != null)
-		{
-			GuardingOrder order = new GuardingOrder(1);
-			order.setTargetNode(reguardUnit.anchor);
-			guardingOrders.put(reguardUnit, order);
-			faction.getScheduler().addOrder(UnitsFactory.BIDRY, order);
-			
-			attackingOrders.remove(reguardUnit);
-		}
 	}
 
 }
