@@ -32,7 +32,7 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 		{
 			// either we reached next node, or we do not have target
 			
-			ant.route = ant.mesh.getShortestRoute(ant.position, targetNode);
+			ant.route = ant.mesh.getShortestRoute(ant.anchor, targetNode);
 			
 			if(!ant.route.hasNext())
 			{
@@ -51,7 +51,7 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 		//////////////////////////////////////
 		// traversing
 		
-		NavEdge edge = ant.mesh.getEdge( ant.position, ant.nextNode );
+		NavEdge edge = ant.mesh.getEdge( ant.anchor, ant.nextNode );
 		
 		float travelDistance = ant.speed * delta + // the real travel distance 
 				ant.nodeOffset;
@@ -67,12 +67,12 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 			travelDistance -= edge.getLength();
 			if(travelDistance < 0)
 			{
-				ant.velocity.set( ant.nextNode.getPoint() ).sub( ant.position.getPoint() ).nor().mul( ant.speed );			
+				ant.velocity.set( ant.nextNode.getPoint() ).sub( ant.anchor.getPoint() ).nor().mul( ant.speed );			
 				ant.angle = ant.velocity.angle();
 				break;
 			}
 			
-			ant.position = ant.nextNode;
+			ant.anchor = ant.nextNode;
 			
 			if( ant.route == null || !ant.route.hasNext() )
 			{
@@ -89,7 +89,7 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 			
 			ant.nextNode = ant.route.next();
 			
-			edge = ant.mesh.getEdge( ant.position, ant.nextNode );
+			edge = ant.mesh.getEdge( ant.anchor, ant.nextNode );
 			if(edge == null)
 			{
 				task.setCanceled();
@@ -114,7 +114,7 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 		}
 		
 		ant.getBody().getAnchor().set( 
-				edge.getDirection() ).mul( ant.nodeOffset ).add( ant.position.getPoint() );
+				edge.getDirection() ).mul( ant.nodeOffset ).add( ant.anchor.getPoint() );
 	}
 
 }

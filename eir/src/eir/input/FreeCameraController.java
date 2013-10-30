@@ -32,12 +32,10 @@ public class FreeCameraController implements ICameraController
 		
 		this.camera = camera;
 		
-		lastPosition = level.getAsteroid(level.getInitialConfig().getAsteroidName())
-					.getModel().getNavNode( 
-						level.getInitialConfig().getSurfaceIdx()).getPoint().cpy();
+		lastPosition = level.getControlledUnit().getBody().getAnchor().cpy();
 		camera.position.x = lastPosition.x;
 		camera.position.y = lastPosition.y;
-		camera.zoom = level.getInitialConfig().getZoom();
+		camera.zoom = 0.1f;
 		this.level = level;
 	}
 	

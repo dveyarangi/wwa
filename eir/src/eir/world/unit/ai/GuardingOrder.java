@@ -25,7 +25,7 @@ public class GuardingOrder extends Order
 	@Override
 	public Task createTask(Scheduler scheduler)
 	{
-		return new GuardingTask(scheduler, this);
+		return new Task(scheduler, this, new TaskStage [] { TaskStage.GUARD }, true);
 	}
 
 }

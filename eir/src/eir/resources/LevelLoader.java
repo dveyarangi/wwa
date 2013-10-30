@@ -40,12 +40,13 @@ import com.google.gson.JsonSyntaxException;
 
 import eir.world.Asteroid;
 import eir.world.Level;
+import eir.world.controllers.IController;
 import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
 import eir.world.unit.Faction;
-import eir.world.unit.UnitsFactory;
 import eir.world.unit.Unit;
+import eir.world.unit.UnitsFactory;
 
 /**
  * @author dveyarangi
@@ -64,7 +65,7 @@ public class LevelLoader
 	 */
 	private Multimap<String, String> levelTypes;
 	
-	public class LoadingContext
+	public static class LoadingContext
 	{
 		public NavMesh navMesh = new FloydWarshal();
 		
@@ -179,12 +180,26 @@ public class LevelLoader
 	 * @param levelName
 	 * @return
 	 */
-	public Level readLevel(String levelId)
+	Level readLevel(String levelId, final LoadingContext context)
 	{
-		final LoadingContext context = new LoadingContext();
+		
+/*		final Gson resourceCounter = new GsonBuilder()
+		.registerTypeAdapter(Texture.class, new JsonDeserializer<Texture>()
+			{
+				@Override
+				public Texture deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					String textureFile = elem.getAsString();
+					
+					return GameFactory.loadTexture( textureFile );
+				}
+			})
+			.create();*/
 		
 		// this is raw gson parser (without custom deserializatiors)
 		// it is used for asteroid reference substitutions
+		ControllerAdapter controllerAdapter = new ControllerAdapter();
+		
 		final Gson rawGson = new GsonBuilder()
 		.registerTypeAdapter( NavNode.class, new JsonDeserializer<NavNode>()
 			{
@@ -232,6 +247,7 @@ public class LevelLoader
 					
 				}
 			})	
+			.registerTypeAdapter( IController.class, controllerAdapter)
 			.create();
 
 		UnitAdapter unitAdapter = new UnitAdapter();
@@ -328,6 +344,7 @@ public class LevelLoader
 			.create();
 		
 		unitAdapter.gson = gson;
+		controllerAdapter.gson = gson;
 		
 		InputStream stream = openFileStream( levelId );
 
@@ -343,7 +360,6 @@ public class LevelLoader
 			Gdx.app.error( TAG,  "Level file not found or unreadible", jioe ); 
 		}
 
-		level.init(context);
 		
 		return level;
 	}
@@ -474,6 +490,30 @@ public class LevelLoader
 			unit.init();
 			
 			return unit;
+		}
+	}
+	
+	private static class ControllerAdapter implements  JsonDeserializer<IController>
+	{
+		Gson gson;
+		
+		@Override
+		public IController deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+		{
+			JsonObject object = elem.getAsJsonObject();
+			String ctrlType = object.get( "type" ).getAsString().intern();
+			String className = "eir.world.controllers." + ctrlType;
+			Class<?> ctrlClass;
+			try {
+				ctrlClass = Class.forName( className );
+			} catch (ClassNotFoundException e) {
+				throw new JsonParseException("Faction controller of type " + className + " not found.");
+			}
+			
+			IController ctrl = (IController) gson.fromJson( elem, ctrlClass );
+
+			
+			return ctrl;
 		}
 	}
 }

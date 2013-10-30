@@ -7,6 +7,7 @@ import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
@@ -68,7 +69,7 @@ public class Ant extends Unit
 		stateTime += delta;
 	}
 
-	public void draw(SpriteBatch batch)
+	public void draw(SpriteBatch batch, ShapeRenderer renderer)
 	{
 		Vector2 position = getBody().getAnchor();
 		TextureRegion region = faction.getAntAnimation().getKeyFrame( stateTime, true );

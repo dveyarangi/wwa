@@ -12,7 +12,7 @@ import eir.world.unit.UnitsFactory;
  * @author Ni
  *
  */
-public abstract class Task
+public class Task
 {
 	protected final Scheduler scheduler;
 	protected final Order order;
@@ -22,16 +22,39 @@ public abstract class Task
 	
 	protected Status status;
 	
-	public Task(Scheduler scheduler, Order order)
+	protected TaskStage [] stages;
+	protected boolean cycle = false;
+	protected int stageIdx = 0;
+	
+	
+	public Task(Scheduler scheduler, Order order, TaskStage [] stages, boolean cycle)
 	{
 
 		this.scheduler = scheduler;
 		this.order = order;
 		
+		this.stages = stages;
+		this.stage = stages[stageIdx ++];
+		this.cycle = cycle;
+		
 		this.status = Status.ONGOING;
 	}
 	
-	public abstract TaskStage nextStage();
+	public TaskStage nextStage()
+	{
+		if(stageIdx >= stages.length)
+		{
+			if(!cycle)
+			{
+				this.setCompleted();
+				return null;
+			}
+			
+			stageIdx = 0;
+		}
+		
+		return stages [stageIdx ++];
+	}
 	
 	public void cancel() 
 	{

@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
-import eir.world.unit.Bullet;
 import eir.world.unit.Damage;
 import eir.world.unit.spider.Spider;
 
@@ -37,7 +36,7 @@ public class HomingLauncher extends IWeapon
 	
 	public HomingLauncher(Spider spider)
 	{
-		super(spider.getOwnerId());
+		super(spider.getFaction());
 		
 		this.spider = spider;
 		

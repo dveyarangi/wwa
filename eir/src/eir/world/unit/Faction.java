@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 
 import eir.world.Asteroid;
 import eir.world.Level;
+import eir.world.controllers.IController;
 import eir.world.unit.ai.RandomTravelingOrder;
 import eir.world.unit.ai.Scheduler;
 
@@ -44,18 +45,21 @@ public class Faction
 	
 	public Set <Unit> units;
 	
+	private IController controller;
+	
 	private Scheduler scheduler;
 	
 
 	public Faction()
 	{
 		this.units = new HashSet <Unit> ();
-		this.scheduler = new Scheduler( level );
+		scheduler = new Scheduler();
 	}
 	
 	public void init(Level level)
 	{
 		this.level = level;
+		this.controller.init( this );
 	}
 	
 	public int getOwnerId()	{ return ownerId; }
@@ -90,5 +94,9 @@ public class Faction
 
 
 	public Scheduler getScheduler() { return scheduler; }
+
+	public IController getController() {
+		return controller;
+	}
 
 }

@@ -7,16 +7,7 @@
 			
 			# length of the game world in tiles
 			"height" : "1536",
-			
-			"initialConfig" : {
-			
-				"nodeIdx" : 22,
-			
-				"zoom" : 0.1,
-				
-				"asteroid" : "center"
-			},
-			
+
 			"background" : { 
 				"layers" : [
 					{	
@@ -433,14 +424,23 @@
 			"factions" : [
 				{
 					"ownerId" : 1,
+					"controller" : {
+					 	"type" : "PlayerController"
+					},
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"}
 				},
 				{
 					"ownerId" : 2,
+					"controller" : {
+					 	"type" : "DummyController"
+					},
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"}
 				},			
 				{
 					"ownerId" : 3,
+					"controller" : {
+						"type" : "WildlifeController"
+					},
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"}
 				}			
 			],
@@ -452,7 +452,7 @@
 				{
 					"type" : "spawner",
 					"faction" : 2,
-					"position" : { "asteroid" : "red_left_foot", "navIdx" : 1 },
+					"anchor" : { "asteroid" : "red_left_foot", "navIdx" : 1 },
 					"unitType" : "ant",
 					"maxUnits" : 100,
 					"spawnInterval" : 1f
@@ -461,7 +461,7 @@
 				{
 					"type" : "spawner",
 					"faction" : 1,
-					"position" : { "asteroid" : "red_right_foot", "navIdx" : 1 },
+					"anchor" : { "asteroid" : "red_right_foot", "navIdx" : 1 },
 					"unitType" : "ant",
 					
 					"maxUnits" : 100,
@@ -471,14 +471,19 @@
 				{
 					"type" : "spawner",
 					"faction" : 3,
-					"position" : { "asteroid" : "junkheap", "navIdx" : 200 },
+					"anchor" : { "asteroid" : "junkheap", "navIdx" : 200 },
 					"unitType" : "birdy", 
 					"maxUnits" : 10,
 					"spawnInterval" : 10f
 					
 				}
-			]
+			],
 			
+			"playerSpider" : {
+					"type" : "spider",
+					"faction" : 2,
+					"anchor" : { "asteroid" : "center", "navIdx" : 22 }
+				}
 		########################################
 
 

@@ -16,6 +16,7 @@ public class BirdyFactory extends UnitFactory <Birdy>
 	public BirdyFactory()
 	{
 		behaviors.registerBehavior( TaskStage.GUARD, new BirdyGuardingBehavior() );
+		behaviors.registerBehavior( TaskStage.ATTACK, new BirdyAttackingBehavior() );
 	}
 	
 	protected Birdy createEmpty() { return new Birdy(); }

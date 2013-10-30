@@ -17,7 +17,6 @@ import com.badlogic.gdx.math.Vector3;
 import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.environment.nav.NavNode;
-import eir.world.unit.spider.Spider;
 
 /**
  * handles input for game
@@ -33,8 +32,6 @@ public class GameInputProcessor implements InputProcessor
 	private ICameraController camController;
 	
 	private final Level level;
-	
-	private final Spider playerSpider;
 	
 	private int lastx, lasty;
 	private Vector3 pointerPosition3 = new Vector3();
@@ -69,8 +66,6 @@ public class GameInputProcessor implements InputProcessor
 
 		this.level = level;
 		
-		this.playerSpider = level.getPlayerSpider();
-		
 		lastx = (int) camController.getCamera().viewportWidth/2;
 		lasty = (int) camController.getCamera().viewportHeight/2;
 		
@@ -85,21 +80,19 @@ public class GameInputProcessor implements InputProcessor
 		{
 		
 		case Input.Keys.A:
-			playerSpider.walkCCW(true);
+			level.getControlledUnit().walkCCW(true);
 			break;
 			
 		case Input.Keys.D:
-			playerSpider.walkCW(true);
+			level.getControlledUnit().walkCW(true);
 			break;
 			
 		case Input.Keys.W:
-			
-			playerSpider.walkUp(true);
-			
+			level.getControlledUnit().walkUp(true);
 			break;
 			
 		case Input.Keys.S:
-				playerSpider.walkDown(true);
+			level.getControlledUnit().walkDown(true);
 			break;
 			
 		case Input.Keys.SPACE:
@@ -125,16 +118,16 @@ public class GameInputProcessor implements InputProcessor
 		switch(keycode)
 		{
 		case Input.Keys.A:
-			playerSpider.walkCCW(false);
+			level.getControlledUnit().walkCCW(false);
 			break;
 		case Input.Keys.D:
-			playerSpider.walkCW(false);
+			level.getControlledUnit().walkCW(false);
 			break;
 		case Input.Keys.W:
-			playerSpider.walkUp(false);
+			level.getControlledUnit().walkUp(false);
 			break;
 		case Input.Keys.S:
-			playerSpider.walkDown(false);
+			level.getControlledUnit().walkDown(false);
 			break;
 		default:
 			return false;
@@ -159,7 +152,7 @@ public class GameInputProcessor implements InputProcessor
 			
 			if(pickingSensor.getNode() != null)
 			{
-				NavNode sourceNode = playerSpider.getClosestNode();
+				NavNode sourceNode = level.getControlledUnit().anchor;
 				NavNode targetNode = pickingSensor.getNode();
 				
 				level.toggleWeb(sourceNode, targetNode);
@@ -167,7 +160,7 @@ public class GameInputProcessor implements InputProcessor
 		}
 		
 		if(button == Input.Buttons.LEFT)		
-			playerSpider.setShootingTarget( pointerPosition2 );
+			level.getControlledUnit().setShootingTarget( pointerPosition2 );
 
 		return true;
 	}
@@ -181,7 +174,7 @@ public class GameInputProcessor implements InputProcessor
 			camController.setUnderUserControl(false);
 		}
 		if(button == Input.Buttons.LEFT)
-			playerSpider.setShootingTarget( null );
+			level.getControlledUnit().setShootingTarget( null );
 		return true;
 	}
 
@@ -259,7 +252,7 @@ public class GameInputProcessor implements InputProcessor
 		
 		renderer.setColor( 0, 1, 0, 0.1f );
 		renderer.begin( ShapeType.Line );
-		renderer.line( playerSpider.getPosition().x, playerSpider.getPosition().y, 
+		renderer.line( level.getControlledUnit().getBody().getAnchor().x, level.getControlledUnit().getBody().getAnchor().y, 
 					pointerPosition2.x, pointerPosition2.y );
 		renderer.end();
 		

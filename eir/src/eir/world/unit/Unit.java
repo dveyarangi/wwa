@@ -6,6 +6,8 @@ package eir.world.unit;
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
@@ -28,8 +30,7 @@ public abstract class Unit implements ISpatialObject
 	
 	protected Faction faction;
 
-
-	public NavNode position;
+	public NavNode anchor;
 
 	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas", 
 			"explosion02");
@@ -56,15 +57,27 @@ public abstract class Unit implements ISpatialObject
 	}
 	
 	
-	public void init(String type, NavNode position, Faction faction)
+	public void init(String type, NavNode anchor, Faction faction)
 	{
 		this.type = type;
-		this.position = position;
+		this.anchor = anchor;
 		this.faction = faction;
+		
+		body.update( anchor.getPoint().x, anchor.getPoint().y, getSize()/2, getSize()/2 );
+	
+		init();
+	}
+	public void init(String type, float x, float y, float angle, Faction faction)
+	{
+		this.type = type;
+		this.faction = faction;
+		
+		body.update( x, y, getSize()/2, getSize()/2 );
+		
+		this.angle = angle;
 		
 		init();
 	}
-	
 	public AABB getBody() { return body; }
 	
 	public Faction getFaction() { return faction; }
@@ -85,8 +98,6 @@ public abstract class Unit implements ISpatialObject
 		this.task = null;
 		
 		this.type = type.intern();
-		
-		body.update( position.getPoint().x, position.getPoint().y, getSize()/2, getSize()/2 );
 	}
 	
 	public void update(float delta)
@@ -110,7 +121,7 @@ public abstract class Unit implements ISpatialObject
 		task.getBehavior( this ).update( delta, task, this );
 	}
 
-	public abstract void draw( SpriteBatch batch );
+	public abstract void draw( SpriteBatch batch, ShapeRenderer shape );
 
 	
 	public boolean isAlive() { return isAlive; }
@@ -121,8 +132,9 @@ public abstract class Unit implements ISpatialObject
 	/**
 	 * @param damage
 	 */
-	public void hit(Damage damage)
+	public void hit(Unit source)
 	{
+		faction.getController().yellUnitHit( this, source );
 		setDead();
 		if(task != null)
 		{
@@ -146,5 +158,12 @@ public abstract class Unit implements ISpatialObject
 	public Damage getDamage() {	return damage; }
 
 	public abstract float getSize();
+
+
+	public void setShootingTarget(Vector2 targetPos) {}
+	public void walkDown(boolean b) {}
+	public void walkCCW(boolean b) {}
+	public void walkCW(boolean b) {}
+	public void walkUp(boolean b) {}
 
 }

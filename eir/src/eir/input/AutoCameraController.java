@@ -31,12 +31,10 @@ public class AutoCameraController implements ICameraController
 		this.camera = camera;
 		this.inputProcessor = inputProcessor;
 		
-		lastPosition = level.getAsteroid(level.getInitialConfig().getAsteroidName())
-					.getModel().getNavNode( 
-						level.getInitialConfig().getSurfaceIdx()).getPoint().cpy();
+		lastPosition = level.getControlledUnit().getBody().getAnchor().cpy();
 		camera.position.x = lastPosition.x;
 		camera.position.y = lastPosition.y;
-		zoomTarget = camera.zoom = level.getInitialConfig().getZoom();
+		zoomTarget = camera.zoom = 0.1f;
 		this.level = level;
 		
 		scrollTarget = new Vector2();
@@ -46,7 +44,7 @@ public class AutoCameraController implements ICameraController
 	
 	public void update( float delta )
 	{
-		Vector2 spiderPos = level.getPlayerSpider().getPosition();
+		Vector2 spiderPos = level.getControlledUnit().getBody().getAnchor();
 		Vector2 pointerPos = inputProcessor.getCrosshairPosition();
 		
 		updateCameraPosition( spiderPos, pointerPos ); 

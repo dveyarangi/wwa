@@ -83,9 +83,6 @@ public class GameScreen extends AbstractScreen
 		
 		inputController.draw( batch, shapeRenderer );
 		
-		Spider playerSpider = level.getPlayerSpider();
-		playerSpider.update(delta);
-		
 		batch.begin();
 		
 /*		for(Spider spider : spiders)
@@ -96,12 +93,10 @@ public class GameScreen extends AbstractScreen
 		
 		for(Unit unit : level.getUnits())
 		{
-			unit.draw( batch );
+			unit.draw( batch, shapeRenderer );
 		}
 		
 		batch.end();
-		
-		playerSpider.draw(batch, shapeRenderer);
 		
 	}
 

@@ -132,9 +132,6 @@ public class Leg
 	{
 
 		
-		
-		batch.begin();
-		
 		kneeTexture.setOrigin( kneeTexture.getWidth()/2, 0 );
 		kneeTexture.setScale(1f/kneeTexture.getRegionWidth(), kneeLength/kneeTexture.getRegionHeight()  );
 		kneeTexture.setPosition( bodyJoint.x-kneeTexture.getOriginX(), bodyJoint.y );
@@ -161,8 +158,7 @@ public class Leg
 		
 		batch.draw( legJointTexture, ancleJoint.x-0.5f, ancleJoint.y-0.5f, 1, 1 );
 		batch.draw( legJointTexture, kneeJoint.x-0.65f, kneeJoint.y-0.65f, 1.3f, 1.3f );
-		
-		batch.end();
+
 		
 /*		shape.begin( ShapeType.Line );
 		shape.setColor( 1.0f, 0.0f, 0.0f, 1.0f );

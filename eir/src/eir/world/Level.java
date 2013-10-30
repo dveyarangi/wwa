@@ -21,7 +21,6 @@ import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.environment.spatial.UnitCollider;
 import eir.world.unit.UnitsFactory;
-import eir.world.unit.Bullet;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
 import eir.world.unit.ai.RandomTravelingOrder;
@@ -39,8 +38,7 @@ public class Level
 	 */
 	private int width, height;
 	private float halfWidth, halfHeight;
-	
-	private InitialConfig initialConfig;
+
 	
 	private Background background;
 
@@ -76,10 +74,7 @@ public class Level
 	
 	private static final int PLAYER_ID = 1;
 	private static final int ENEMY_ID = 2;
-	private Spider playerSpider;
-	
-	private List <Bullet> bullets;
-	
+	private Unit playerSpider;
 	
 	private List <Effect> effects;
 	
@@ -90,7 +85,6 @@ public class Level
 	public Level()
 	{
 		units = new HashSet <Unit> ();
-		bullets = new LinkedList <Bullet> ();
 		effects = new LinkedList <Effect> ();
 		collider = new UnitCollider();
 	}
@@ -134,6 +128,8 @@ public class Level
 			addUnit( unit );
 		}
 		
+		addUnit(playerSpider);
+		
 		Debug.startTiming("navmesh calculation");
 		navMesh.init();
 		Debug.stopTiming("navmesh calculation");
@@ -143,14 +139,10 @@ public class Level
 			navMesh.getNode( idx ).init( this );
 			spatialIndex.add( navMesh.getNode( idx ) );
 		}
-		Asteroid initialAsteroid = getAsteroid( initialConfig.getAsteroidName() );
-			
-		playerSpider = new Spider( PLAYER_ID, this, initialAsteroid, initialConfig.getSurfaceIdx(), 10, 80 );
 
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
 		
-
 	}
 
 	/**
@@ -173,6 +165,7 @@ public class Level
 	 */
 	public Unit addUnit(Unit unit)
 	{
+		log("unit added: type: " + unit.getType() + " : sid: " + unit.getId());
 		unitsToAdd.add(unit);
 		
 		return unit;
@@ -206,14 +199,20 @@ public class Level
 		while(unIt.hasNext())
 		{
 			Unit unit = unIt.next();
-			unit.update(delta);
 			
-			spatialIndex.update( unit );
+			if(unit.isAlive()) // unit may already be dead from previous hits
+			{
+				// updating position:
+				unit.update(delta);
+				spatialIndex.update( unit );
+				
+				// colliding:
+				collider.setAnt( unit );
+				spatialIndex.queryAABB(collider, unit.getArea() );
+			}
 			
-			collider.setAnt( unit );
-			
-			spatialIndex.queryAABB(collider, unit.getArea() );
-			if(!unit.isAlive())
+			if(!unit.isAlive() ||
+				!inWorldBounds(unit.getArea().getAnchor())) // unit may be dead from the collision
 			{
 				unIt.remove();
 				spatialIndex.remove( unit );
@@ -229,28 +228,6 @@ public class Level
 			
 		}
 
-		Iterator <Bullet> bulletIt = bullets.iterator();
-		while(bulletIt.hasNext())
-		{
-			Bullet bullet = bulletIt.next();
-			if(bullet.isAlive())
-				bullet.update( delta );
-			if(!inWorldBounds(bullet.getArea().getAnchor()) 
-			|| !bullet.isAlive())
-			{
-				spatialIndex.remove( bullet );
-				bulletIt.remove();
-				Bullet.free( bullet );
-				
-				Effect hitEffect = bullet.weapon.createHitEffect( bullet );
-				if(hitEffect != null)
-					effects.add( hitEffect );
-			}
-			else
-			{
-				spatialIndex.update( bullet );
-			}
-		}
 		Iterator <Effect> effectIt = effects.iterator();
 		while(effectIt.hasNext())
 		{
@@ -284,12 +261,7 @@ public class Level
 		{
 			web.draw( batch );
 		}
-		
-		for(Bullet bullet : bullets)
-		{
-			bullet.draw( batch );
-		}
-		
+
 		for(Effect effect : effects)
 		{
 			effect.draw( batch );
@@ -344,27 +316,12 @@ public class Level
 		return null;
 	}
 
-	public InitialConfig getInitialConfig()
-	{
-		return initialConfig;
-	}
-
 	/**
 	 * @return
 	 */
-	public Spider getPlayerSpider()
+	public Unit getControlledUnit()
 	{
 		return playerSpider;
-	}
-
-	/**
-	 * @param playerSpider2
-	 * @param pointerPosition2
-	 */
-	public void shoot(Spider spider, Bullet bullet)
-	{
-		bullets.add( bullet );
-		spatialIndex.add( bullet );
 	}
 	
 	public boolean inWorldBounds(Vector2 position)

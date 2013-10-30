@@ -1,13 +1,14 @@
 /**
  * 
  */
-package eir.world.unit;
+package eir.world.unit.weapon;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
@@ -17,130 +18,72 @@ import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.Damage;
+import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
  *
  */
 @SuppressWarnings("unused")
-public class Bullet implements Poolable, ISpatialObject
+public class Bullet extends Unit
 {
-	//////////////////////////////////////////////////////////////////
-	// life cycle methods
-	//////////////////////////////////////////////////////////////////
-
-	private static Pool<Bullet> pool = new Pool<Bullet> () {
-
-		@Override
-		protected Bullet newObject()
-		{
-			return new Bullet();
-		}
-	};
-	
-	public static Bullet getBullet(Level level, IWeapon weapon, float x, float y, float dx, float dy, Vector2 target)
-	{
-
-		Bullet bullet = pool.obtain();
-		bullet.reset();
-		bullet.id = level.createObjectId();
-		bullet.size = weapon.getSize();
-		
-		bullet.body.getAnchor().set( x, y );
-		bullet.body.getDimensions().set( bullet.size, bullet.size );
-		
-		bullet.velocity.set(dx, dy);
-		bullet.target.set( target );
-		bullet.weapon = weapon;
-
-		return bullet;
-	}
-	
-	public static void free(Bullet bullet)
-	{
-		pool.free( bullet );
-	}
 	
 	//////////////////////////////////////////////////////////////////
 	
 	private static int crosshairAnimationId = GameFactory.registerAnimation("anima//ui//crosshair02.atlas", "crosshair");
 	private static Animation crosshair = GameFactory.getAnimation( crosshairAnimationId );
 
+	IWeapon weapon;
 	
-	/**
-	 * level object id
-	 */
-	private int id;
-	
-	private float size = 1;
+	float size = 1;
 
-	/**
-	 * Collision box
-	 */
-	private AABB body;
-	
 	/**
 	 * Bullet velocity
 	 */
-	private Vector2 velocity;
+	Vector2 velocity;
 	
-	private boolean isAlive;
+	Vector2 target;
 	
-	private Vector2 target;
+//	public IWeapon weapon;
 	
-	public IWeapon weapon;
+	float angle;
 	
-	public float angle;
+	float lifetime;
 	
-	public float lifetime;
-	
-	private Bullet()
+	Bullet()
 	{
-		body = AABB.createSquare(0, 0, 0);
-		
 		velocity = Vector2.Zero.cpy();
 		
 		target = Vector2.Zero.cpy();
 	}
-
 	
-	@Override
-	public AABB getArea()
+	public void init()
 	{
-		return body;
-	}
-
-	@Override
-	public int getId()
-	{
-		return id;
-	}
-
-	@Override
-	public void reset()	
-	{ 
-		this.isAlive = true;
+		super.init();
 		this.lifetime = 0;
 	}
+
 
 	/**
 	 * @param delta
 	 */
+	@Override
 	public void update(float delta)
 	{
 		lifetime += delta;
 		if(lifetime > weapon.getLifeDuration())
 		{
-			isAlive = false;
+			setDead();
 			return;
 		}
 		weapon.getBulletBehavior().update( delta, this );
 	}
 	
-	public void draw( SpriteBatch batch )
+	@Override
+	public void draw( SpriteBatch batch, ShapeRenderer shape )
 	{
-		Vector2 position = body.getAnchor();
+		Vector2 position = getBody().getAnchor();
 		TextureRegion region = weapon.getBulletAnimation().getKeyFrame( lifetime, true );
 		batch.draw( region, 
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
@@ -167,22 +110,14 @@ public class Bullet implements Poolable, ISpatialObject
 	}
 
 	public Vector2 getVelocity() { return velocity; }
-	public AABB getBody() { return body; }
+
 	public Vector2 getTarget() { return target; }
-	public void setIsAlive(boolean isAlive) { this.isAlive = false; }
 
-	/**
-	 * @return
-	 */
-	public boolean isAlive() { return isAlive; }
 
-	/**
-	 * @return
-	 */
-	public Damage getDamage()
-	{
-		isAlive = false;
-		return weapon.getDamage();
+	@Override
+	public float getSize() {
+		return size;
 	}
+
 
 }

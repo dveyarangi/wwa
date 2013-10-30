@@ -18,7 +18,14 @@ public class RandomTravelingOrder extends Order
 
 	@Override
 	public Task createTask(Scheduler scheduler) {
-		return new TravelingTask(scheduler, this);
+		return new Task(scheduler, 
+						this, 
+						new TaskStage[] { 
+							TaskStage.TRAVEL_TO_SOURCE,
+							TaskStage.TRAVEL_TO_TARGET
+						},
+						false
+		);
 	}
 	
 	@Override

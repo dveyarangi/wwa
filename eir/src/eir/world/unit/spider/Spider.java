@@ -10,38 +10,28 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Asteroid;
-import eir.world.Level;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavNode;
-import eir.world.unit.Bullet;
+import eir.world.unit.Faction;
+import eir.world.unit.Unit;
+import eir.world.unit.weapon.Bullet;
 import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
-import eir.world.unit.weapon.Minigun;
-
 /**
  * Spider
  *
  */
-public class Spider
+public class Spider extends Unit
 {
-	private int ownerId;
-	
-	private Level level;
+	private Faction faction;
 	
 	private float size;
-	
-	private Vector2 position;
 
 	private Vector2 axis;
 	
-	/**
-	 * currently traversed asteroid, maybe null in transition
-	 */
-	private Asteroid asteroid;
-	
 	private float speed;
 
-	
+	private Asteroid asteroid;
 	private float surfaceIdx;
 	private float webIdx;
 	
@@ -59,34 +49,33 @@ public class Spider
 	private Chassis chassis;
 	
 	private static Sprite spiderTexture = GameFactory.createSprite( "anima//spider//spider_body.png" );
-
-	public Spider(int ownerId, Level level, Asteroid asteroid, float surfaceIdx, float size, float speed)
+	
+	public Spider()
 	{
-		this.ownerId = ownerId;
-		this.level = level;
-		this.asteroid = asteroid;
-		
-		this.size = size;
+		System.out.println("hola");
+	}
+
+	public void init()
+	{
+		super.init();
 		this.speed = 10*speed;
+
 		
-		position = new Vector2();
-		
-		this.surfaceIdx = surfaceIdx;
-		asteroid.getModel().getSurfacePoint( surfaceIdx, position );
+		asteroid = ((Asteroid) anchor.getDescriptor().getObject());
+		asteroid.getModel().getSurfacePoint( surfaceIdx, getBody().getAnchor() );
 		
 		sprite = new Sprite(GameFactory.loadTexture( "models/spider_placeholder.png" ));
 		sprite.setOrigin( sprite.getWidth()/2, sprite.getHeight()/2 );
 		sprite.setScale( size / sprite.getWidth() );
 		
-//		weapon = new Minigun(ownerId);
+//		weapon = new Minigun(this);
 		weapon = new HomingLauncher(this);
 		
 		axis = new Vector2();
-		
-		this.chassis = new Chassis( this, position, position );
+		this.chassis = new Chassis( this, getBody().getAnchor(), getBody().getAnchor() );
 	}
 	
-	public int getOwnerId() { return ownerId; }
+	public Faction getFaction() { return faction; }
 	
 	public void update(float delta)
 	{
@@ -118,7 +107,7 @@ public class Spider
 					if(webIdx > 1)
 						webIdx = 1;
 						
-					position.set(web.getDirection())
+					getBody().getAnchor().set(web.getDirection())
 							.mul(webIdx*web.getLength())
 							.add( web.getNode1().getPoint() );					
 					axis.set( web.getDirection() );
@@ -126,10 +115,13 @@ public class Spider
 			}
 		}
 		
+		asteroid.getModel().getNavNode( 
+				Math.round( surfaceIdx ) % asteroid.getModel().getSize() );	
+				
 		chassis.update( delta );
 	
 		// floating toward chassis center point
-		position.add( chassis.getPosition().tmp().sub( position ).div( 10 ) );
+		getBody().getAnchor().add( chassis.getPosition().tmp().sub( getBody().getAnchor() ).div( 10 ) );
 //		leftLegJoint.set(targetPosition); 
 //		rightLegJoint.set(targetPosition); 
 		
@@ -137,15 +129,15 @@ public class Spider
 		
 		if(shootingTarget != null)
 		{
-			Bullet bullet = weapon.createBullet( level, position, shootingTarget );
+			Bullet bullet = weapon.createBullet( faction.getLevel(), getBody().getAnchor(), shootingTarget );
 			if(bullet != null) // is reloaded
-			level.shoot( this, bullet);
+			faction.getLevel().addUnit( bullet );
 		}
 	}
 	
 	public void stepFromWeb()
 	{
-		if(web.getNode1().getPoint().dst2( position ) < 10d)
+		if(web.getNode1().getPoint().dst2( getBody().getAnchor() ) < 10d)
 		{
 			asteroid = web.getNode1().getDescriptor().getObject();
 			surfaceIdx = web.getNode1().getDescriptor().getIndex();
@@ -153,7 +145,7 @@ public class Spider
 			web = null;
 		}
 		else
-		if(web.getNode2().getPoint().dst2( position ) < 10)
+		if(web.getNode2().getPoint().dst2( getBody().getAnchor() ) < 10)
 		{
 			asteroid = web.getNode2().getDescriptor().getObject();
 			surfaceIdx = web.getNode2().getDescriptor().getIndex();
@@ -162,10 +154,9 @@ public class Spider
 		}
 	}
 	
-	public NavNode getClosestNode()
+	private NavNode getClosestNode()
 	{
-		return asteroid.getModel().getNavNode( 
-				Math.round( surfaceIdx ) % asteroid.getModel().getSize() );
+		return anchor;
 	}
 
 
@@ -188,7 +179,7 @@ public class Spider
 			NavEdge walkingEdge = null; 
 			for(NavNode node : getClosestNode().getNeighbors())
 			{
-				NavEdge edge = level.getNavMesh().getEdge( getClosestNode(), node);
+				NavEdge edge = faction.getLevel().getNavMesh().getEdge( getClosestNode(), node);
 				if(edge.getType() == NavEdge.Type.WEB)
 				{
 					walkingEdge = edge;
@@ -222,18 +213,8 @@ public class Spider
 		
 		chassis.draw(batch, shape);
 				
-		batch.begin();
 //		spiderTexture.setRotation( weapon.get )
-		batch.draw( spiderTexture, position.x-2.5f, position.y-2f, 4, 4 );
-		batch.end();
-	}
-
-	/**
-	 * @return
-	 */
-	public Vector2 getPosition()
-	{
-		return position;
+		batch.draw( spiderTexture, getBody().getAnchor().x-2.5f, getBody().getAnchor().y-2f, 4, 4 );
 	}
 
 	/**
@@ -255,4 +236,10 @@ public class Spider
 	 * @return
 	 */
 	float getSurfaceIdx() { return surfaceIdx; }
+
+
+	@Override
+	public float getSize() {
+		return size;
+	}
 }

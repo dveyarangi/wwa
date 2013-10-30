@@ -8,9 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Effect;
 import eir.world.Level;
-import eir.world.unit.Bullet;
 import eir.world.unit.Damage;
 import eir.world.unit.Faction;
+import eir.world.unit.UnitsFactory;
 
 /**
  * @author dveyarangi
@@ -29,20 +29,20 @@ public abstract class IWeapon
 	protected float timeToReload;
 	protected int bulletsInMagazine;
 	
-	protected int ownerId;
+	protected Faction faction;
 
 
 	protected Level level;
 	/**
 	 * 
 	 */
-	public IWeapon(int ownerId)
+	public IWeapon(Faction faction)
 	{
 		super();
 		
 		weaponDir = new Vector2();
 		
-		this.ownerId = ownerId;
+		this.faction = faction;
 	}
 
 	public Bullet createBullet(Level level, Vector2 weaponPos, Vector2 targetPos)
@@ -59,10 +59,12 @@ public abstract class IWeapon
 		weaponDir.setAngle( angle );
 		
 		float speed = createSpeed();
-		Bullet bullet = Bullet.getBullet( level, this, 
-				weaponPos.x, weaponPos.y, 
-			 	weaponDir.x * speed, weaponDir.y * speed,
-				targetPos);
+		Bullet bullet = UnitsFactory.getUnit(UnitsFactory.BULLET, weaponPos.x, weaponPos.y, angle, faction);
+				
+		bullet.weapon = this;
+		bullet.velocity.set(this.getDirection()).mul( speed );
+		bullet.size = this.getSize();
+		bullet.target.set(targetPos);
 		
 		bullet.angle = weaponDir.angle();
 		this.level = level;
@@ -144,5 +146,7 @@ public abstract class IWeapon
 
 	public Level getLevel() { return level; }
 	
-	public int getOwnerId() { return ownerId; }
+	public Faction getFaction() { return faction; }
+	
+	public Vector2 getDirection() { return weaponDir; }
 }

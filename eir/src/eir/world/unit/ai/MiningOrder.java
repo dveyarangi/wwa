@@ -23,7 +23,14 @@ public class MiningOrder extends Order
 	@Override
 	public Task createTask(Scheduler scheduler)
 	{
-		return new MiningTask(scheduler, this);
+		return new Task(scheduler, 
+				this, 
+				new TaskStage[] { 
+					TaskStage.TRAVEL_TO_TARGET,
+					TaskStage.MINING,
+				},
+				false
+			);
 	}
 
 }

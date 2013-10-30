@@ -9,10 +9,12 @@ package eir.world.unit.ai;
  */
 public enum TaskStage
 {
+	IDLE,
 	TRAVEL_TO_SOURCE,
 	TRAVEL_TO_TARGET,
 	MINING,
 	UNLOAD,
 	FARM,
-	GUARD
+	GUARD,
+	ATTACK,
 }

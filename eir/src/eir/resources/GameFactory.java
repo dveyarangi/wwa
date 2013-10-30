@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.BodyLoader.Model;
 import eir.resources.BodyLoader.RigidBodyModel;
+import eir.resources.LevelLoader.LoadingContext;
 import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.environment.nav.NavMesh;
@@ -96,8 +97,13 @@ public class GameFactory
 	 */
 	public static Level loadLevel(String levelName)
 	{
+		final LoadingContext context = new LoadingContext();
 		LevelLoader loader = new LevelLoader();
-		level = loader.readLevel( levelName );
+		
+		level = loader.readLevel( levelName, context );
+		
+		level.init(context);
+		
 		return level;
 	}
 	

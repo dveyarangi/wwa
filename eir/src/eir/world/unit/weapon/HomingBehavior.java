@@ -5,7 +5,6 @@ package eir.world.unit.weapon;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.world.unit.Bullet;
 
 
 /**
@@ -46,7 +45,7 @@ public class HomingBehavior implements IBulletBehavior
 		// hit:
 		if(bullet.getBody().getAnchor().dst2( bullet.getTarget() ) < 1)
 		{
-			bullet.setIsAlive(false);
+			bullet.setDead();
 		}
 	}
 

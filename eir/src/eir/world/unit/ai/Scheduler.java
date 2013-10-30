@@ -16,9 +16,7 @@ import eir.world.unit.Unit;
  */
 public class Scheduler
 {
-	
-	private Level level;
-	
+		
 	/**
 	 * Orders by unit types?
 	 */
@@ -27,10 +25,8 @@ public class Scheduler
 	private Multimap <Order, Task> tasks;
 	
 	
-	public Scheduler(Level level)
+	public Scheduler()
 	{
-		this.level = level;
-		
 		this.orders = HashMultimap.create(); 
 		
 		tasks = HashMultimap.create();
