@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import eir.world.unit.Damage;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
-import eir.world.unit.ai.GuardingOrder;
 
 /**
  * @author dveyarangi
@@ -35,8 +34,6 @@ public class Spawner extends Unit
 		super.init();
 		
 		unitType = unitType.intern();
-	
-		faction.getScheduler().addOrder( "birdy", new GuardingOrder( 0, anchor ) );
 
 	}
 	
@@ -54,16 +51,15 @@ public class Spawner extends Unit
 		}
 	}
 
-	public void hit(Damage damage)
+	public void hit(Unit source)
 	{
-		return; // spawner is unbreakable for now
+		return; // TODO: spawner is unbreakable for now
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, ShapeRenderer shape)
 	{
-		// TODO Auto-generated method stub
-		
+		return; // TODO: spawner is invisible
 	}
 
 	@Override

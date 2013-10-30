@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import eir.resources.GameFactory;
 import eir.world.Effect;
 import eir.world.unit.Damage;
-import eir.world.unit.Faction;
+import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
@@ -30,10 +30,10 @@ public class Minigun extends IWeapon
 	
 	private Damage bulletDamage;
 	
-	public Minigun(Faction faction)
+	public Minigun(Unit unit)
 	{
 		
-		super(faction); 
+		super(unit); 
 //		bulletSprite = new Sprite(GameFactory.loadTexture("models/fireball.png"));
 //		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
 //		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );

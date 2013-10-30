@@ -10,6 +10,7 @@ import eir.world.Effect;
 import eir.world.Level;
 import eir.world.unit.Damage;
 import eir.world.unit.Faction;
+import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 
 /**
@@ -28,24 +29,24 @@ public abstract class IWeapon
 	protected Vector2 weaponDir;
 	protected float timeToReload;
 	protected int bulletsInMagazine;
-	
-	protected Faction faction;
 
 
 	protected Level level;
+	
+	private Unit owner;
 	/**
 	 * 
 	 */
-	public IWeapon(Faction faction)
+	public IWeapon(Unit owner)
 	{
 		super();
 		
-		weaponDir = new Vector2();
+		this.owner = owner;
 		
-		this.faction = faction;
+		weaponDir = new Vector2();
 	}
 
-	public Bullet createBullet(Level level, Vector2 weaponPos, Vector2 targetPos)
+	public Bullet createBullet(Level level, Vector2 targetPos)
 	{
 		if(timeToReload > 0)
 		{
@@ -54,12 +55,14 @@ public abstract class IWeapon
 		if(bulletsInMagazine == 0)
 			bulletsInMagazine = getBurstSize();
 		
+		Vector2 weaponPos = owner.getArea().getAnchor();
+		
 		weaponDir.set( targetPos ).sub( weaponPos ).nor();
 		float angle = createAngle();
 		weaponDir.setAngle( angle );
 		
 		float speed = createSpeed();
-		Bullet bullet = UnitsFactory.getUnit(UnitsFactory.BULLET, weaponPos.x, weaponPos.y, angle, faction);
+		Bullet bullet = UnitsFactory.getUnit(UnitsFactory.BULLET, weaponPos.x, weaponPos.y, angle, owner.getFaction());
 				
 		bullet.weapon = this;
 		bullet.velocity.set(this.getDirection()).mul( speed );
@@ -146,7 +149,9 @@ public abstract class IWeapon
 
 	public Level getLevel() { return level; }
 	
-	public Faction getFaction() { return faction; }
+	public Faction getFaction() { return owner.getFaction(); }
 	
 	public Vector2 getDirection() { return weaponDir; }
+
+	public Unit getOwner() { return owner; }
 }

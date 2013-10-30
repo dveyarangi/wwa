@@ -165,7 +165,7 @@ public class Level
 	 */
 	public Unit addUnit(Unit unit)
 	{
-		log("unit added: type: " + unit.getType() + " : sid: " + unit.getId());
+		log("Unit added: " + unit);
 		unitsToAdd.add(unit);
 		
 		return unit;
@@ -224,6 +224,7 @@ public class Level
 				unit.getFaction().removeUnit( unit );
 				
 				UnitsFactory.free( unit );
+				log("Unit removed: " + unit);
 			}
 			
 		}

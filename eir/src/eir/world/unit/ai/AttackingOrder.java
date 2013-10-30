@@ -3,20 +3,23 @@
  */
 package eir.world.unit.ai;
 
+import eir.world.unit.Unit;
+
 
 /**
  * @author dveyarangi
  *
  */
-public class GuardingOrder extends Order
+public class AttackingOrder extends Order
 {
+	private Unit unit;
 
 	/**
 	 * @param priority
 	 * @param sourceNode
 	 * @param targetNode
 	 */
-	public GuardingOrder(float priority)
+	public AttackingOrder(float priority)
 	{
 		super( priority, null, null, null );
 	}
@@ -24,7 +27,8 @@ public class GuardingOrder extends Order
 	@Override
 	public Task createTask(Scheduler scheduler)
 	{
-		return new Task( scheduler, this, new TaskStage [] { TaskStage.GUARD }, false );
+		return new Task(scheduler, this, new TaskStage [] { TaskStage.ATTACK }, false);
 	}
+
 
 }

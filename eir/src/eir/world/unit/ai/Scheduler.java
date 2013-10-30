@@ -55,12 +55,23 @@ public class Scheduler
 		if(unitOrders == null)
 			return null;
 		
-		Order order = unitOrders.iterator().next();
+		Order order = null;
+		for(Order aOrder : unitOrders)
+		{
+			if(aOrder.isActive())
+			{
+				order = aOrder;
+				break;
+			}
+		}
 		
+		Task task = null;
 		
-		Task task = order.createTask( this );
+		if(order != null)
+			task = order.createTask( this );
 		
-		tasks.put(order, task);
+		if(task != null)
+			tasks.put(order, task);
 		
 		return task;
 	}

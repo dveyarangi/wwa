@@ -11,7 +11,7 @@ public class RandomTravelingOrder extends Order
 	private NavMesh mesh;
 
 	public RandomTravelingOrder(NavMesh mesh, float priority) {
-		super(priority, null, null);
+		super(priority, null, null, null);
 		
 		this.mesh = mesh;
 	}

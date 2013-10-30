@@ -119,6 +119,7 @@ public abstract class Unit implements ISpatialObject
 		
 		// performing task:
 		task.getBehavior( this ).update( delta, task, this );
+
 	}
 
 	public abstract void draw( SpriteBatch batch, ShapeRenderer shape );

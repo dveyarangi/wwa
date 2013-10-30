@@ -36,6 +36,8 @@ public class Birdy extends Unit
 	
 	Vector2 velocity = new Vector2();
 
+	public boolean quantum;
+
 	
 	public void init()
 	{
@@ -44,6 +46,7 @@ public class Birdy extends Unit
 		velocity.set(0,0);
 		
 		timeToPulse = 0;
+		quantum = false;
 	}
 
 	@Override

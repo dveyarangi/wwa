@@ -119,5 +119,9 @@ public class Bullet extends Unit
 		return size;
 	}
 
+	public IWeapon getWeapon() {
+		return weapon;
+	}
+
 
 }

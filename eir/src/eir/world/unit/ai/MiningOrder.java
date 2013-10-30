@@ -17,7 +17,7 @@ public class MiningOrder extends Order
 	 */
 	public MiningOrder(float priority, NavNode sourceNode, NavNode targetNode)
 	{
-		super(priority, sourceNode, targetNode);
+		super(priority, sourceNode, targetNode, null);
 	}
 
 	@Override

@@ -22,15 +22,27 @@ public class BirdyAttackingBehavior implements UnitBehavior <Birdy>
 	{
 		if(unit.timeToPulse <= 0)
 		{
-			unit.timeToPulse = unit.pulseLength;
+			if(unit.quantum)
+			{
+				task.nextStage();
+				unit.quantum = false;
+				return;
+			}
 			
-			Vector2 target = task.getOrder().getTargetNode().getPoint();
+			unit.quantum = true;
 			
-			unit.velocity.set( target );
-			unit.velocity.x += RandomUtil.R( 50 ) - 25;
-			unit.velocity.y += RandomUtil.R( 50 ) - 25;
+			unit.timeToPulse = unit.pulseLength/2;
 			
-			unit.velocity.sub( unit.getBody().getAnchor() ).nor().mul( unit.pulseStreght );
+			Vector2 target = task.getOrder().getUnit().getBody().getAnchor();
+			
+			
+			unit.velocity.set( target ).sub( unit.getBody().getAnchor() );
+			
+			float dist = unit.velocity.len();
+			unit.velocity.x += RandomUtil.R( dist ) - dist/2;
+			unit.velocity.y += RandomUtil.R( dist ) - dist/2;
+			
+			unit.velocity.div(dist).mul( unit.pulseStreght );
 			
 			unit.angle = unit.velocity.angle();
 		}

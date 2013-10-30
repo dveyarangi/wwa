@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import eir.resources.GameFactory;
 import eir.world.Effect;
 import eir.world.unit.Damage;
-import eir.world.unit.spider.Spider;
+import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
@@ -25,20 +25,17 @@ public class HomingLauncher extends IWeapon
 	private Damage bulletDamage;
 	
 	private float burstAngle;
-	
-	private Spider spider;
-	
+
 		
 	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
 	private static final int TRAIL_AID = GameFactory.registerAnimation( "anima//effects//smoke//smoke.atlas", "smoke" );
 	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion03.atlas", "explosion03" );
 	private static final int HIT_02_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion05.atlas", "explosion05" );
 	
-	public HomingLauncher(Spider spider)
+	public HomingLauncher(Unit unit)
 	{
-		super(spider.getFaction());
-		
-		this.spider = spider;
+		super(unit);
+
 		
 		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
 		

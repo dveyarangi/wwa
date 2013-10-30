@@ -9,10 +9,8 @@ import java.util.Set;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 
-import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.controllers.IController;
-import eir.world.unit.ai.RandomTravelingOrder;
 import eir.world.unit.ai.Scheduler;
 
 /**
@@ -77,6 +75,7 @@ public class Faction
 	
 	public void update( float delta )
 	{
+		controller.update( delta );
 	}
 	
 	/**
@@ -97,6 +96,10 @@ public class Faction
 
 	public IController getController() {
 		return controller;
+	}
+
+	public Set <Unit> getUnits() {
+		return units;
 	}
 
 }

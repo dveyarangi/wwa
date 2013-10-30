@@ -454,7 +454,7 @@
 					"faction" : 2,
 					"anchor" : { "asteroid" : "red_left_foot", "navIdx" : 1 },
 					"unitType" : "ant",
-					"maxUnits" : 100,
+					"maxUnits" : 50,
 					"spawnInterval" : 1f
 					
 				},
@@ -464,7 +464,7 @@
 					"anchor" : { "asteroid" : "red_right_foot", "navIdx" : 1 },
 					"unitType" : "ant",
 					
-					"maxUnits" : 100,
+					"maxUnits" : 50,
 					"spawnInterval" : 1f
 					
 				},
@@ -473,15 +473,30 @@
 					"faction" : 3,
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 200 },
 					"unitType" : "birdy", 
-					"maxUnits" : 10,
-					"spawnInterval" : 10f
-					
-				}
+					"maxUnits" : 50,
+					"spawnInterval" : 1.5f
+				},
+				{
+					"type" : "spawner",
+					"faction" : 3,
+					"anchor" : { "asteroid" : "junkheap", "navIdx" : 100 },
+					"unitType" : "birdy", 
+					"maxUnits" : 50,
+					"spawnInterval" : 1.5f
+				},
+								{
+					"type" : "spawner",
+					"faction" : 3,
+					"anchor" : { "asteroid" : "junkheap", "navIdx" : 50 },
+					"unitType" : "birdy", 
+					"maxUnits" : 50,
+					"spawnInterval" : 1.5f
+				}				
 			],
 			
 			"playerSpider" : {
 					"type" : "spider",
-					"faction" : 2,
+					"faction" : 1,
 					"anchor" : { "asteroid" : "center", "navIdx" : 22 }
 				}
 		########################################

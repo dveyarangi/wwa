@@ -17,6 +17,7 @@ import eir.world.unit.Unit;
 import eir.world.unit.weapon.Bullet;
 import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.weapon.Minigun;
 /**
  * Spider
  *
@@ -68,8 +69,8 @@ public class Spider extends Unit
 		sprite.setOrigin( sprite.getWidth()/2, sprite.getHeight()/2 );
 		sprite.setScale( size / sprite.getWidth() );
 		
-//		weapon = new Minigun(this);
-		weapon = new HomingLauncher(this);
+		weapon = new Minigun(this);
+//		weapon = new HomingLauncher(this);
 		
 		axis = new Vector2();
 		this.chassis = new Chassis( this, getBody().getAnchor(), getBody().getAnchor() );
@@ -129,7 +130,7 @@ public class Spider extends Unit
 		
 		if(shootingTarget != null)
 		{
-			Bullet bullet = weapon.createBullet( faction.getLevel(), getBody().getAnchor(), shootingTarget );
+			Bullet bullet = weapon.createBullet( faction.getLevel(), shootingTarget );
 			if(bullet != null) // is reloaded
 			faction.getLevel().addUnit( bullet );
 		}
