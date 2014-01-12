@@ -51,6 +51,9 @@ public abstract class Unit implements ISpatialObject
 	
 	protected Damage damage = new Damage();
 
+	
+	public float lifetime;
+	
 
 	public Unit()
 	{
@@ -99,10 +102,14 @@ public abstract class Unit implements ISpatialObject
 		this.task = null;
 		
 		this.type = type.intern();
+		
+		this.lifetime = 0;
 	}
 	
 	public void update(float delta)
 	{
+		lifetime += delta;
+		
 		if(task == null || task.isFinished())
 		{
 			// requesting a new task:

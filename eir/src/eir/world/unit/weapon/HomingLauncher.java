@@ -27,7 +27,8 @@ public class HomingLauncher extends IWeapon
 	private float burstAngle;
 
 		
-	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
+//	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
+	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket02.atlas", "bullet" );
 	private static final int TRAIL_AID = GameFactory.registerAnimation( "anima//effects//smoke//smoke.atlas", "smoke" );
 	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion03.atlas", "explosion03" );
 	private static final int HIT_02_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion05.atlas", "explosion05" );
@@ -45,17 +46,17 @@ public class HomingLauncher extends IWeapon
 	}
 	
 	@Override
-	public float getSize() { return 1; }
+	public float getSize() { return 3; }
 
 
 	@Override
-	public int getBurstSize() { return 8; }
+	public int getBurstSize() { return 13; }
 
 	@Override
-	public float getMagazineReloadTime() { return 1f; }
+	public float getMagazineReloadTime() { return 0.3f; }
 
 	@Override
-	public float getReloadingTime() { return 0.05f; }
+	public float getReloadingTime() { return 0.02f; }
 
 	@Override
 	public float getAccuracy() { return 15; }

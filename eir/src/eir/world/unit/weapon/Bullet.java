@@ -48,8 +48,7 @@ public class Bullet extends Unit
 //	public IWeapon weapon;
 	
 	float angle;
-	
-	float lifetime;
+
 	
 	Bullet()
 	{
@@ -90,7 +89,7 @@ public class Bullet extends Unit
 				region.getRegionWidth()/2,region.getRegionHeight()/2, 
 				region.getRegionWidth(), region.getRegionHeight(), 
 				size/region.getRegionWidth(), 
-				size/region.getRegionWidth(), angle+90);
+				size/region.getRegionWidth(), angle);
 		
 		if(weapon.getBulletBehavior().requiresTarget() && target != null)
 		{
@@ -123,5 +122,8 @@ public class Bullet extends Unit
 		return weapon;
 	}
 
-
+	public Effect getDeathEffect()
+	{
+		return weapon.createHitEffect( this );
+	}
 }

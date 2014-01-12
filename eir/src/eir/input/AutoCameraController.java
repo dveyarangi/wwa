@@ -26,6 +26,9 @@ public class AutoCameraController implements ICameraController
 	private Vector2 scrollTarget;
 	public float zoomTarget;
 	
+	private static final int TRANSPOSE_LATENCY = 10;
+	private static final int ZOOM_LATENCY = 10;
+	
 	public AutoCameraController(OrthographicCamera camera, GameInputProcessor inputProcessor, Level level)
 	{
 		this.camera = camera;
@@ -62,9 +65,9 @@ public class AutoCameraController implements ICameraController
 		
 		scrollTarget.div( 2 ).add( playerPos );
 		
-		camera.position.x += (scrollTarget.x - camera.position.x) / 2;
-		camera.position.y += (scrollTarget.y - camera.position.y) / 2;
-		camera.zoom += (zoomTarget - camera.zoom) / 10;
+		camera.position.x += (scrollTarget.x - camera.position.x) / TRANSPOSE_LATENCY;
+		camera.position.y += (scrollTarget.y - camera.position.y) / TRANSPOSE_LATENCY;
+		camera.zoom += (zoomTarget - camera.zoom) / ZOOM_LATENCY;
 
 		// storing last camera position:
 		lastPosition.x = camera.position.x;

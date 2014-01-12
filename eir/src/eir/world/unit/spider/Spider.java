@@ -68,8 +68,8 @@ public class Spider extends Unit
 		sprite.setOrigin( sprite.getWidth()/2, sprite.getHeight()/2 );
 		sprite.setScale( size / sprite.getWidth() );
 		
-		weapon = new Minigun(this);
-//		weapon = new HomingLauncher(this);
+//		weapon = new Minigun(this);
+		weapon = new HomingLauncher(this);
 		
 		axis = new Vector2();
 		this.chassis = new Chassis( this, getBody().getAnchor(), getBody().getAnchor() );

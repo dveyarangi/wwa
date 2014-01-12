@@ -15,9 +15,9 @@ public class TexturePacker
 {
 	  public static void main (String[] args) throws Exception {
 	         TexturePacker2.
-	         process("anima\\smoke\\", // source dir
-	        		 "anima\\smoke\\smoke01\\",  // target dir
-	        		 "smoke" // atlas name
+	         process("images\\rocket\\", // source dir
+	        		 "images\\rocket\\r\\",  // target dir
+	        		 "rocket02" // atlas name
 	        		 );
 	 }
 }

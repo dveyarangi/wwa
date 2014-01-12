@@ -27,7 +27,7 @@ public class WildlifeController implements IController
 	private static final int ANGER_TIMEOUT = 20;
 	private static final int ANGER_BY_HIT = 5;
 	
-	private static final float ANGER_SPAWN_MODIFIER = 0.25f;
+	private static final float ANGER_SPAWN_MODIFIER = 0.1f;
 	
 
 	@Override

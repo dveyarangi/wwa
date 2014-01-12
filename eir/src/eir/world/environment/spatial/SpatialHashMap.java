@@ -412,6 +412,12 @@ public class SpatialHashMap <O extends ISpatialObject>
 					if(object.getArea().getPassId() == passId)
 						continue;
 					
+					distanceSquare = 
+							FastMath.powOf2(x - object.getArea().getCenterX()) + 
+							FastMath.powOf2(y - object.getArea().getCenterY());
+					if(radiusSquare < distanceSquare)
+						continue;
+					
 //					float distanceSquare = FastMath.powOf2(x - chunk.getX()) + FastMath.powOf2(y - chunk.getY());
 					
 //					System.out.println(aabb.r+radius + " : " + Math.sqrt(distanceSquare));
