@@ -1,19 +1,9 @@
 package eir.resources;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.OrderedMap;
 import com.google.gson.Gson;
 
 /**
@@ -23,22 +13,22 @@ import com.google.gson.Gson;
  *
  * @author Aurelien Ribon | http://www.aurelienribon.com
  */
-public class BodyLoader {
+public class ShapeLoader {
 
         // Model
-        private final Model model;
+ //       private final Model model;
 
         // Reusable stuff
-        private final List<Vector2> vectorPool = new ArrayList<Vector2>();
-        private final PolygonShape polygonShape = new PolygonShape();
-        private final CircleShape circleShape = new CircleShape();
-        private final Vector2 vec = new Vector2();
+ //       private final List<Vector2> vectorPool = new ArrayList<Vector2>();
+//        private final PolygonShape polygonShape = new PolygonShape();
+ //       private final CircleShape circleShape = new CircleShape();
+ //       private final Vector2 vec = new Vector2();
 
         // -------------------------------------------------------------------------
         // Ctors
         // -------------------------------------------------------------------------
 
-        public BodyLoader(FileHandle file) {
+ /*       public BodyLoader(FileHandle file) {
                 if (file == null) throw new NullPointerException("file is null");
                 model = readJson(file.readString());
         }
@@ -46,9 +36,9 @@ public class BodyLoader {
         public BodyLoader(String str) {
                 if (str == null) throw new NullPointerException("str is null");
                 model = readJson(str);
-        }
-          
-        public static Model readModel(String str)
+        }*/
+        
+        public static Model readShape(String str)
         {
         	Gson gson = new Gson();
         	Model model = gson.fromJson( str, Model.class );
@@ -83,10 +73,11 @@ public class BodyLoader {
          * @param fd The fixture parameters to apply to the created body fixture.
          * @param scale The desired scale of the body. The default width is 1.
          */
-        public void attachFixture(Body body, String name, FixtureDef fd, float scale) {
+ /*       public void attachFixture(Body body, String name, FixtureDef fd, Vector2 origin, float scale) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
-                if (rbModel == null) 
-                	throw new RuntimeException("Name '" + name + "' was not found.");
+                if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
+
+                origin.set(rbModel.origin).mul(scale);
 
                 for (int i=0, n=rbModel.polygons.size(); i<n; i++) {
                         PolygonModel polygon = rbModel.polygons.get(i);
@@ -94,7 +85,7 @@ public class BodyLoader {
 
                         for (int ii=0, nn=vertices.length; ii<nn; ii++) {
                                 vertices[ii] = newVec().set(polygon.vertices.get(ii)).mul(scale);
-                                vertices[ii].sub(getOrigin(name, scale));
+                                vertices[ii].sub(origin);
                         }
 
                         polygonShape.set(vertices);
@@ -118,17 +109,17 @@ public class BodyLoader {
 
                         free(center);
                 }
-        }
+        }*/
 
         /**
          * Gets the image path attached to the given name.
          */
-        public String getImagePath(String name) {
+ /*       public String getImagePath(String name) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
                 return rbModel.imagePath;
-        }
+        }*/
 
         /**
          * Gets the origin point attached to the given name. Since the point is
@@ -136,12 +127,12 @@ public class BodyLoader {
          * size. Warning: this method returns the same Vector2 object each time, so
          * copy it if you need it for later use.
          */
-        public Vector2 getOrigin(String name, float scale) {
+ /*       public Vector2 getOrigin(String name, float scale) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
                 return vec.set(rbModel.origin).mul(scale);
-        }
+        }*/
 
         /**
          * <b>For advanced users only.</b> Lets you access the internal model of
@@ -157,21 +148,21 @@ public class BodyLoader {
         // -------------------------------------------------------------------------
 
         public static class Model {
-                public Map <String, RigidBodyModel> rigidBodies = new HashMap<String, RigidBodyModel>();
+                public List <RigidBodyModel> rigidBodies = new ArrayList<RigidBodyModel>();
         }
 
         public static class RigidBodyModel {
                 public String name;
                 public String imagePath;
                 public Vector2 origin = new Vector2();
-                public List<PolygonModel> polygons = new ArrayList <PolygonModel> ();
-                public List<CircleModel> circles = new ArrayList <CircleModel> ();
-                public List<ShapeModel> shapes = new ArrayList <ShapeModel> ();
+                public List<List <Vector2>> polygons;
+                public List<CircleModel> circles;
+                public List<ShapeModel> shapes;
         }
 
         public static class PolygonModel {
                 public List<Vector2> vertices = new ArrayList<Vector2>();
-                private Vector2[] buffer; // used to avoid allocation in attachFixture()
+ //               private Vector2[] buffer; // used to avoid allocation in attachFixture()
         }
         
         public static enum ShapeType { POLYGON }
@@ -190,7 +181,7 @@ public class BodyLoader {
         // Json reading process
         // -------------------------------------------------------------------------
 
-        private Model readJson(String str) {
+ /*       private Model readJson(String str) {
                 Model m = new Model();
                 OrderedMap<String,?> rootElem = (OrderedMap<String,?>) new JsonReader().parse(str);
 
@@ -203,9 +194,9 @@ public class BodyLoader {
                 }
 
                 return m;
-        }
+        }*/
 
-        private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem) {
+/*        private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem) {
                 RigidBodyModel rbModel = new RigidBodyModel();
                 rbModel.name = (String) bodyElem.get("name");
                 rbModel.imagePath = (String) bodyElem.get("imagePath");
@@ -260,5 +251,5 @@ public class BodyLoader {
 
         private void free(Vector2 v) {
                 vectorPool.add(v);
-        }
+        }*/
 }

@@ -6,6 +6,7 @@ package eir.world;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
@@ -52,6 +53,8 @@ public class Asteroid
 	 */
 	private PolygonalModel model;
 	
+	private Body body;
+	
 	public Asteroid()
 	{
 
@@ -69,11 +72,17 @@ public class Asteroid
 	 * This is required to initialize sprite and model
 	 * @param factory
 	 */
-	public void init(NavMesh mesh)
+	public void preinit(NavMesh mesh)
 	{
 		model = GameFactory.loadAsteroidModel( mesh, this, modelId );
 		sprite = GameFactory.createSprite( modelId, position, model.getOrigin(), size, size, angle );
 	}
+	
+	public void init(Level level)
+	{
+		this.body = GameFactory.loadBody(modelId, this);
+	}
+	
 	
 	/**
 	 * @param batch

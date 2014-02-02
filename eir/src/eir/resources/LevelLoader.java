@@ -271,7 +271,7 @@ public class LevelLoader
 						asteroid = rawGson.fromJson( elem, type );
 						context.addAsteroid(asteroid);
 						
-						asteroid.init( context.navMesh );
+						asteroid.preinit( context.navMesh );
 						
 						return asteroid;
 					}

@@ -24,6 +24,8 @@ public class UIInputProcessor implements InputProcessor
 			Debug.toggleSpatialGrid();
 		if(keycode == Keys.SEMICOLON)
 			Debug.toggleFactions();
+		if(keycode == Keys.APOSTROPHE)
+			Debug.toggleBox2D();
 		
 			
 		return false;

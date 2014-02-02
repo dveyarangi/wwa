@@ -8,7 +8,6 @@ import eir.game.EirGame;
 import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
-import eir.world.unit.Unit;
 
 /**
  * place holder screen for now. does same as application listener from sample
@@ -77,22 +76,6 @@ public class GameScreen extends AbstractScreen
 		
 		
 		inputController.draw( batch, shapeRenderer );
-		
-		batch.begin();
-		
-/*		for(Spider spider : spiders)
-		{
-			spider.update(delta);
-			spider.draw( batch );
-		}*/
-		
-		for(Unit unit : level.getUnits())
-		{
-			unit.draw( batch );
-		}
-		
-		batch.end();
-		
 		Debug.debug.update( delta );
 		Debug.debug.draw(batch, shapeRenderer);
 	

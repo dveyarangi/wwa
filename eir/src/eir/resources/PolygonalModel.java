@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import eir.world.Asteroid;
 import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavEdge;
-import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.NavNodeDescriptor;
 
@@ -71,7 +70,7 @@ public class PolygonalModel
 	 * @param body
 	 * @param sprite
 	 */
-	public PolygonalModel(FloydWarshal navMesh, Asteroid asteroid, Vector2 origin, Vector2 [] rawVertices, List<List<Vector2>> polygons, float size, Vector2 position, float angle)
+	public PolygonalModel(FloydWarshal navMesh, Asteroid asteroid, Vector2 origin, Vector2 [] rawVertices, List<List<Vector2>> polygons)
 	{
 		super();
 		this.origin = origin;
@@ -87,9 +86,9 @@ public class PolygonalModel
 		{
 			vertices[idx] = rawVertices[idx].tmp()
 					.sub( origin.x, origin.y ) // making relative to origin 
-					.rotate( angle ) // rotating
-					.mul( size ) // scaling
-					.add( position )  // transposing
+					.rotate( asteroid.getAngle() ) // rotating
+					.mul( asteroid.getSize() ) // scaling
+					.add( asteroid.getPosition() )  // transposing
 					.cpy();      // tmp ref is not to be saved!
 		}
 		

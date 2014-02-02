@@ -66,15 +66,15 @@ public class SpatialHashMapLook
 					// TODO???
 				}
 //				if(bucket.size() > 0)
-				if(bucket != null)
+//				if(bucket != null)
 //				for(ISpatialObject chunk : bucket)
 //				{
 //					System.out.println(chunk);
 //					if(chunk.overlaps(x, y, x+map.getCellSize(), y+map.getCellSize()))
-					{
-						isReal = true;
-						break;
-					}
+//					{
+//						isReal = true;
+//						break;
+//					}
 //				}
 				if(bucket == null) {
 					renderer.setColor(1f, 0f, 0.0f, 0.5f);

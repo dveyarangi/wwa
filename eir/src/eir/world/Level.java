@@ -7,13 +7,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import sun.util.logging.resources.logging;
-
-import yarangi.java.InvokationMapper;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
 import eir.debug.Debug;
 import eir.resources.LevelLoader.LoadingContext;
@@ -82,6 +79,8 @@ public class Level
 	private List <Effect> effects;
 	
 	private UnitCollider collider;
+	
+	private World world;
 
 	private Queue <Unit> unitsToAdd = new LinkedList <Unit> ();
 
@@ -105,21 +104,22 @@ public class Level
 	public void init(LoadingContext context)
 	{
 		
+		groundMesh = context.navMesh;
+		
 		halfWidth = width / 2;
 		halfHeight = height / 2;
 		
-		groundMesh = context.navMesh;
-		
-		NavMeshGenerator generator = new NavMeshGenerator();
-		
-		debug("Generating air mesh...");
-		airMesh = generator.generateMesh(getAsteroids(), new Vector2(-halfWidth+1, -halfHeight+1), new Vector2(halfWidth-1, halfHeight-1));
-		debug("Done generating air mesh.");
+		world = new World(new Vector2(0, 0), true); 
 		
 		spatialIndex = new SpatialHashMap<ISpatialObject>( 
 				name+ "-spatial", 
 				16f, // size of bucket
 				width, height );
+		
+		for(Asteroid asteroid : asteroids)
+		{
+			asteroid.init( this );
+		}
 		
 		for( Web web : webs )
 		{
@@ -143,6 +143,12 @@ public class Level
 		}
 
 		
+		NavMeshGenerator generator = new NavMeshGenerator();
+		
+		Debug.startTiming("air nav mesh generation");
+		airMesh = generator.generateMesh(getAsteroids(), new Vector2(-halfWidth+1, -halfHeight+1), new Vector2(halfWidth-1, halfHeight-1));
+		Debug.stopTiming("air nav mesh generation");
+		
 		Debug.startTiming("navmesh calculation");
 		groundMesh.init();
 		Debug.stopTiming("navmesh calculation");
@@ -151,6 +157,12 @@ public class Level
 		{
 			groundMesh.getNode( idx ).init( this );
 			spatialIndex.add( groundMesh.getNode( idx ) );
+		}
+		
+		for(int idx = 0; idx < airMesh.getNodesNum(); idx ++)
+		{
+			airMesh.getNode( idx ).init( this );
+			spatialIndex.add( airMesh.getNode( idx ) );
 		}
 
 		// nav mesh initiated after this point
@@ -275,11 +287,17 @@ public class Level
 		{
 			web.draw( batch );
 		}
+		
+		for(Unit unit : getUnits())
+		{
+			unit.draw( batch );
+		}
 
 		for(Effect effect : effects)
 		{
 			effect.draw( batch );
 		}
+		
 		
 		batch.end();		
 	}
@@ -320,17 +338,6 @@ public class Level
 		public float getZoom() { return zoom; }
 		public int getSurfaceIdx() { return nodeIdx; }
 		public String getAsteroidName() { return asteroid; }
-	}
-
-	public Asteroid getAsteroid(String name)
-	{
-		for(Asteroid asteroid : asteroids)
-		{
-			if(asteroid.getName().equals( name ))
-				return asteroid;
-		}
-		
-		return null;
 	}
 
 	/**
@@ -405,4 +412,6 @@ public class Level
 
 
 	public Background getBackground() { return background; }
+
+	public World getWorld() { return world; }
 }

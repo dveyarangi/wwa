@@ -17,9 +17,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 
-import eir.resources.BodyLoader.Model;
-import eir.resources.BodyLoader.RigidBodyModel;
 import eir.resources.LevelLoader.LoadingContext;
 import eir.world.Asteroid;
 import eir.world.Level;
@@ -126,19 +128,45 @@ public class GameFactory
 		String modelFile = createBodyPath(modelId);
 		log("Loading asteroid model file [" + modelFile + "]");
 		
-		Model model = BodyLoader.readModel( Gdx.files.internal( modelFile ).readString() );
-		RigidBodyModel bodyModel = model.rigidBodies.get( 0 );
+		ShapeLoader.RigidBodyModel bodyModel = ShapeLoader.readShape( Gdx.files.internal( modelFile ).readString() ).rigidBodies.get( 0 );
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 		
 		return new PolygonalModel( 
 				(FloydWarshal)mesh,
 				asteroid, 
-				bodyModel.origin, vertices, bodyModel.polygons,
-				asteroid.getSize(), 
-				asteroid.getPosition(), 
-				asteroid.getAngle());
+				bodyModel.origin, 
+				vertices, 
+				bodyModel.polygons);
 
 	} 
+	
+	public static Body loadBody(String modelId, Asteroid asteroid) {
+		String modelFile = createBodyPath(modelId);
+	    // 0. Create a loader for the file saved from the editor.
+	    BodyLoader loader = new BodyLoader(Gdx.files.internal( modelFile));
+		 
+	    // 1. Create a BodyDef, as usual.
+	    BodyDef bd = new BodyDef();
+	    bd.position.set(asteroid.getPosition());
+	    bd.angle = (float)(asteroid.getAngle()/(2f*Math.PI));
+	    
+	    
+	    bd.type = BodyType.StaticBody;
+	 
+	    // 2. Create a FixtureDef, as usual.
+	    FixtureDef fd = new FixtureDef();
+	    fd.density = 1;
+	    fd.friction = 0.5f;
+	    fd.restitution = 0.3f;
+	 
+	    // 3. Create a Body, as usual.
+	    Body body = level.getWorld().createBody(bd);
+	 
+	    // 4. Create the body fixture automatically by using the loader.
+	    loader.attachFixture(body, "Name", fd, asteroid.getSize());
+	    
+	    return body;
+	}
 	
 	public static Sprite createSprite(String modelId, Vector2 position, Vector2 origin, float width, float height, float degrees)
 	{

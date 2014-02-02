@@ -94,13 +94,13 @@ public class NavMeshGenerator
 			if(c2.x < minCorner.x || c2.y < minCorner.y || c2.x > maxCorner.x || c2.y > maxCorner.y)
 				continue edges;
 			
-			/*			for(Polygon polygon : polygons)
+			for(Polygon polygon : polygons)
 			{
 				if(polygon.contains(c1.x, c1.y) || polygon.contains(c2.x, c2.y))
 				{
 					continue edges;
 				}
-			}*/			
+			}		
 			
 			NavNode node1;
 			if(nodes.containsKey(c1))

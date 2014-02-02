@@ -1,6 +1,6 @@
 {"rigidBodies":[
 	{
-		"name":"asteroid_head_01",
+		"name":"Name",
 		"imagePath":"asteroid_head_01.png",
 		"origin":{"x":0.5106250643730164,"y":0.5412501096725464},
 		"polygons":[

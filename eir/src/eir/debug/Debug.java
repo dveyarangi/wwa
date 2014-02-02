@@ -8,11 +8,13 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
@@ -42,10 +44,13 @@ public class Debug
 	
 	private BitmapFont font;
 	
+	private OrthographicCamera camera;
+	
 	public boolean drawCoordinateGrid = false;
 	public boolean drawNavMesh = false;
 	public boolean drawSpatialHashmap = false;
 	public boolean drawFactions = false;
+	public boolean drawBox2D = false;
 	
 	private static Map <String, Long> timings = new HashMap <String, Long> ();
 
@@ -56,12 +61,14 @@ public class Debug
 	private static final int SAMPLES = 60;
 
 	public static final BitmapFont FONT = GameFactory.loadFont("skins//fonts//default", 0.05f);
-;
+
 	private float [] deltas = new float [SAMPLES]; 
 	private float deltaPeak = 0;
 	private boolean isFirstBatch = true;
     
     private FPSLogger fpsLogger = new FPSLogger();
+    
+    private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 	
 	public static void init( Level level, GameInputProcessor inputController )
 	{
@@ -71,13 +78,20 @@ public class Debug
 	private Debug( Level level, GameInputProcessor inputController)
 	{
 		this.level = level;
+		
+		this.camera = inputController.getCamera();
+		
 		debugGrid = new CoordinateGrid( 
 				level.getWidth(), level.getHeight(), 
-				inputController.getCamera() );
+				camera);
 		
 		spatialGrid = new SpatialHashMapLook( level.getSpatialIndex() );
 		
 		font = GameFactory.loadFont("skins//fonts//default", 0.05f);
+		
+		debugRenderer.setDrawBodies(true);
+		debugRenderer.setDrawAABBs(false);
+		debugRenderer.setDrawVelocities(true);
 	}
 	
 	public void update(float delta)
@@ -143,6 +157,8 @@ public class Debug
 				unit.draw( shape );
 			}
 			
+		if(drawBox2D)
+			debugRenderer.render(level.getWorld(), camera.combined);
 		
 	}
 	
@@ -199,6 +215,7 @@ public class Debug
 	public static void toggleCoordinateGrid() { debug.drawCoordinateGrid =! debug.drawCoordinateGrid; }
 	public static void toggleSpatialGrid() { debug.drawSpatialHashmap =! debug.drawSpatialHashmap; }
 	public static void toggleFactions() { debug.drawFactions =! debug.drawFactions; }
+	public static void toggleBox2D() { debug.drawBox2D =! debug.drawBox2D; }
 
 
 	public static void startTiming(String processName)
