@@ -94,6 +94,12 @@ public abstract class Unit implements ISpatialObject
 
 	@Override
 	public int getId() { return id; }
+	
+	public String getName()  { return this.getClass().getSimpleName(); }
+	
+	public String toString() {
+		return getName() + " (" + getId() + ")";
+	}
 
 	public void init()
 	{

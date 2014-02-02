@@ -8,6 +8,7 @@ import java.util.List;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Asteroid;
+import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
@@ -70,7 +71,7 @@ public class PolygonalModel
 	 * @param body
 	 * @param sprite
 	 */
-	public PolygonalModel(NavMesh navMesh, Asteroid asteroid, Vector2 origin, Vector2 [] rawVertices, List<List<Vector2>> polygons, float size, Vector2 position, float angle)
+	public PolygonalModel(FloydWarshal navMesh, Asteroid asteroid, Vector2 origin, Vector2 [] rawVertices, List<List<Vector2>> polygons, float size, Vector2 position, float angle)
 	{
 		super();
 		this.origin = origin;
@@ -104,7 +105,7 @@ public class PolygonalModel
 		nodes = new NavNode[len];
 
 		navMesh.beginAsteroid();
-		NavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0], rawVertices[0] );
+		NavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0] /*, rawVertices[0]*/ );
 		int startingIdx = currNode.idx;
 		NavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
@@ -126,7 +127,7 @@ public class PolygonalModel
 			prevNode = currNode;
 			
 			if(nidx != 0)
-				currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, nidx),  b, rawVertices[nidx] );
+				currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, nidx),  b /*, rawVertices[nidx]*/ );
 			else
 				currNode = navMesh.getNode(startingIdx);
 			navMesh.linkNodes( currNode, prevNode, NavEdge.Type.LAND );
@@ -151,6 +152,8 @@ public class PolygonalModel
 	{
 		return origin;
 	}
+	
+	public Vector2 [] getVertices() { return vertices; }
 	
 	/**
 	 * Returns a new index, that is resulting from stepping the specified stepLen from the initial index

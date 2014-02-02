@@ -53,7 +53,7 @@ public class Ant extends Unit
 	{
 		super.init();
 		
-		this.mesh = faction.getLevel().getNavMesh();
+		this.mesh = faction.getLevel().getGroundNavMesh();
 		
 		route = null;
 		velocity.set( 0,0 );

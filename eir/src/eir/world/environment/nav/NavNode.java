@@ -20,7 +20,7 @@ import eir.world.environment.spatial.ISpatialObject;
 public class NavNode implements ISpatialObject
 {
 	private final Vector2 point;
-	private final Vector2 rawPoint;
+//	private final Vector2 rawPoint;
 	
 	/**
 	 * index of this node in the in the nav mesh that contains it (unique in mesh)
@@ -50,12 +50,11 @@ public class NavNode implements ISpatialObject
 	 * @param idx index for this node
 	 * @param aIdx index of the asteroid containing this node
 	 */	
-	NavNode(NavNodeDescriptor descriptor ,Vector2 point, Vector2 rawPoint, int idx, int aIdx)
+	NavNode(NavNodeDescriptor descriptor,Vector2 point, int idx, int aIdx)
 	{
 		this.descriptor = descriptor;
 		this.idx = idx;
 		this.point = point;
-		this.rawPoint = rawPoint;
 		this.aIdx = aIdx;
 		this.neighbours = new HashSet <NavNode> ();
 		
@@ -63,7 +62,6 @@ public class NavNode implements ISpatialObject
 	}
 	
 	public Vector2 getPoint() { return point; }
-	public Vector2 getRawPoint() { return rawPoint; }
 	
 	public void init(Level level)
 	{
@@ -115,4 +113,5 @@ public class NavNode implements ISpatialObject
 	}
 	
 	public NavNodeDescriptor getDescriptor() { return descriptor; }
+
 }

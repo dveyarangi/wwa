@@ -7,8 +7,12 @@ import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
+import yarangi.math.IVector2D;
+import yarangi.math.Vector2D;
 
 /**
  * @author dveyarangi
@@ -25,8 +29,6 @@ public abstract class NavMesh
 	 * array of index range (low,high) for each registered asteroid
 	 */
 	protected ArrayList<int[]> indexRange;
-	
-	private int[] cur;
 	
 	/**
 	 * i add comment on your thingies too!!
@@ -69,35 +71,12 @@ public abstract class NavMesh
 	 */
 	public NavNode getNode(int idx) { return nodes.get( idx ); }
 	
-	/**
-	 *  call when start adding nodes belonging to same batch
-	 */
-	public void beginAsteroid()
-	{
-		cur = new int[2];
-		cur[0] = nodes.size();
-	}
-	
-	/**
-	 * call when finished adding  nodes belonging to same batch
-	 */
-	public void endAsteroid()
-	{
-		cur[1] = nodes.size()-1;
-		indexRange.add(cur);
-		cur = null;
-	}
-	
-	public NavNode insertNode(NavNodeDescriptor descriptor, Vector2 point, Vector2 rawPoint)
+	public NavNode insertNode(NavNodeDescriptor descriptor, Vector2 point)
 	{
 		if(nodes.size() >= MAX_NODES) // sanity; overflow may break edges mapping
 			throw new IllegalStateException("Reached max node capacity.");
 		
-		if( cur==null )
-			throw new IllegalStateException("May not add new nodes outside of asteroid context "
-					+ "(must be between beginAsteroid and endAsteroid calls) ");
-		
-		NavNode node = new NavNode(descriptor, point, rawPoint, nodes.size(), indexRange.size());
+		NavNode node = new NavNode(descriptor, point, nodes.size(), indexRange.size());
 		
 		nodes.add( node );
 		return node;
@@ -163,6 +142,18 @@ public abstract class NavMesh
 	public TIntObjectIterator<NavEdge> getEdgesIterator()
 	{
 		return edges.iterator();
+	}
+	
+	public List <IVector2D> asVectors()
+	{
+		List <IVector2D> vectors = new LinkedList <IVector2D> ();
+		
+		for(int nidx = 0; nidx < getNodesNum(); nidx ++)
+		{
+			vectors.add(Vector2D.R(getNode(nidx).getPoint().x, getNode(nidx).getPoint().y));
+		}
+		
+		return vectors;
 	}
 
 }

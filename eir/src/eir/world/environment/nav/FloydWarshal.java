@@ -5,6 +5,8 @@ import gnu.trove.iterator.TIntObjectIterator;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.math.Vector2;
+
 
 /**
  * calculates all shortest routes for a given nav mesh<br>
@@ -33,6 +35,10 @@ public class FloydWarshal extends NavMesh
 	 *  distances inside the same asteroid
 	 */
 	protected float[] localdists;
+	
+	
+	private int[] cur;
+
 	
 	public FloydWarshal()
 	{
@@ -278,6 +284,33 @@ public class FloydWarshal extends NavMesh
 		else
 			return (to.idx==indexRange.get(from.aIdx)[0]) ? localdists[from.idx] : localdists[from.idx] - localdists[to.idx];
 	}
-
+	
+	public NavNode insertNode(NavNodeDescriptor descriptor, Vector2 point)
+	{
+		if( cur==null )
+			throw new IllegalStateException("May not add new nodes outside of asteroid context "
+					+ "(must be between beginAsteroid and endAsteroid calls) ");
+		
+		return super.insertNode(descriptor, point);
+	}
+	
+	/**
+	 *  call when start adding nodes belonging to same batch
+	 */
+	public void beginAsteroid()
+	{
+		cur = new int[2];
+		cur[0] = nodes.size();
+	}
+	
+	/**
+	 * call when finished adding  nodes belonging to same batch
+	 */
+	public void endAsteroid()
+	{
+		cur[1] = nodes.size()-1;
+		indexRange.add(cur);
+		cur = null;
+	}
 
 }

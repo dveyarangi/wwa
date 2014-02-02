@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import sun.util.logging.resources.logging;
+
+import yarangi.java.InvokationMapper;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -15,6 +19,7 @@ import eir.debug.Debug;
 import eir.resources.LevelLoader.LoadingContext;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
+import eir.world.environment.nav.NavMeshGenerator;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.parallax.Background;
 import eir.world.environment.spatial.ISpatialObject;
@@ -62,7 +67,8 @@ public class Level
 	 */
 	private SpatialHashMap<ISpatialObject> spatialIndex;
 	
-	private NavMesh navMesh;
+	private NavMesh groundMesh;
+	private NavMesh airMesh;
 	
 	
 	/**
@@ -98,10 +104,17 @@ public class Level
 	 */
 	public void init(LoadingContext context)
 	{
-		navMesh = context.navMesh;
-	
+		
 		halfWidth = width / 2;
 		halfHeight = height / 2;
+		
+		groundMesh = context.navMesh;
+		
+		NavMeshGenerator generator = new NavMeshGenerator();
+		
+		debug("Generating air mesh...");
+		airMesh = generator.generateMesh(getAsteroids(), new Vector2(-halfWidth+1, -halfHeight+1), new Vector2(halfWidth-1, halfHeight-1));
+		debug("Done generating air mesh.");
 		
 		spatialIndex = new SpatialHashMap<ISpatialObject>( 
 				name+ "-spatial", 
@@ -110,7 +123,7 @@ public class Level
 		
 		for( Web web : webs )
 		{
-			web.init( this.getNavMesh() );
+			web.init( this.getGroundNavMesh() );
 		}
 		
 		
@@ -126,18 +139,18 @@ public class Level
 		{
 			faction.init( this );
 
-			faction.getScheduler().addOrder( "ant", new RandomTravelingOrder( navMesh, 0 ) );
+			faction.getScheduler().addOrder( "ant", new RandomTravelingOrder( groundMesh, 0 ) );
 		}
 
 		
 		Debug.startTiming("navmesh calculation");
-		navMesh.init();
+		groundMesh.init();
 		Debug.stopTiming("navmesh calculation");
 		
-		for(int idx = 0; idx < navMesh.getNodesNum(); idx ++)
+		for(int idx = 0; idx < groundMesh.getNodesNum(); idx ++)
 		{
-			navMesh.getNode( idx ).init( this );
-			spatialIndex.add( navMesh.getNode( idx ) );
+			groundMesh.getNode( idx ).init( this );
+			spatialIndex.add( groundMesh.getNode( idx ) );
 		}
 
 		// nav mesh initiated after this point
@@ -155,9 +168,9 @@ public class Level
 	public float getWidth() { return width; }
 
 	
-	private void log(String message)
+	private void debug(String message)
 	{
-		Gdx.app.log( name, message);
+		Gdx.app.debug( name, message);
 	}
 
 	/**
@@ -165,7 +178,7 @@ public class Level
 	 */
 	public Unit addUnit(Unit unit)
 	{
-		log("Unit added: " + unit);
+		debug("Unit added: " + unit);
 		unitsToAdd.add(unit);
 		unit.getFaction().addUnit( unit );
 		
@@ -224,7 +237,7 @@ public class Level
 				unit.getFaction().removeUnit( unit );
 				
 				UnitsFactory.free( unit );
-				log("Unit removed: " + unit);
+				debug("Unit removed: " + unit);
 			}
 			
 		}
@@ -274,15 +287,18 @@ public class Level
 	/**
 	 * @return
 	 */
-	public NavMesh getNavMesh()
+	public NavMesh getGroundNavMesh()
 	{
-		return navMesh;
+		return groundMesh;
 	}
-
-	public static int OBJECT_ID = 0;
 	/**
 	 * @return
 	 */
+	public NavMesh getAirNavMesh()
+	{
+		return airMesh;
+	}
+	public static int OBJECT_ID = 0;
 	public static int createObjectId()
 	{
 		return OBJECT_ID ++;
@@ -349,7 +365,7 @@ public class Level
 		if(sourceNode.getDescriptor().getObject() == targetNode.getDescriptor().getObject())
 			return;
 		
-		NavEdge edge = getNavMesh().getEdge( sourceNode, targetNode );
+		NavEdge edge = getGroundNavMesh().getEdge( sourceNode, targetNode );
 		
 		if(edge == null)
 		{
@@ -360,7 +376,7 @@ public class Level
 			);
 			
 			webs.add( web );
-			web.init( this.getNavMesh() );
+			web.init( this.getGroundNavMesh() );
 			
 			
 			
@@ -377,12 +393,12 @@ public class Level
 					webIt.remove();
 			}
 			
-			getNavMesh().unlinkNodes( sourceNode, targetNode );
+			getGroundNavMesh().unlinkNodes( sourceNode, targetNode );
 		}
 		
 		
 		Debug.startTiming("navmesh calculation");
-		navMesh.update();
+		getGroundNavMesh().update();
 		Debug.stopTiming("navmesh calculation");
 
 	}

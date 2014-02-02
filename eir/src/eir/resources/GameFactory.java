@@ -23,6 +23,7 @@ import eir.resources.BodyLoader.RigidBodyModel;
 import eir.resources.LevelLoader.LoadingContext;
 import eir.world.Asteroid;
 import eir.world.Level;
+import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavMesh;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
@@ -130,7 +131,8 @@ public class GameFactory
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 		
 		return new PolygonalModel( 
-				mesh, asteroid, 
+				(FloydWarshal)mesh,
+				asteroid, 
 				bodyModel.origin, vertices, bodyModel.polygons,
 				asteroid.getSize(), 
 				asteroid.getPosition(), 

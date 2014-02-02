@@ -33,20 +33,30 @@
 				  "name" : "center",
 				  "position" : { "x":"0",  "y":"0" },
 				  "angle" : "0",
-				  "size" : "150",
+				  "size" : "120",
+				  "modelId" : "exodus_01/exodus_01_center"
+				},
+				/*{ 
+				  "name" : "center",
+				  "position" : { "x":"0",  "y":"0" },
+				  "angle" : "0",
+				  "size" : "120",
 				  "modelId" : "junkyard/asteroid_junkyard_01"
 				},
 				{ 
 				  "name" : "junkheap",
-				  "position" : { "x":"-120",  "y":"49" },
+				  "position" : { "x":"-100",  "y":"49" },
 				  "angle" : "0",
-				  "size" : "125",
+				  "size" : "120",
 				  "modelId" : "junkyard/asteroid_junkyard_02"
-				},
-				/*				{ 
+				},*/
+				{ 
 				  "name" : "red_head",
+				  "position" : { "x":"-120",  "y":"49" },
+				  "angle" : "180",
+				  "size" : "115",
 				  "modelId" : "exodus_01/exodus_01_red_head"
-				},	*/		
+				},			
 				{ 
 				  "name" : "red_back",
 				  "position" : { "x":"-249",  "y":"91" },
@@ -119,13 +129,13 @@
 				},			
 				
 			    #######
-/*				{ 
+				{ 
 				  "name" : "blue_head",
 				  "position" : { "y":"-120",  "x":"-49" },
 				  "angle" : "65",
 				  "size" : "125",
 				  "modelId" : "asteroid_head_04"
-				},	*/		
+				},			
 				{ 
 				  "name" : "blue_back",
 				  "position" : { "y":"-249",  "x":"-91" },
@@ -200,13 +210,13 @@
 				
 				#######
 				
-/*				{ 
+				{ 
 				  "name" : "yellow_head",
 				  "position" : { "x":"120",  "y":"-49" },
 				  "angle" : "180",
 				  "size" : "115",
 				  "modelId" : "exodus_01/exodus_01_red_head"
-				},	*/		
+				},			
 				{ 
 				  "name" : "yellow_back",
 				  "position" : { "x":"249",  "y":"-91" },
@@ -280,13 +290,13 @@
 				
 								
 			    #######
-/*				{ 
+				{ 
 				  "name" : "green_head",
 				  "position" : { "y":"120",  "x":"49" },
 				  "angle" : "-90",
 				  "size" : "125",
 				  "modelId" : "exodus_01/exodus_01_blue_head"
-				},	*/		
+				},			
 				{ 
 				  "name" : "green_back",
 				  "position" : { "y":"249",  "x":"91" },
@@ -471,7 +481,7 @@
 					"maxUnits" : 50,
 					"spawnInterval" : 1f
 					
-				},
+				}/*,
 				{
 					"type" : "spawner",
 					"faction" : 3,
@@ -495,13 +505,13 @@
 					"unitType" : "birdy", 
 					"maxUnits" : 50,
 					"spawnInterval" : 1.5f
-				}				
+				}	*/			
 			],
 			
 			"playerSpider" : {
 					"type" : "spider",
 					"faction" : 1,
-					"anchor" : { "asteroid" : "center", "navIdx" : 22 }
+					"anchor" : { "asteroid" : "center", "navIdx" : 1 }
 				}
 		########################################
 

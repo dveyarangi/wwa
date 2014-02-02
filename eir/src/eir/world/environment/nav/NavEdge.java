@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class NavEdge
 {
-	public enum Type { WEB, LAND }
+	public enum Type { WEB, LAND, AIR }
 	
 	public final Type type;
 	

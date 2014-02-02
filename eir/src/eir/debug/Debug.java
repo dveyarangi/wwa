@@ -132,7 +132,10 @@ public class Debug
 			spatialGrid.draw( shape );
 		
 		if(drawNavMesh)
-			drawNavMesh( batch, shape );
+		{
+			drawNavMesh( level.getGroundNavMesh(), batch, shape );
+			drawNavMesh( level.getAirNavMesh(), batch, shape );
+		}
 		
 		if(drawFactions)
 			for(Unit unit : level.getUnits())
@@ -143,10 +146,9 @@ public class Debug
 		
 	}
 	
-	private void drawNavMesh(SpriteBatch batch, ShapeRenderer shape)
+	private void drawNavMesh(NavMesh navMesh, SpriteBatch batch, ShapeRenderer shape)
 	{
-		
-		NavMesh navMesh = level.getNavMesh();
+
 		NavNode srcNode;
 		
 		shape.begin(ShapeType.FilledCircle);

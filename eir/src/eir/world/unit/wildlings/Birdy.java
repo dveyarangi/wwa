@@ -72,4 +72,6 @@ public class Birdy extends Unit
 
 	@Override
 	public float getSize() { return size; }
+
+
 }

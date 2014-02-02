@@ -179,7 +179,7 @@ public class Spider extends Unit
 			NavEdge walkingEdge = null; 
 			for(NavNode node : getClosestNode().getNeighbors())
 			{
-				NavEdge edge = faction.getLevel().getNavMesh().getEdge( getClosestNode(), node);
+				NavEdge edge = faction.getLevel().getGroundNavMesh().getEdge( getClosestNode(), node);
 				if(edge.getType() == NavEdge.Type.WEB)
 				{
 					walkingEdge = edge;
