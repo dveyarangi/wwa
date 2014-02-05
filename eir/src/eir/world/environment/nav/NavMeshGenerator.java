@@ -7,116 +7,153 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import yarangi.math.Edge;
+import yarangi.math.IVector2D;
+import yarangi.math.Vector2D;
+import yarangi.math.triangulation.Delaunay2D;
+import yarangi.math.triangulation.ITriangulator;
+import yarangi.math.triangulation.Mesh;
+import yarangi.math.triangulation.MeshFilter;
+import yarangi.math.triangulation.TriangleStore;
+import yarangi.math.triangulation.VoronoiDiagram;
+
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Asteroid;
 import eir.world.environment.nav.NavEdge.Type;
 
-import  yarangi.math.triangulation.ITriangulator;
-import  yarangi.math.triangulation.Delaunay2D;
-import  yarangi.math.triangulation.TriangleStore;
-import yarangi.math.Geometry;
-import yarangi.math.IVector2D;
-import yarangi.math.Vector2D;
-import yarangi.math.Edge;
-
-public class NavMeshGenerator 
+public class NavMeshGenerator
 {
-	
+
 	private ITriangulator triangulator;
-	
+
 	public NavMeshGenerator()
 	{
 		triangulator = new Delaunay2D();
 	}
 	
-	
-	public NavMesh generateMesh(List <Asteroid> asteroids, Vector2 minCorner, Vector2 maxCorner)
+	/**
+	 * Filter for triangulated stuff
+	 */
+	private static class AsteroidFilter implements MeshFilter 
 	{
-		NavMesh mesh = new DummyNavMesh();
+		private Vector2 minCorner, maxCorner;
+		private List<Polygon> polygons;
 		
-		List <IVector2D> points = new LinkedList <IVector2D> ();
-		
-		List <Polygon> polygons = new LinkedList <Polygon> ();
-		
-		for(Asteroid asteroid : asteroids)
+		public AsteroidFilter(List<Polygon> polygons, Vector2 minCorner, Vector2 maxCorner)
 		{
-			float [] polyv = new float[2*asteroid.getModel().getVertices().length];
+			this.maxCorner = maxCorner;
+			this.minCorner = minCorner;
+			this.polygons = polygons;
+		}
+
+		@Override
+		public boolean accept( Edge edge )
+		{
+			return true;
+		}
+
+		@Override
+		public boolean accept( IVector2D node )
+		{
+			if( node.x() < minCorner.x || node.y() < minCorner.y 
+			 || node.x() > maxCorner.x || node.y() > maxCorner.y )
+				return false;
+			
+			for( Polygon polygon : polygons )
+			{
+				if( polygon.contains( (float)node.x(), (float)node.y() ))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+	public NavMesh generateMesh( List<Asteroid> asteroids, final Vector2 minCorner, final Vector2 maxCorner )
+	{
+		NavMesh resultMesh = new DummyNavMesh();
+
+		final List<Polygon> polygons = new LinkedList<Polygon>();
+
+		// collecting points for triangulation
+		// TODO: get rid of either IVector2D or Vector2
+		Set<IVector2D> points = new HashSet<IVector2D>();
+		for( Asteroid asteroid : asteroids )
+		{
+			float[] polyv = new float[2 * asteroid.getModel().getVertices().length];
 			int idx = 0;
-			for(Vector2 vertex : asteroid.getModel().getVertices())
+			for( Vector2 vertex : asteroid.getModel().getVertices() )
 			{
 				polyv[idx++] = vertex.x;
 				polyv[idx++] = vertex.y;
-				points.add(Vector2D.R(vertex.x, vertex.y));
+				points.add( Vector2D.R( vertex.x, vertex.y ) );
 			}
-			polygons.add(new Polygon(polyv));
+			polygons.add( new Polygon( polyv ) );
 		}
-		
-		points.add(Vector2D.R(minCorner.x, minCorner.y));
-		points.add(Vector2D.R(minCorner.x, maxCorner.y));
-		points.add(Vector2D.R(maxCorner.x, maxCorner.y));
-		points.add(Vector2D.R(maxCorner.x, minCorner.y));
-		
-		TriangleStore store = triangulator.triangulate(points);
 
-		Set <Edge> traversedEdges = new HashSet <Edge> ();
-		
-		// TODO: get rid of IVector2D or Vector2
-		Map <Vector2, NavNode> nodes = new HashMap <Vector2, NavNode> ();
-		edges: for(Edge edge1 : store.getEdges())
+		// looks prettier this way:
+		points.add( Vector2D.R( minCorner.x, minCorner.y ) );
+		points.add( Vector2D.R( minCorner.x, maxCorner.y ) );
+		points.add( Vector2D.R( maxCorner.x, maxCorner.y ) );
+		points.add( Vector2D.R( maxCorner.x, minCorner.y ) );
+
+		// triangulating:
+		TriangleStore store1 = triangulator.triangulate( points );
+
+		// inverting the triangulation to get regions
+		Mesh mesh = VoronoiDiagram.invertTriangleStore( store1, new AsteroidFilter( polygons, minCorner, maxCorner ));
+
+/*		for( Asteroid asteroid : asteroids )
 		{
-			if( traversedEdges.contains(edge1) )
-				continue;
-			
-			traversedEdges.add( edge1 );
-			
-			Edge edge2 = new Edge( edge1.second(), edge1.first() );
-			
-			IVector2D p1 = store.getCCWPoint( edge1 );
-			IVector2D p2 = store.getCCWPoint( edge2 );
-			
-			if(p2 == null)
-				continue;
-			
-			traversedEdges.add( edge2 );
-			
-			IVector2D o1 = Geometry.cirrcumCircleCenter(p1, edge1.first(), edge1.second());
-			IVector2D o2 = Geometry.cirrcumCircleCenter(p2, edge2.first(), edge2.second());
-			
-			Vector2 c1 = new Vector2( (float)o1.x(), (float)o1.y());
-			Vector2 c2 = new Vector2( (float)o2.x(), (float)o2.y());
-			
-
-			
-			if(c1.x < minCorner.x || c1.y < minCorner.y || c1.x > maxCorner.x || c1.y > maxCorner.y)
-				continue edges;
-			if(c2.x < minCorner.x || c2.y < minCorner.y || c2.x > maxCorner.x || c2.y > maxCorner.y)
-				continue edges;
-			
-			for(Polygon polygon : polygons)
+			for( Vector2 vertex : asteroid.getModel().getVertices() )
 			{
-				if(polygon.contains(c1.x, c1.y) || polygon.contains(c2.x, c2.y))
-				{
-					continue edges;
-				}
-			}		
-			
+				mesh.getNodes().add( Vector2D.R( vertex.x, vertex.y ) );
+			}
+		}*/
+		//		TriangleStore store2 = triangulator.triangulate( mesh1.getNodes() );
+		
+/*		Mesh mesh2 = VoronoiDiagram.invertTriangleStore( store2, new AsteroidFilter( polygons, minCorner, maxCorner ));
+		
+/*		for(Edge edge : store2.getEdges())
+		{
+			NavNode node1 = nodes.get( new Vector2((float)edge.first().x(), (float)edge.first().y() ) );
+			NavNode node2 = nodes.get( new Vector2((float)edge.second().x(), (float)edge.second().y() ) );
+			mesh.linkNodes( node1, node2, Type.AIR );
+		}
+		*/
+		
+		// converting voronoi regions to nav mesh:
+		
+		Map<Vector2, NavNode> nodes = new HashMap<Vector2, NavNode>();
+		edges: for( Edge edge : mesh.getEdges() )
+		{
+
+			Vector2 c1 = new Vector2( (float) edge.first().x(),  (float) edge.first().y() );
+			Vector2 c2 = new Vector2( (float) edge.second().x(), (float) edge.second().y() );
+
 			NavNode node1;
-			if(nodes.containsKey(c1))
-				node1 = nodes.get(c1);
+			if( nodes.containsKey( c1 ) )
+			{
+				node1 = nodes.get( c1 );
+			}
 			else
-				nodes.put(c1, node1 = mesh.insertNode( null, c1 )) ;
+				nodes.put( c1, node1 = resultMesh.insertNode( null, c1 ) );
 			NavNode node2;
-			if(nodes.containsKey(c2))
-				node2 = nodes.get(c2);
+			
+			if( nodes.containsKey( c2 ) )
+			{
+				node2 = nodes.get( c2 );
+			}
 			else
-				nodes.put(c2, node2 = mesh.insertNode( null, c2 )) ;
-			
-			mesh.linkNodes(node1, node2, Type.AIR);
-			
+				nodes.put( c2, node2 = resultMesh.insertNode( null, c2 ) );
+
+			resultMesh.linkNodes( node1, node2, Type.AIR );
+
 		}
 		
-		return mesh;
+		return resultMesh;
 	}
 }

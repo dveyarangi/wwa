@@ -150,7 +150,6 @@ public class GameFactory
 	    bd.position.set(asteroid.getPosition());
 	    bd.angle = (float)(asteroid.getAngle()/(2f*Math.PI));
 	    
-	    
 	    bd.type = BodyType.StaticBody;
 	 
 	    // 2. Create a FixtureDef, as usual.
@@ -180,8 +179,8 @@ public class GameFactory
 		TextureRegion region = new TextureRegion(texture);
 		
 		Sprite sprite = new Sprite(region);
-		float realOX = ox*sprite.getWidth();
-		float realOY = oy*sprite.getHeight();
+		float realOX = sprite.getWidth()/2;
+		float realOY = sprite.getHeight()/2;
 		sprite.setOrigin(realOX, realOY);
 		
 		float scaleX = width/region.getRegionWidth();
