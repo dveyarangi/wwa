@@ -140,7 +140,8 @@ public class GameFactory
 
 	} 
 	
-	public static Body loadBody(String modelId, Asteroid asteroid) {
+	public static Body loadBody(String modelId, Asteroid asteroid) 
+	{
 		String modelFile = createBodyPath(modelId);
 	    // 0. Create a loader for the file saved from the editor.
 	    BodyLoader loader = new BodyLoader(Gdx.files.internal( modelFile));

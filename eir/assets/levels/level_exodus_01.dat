@@ -481,15 +481,15 @@
 					"maxUnits" : 50,
 					"spawnInterval" : 1f
 					
-				}/*,
+				},
 				{
 					"type" : "spawner",
 					"faction" : 3,
-					"anchor" : { "asteroid" : "junkheap", "navIdx" : 200 },
+					"anchor" : { "asteroid" : "red_ass", "navIdx" : 16 },
 					"unitType" : "birdy", 
 					"maxUnits" : 50,
 					"spawnInterval" : 1.5f
-				},
+				}/*,
 				{
 					"type" : "spawner",
 					"faction" : 3,
