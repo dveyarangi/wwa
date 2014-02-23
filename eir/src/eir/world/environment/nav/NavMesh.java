@@ -10,38 +10,33 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.badlogic.gdx.math.Vector2;
 import yarangi.math.IVector2D;
 import yarangi.math.Vector2D;
+
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * @author dveyarangi
  *
  */
-public abstract class NavMesh
+public abstract class NavMesh <N extends NavNode>
 {
 	/**
 	 * List of all participating nodes
 	 */
-	protected ArrayList<NavNode> nodes;
-	
-	/**
-	 * array of index range (low,high) for each registered asteroid
-	 */
-	protected ArrayList<int[]> indexRange;
+	protected ArrayList <N> nodes;
 	
 	/**
 	 * i add comment on your thingies too!!
 	 */
-	protected TIntObjectHashMap<NavEdge> edges;
+	protected TIntObjectHashMap<NavEdge <N>> edges;
 	
 	private static final int MAX_NODES = 1000000;
 	
 	public NavMesh()
 	{
-		nodes = new ArrayList<NavNode> ();
-		edges = new TIntObjectHashMap <NavEdge> ();
-		indexRange = new ArrayList<int[]>();
+		nodes = new ArrayList <N> ();
+		edges = new TIntObjectHashMap <NavEdge <N>> ();
 	}
 
 	/**
@@ -57,7 +52,7 @@ public abstract class NavMesh
 	/**
 	 * Creates iterator over shortest route from to
 	 */
-	public abstract Route getShortestRoute( NavNode from, NavNode to );
+	public abstract Route <N> getShortestRoute( N from, N to );
 
 	/**
 	 * Count of all nodes in mesh 
@@ -69,18 +64,20 @@ public abstract class NavMesh
 	 * @param idx
 	 * @return
 	 */
-	public NavNode getNode(int idx) { return nodes.get( idx ); }
+	public N getNode(int idx) { return nodes.get( idx ); }
 	
-	public NavNode insertNode(NavNodeDescriptor descriptor, Vector2 point)
+	public N insertNode(NavNodeDescriptor descriptor, Vector2 point)
 	{
 		if(nodes.size() >= MAX_NODES) // sanity; overflow may break edges mapping
 			throw new IllegalStateException("Reached max node capacity.");
 		
-		NavNode node = new NavNode(descriptor, point, nodes.size(), indexRange.size());
+		N node = createNavNode(descriptor, point, nodes.size());
 		
 		nodes.add( node );
 		return node;
 	}
+	
+	protected abstract N createNavNode(NavNodeDescriptor descriptor, Vector2 point, int nodeIdx);
 	
 	/** 
 	 * Adds edge between specified nodes.
@@ -89,7 +86,7 @@ public abstract class NavMesh
 	 * @param nb
 	 * @param type
 	 */
-	public void linkNodes( NavNode na, NavNode nb, NavEdge.Type type )
+	public void linkNodes( N na, N nb, NavEdge.Type type )
 	{
 		na.addNeighbour(nb);
 		nb.addNeighbour(na);
@@ -97,8 +94,8 @@ public abstract class NavMesh
 		int edgeIdx = getEdgeIdx(na.idx, nb.idx);
 		if(!edges.contains( edgeIdx ))
 		{
-			edges.put( edgeIdx, new NavEdge( na, nb, type ) );
-			edges.put( getEdgeIdx(nb.idx, na.idx), new NavEdge( nb, na, type ) );
+			edges.put( edgeIdx, new NavEdge <N> ( na, nb, type ) );
+			edges.put( getEdgeIdx(nb.idx, na.idx), new NavEdge <N> ( nb, na, type ) );
 		}
 	}
 
@@ -108,7 +105,7 @@ public abstract class NavMesh
 	 * @param na
 	 * @param nb
 	 */
-	public boolean unlinkNodes(NavNode na, NavNode nb)
+	public boolean unlinkNodes(N na, N nb)
 	{
 		na.removeNeighbour(nb);
 		nb.removeNeighbour(na);
@@ -123,12 +120,12 @@ public abstract class NavMesh
 		return false;
 	}	
 	
-	public NavEdge getEdge(int node1Idx, int node2Idx)
+	public NavEdge <N> getEdge(int node1Idx, int node2Idx)
 	{
 		return edges.get( getEdgeIdx( node1Idx, node2Idx ) );
 	}
 	
-	public NavEdge getEdge(NavNode na, NavNode nb)
+	public NavEdge <N> getEdge(N na, N nb)
 	{
 		return getEdge( na.idx, nb.idx );
 	}
@@ -139,7 +136,7 @@ public abstract class NavMesh
 		return node1Idx + (node2Idx+1) * MAX_NODES;
 	}
 	
-	public TIntObjectIterator<NavEdge> getEdgesIterator()
+	public TIntObjectIterator<NavEdge<N>> getEdgesIterator()
 	{
 		return edges.iterator();
 	}

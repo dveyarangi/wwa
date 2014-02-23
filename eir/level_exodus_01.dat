@@ -55,7 +55,7 @@
 				  "position" : { "x":"-120",  "y":"49" },
 				  "angle" : "180",
 				  "size" : "115",
-				  "modelId" : "exodus_01/exodus_01_red_head"
+				  "modelId" : "exodus_01/city_01"
 				},			
 				{ 
 				  "name" : "red_back",
@@ -65,11 +65,12 @@
 				  "modelId" : "exodus_01/exodus_01_red_back"
 				},				
 				{ 
+				  "@id" : 1001,
 				  "name" : "red_ass",
 				  "position" : { "x":"-374",  "y":"-8" },
 				  "angle" : "0",
 				  "size" : "110",
-				  "modelId" : "exodus_01/city_01"
+				  "modelId" : "exodus_01/exodus_01_red_ass"
 				},					
 				{ 
 				  "name" : "grasp_01",
@@ -375,7 +376,7 @@
 		########################################
 			"webs" : [
 				{
-					"source" : { "asteroid" : "red_ass", "navIdx" : 14 },
+					"source" : { "asteroid" : "red_ass", "navIdx" : 8 },
 					"target" : { "asteroid" : "red_right_leg", "navIdx" : 32 },
 
 					"threadTexture" : "models/web_thread_01.png",
@@ -384,7 +385,7 @@
 					
 				},
 				{
-					"source" : { "asteroid" : "red_ass", "navIdx" : 8 },
+					"source" : { "asteroid" : "red_ass", "navIdx" : 0 },
 					"target" : { "asteroid" : "red_left_leg", "navIdx" : 19 },
 
 					"threadTexture" : "models/web_thread_01.png",
@@ -402,7 +403,7 @@
 					
 				},				
 				{
-					"source" : { "asteroid" : "red_back", "navIdx" : 18 },
+					"source" : { "asteroid" : "red_back", "navIdx" : 8 },
 					"target" : { "asteroid" : "red_ass", "navIdx" : 23 },
 
 					"threadTexture" : "models/web_thread_01.png",
@@ -433,27 +434,22 @@
 			
 			"factions" : [
 				{
+					
 					"ownerId" : 1,
-					"controller" : {
-					 	"type" : "PlayerController"
-					},
+					"controller" : { "@type":"eir.world.controllers.PlayerController" },
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"},
 					"color" : { "r" : 0.8, "g" : 0.8, "b" : 0.8 }
 					
 				},
 				{
 					"ownerId" : 2,
-					"controller" : {
-					 	"type" : "DummyController"
-					},
+					"controller" : { "@type":"eir.world.controllers.DummyController" },
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"},
 					"color" : { "r" : 0.2, "g" : 0.2, "b" : 0.2 }
 				},			
 				{
 					"ownerId" : 3,
-					"controller" : {
-						"type" : "WildlifeController"
-					},
+					"controller" : { "@type":"eir.world.controllers.WildlifeController"	},
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"},
 					"color" : { "r" : 0.5, "g" : 0.5, "b" : 0 }
 				}			
@@ -498,7 +494,7 @@
 					"maxUnits" : 50,
 					"spawnInterval" : 1.5f
 				},
-								{
+				{
 					"type" : "spawner",
 					"faction" : 3,
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 50 },
@@ -508,7 +504,7 @@
 				}	*/			
 			],
 			
-			"playerUnit" : {
+			"playerSpider" : {
 					"type" : "spider",
 					"faction" : 1,
 					"anchor" : { "asteroid" : "center", "navIdx" : 1 }

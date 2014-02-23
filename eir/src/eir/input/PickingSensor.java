@@ -3,7 +3,7 @@
  */
 package eir.input;
 
-import eir.world.environment.nav.NavNode;
+import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.ISpatialSensor;
 
@@ -14,14 +14,14 @@ import eir.world.environment.spatial.ISpatialSensor;
 public class PickingSensor implements ISpatialSensor<ISpatialObject>
 {
 
-	private NavNode pickedNode;
+	private SurfaceNavNode pickedNode;
 
 	@Override
 	public boolean objectFound(ISpatialObject object)
 	{
-		if(object instanceof NavNode)
+		if(object instanceof SurfaceNavNode)
 		{
-			pickedNode = (NavNode) object;
+			pickedNode = (SurfaceNavNode) object;
 		}
 		return false;
 	}
@@ -35,7 +35,7 @@ public class PickingSensor implements ISpatialSensor<ISpatialObject>
 	/**
 	 * @return
 	 */
-	public NavNode getNode()
+	public SurfaceNavNode getNode()
 	{
 		return pickedNode;
 	}

@@ -1,7 +1,7 @@
 package eir.world.unit.ant;
 
 import eir.world.environment.nav.NavEdge;
-import eir.world.environment.nav.NavNode;
+import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.UnitBehavior;
 import eir.world.unit.ai.Task;
 
@@ -13,7 +13,7 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 		@Override
 		public void update(float delta, Task task, Ant ant)
 		{
-			travelTo( delta, task, ant, task.getOrder().getSourceNode() );
+			travelTo( delta, task, ant, (SurfaceNavNode) task.getOrder().getSourceNode() );
 		}
 	}
 
@@ -22,11 +22,11 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 		@Override
 		public void update(float delta, Task task, Ant ant)
 		{
-			travelTo( delta, task, ant, task.getOrder().getTargetNode() );
+			travelTo( delta, task, ant, (SurfaceNavNode) task.getOrder().getTargetNode() );
 		}
 	}
 	
-	protected void travelTo( float delta, Task task, Ant ant, NavNode targetNode )
+	protected void travelTo( float delta, Task task, Ant ant, SurfaceNavNode targetNode )
 	{
 		if(ant.nextNode == null)
 		{

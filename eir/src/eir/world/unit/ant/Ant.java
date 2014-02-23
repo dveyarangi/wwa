@@ -13,8 +13,8 @@ import eir.debug.Debug;
 import eir.resources.GameFactory;
 import eir.world.Effect;
 import eir.world.environment.nav.NavMesh;
-import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.Route;
+import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.Damage;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
@@ -30,8 +30,8 @@ public class Ant extends Unit
 	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas", 
 			"explosion02");
 
-	NavMesh mesh;
-	Route route;
+	NavMesh <SurfaceNavNode> mesh;
+	Route  <SurfaceNavNode> route;
 	
 	protected float stateTime;
 	
@@ -43,17 +43,18 @@ public class Ant extends Unit
 	private float screamTime;
 	float nodeOffset;
 	
-	NavNode nextNode, targetNode;
+	SurfaceNavNode nextNode, targetNode;
 
 	public Ant()
 	{
 	}
 	
+	@Override
 	public void init()
 	{
 		super.init();
 		
-		this.mesh = faction.getLevel().getGroundNavMesh();
+		this.mesh = faction.getEnvironment().getGroundMesh();
 		
 		route = null;
 		velocity.set( 0,0 );
@@ -61,6 +62,7 @@ public class Ant extends Unit
 
 	}
 
+	@Override
 	public void update( float delta )
 	{
 		super.update( delta );
@@ -68,6 +70,7 @@ public class Ant extends Unit
 		stateTime += delta;
 	}
 
+	@Override
 	public void draw(SpriteBatch batch)
 	{
 		Vector2 position = getBody().getAnchor();
@@ -85,23 +88,26 @@ public class Ant extends Unit
 			if(stateTime - screamTime < 1)
 				Debug.FONT.draw( batch, "Yarr!", position.x, position.y );
 			if(targetNode != null)
-				Debug.FONT.draw( batch, String.valueOf( targetNode.idx ), position.x+2, position.y-2 );
+				Debug.FONT.draw( batch, String.valueOf( targetNode.getIndex() ), position.x+2, position.y-2 );
 		}
 	}
 
 	/**
 	 * @return
 	 */
+	@Override
 	public Effect getDeathEffect()
 	{
 		return Effect.getEffect( hitAnimationId, 25, getBody().getAnchor(), RandomUtil.N( 360 ), 1 );
 	}
 
+	@Override
 	public Faction getFaction() { return faction; }
 
 	/**
 	 * @return
 	 */
+	@Override
 	public Damage getDamage() {	return damage; }
 
 	@Override public float getSize() { return size; }

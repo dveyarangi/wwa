@@ -13,7 +13,7 @@ import yarangi.math.FastMath;
  * Note: cannot be used in multi-threaded environment, due to passId optimization (and lack of any type of synchronization).
  * @param <O>
  */
-public class SpatialHashMap <O extends ISpatialObject>
+public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex <O>
 {
 	/**
 	 * buckets array
@@ -27,7 +27,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * For each indexed object, we keep copy of it's AABB, so when object asks for AABB 
 	 * update, the hashmap can fix buckets accordingly.
 	 */
-	private TIntObjectHashMap<AABB> aabbs = new TIntObjectHashMap<AABB> ();
+	private final TIntObjectHashMap<AABB> aabbs = new TIntObjectHashMap<AABB> ();
 	
 	/**
 	 * number of buckets
@@ -152,6 +152,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * Adds spatial object to the indexer.
 	 * @param object
 	 */
+	@Override
 	public void add(O object) 
 	{
 		AABB transition = aabbs.get( object.getId() );
@@ -170,6 +171,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * @param object
 	 * @return
 	 */
+	@Override
 	public O remove(O object) 
 	{
 		
@@ -261,6 +263,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	 * Update object index
 	 * @param object
 	 */
+	@Override
 	public void update(O object) 
 	{
 		
@@ -319,6 +322,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	/**
 	 * Walks over provided AABB and feeds the sensor with object whose AABBs overlap it
 	 */
+	@Override
 	public ISpatialSensor <O> queryAABB(ISpatialSensor <O> sensor, AABB aabb)
 	{
 		return queryAABB( sensor, aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY() );
@@ -327,6 +331,7 @@ public class SpatialHashMap <O extends ISpatialObject>
 	/**
 	 * Walks over provided AABB and feeds the sensor with object whose AABBs overlap it
 	 */
+	@Override
 	public ISpatialSensor <O> queryAABB(ISpatialSensor <O> sensor, float cx, float cy, float rx, float ry)
 	{
 		float minx = cx - rx;
@@ -423,6 +428,8 @@ public class SpatialHashMap <O extends ISpatialObject>
 //					System.out.println(aabb.r+radius + " : " + Math.sqrt(distanceSquare));
 					
 					// TODO: make it strictier:
+					if(!object.getArea().overlaps( x, y, x, y ))
+						continue;
 //					if(radiusSquare >= distanceSquare)
 						if(sensor.objectFound(object/*, distanceSquare*/))
 							break;
@@ -435,6 +442,145 @@ public class SpatialHashMap <O extends ISpatialObject>
 		return sensor;
 	}
 	
+	@Override
+	public O findClosest( ISpatialFilter <ISpatialObject> filter, float x, float y )
+	{
+		int minx = Math.min(toGridIndex(x),  halfGridWidth);
+		int miny = Math.min(toGridIndex(y),  halfGridHeight);
+		int passId = getNextPassId();
+		
+		float closestDistanceSquare = Float.MAX_VALUE;
+		float squareRadius = 0;
+		float distanceSquare = 0;
+		Set <O> cell;
+		
+		O closestNeighbor = null;
+		cell = map[hash(minx, miny)];
+		
+		// TODO: make it strictier:
+		for(O object : cell)
+		{
+			if(object.getArea().getPassId() == passId)
+				continue;
+			
+			if( ! filter.accept( object ) )
+				continue;
+			
+			distanceSquare = 
+					FastMath.powOf2(x - object.getArea().getCenterX()) + 
+					FastMath.powOf2(y - object.getArea().getCenterY());
+
+			if(distanceSquare < closestDistanceSquare)
+			{
+				closestDistanceSquare = distanceSquare;
+				closestNeighbor = object;
+			}
+			
+			object.getArea().setPassId( passId );
+		
+
+		}
+		
+		int tx, ty;
+		
+		spiral: for(int radius = 0; radius < halfGridWidth*2; radius ++)
+		{
+			int xdelta = 1, ydelta = 0;
+			
+			tx = minx-radius;
+			ty = miny-radius;
+			
+			for(int dir = 0; dir < 4; dir ++)
+			{
+				for(int idx = -radius; idx <= radius; idx ++)
+				{
+					
+					cell = map[hash(tx+xdelta*idx, ty+ydelta*idx)];
+					
+					for(O object : cell)
+					{
+						if(object.getArea().getPassId() == passId)
+							continue;
+						
+						if(!object.getArea().overlaps( x, y, x, y ))
+							continue;
+						
+						if( ! filter.accept( object ) )
+							continue;
+						
+						distanceSquare = 
+								FastMath.powOf2(x - object.getArea().getCenterX()) + 
+								FastMath.powOf2(y - object.getArea().getCenterY());
+	
+						if(distanceSquare < closestDistanceSquare)
+						{
+							closestDistanceSquare = distanceSquare;
+							closestNeighbor = object;
+							break spiral;
+						}
+						
+						object.getArea().setPassId( passId );
+					}
+					
+				}
+				
+				int td = ydelta;
+				ydelta = xdelta;
+				xdelta = -td;
+				
+			}
+		}
+		
+		// TODO: optimize, following is slower than possible
+		
+		if( closestNeighbor == null)
+			return null;
+		
+		ClosestNeighborSensor sensor =  new ClosestNeighborSensor(x, y);
+		queryRadius( sensor, x, y, (float)Math.sqrt( closestDistanceSquare ) );
+		
+		return sensor.getClosestFound();
+	}	
+	
+	/**
+	 * Stores in his belly the point closest to coordinates specified in ctor.
+	 * @author Fima
+	 *
+	 */
+	private class ClosestNeighborSensor implements ISpatialSensor <O>
+	{
+		private O closestObject = null;
+		private float closestDistance = Float.MAX_VALUE;
+		private final float x, y;
+		
+		ClosestNeighborSensor(float x, float y)
+		{
+			this.x = x; this.y = y;
+		}
+
+		public O getClosestFound() { return closestObject; }
+
+		@Override
+		public boolean objectFound( O object )
+		{
+			float dSqrt = FastMath.powOf2(object.getArea().getCenterX()-x) +
+						  FastMath.powOf2(object.getArea().getCenterY()-y);
+			if(dSqrt < closestDistance)
+			{
+				closestDistance = dSqrt;
+				closestObject = object;
+			}
+			return false;
+		}
+
+		@Override
+		public void clear() 
+		{
+			closestObject = null;
+			closestDistance = Float.MAX_VALUE;
+		}
+	}
+
 	/**
 	 * Walks over provided line and feeds the sensor with object whose AABBs it crosses
 	 * 
@@ -530,5 +676,6 @@ public class SpatialHashMap <O extends ISpatialObject>
 	{
 		return (x < -halfGridWidth || x > halfGridWidth || y < -halfGridHeight || y > halfGridHeight); 
 	}
-	
+
+
 }

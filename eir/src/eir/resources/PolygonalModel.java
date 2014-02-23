@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import eir.world.Asteroid;
 import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavEdge;
-import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.NavNodeDescriptor;
+import eir.world.environment.nav.SurfaceNavNode;
 
 /**
  * @author dveyarangi
@@ -22,43 +22,43 @@ public class PolygonalModel
 	/**
 	 * number of vertices
 	 */
-	private int len;
+	private final int len;
 	
 	/**
 	 * polygon origin point
 	 */
-	private	Vector2 origin;
+	private final	Vector2 origin;
 	
 	/**
 	 * scaled, rotated and transposed vertices
 	 */
-	private Vector2 [] vertices;
+	private final Vector2 [] vertices;
 	
 	/**
 	 * normals of polygon edges
 	 */
-	private Vector2 [] normals;
+	private final Vector2 [] normals;
 	
 	/**
 	 * directions of polygon edges
 	 */
 	
-	private Vector2 [] directions;
+	private final Vector2 [] directions;
 	
 	/**
 	 * slopes of polygon edges
 	 */
-	private float [] slopes;
+	private final float [] slopes;
 	
 	/**
 	 * lengths of polygon edges
 	 */
-	private float [] lengths;
+	private final float [] lengths;
 	
 	/**
 	 * navigation nodes corresponding to polygon vertices
 	 */
-	private NavNode [] nodes;
+	private final SurfaceNavNode [] nodes;
 	
 	private float maxSurfaceIdx;
 
@@ -101,12 +101,12 @@ public class PolygonalModel
 		// lengths of poly edges:
 		lengths = new float [len];
 		
-		nodes = new NavNode[len];
+		nodes = new SurfaceNavNode[len];
 
 		navMesh.beginAsteroid();
-		NavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0] /*, rawVertices[0]*/ );
-		int startingIdx = currNode.idx;
-		NavNode prevNode;
+		SurfaceNavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0] /*, rawVertices[0]*/ );
+		int startingIdx = currNode.getIndex();
+		SurfaceNavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
 		{
 			int nidx = (idx+1)%len;
@@ -140,7 +140,7 @@ public class PolygonalModel
 	 * @param navNodeIdx
 	 * @return
 	 */
-	public NavNode getNavNode(int navNodeIdx)
+	public SurfaceNavNode getNavNode(int navNodeIdx)
 	{
 		return nodes[navNodeIdx];
 	}

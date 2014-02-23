@@ -6,6 +6,8 @@ package eir.debug;
 import java.util.HashMap;
 import java.util.Map;
 
+import yarangi.java.InvokationMapper;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,6 +24,7 @@ import eir.world.Level;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
+import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.unit.Unit;
 import gnu.trove.iterator.TIntObjectIterator;
 
@@ -69,6 +72,8 @@ public class Debug
     private FPSLogger fpsLogger = new FPSLogger();
     
     private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+    
+    private static InvokationMapper mapper = new InvokationMapper();
 	
 	public static void init( Level level, GameInputProcessor inputController )
 	{
@@ -85,7 +90,7 @@ public class Debug
 				level.getWidth(), level.getHeight(), 
 				camera);
 		
-		spatialGrid = new SpatialHashMapLook( level.getSpatialIndex() );
+		spatialGrid = new SpatialHashMapLook( (SpatialHashMap) level.getEnvironment().getIndex() );
 		
 		font = GameFactory.loadFont("skins//fonts//default", 0.05f);
 		
@@ -147,8 +152,8 @@ public class Debug
 		
 		if(drawNavMesh)
 		{
-			drawNavMesh( level.getGroundNavMesh(), batch, shape );
-			drawNavMesh( level.getAirNavMesh(), batch, shape );
+			drawNavMesh( level.getEnvironment().getGroundMesh(), batch, shape );
+			drawNavMesh( level.getEnvironment().getAirMesh(), batch, shape );
 		}
 		
 		if(drawFactions)
@@ -229,8 +234,9 @@ public class Debug
 		log(processName + " finished in " + duration + "ms");
 	}
 		
-	private static void log(String message)
+	public static void log(String message)
 	{
-		Gdx.app.log( TAG, message);
+		String [] path = mapper.getInvoker().split( "\\." );
+		Gdx.app.log( path[path.length-2] + "#" + path[path.length-1], ">> " + message);
 	}
 }

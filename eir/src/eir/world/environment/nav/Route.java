@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
  * @author Ni
  *
  */
-public abstract class Route implements Poolable
+public abstract class Route <N extends NavNode> implements Poolable
 {
 	/**
 	 * has another node en route?
@@ -19,7 +19,7 @@ public abstract class Route implements Poolable
 	 * get next node if available
 	 * @return
 	 */
-	public abstract NavNode next();
+	public abstract N next();
 	
 	/**
 	 * recycle this route. <b>MAKE SURE NOT TO KEEP THE REF AFTER CALLING</b>

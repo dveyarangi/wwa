@@ -14,17 +14,17 @@ import com.badlogic.gdx.math.Vector2;
  * @author Ni
  *
  */
-public class FloydWarshal extends NavMesh
+public class FloydWarshal extends NavMesh <SurfaceNavNode>
 {
 	/**
 	 * fw shortest routes
 	 */
-	protected NavNode[][] routes;
+	protected SurfaceNavNode[][] routes;
 	
 	/**
 	 * nodes tagged as web anchors
 	 */
-	protected ArrayList<NavNode> webNodes;
+	protected ArrayList<SurfaceNavNode> webNodes;
 	
 	/**
 	 * translates node index to floyd warshal matrix index
@@ -38,16 +38,25 @@ public class FloydWarshal extends NavMesh
 	
 	
 	private int[] cur;
+	
+	
+	/**
+	 * array of index range (low,high) for each registered asteroid
+	 */
+	protected ArrayList <int[]> indexRange;
+
 
 	
 	public FloydWarshal()
 	{
-		webNodes = new ArrayList<NavNode>();
+		webNodes = new ArrayList <SurfaceNavNode> ();
+		indexRange = new ArrayList<int[]>();
 	}
 	
 	/**
 	 * initialize in asteroid routes and initial floyd warshal 
 	 */
+	@Override
 	public void init()
 	{
 		int n = nodes.size();
@@ -55,7 +64,7 @@ public class FloydWarshal extends NavMesh
 		// for navigation between nodes inside the same asteroid
 		localdists = new float[n];
 		
-		TIntObjectIterator<NavEdge> it = edges.iterator();
+		TIntObjectIterator<NavEdge<SurfaceNavNode>> it = edges.iterator();
 		
 		// add all "land" edges
 		while( it.hasNext() )
@@ -107,9 +116,9 @@ public class FloydWarshal extends NavMesh
 		float[][] lastdists = new float[n][n];
 		float[][] tmpdists = null;
 		
-		NavNode[][] preds = new NavNode[n][n];
-		NavNode[][] lastpreds = new NavNode[n][n];
-		NavNode[][] tmppreds = null;
+		SurfaceNavNode[][] preds = new SurfaceNavNode[n][n];
+		SurfaceNavNode[][] lastpreds = new SurfaceNavNode[n][n];
+		SurfaceNavNode[][] tmppreds = null;
 		
 		int[] fwIdx = new int[nodes.size()];
 		
@@ -132,7 +141,7 @@ public class FloydWarshal extends NavMesh
 		// 		(= sum of all edges in asteroid to prevent fw from choosing this virtual node as path between two real nodes)
 		for( int i=0 ; i<webNodes.size() ; i++ )
 		{
-			NavNode node = webNodes.get(i);
+			SurfaceNavNode node = webNodes.get(i);
 			int[] range = indexRange.get(node.aIdx);
 			
 			int nodefwIdx = indexRange.size() + i;
@@ -142,13 +151,13 @@ public class FloydWarshal extends NavMesh
 		}
 		
 		
-		TIntObjectIterator<NavEdge> it = edges.iterator();
+		TIntObjectIterator<NavEdge<SurfaceNavNode>> it = edges.iterator();
 		
 		// add web nodes and distance between two ends of each web
 		while( it.hasNext() )
 		{
 			it.advance();
-			NavEdge e = it.value();
+			NavEdge <SurfaceNavNode> e = it.value();
 			
 			if( e.type!=NavEdge.Type.WEB )
 				continue;
@@ -161,9 +170,9 @@ public class FloydWarshal extends NavMesh
 		}
 		
 		// add distance between all nodes in the same asteroid
-		for( NavNode from : webNodes )
+		for( SurfaceNavNode from : webNodes )
 		{
-			for( NavNode to : webNodes )
+			for( SurfaceNavNode to : webNodes )
 			{
 				if( from.aIdx != to.aIdx || from==to )
 					continue;
@@ -214,7 +223,7 @@ public class FloydWarshal extends NavMesh
 	
 	
 	@Override
-	public void linkNodes(NavNode na, NavNode nb, Type type)
+	public void linkNodes(SurfaceNavNode na, SurfaceNavNode nb, Type type)
 	{
 		super.linkNodes(na, nb, type);
 		
@@ -227,7 +236,7 @@ public class FloydWarshal extends NavMesh
 	
 	
 	@Override
-	public boolean unlinkNodes(NavNode na, NavNode nb)
+	public boolean unlinkNodes(SurfaceNavNode na, SurfaceNavNode nb)
 	{
 		if( edges.contains(getEdgeIdx(na.idx, nb.idx)) )
 		{
@@ -244,7 +253,7 @@ public class FloydWarshal extends NavMesh
 	 * @return Route starting at a and ending at b using shortest route
 	 */
 	@Override
-	public Route getShortestRoute( NavNode from, NavNode to )
+	public Route getShortestRoute( SurfaceNavNode from, SurfaceNavNode to )
 	{
 		FloydWarshalRoute r = FloydWarshalRoute.routesPool.obtain();
 		r.set(this, from, to);
@@ -257,7 +266,7 @@ public class FloydWarshal extends NavMesh
 	 * @param to
 	 * @return clockwise distance between <b>from</b> and <b>to</b> if they are on the same asteroid, infinity otherwise
 	 */
-	public float cwDistance( NavNode from, NavNode to )
+	public float cwDistance( SurfaceNavNode from, SurfaceNavNode to )
 	{
 		if( from.aIdx != to.aIdx )
 			return Float.POSITIVE_INFINITY;
@@ -274,7 +283,7 @@ public class FloydWarshal extends NavMesh
 	 * @param to
 	 * @return counter clockwise distance between <b>from</b> and <b>to</b> if they are on the same asteroid, infinity otherwise
 	 */
-	public float ccwDistance( NavNode from, NavNode to )
+	public float ccwDistance( SurfaceNavNode from, SurfaceNavNode to )
 	{
 		if( from.aIdx != to.aIdx )
 			return Float.POSITIVE_INFINITY;
@@ -285,7 +294,8 @@ public class FloydWarshal extends NavMesh
 			return (to.idx==indexRange.get(from.aIdx)[0]) ? localdists[from.idx] : localdists[from.idx] - localdists[to.idx];
 	}
 	
-	public NavNode insertNode(NavNodeDescriptor descriptor, Vector2 point)
+	@Override
+	public SurfaceNavNode insertNode(NavNodeDescriptor descriptor, Vector2 point)
 	{
 		if( cur==null )
 			throw new IllegalStateException("May not add new nodes outside of asteroid context "
@@ -311,6 +321,12 @@ public class FloydWarshal extends NavMesh
 		cur[1] = nodes.size()-1;
 		indexRange.add(cur);
 		cur = null;
+	}
+
+	@Override
+	protected SurfaceNavNode createNavNode( NavNodeDescriptor descriptor, Vector2 point, int nodeIdx )
+	{
+		return new SurfaceNavNode(descriptor, point, nodeIdx, indexRange.size());
 	}
 
 }

@@ -3,10 +3,12 @@
  */
 package eir.resources;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -14,32 +16,34 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.cedarsoftware.util.io.JsonObject;
+import com.cedarsoftware.util.io.JsonReader;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
+
 
 import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.controllers.IController;
-import eir.world.environment.nav.SurfaceNavNode;
+import eir.world.environment.nav.FloydWarshal;
+import eir.world.environment.nav.NavMesh;
+import eir.world.environment.nav.NavNode;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
@@ -60,7 +64,40 @@ public class LevelLoader
 	 * that can be loaded using {@link #readLevel(String)}.
 	 */
 	private Multimap<String, String> levelTypes;
+	
+	public static class LoadingContext
+	{
+		public NavMesh navMesh = new FloydWarshal();
+		
+		public Map <String, Asteroid> asteroids = 
+				new HashMap <String, Asteroid> ();
+		
+		public Map <String, Animation> animations = 
+				new HashMap <String, Animation> ();
 
+		public Map <Integer, Faction> factions = new HashMap <Integer, Faction> ();
+
+		/**
+		 * @param asteroidName
+		 * @return
+		 */
+		public Asteroid getAsteroid(String name)
+		{
+			if(!asteroids.containsKey( name ))
+				throw new IllegalArgumentException("Asteroid " + name + " not defined.");
+
+			return asteroids.get( name );
+		}
+
+		/**
+		 * @param asteroid
+		 */
+		public void addAsteroid(Asteroid asteroid)
+		{
+			asteroids.put( asteroid.getName(), asteroid );
+		}
+		
+	}
 	
 	/**
 	 * Creates level loader and lists level folder ({@link #LEVEL_DATA_ROOT}
@@ -144,59 +181,27 @@ public class LevelLoader
 	 * @param levelName
 	 * @return
 	 */
-	Level readLevel(String levelId, final LevelLoadingContext context)
+	Level readLevel(String levelId, final LoadingContext context)
 	{
 		
-/*		final Gson resourceCounter = new GsonBuilder()
-		.registerTypeAdapter(Texture.class, new JsonDeserializer<Texture>()
-			{
+		JsonReader.addReader( Texture.class, new JsonReader.JsonClassReader() {
 				@Override
-				public Texture deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				public Object read(Object jOb, LinkedList<JsonObject<String, Object>> stack)	
 				{
-					String textureFile = elem.getAsString();
+					JsonObject object = (JsonObject) jOb;
+					String textureFile = (String)object.getPrimitiveValue();
 					
 					return GameFactory.loadTexture( textureFile );
 				}
-			})
-			.create();*/
-		
-		// this is raw gson parser (without custom deserializatiors)
-		// it is used for asteroid reference substitutions
-		ControllerAdapter controllerAdapter = new ControllerAdapter();
-		
-		final Gson rawGson = new GsonBuilder()
-		.registerTypeAdapter( SurfaceNavNode.class, new JsonDeserializer<SurfaceNavNode>()
-			{
-				@Override
-				public SurfaceNavNode deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
-				{
-					JsonObject object = elem.getAsJsonObject();
-					String asteriodName = object.get( "asteroid" ).getAsString();
-					int navIdx = object.get( "navIdx" ).getAsInt();
-					
-					Asteroid asteroid = context.asteroids.get( asteriodName );
-					return asteroid.getModel().getNavNode( navIdx );
-				}
-			}) 
-			.registerTypeAdapter( Texture.class, new JsonDeserializer<Texture>()
-			{
-				@Override
-				public Texture deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
-				{
-					String textureFile = elem.getAsString();
-					
-					return GameFactory.loadTexture( textureFile );
-				}
-			})
+		});
 			
-			.registerTypeAdapter( Animation.class, new JsonDeserializer<Animation>()
-			{
+		JsonReader.addReader( Texture.class, new JsonReader.JsonClassReader() {
 				@Override
-				public Animation deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				public Object read(Object jOb, LinkedList<JsonObject<String, Object>> stack)	
 				{
-					JsonObject object = elem.getAsJsonObject();
-					String atlasFile = object.get( "atlasFile" ).getAsString();
-					String atlasId = object.get( "atlasId" ).getAsString();
+					JsonObject object = (JsonObject) jOb;
+					String atlasFile = object.get( "atlasFile" ).toString();
+					String atlasId = object.get( "atlasId" ).toString();
 					String animationName = atlasFile + "/" + atlasId;
 					
 					Animation animation = context.animations.get( animationName );
@@ -210,119 +215,55 @@ public class LevelLoader
 					return animation;
 					
 				}
-			})	
-			.registerTypeAdapter( IController.class, controllerAdapter)
-			.create();
+		});	
 
-		UnitAdapter unitAdapter = new UnitAdapter();
+
+//		UnitAdapter unitAdapter = new UnitAdapter();
 		
-		final Gson gson = new GsonBuilder()
-			///////////////////////////////////////////////////////////////
-			// game objects adapters:
-			///////////////////////////////////////////////////////////////
-		
-			// loading asteroids
-			.registerTypeAdapter( Asteroid.class, new JsonDeserializer<Asteroid>()
-			{
-				@Override
-				public Asteroid deserialize(JsonElement elem, Type type, JsonDeserializationContext ctx) throws JsonParseException
+		JsonReader.addReader( Texture.class, new JsonReader.JsonClassReader() {
+			@Override
+			public Object read(Object jOb, LinkedList<JsonObject<String, Object>> stack)	
+			{		
+				Asteroid asteroid;
+				
+				if(elem.isJsonObject()) // creating asteroid by definitions
 				{
-					Asteroid asteroid;
+					asteroid = rawGson.fromJson( elem, type );
+					context.addAsteroid(asteroid);
 					
-					if(elem.isJsonObject()) // creating asteroid by definitions
-					{
-						asteroid = rawGson.fromJson( elem, type );
-						context.addAsteroid(asteroid);
-						
-						asteroid.preinit( context.navMesh );
-						
-						return asteroid;
-					}
-					
-					// getting asteroid by name reference:
-					String asteroidName = elem.getAsString();
-					
-					asteroid = context.getAsteroid(asteroidName);
+					asteroid.preinit( context.navMesh );
 					
 					return asteroid;
-					
 				}
-			})
+				
+				// getting asteroid by name reference:
+				String asteroidName = elem.getAsString();
+				
+				asteroid = context.getAsteroid(asteroidName);
+				
+				return asteroid;
+				
+			}
+		});
 
-
-			.registerTypeAdapter( Faction.class, new JsonDeserializer<Faction>()
-			{
-				@Override
-				public Faction deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
-				{
-					Faction faction;
-					
-					if(elem.isJsonObject()) // creating asteroid by definitions
-					{
-						faction = rawGson.fromJson( elem, type );
-						context.factions.put(faction.getOwnerId(), faction);
-						
-						return faction;
-					}
-					
-					// getting asteroid by name reference:
-					int factionId = elem.getAsInt();
-					
-					faction = context.factions.get(factionId);
-					
-					return faction;
-				}
-			})
-			.registerTypeAdapter( SurfaceNavNode.class, new JsonDeserializer<SurfaceNavNode>()
-			{
-				@Override
-				public SurfaceNavNode deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
-				{
-					return rawGson.fromJson( elem, SurfaceNavNode.class );
-				}
-			})
-			.registerTypeAdapter( Unit.class, unitAdapter)
-			
-			///////////////////////////////////////////////////////////////
-			// graphic objects adapters:
-			///////////////////////////////////////////////////////////////
-			
-			.registerTypeAdapter( Texture.class, new JsonDeserializer<Texture>()
-			{
-				@Override
-				public Texture deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
-				{
-					return rawGson.fromJson( elem, Texture.class );
-				}
-			})
-			
-			.registerTypeAdapter( Animation.class, new JsonDeserializer<Animation>()
-			{
-				@Override
-				public Animation deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
-				{
-					return rawGson.fromJson( elem, Animation.class );
-					
-				}
-			})			
-			.create();
 		
-		unitAdapter.gson = gson;
-		controllerAdapter.gson = gson;
+
+		.registerTypeAdapter( NavNode.class, new JsonDeserializer<NavNode>()
+			{
+				@Override
+				public NavNode deserialize(JsonElement elem, Type type, JsonDeserializationContext arg2) throws JsonParseException
+				{
+					JsonObject object = elem.getAsJsonObject();
+					String asteriodName = object.get( "asteroid" ).getAsString();
+					int navIdx = object.get( "navIdx" ).getAsInt();
+					
+					Asteroid asteroid = context.asteroids.get( asteriodName );
+					return asteroid.getModel().getNavNode( navIdx );
+				}
+			}) 			.create();
 		
-		InputStream stream = openFileStream( levelId );
-
-		Level level = null;
-
-		try
-		{
-			level = gson.fromJson( new InputStreamReader( stream ), Level.class );
-		} 
-		catch ( JsonSyntaxException jse ) { 
-			Gdx.app.error( TAG,  "Level file is contains errors", jse ); } 
-		catch ( JsonIOException jioe ) { 
-			Gdx.app.error( TAG,  "Level file not found or unreadible", jioe ); 
-		}
+		JsonReader reader = new JsonReader();
+		Level level = (Level)reader.jsonToJava( readLevelConfig ( levelId) );
 
 		
 		return level;
@@ -334,14 +275,26 @@ public class LevelLoader
 	 * @return
 	 * @throws IllegalArgumentException if no resource matching the Level name is found.
 	 */
-	private InputStream openFileStream(String levelId)
+	private String readLevelConfig(String levelId)
 	{
-		InputStream stream = this.getClass().getClassLoader().getResourceAsStream( levelId );
-		if(stream == null)
+		StringBuilder fileData = new StringBuilder();
+		try
 		{
-			throw new IllegalArgumentException ("Cannot open resource " + levelId );
+			InputStream stream = this.getClass().getClassLoader().getResourceAsStream( levelId );
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+			String line;
+			{
+				while((line = reader.readLine()) != null)
+					fileData.append( line );
+			}
 		}
-		return stream;
+		catch( IOException e )
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+		return fileData.toString();
 
 	}
 
@@ -354,7 +307,7 @@ public class LevelLoader
 		LevelLoader loader = new LevelLoader();
 
 		String levelName = loader.getLevelNames( "exodus" ).iterator().next();
-		Level level = loader.readLevel( levelName, new LevelLoadingContext() );
+		Level level = loader.readLevel( levelName, new LoadingContext() );
 
 		System.out.println( "Loaded level descriptor " + level );
 
@@ -439,7 +392,7 @@ public class LevelLoader
 		throw new UnsupportedOperationException( "Cannot list files for URL " + dirURL );
 	}
 	
-	private static class UnitAdapter implements  JsonDeserializer<Unit>
+/*	private static class UnitAdapter implements  JsonDeserializer<Unit>
 	{
 		Gson gson;
 		
@@ -478,5 +431,5 @@ public class LevelLoader
 			
 			return ctrl;
 		}
-	}
+	}*/
 }

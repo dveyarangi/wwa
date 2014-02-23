@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
+import eir.debug.Debug;
 import eir.game.screens.MenuScreen;
 
 /**
@@ -27,7 +28,7 @@ public class EirGame extends Game
     @Override
     public void create()
     {
-        Gdx.app.log( LOG, "Creating game on " + Gdx.app.getType() );
+        Debug.log("Creating game on " + Gdx.app.getType() );
 
     }
 
@@ -35,7 +36,7 @@ public class EirGame extends Game
     public void resize( int width, int height )
     {
         super.resize( width, height );
-        Gdx.app.log( LOG, "Resizing game to: " + width + " x " + height );
+        Debug.log("Resizing game to: " + width + " x " + height );
 
         // show the splash screen when the game is resized for the first time;
         // this approach avoids calling the screen's resize method repeatedly
@@ -59,7 +60,7 @@ public class EirGame extends Game
     public void pause()
     {
         super.pause();
-        Gdx.app.log( LOG, "Pausing game" );
+        Debug.log("Pausing game" );
 
     }
 
@@ -67,21 +68,21 @@ public class EirGame extends Game
     public void resume()
     {
         super.resume();
-        Gdx.app.log( LOG, "Resuming game" );
+        Debug.log("Resuming game" );
     }
 
     @Override
     public void setScreen( Screen screen )
     {
         super.setScreen( screen );
-        Gdx.app.log( LOG, "Setting screen: " + screen.getClass().getSimpleName() );
+        Debug.log("Setting screen: " + screen.getClass().getSimpleName() );
     }
 
     @Override
     public void dispose()
     {
         super.dispose();
-        Gdx.app.log( LOG, "Disposing game" );
+        Debug.log("Disposing game" );
 
     }
     

@@ -23,8 +23,8 @@ public class FloydWarshalRoute extends Route
 			};
 	
 	private FloydWarshal navMesh;
-	private NavNode from;
-	private NavNode to;
+	private SurfaceNavNode from;
+	private SurfaceNavNode to;
 	private boolean hasNext;
 
 	public FloydWarshalRoute()
@@ -42,7 +42,7 @@ public class FloydWarshalRoute extends Route
 	 * @param from
 	 * @param to
 	 */
-	protected void set( FloydWarshal navMesh, NavNode from, NavNode to )
+	protected void set( FloydWarshal navMesh, SurfaceNavNode from, SurfaceNavNode to )
 	{
 		this.navMesh = navMesh;
 		this.from = from;
@@ -68,7 +68,7 @@ public class FloydWarshalRoute extends Route
 	}
 	
 	@Override
-	public NavNode next()
+	public SurfaceNavNode next()
 	{
 		// next does some redundant things in order to avoid being overly stateful 
 		
@@ -79,9 +79,9 @@ public class FloydWarshalRoute extends Route
 		{
 			hasNext = false;
 			return to;
-		}
+		} 
 		
-		NavNode tmpto = navMesh.routes[from.aIdx][to.aIdx];
+		SurfaceNavNode tmpto = navMesh.routes[from.aIdx][to.aIdx];
 		
 		// if from==tmpto we've reached the web node
 		if ( from==tmpto )

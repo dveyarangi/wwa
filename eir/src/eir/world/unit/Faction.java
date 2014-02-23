@@ -15,6 +15,7 @@ import com.google.common.collect.Multimap;
 
 import eir.world.Level;
 import eir.world.controllers.IController;
+import eir.world.environment.Environment;
 import eir.world.unit.ai.Scheduler;
 
 /**
@@ -92,10 +93,6 @@ public class Faction
 		controller.update( delta );
 	}
 	
-	/**
-	 * @return
-	 */
-	public Level getLevel()	{ return level; }
 
 	/**
 	 * @return
@@ -115,5 +112,13 @@ public class Faction
 	public Set <Unit> getUnits() {
 		return units;
 	}
+
+	public Level getLevel() { return level; }
+	/**
+	 * Equivalent of {@link #getLevel()#getEnvironment()}
+	 * @return
+	 */
+	public Environment getEnvironment() { return level.getEnvironment(); }
+
 
 }

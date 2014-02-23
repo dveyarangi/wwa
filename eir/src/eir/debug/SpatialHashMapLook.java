@@ -2,14 +2,13 @@ package eir.debug;
 
 import java.util.Set;
 
+import yarangi.math.FastMath;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
-
-import yarangi.math.FastMath;
 
 /**
  * Renders entity index
@@ -20,7 +19,7 @@ import yarangi.math.FastMath;
 public class SpatialHashMapLook
 {
 	
-	private SpatialHashMap <ISpatialObject> map;
+	private final SpatialHashMap <ISpatialObject> map;
 	
 	public SpatialHashMapLook(SpatialHashMap <ISpatialObject> map)
 	{
@@ -30,7 +29,7 @@ public class SpatialHashMapLook
 	public void draw(ShapeRenderer renderer) 
 	{
 		int cellX, cellY;
-		float cellsize = (float)map.getCellSize();
+		float cellsize = map.getCellSize();
 		float halfCellSize = cellsize / 2.f;
 		float minx = -map.getWidth()/2-halfCellSize;
 		float maxx = map.getWidth()/2-halfCellSize;
@@ -58,44 +57,31 @@ public class SpatialHashMapLook
 			for(float x = minx; x < maxx; x += map.getCellSize())
 			{
 				cellX = FastMath.round(x / map.getCellSize());
-				boolean isReal = false;
 				try {
 					bucket = map.getBucket(cellX, cellY);
 				}
 				catch(ArrayIndexOutOfBoundsException e) {
-					// TODO???
+					e.printStackTrace();
 				}
-//				if(bucket.size() > 0)
-//				if(bucket != null)
-//				for(ISpatialObject chunk : bucket)
-//				{
-//					System.out.println(chunk);
-//					if(chunk.overlaps(x, y, x+map.getCellSize(), y+map.getCellSize()))
-//					{
-//						isReal = true;
-//						break;
-//					}
-//				}
-				if(bucket == null) {
-					renderer.setColor(1f, 0f, 0.0f, 0.5f);
-					renderer.begin( ShapeType.Line );
-					renderer.line(x, y, x+cellsize, y+cellsize);
 
-					renderer.line(x, y+cellsize, x+cellsize, y);
-					renderer.end();
-
-
-				}
-				else
-				if(bucket.size() != 0)
+				if(bucket != null && bucket.size() != 0)
 				{
-					if(isReal)		
+					boolean isReal = false;
+					for(ISpatialObject o : bucket)
+					{
+						if(o.getArea().overlaps( x, y, x+cellsize, y+cellsize ))
+						{
+							isReal = true;
+							break;
+						}
+					}
+					if(isReal)
+					{
 						renderer.setColor(0.8f, 0.6f, 0.8f, 0.2f);
-					else
-						renderer.setColor(0.1f, 0.6f, 0.8f, 0.1f);
-					renderer.begin( ShapeType.Rectangle );
-					renderer.rect( x, y, cellsize, cellsize);
-					renderer.end();
+						renderer.begin( ShapeType.Rectangle );
+						renderer.rect( x, y, cellsize, cellsize);
+						renderer.end();
+					}
 				}	
 			}
 		}

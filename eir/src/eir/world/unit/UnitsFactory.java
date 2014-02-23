@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.IdentityMap;
 import com.badlogic.gdx.utils.Pool;
 
 import eir.world.environment.nav.NavNode;
+import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.ai.TaskStage;
 import eir.world.unit.ant.AntFactory;
 import eir.world.unit.spider.SpiderFactory;
@@ -60,7 +61,7 @@ public class UnitsFactory
 		UnitFactory <U> factory = (UnitFactory <U>) factories.get( type );
 		U unit = factory.pool.obtain();
 
-		unit.init(type, anchor, faction);
+		unit.init(type, (SurfaceNavNode)anchor, faction);
 		
 		return unit;
 	}

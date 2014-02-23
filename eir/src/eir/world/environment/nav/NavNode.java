@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 
-import eir.world.Level;
+import eir.world.environment.Environment;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
 
@@ -28,12 +28,7 @@ public class NavNode implements ISpatialObject
 	 * index of this node in the in the nav mesh that contains it (unique in
 	 * mesh)
 	 */
-	public final int				idx;
-
-	/**
-	 * index of the asteroid containing this nav node
-	 */
-	public final int				aIdx;
+	final int				idx;
 
 	/**
 	 * List of all connected nodes
@@ -57,25 +52,23 @@ public class NavNode implements ISpatialObject
 	 * @param aIdx
 	 *            index of the asteroid containing this node
 	 */
-	NavNode( NavNodeDescriptor descriptor, Vector2 point, int idx, int aIdx )
+	NavNode( NavNodeDescriptor descriptor, Vector2 point, int idx )
 	{
 		this.descriptor = descriptor;
 		this.idx = idx;
 		this.point = point;
-		this.aIdx = aIdx;
 		this.neighbours = new HashSet<NavNode>();
 
 		this.pickingArea = AABB.createSquare( point, 0.1f );
 	}
 
-	public Vector2 getPoint()
-	{
-		return point;
-	}
+	public Vector2 getPoint() { return point; }
 
-	public void init( Level level )
+	public int getIndex() { return idx; }
+
+	public void init()
 	{
-		spatialId = Level.createObjectId();
+		spatialId = Environment.createObjectId();
 	}
 
 	/**
@@ -124,5 +117,6 @@ public class NavNode implements ISpatialObject
 	{
 		return descriptor;
 	}
+
 
 }

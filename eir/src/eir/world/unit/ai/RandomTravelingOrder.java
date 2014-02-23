@@ -1,6 +1,7 @@
 package eir.world.unit.ai;
 
 import yarangi.numbers.RandomUtil;
+import eir.world.environment.Environment;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
 
@@ -10,10 +11,10 @@ public class RandomTravelingOrder extends Order
 	
 	private NavMesh mesh;
 
-	public RandomTravelingOrder(NavMesh mesh, float priority) {
+	public RandomTravelingOrder(Environment environment, float priority) {
 		super(priority, null, null, null);
 		
-		this.mesh = mesh;
+		this.mesh = environment.getGroundMesh();
 	}
 
 	@Override

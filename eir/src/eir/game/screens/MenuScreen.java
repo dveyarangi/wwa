@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.esotericsoftware.tablelayout.BaseTableLayout;
 
+import eir.debug.Debug;
 import eir.game.EirGame;
 
 public class MenuScreen extends AbstractScreen
@@ -57,7 +58,7 @@ public class MenuScreen extends AbstractScreen
         optionsButton.addListener( new ClickListener() {
 			@Override
 	       	public void clicked (InputEvent event, float x, float y) {
-				  log( "TODO: options" );
+				  	Debug.log( "TODO: options" );
            }
         } );
         menuTable.add( optionsButton ).align( BaseTableLayout.LEFT ).padLeft( LEFT_PADDING ).row();
@@ -67,7 +68,7 @@ public class MenuScreen extends AbstractScreen
         TextButton highScoresButton = new TextButton( "High Scores", skin );
         highScoresButton.addListener( new ClickListener() {
        	public void clicked (InputEvent event, float x, float y) {
-				  log( "TODO: highscores" );
+       				Debug.log( "TODO: highscores" );
            }
         } );
         menuTable.add( highScoresButton ).align( BaseTableLayout.LEFT ).padLeft( LEFT_PADDING ).row();
@@ -76,7 +77,7 @@ public class MenuScreen extends AbstractScreen
         TextButton exitButton = new TextButton( "Exit", skin );
         exitButton.addListener( new ClickListener() {
 	       	public void clicked (InputEvent event, float x, float y) {
-					  log( "Exiting by user orders." );
+	       				Debug.log( "Exiting by user orders." );
 					  Gdx.app.exit();
 	           }
 	        } );

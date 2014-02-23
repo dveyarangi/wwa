@@ -1,12 +1,14 @@
 package eir.world.environment.nav;
 
+import com.badlogic.gdx.math.Vector2;
+
 
 /**
  * calculates all shortest routes for a given nav mesh
  * @author Ni
  *
  */
-public class CopyOfFloydWarshalRoutes extends NavMesh
+public class CopyOfFloydWarshalRoutes extends NavMesh <SurfaceNavNode>
 {
 //	protected NavNode[][] routes;
 	
@@ -18,6 +20,7 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 	{
 	}
 	
+	@Override
 	public void init()
 	{
 		calculate();
@@ -98,7 +101,7 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 			}
 		}	
 		
-		for(NavNode node : nodes)
+		for(SurfaceNavNode node : nodes)
 		{
 			for(NavNode neigh : node.getNeighbors())
 			{
@@ -128,11 +131,12 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 	}
 
 	
-	/**
+	/** 
 	 * find the shortest route between node from and to
 	 * @return ordered list starting at a and ending at b using shortest route / null if no route
 	 */
-	public FloydWarshalRoute getShortestRoute( NavNode from, NavNode to )
+	@Override
+	public FloydWarshalRoute getShortestRoute( SurfaceNavNode from, SurfaceNavNode to )
 	{
 		FloydWarshalRoute r = FloydWarshalRoute.routesPool.obtain();
 //		r.set(this, from, to);
@@ -141,5 +145,11 @@ public class CopyOfFloydWarshalRoutes extends NavMesh
 
 	public int getNextNode(int currIdx, int targetIdx) {
 		return next[currIdx][targetIdx];
+	}
+	
+	@Override
+	protected SurfaceNavNode createNavNode( NavNodeDescriptor descriptor, Vector2 point, int nodeIdx)
+	{
+		return new SurfaceNavNode(descriptor, point, nodeIdx, 0);
 	}
 }

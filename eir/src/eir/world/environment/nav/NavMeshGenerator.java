@@ -74,7 +74,7 @@ public class NavMeshGenerator
 
 	public NavMesh generateMesh( List<Asteroid> asteroids, final Vector2 minCorner, final Vector2 maxCorner )
 	{
-		NavMesh resultMesh = new DummyNavMesh();
+		NavMesh resultMesh = new AirNavMesh();
 
 		final List<Polygon> polygons = new LinkedList<Polygon>();
 

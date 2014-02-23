@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Vector3;
 import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.environment.nav.NavNode;
+import eir.world.environment.nav.SurfaceNavNode;
 
 /**
  * handles input for game
@@ -25,7 +26,7 @@ import eir.world.environment.nav.NavNode;
  */
 public class GameInputProcessor implements InputProcessor
 {
-	private InputMultiplexer inputMultiplexer;
+	private final InputMultiplexer inputMultiplexer;
 	
 	private final AutoCameraController autoController;
 	private final FreeCameraController freeController;
@@ -34,8 +35,8 @@ public class GameInputProcessor implements InputProcessor
 	private final Level level;
 	
 	private int lastx, lasty;
-	private Vector3 pointerPosition3 = new Vector3();
-	private Vector2 pointerPosition2 = new Vector2();
+	private final Vector3 pointerPosition3 = new Vector3();
+	private final Vector2 pointerPosition2 = new Vector2();
 	
 	private boolean dragging = false;
 
@@ -44,7 +45,7 @@ public class GameInputProcessor implements InputProcessor
 
 	private float lifeTime = 0;
 	
-	private PickingSensor pickingSensor;
+	private final PickingSensor pickingSensor;
 	
 	public GameInputProcessor(Level level)
 	{
@@ -155,7 +156,7 @@ public class GameInputProcessor implements InputProcessor
 				NavNode sourceNode = level.getControlledUnit().anchor;
 				NavNode targetNode = pickingSensor.getNode();
 				
-				level.toggleWeb(sourceNode, targetNode);
+				level.toggleWeb((SurfaceNavNode)sourceNode, (SurfaceNavNode)targetNode);
 			}
 		}
 		
@@ -231,7 +232,7 @@ public class GameInputProcessor implements InputProcessor
 	    camController.update( delta );
 		lifeTime += delta;
 		pickingSensor.clear();
-		level.getSpatialIndex().queryAABB( pickingSensor, 
+		level.getEnvironment().getIndex().queryAABB( pickingSensor, 
 				pointerPosition2.x, 
 				pointerPosition2.y, 3, 3 );
 		

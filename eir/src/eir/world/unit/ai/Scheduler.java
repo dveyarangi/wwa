@@ -22,9 +22,9 @@ public class Scheduler
 	/**
 	 * Orders by unit types?
 	 */
-	private Multimap <String, Order> orders;
+	private final Multimap <String, Order> orders;
 	
-	private Multimap <Order, Task> tasks;
+	private final Multimap <Order, Task> tasks;
 	
 	
 	public Scheduler()
@@ -54,7 +54,7 @@ public class Scheduler
 		
 		// 
 		Collection <Order> unitOrders = orders.get( unit.getType() );
-		if(unitOrders == null)
+		if(unitOrders == null || unitOrders.size() == 0)
 			return null;
 		
 		Order order = null;

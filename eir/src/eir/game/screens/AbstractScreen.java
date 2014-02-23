@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import eir.debug.Debug;
 import eir.game.EirGame;
 
 
@@ -78,7 +79,7 @@ public abstract class AbstractScreen implements Screen
     @Override
     public void show()
     {
-        log( "Showing screen" );
+    	Debug.log( "Showing screen" );
 
         // set the stage as the input processor
         Gdx.input.setInputProcessor( stage );
@@ -89,7 +90,7 @@ public abstract class AbstractScreen implements Screen
         int width,
         int height )
     {
-        log( "Resizing screen to: " + width + " x " + height );
+    	Debug.log( "Resizing screen to: " + width + " x " + height );
     }
 
     @Override
@@ -114,7 +115,7 @@ public abstract class AbstractScreen implements Screen
     @Override
     public void hide()
     {
-        log( "Hiding screen" );
+    	Debug.log( "Hiding screen" );
 
         // dispose the screen when leaving the screen;
         // note that the dipose() method is not called automatically by the
@@ -125,19 +126,19 @@ public abstract class AbstractScreen implements Screen
     @Override
     public void pause()
     {
-        log( "Pausing screen" );
+    	Debug.log( "Pausing screen" );
     }
 
     @Override
     public void resume()
     {
-        log( "Resuming screen" );
+    	Debug.log( "Resuming screen" );
     }
 
     @Override
     public void dispose()
     {
-        log( "Disposing screen" );
+    	Debug.log( "Disposing screen" );
 
         // as the collaborators are lazily loaded, they may be null
         if( font != null ) font.dispose();
@@ -146,9 +147,5 @@ public abstract class AbstractScreen implements Screen
     }
     
     ///////////////////////////////////////////////////////////////////////////
-    
-    public final String LOG = EirGame.LOG + "(" + getName() + ")";
-    
-    protected void log(String txt) { Gdx.app.log( LOG, txt ); }
 
 }

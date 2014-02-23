@@ -12,8 +12,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
-import eir.world.Level;
+import eir.world.environment.Environment;
 import eir.world.environment.nav.NavNode;
+import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.ai.Task;
@@ -31,7 +32,7 @@ public abstract class Unit implements ISpatialObject
 	
 	protected Faction faction;
 
-	public NavNode anchor;
+	public SurfaceNavNode anchor;
 
 	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas", 
 			"explosion02");
@@ -39,7 +40,7 @@ public abstract class Unit implements ISpatialObject
 
 	///////////////////////////////////////////
 	
-	private AABB body;
+	private final AABB body;
 	
 	private int id;
 	
@@ -64,7 +65,7 @@ public abstract class Unit implements ISpatialObject
 	public void init(String type, NavNode anchor, Faction faction)
 	{
 		this.type = type;
-		this.anchor = anchor;
+		this.anchor = (SurfaceNavNode)anchor;
 		this.faction = faction;
 		
 		body.update( anchor.getPoint().x, anchor.getPoint().y, getSize()/2, getSize()/2 );
@@ -97,6 +98,7 @@ public abstract class Unit implements ISpatialObject
 	
 	public String getName()  { return this.getClass().getSimpleName(); }
 	
+	@Override
 	public String toString() {
 		return getName() + " (" + getId() + ")";
 	}
@@ -104,7 +106,7 @@ public abstract class Unit implements ISpatialObject
 	public void init()
 	{
 		this.isAlive = true;
-		this.id = Level.createObjectId();
+		this.id = Environment.createObjectId();
 		this.task = null;
 		
 		this.type = type.intern();

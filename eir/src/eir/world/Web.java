@@ -13,6 +13,7 @@ import eir.resources.GameFactory;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNode;
+import eir.world.environment.nav.SurfaceNavNode;
 
 
 /**
@@ -21,8 +22,8 @@ import eir.world.environment.nav.NavNode;
  */
 public class Web
 {
-	private NavNode source;
-	private NavNode target;
+	private SurfaceNavNode source;
+	private SurfaceNavNode target;
 	
 	private Texture threadTexture;
 	private Texture sourceTexture;
@@ -34,7 +35,7 @@ public class Web
 	
 	public Web() {}
 	
-	public Web( NavNode source, NavNode target, String threadTexture, String sourceTexture, String targetTexture )
+	public Web( SurfaceNavNode source, SurfaceNavNode target, String threadTexture, String sourceTexture, String targetTexture )
 	{
 		this.source = source;
 		
@@ -53,7 +54,7 @@ public class Web
 		targetSprite.draw(spriteBatch);
 	}
 	
-	public void init(NavMesh mesh)
+	public void init(NavMesh <SurfaceNavNode> mesh)
 	{	
 		
 		mesh.linkNodes( source, target, NavEdge.Type.WEB );

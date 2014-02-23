@@ -11,12 +11,12 @@ import eir.resources.GameFactory;
 import eir.world.Asteroid;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavNode;
+import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
 import eir.world.unit.weapon.Bullet;
 import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
-import eir.world.unit.weapon.Minigun;
 /**
  * Spider
  *
@@ -25,7 +25,7 @@ public class Spider extends Unit
 {
 	private Faction faction;
 	
-	private float size = 10;
+	private final float size = 10;
 
 	private Vector2 axis;
 	
@@ -55,6 +55,7 @@ public class Spider extends Unit
 		System.out.println("hola");
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -75,8 +76,10 @@ public class Spider extends Unit
 		this.chassis = new Chassis( this, getBody().getAnchor(), getBody().getAnchor() );
 	}
 	
+	@Override
 	public Faction getFaction() { return faction; }
 	
+	@Override
 	public void update(float delta)
 	{
 		
@@ -154,24 +157,27 @@ public class Spider extends Unit
 		}
 	}
 	
-	private NavNode getClosestNode()
+	private SurfaceNavNode getClosestNode()
 	{
 		return anchor;
 	}
 
 
+	@Override
 	public void walkCW(boolean walk) 
 	{ 
 		this.walkCW = walk;
 //		if(walk == false)
 //			stepCount = 0;
 	}
+	@Override
 	public void walkCCW(boolean walk) 
 	{ 
 		this.walkCCW = walk; 
 //		if(walk == false)
 //			stepCount = 0;
 	}
+	@Override
 	public void walkUp(boolean walk) 
 	{ 
 		if(web == null)
@@ -179,7 +185,7 @@ public class Spider extends Unit
 			NavEdge walkingEdge = null; 
 			for(NavNode node : getClosestNode().getNeighbors())
 			{
-				NavEdge edge = faction.getLevel().getGroundNavMesh().getEdge( getClosestNode(), node);
+				NavEdge edge = faction.getEnvironment().getGroundMesh().getEdge( getClosestNode(), (SurfaceNavNode) node);
 				if(edge.getType() == NavEdge.Type.WEB)
 				{
 					walkingEdge = edge;
@@ -195,6 +201,7 @@ public class Spider extends Unit
 		if(web != null)
 			this.walkUp = walk; 
 	}
+	@Override
 	public void walkDown(boolean walk) 
 	{ 
 		if(web != null)
@@ -205,6 +212,7 @@ public class Spider extends Unit
 	 * Debug rendering method
 	 * @param shape
 	 */
+	@Override
 	public void draw(SpriteBatch batch)
 	{
 /*		sprite.setPosition( position.x-sprite.getOriginX(), position.y-sprite.getOriginY() );
@@ -220,6 +228,7 @@ public class Spider extends Unit
 	/**
 	 * @param b
 	 */
+	@Override
 	public void setShootingTarget(Vector2 targetPos)
 	{
 		this.shootingTarget = targetPos;
@@ -243,6 +252,7 @@ public class Spider extends Unit
 		return size;
 	}
 	
+	@Override
 	public void hit(Unit source)
 	{
 		faction.getController().yellUnitHit( this, source );

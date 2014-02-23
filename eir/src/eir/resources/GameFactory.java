@@ -22,7 +22,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
-import eir.resources.LevelLoader.LoadingContext;
+import eir.debug.Debug;
 import eir.world.Asteroid;
 import eir.world.Level;
 import eir.world.environment.nav.FloydWarshal;
@@ -72,12 +72,12 @@ public class GameFactory
 	
 	public static void dispose()
 	{
-		log("Disposing textures");
+		Debug.log("Disposing textures");
 		for(Texture texture : instance.textureCache.values())
 		{
 			texture.dispose();
 		}
-		log("Disposing atlases");
+		Debug.log("Disposing atlases");
 		for(TextureAtlas atlas : instance.atlasCache.values())
 		{
 			atlas.dispose();
@@ -89,18 +89,13 @@ public class GameFactory
 		GameFactory.level = null;
 	}
 
-	private static void log(String message)
-	{
-		Gdx.app.log( TAG, message);
-	}
-
 	/**
 	 * @param string
 	 * @return
 	 */
 	public static Level loadLevel(String levelName)
 	{
-		final LoadingContext context = new LoadingContext();
+		final LevelLoadingContext context = new LevelLoadingContext();
 		LevelLoader loader = new LevelLoader();
 		
 		level = loader.readLevel( levelName, context );
@@ -126,7 +121,7 @@ public class GameFactory
 	public static PolygonalModel loadAsteroidModel(NavMesh mesh, Asteroid asteroid, String modelId) 
 	{
 		String modelFile = createBodyPath(modelId);
-		log("Loading asteroid model file [" + modelFile + "]");
+		Debug.log("Loading asteroid model file [" + modelFile + "]");
 		
 		ShapeLoader.RigidBodyModel bodyModel = ShapeLoader.readShape( Gdx.files.internal( modelFile ).readString() ).rigidBodies.get( 0 );
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
@@ -235,7 +230,7 @@ public class GameFactory
 		{
 			texture = new Texture(Gdx.files.internal(textureFile));
 			instance.textureCache.put(textureFile, texture);
-			log("Loaded texture [" + textureFile + "]" );
+			Debug.log("Loaded texture [" + textureFile + "]" );
 		}
 		return texture;
 	}
@@ -278,7 +273,7 @@ public class GameFactory
 				throw new IllegalArgumentException( "Region array " + regionName + " was not found in atlas " + atlasName );
 		}
 		
-		log("Loaded animation [" + atlasName + "] (region " + regionName + ")");
+		Debug.log("Loaded animation [" + atlasName + "] (region " + regionName + ")");
 		
 		Animation animation = new Animation( 0.05f, frames );
 		return animation;
