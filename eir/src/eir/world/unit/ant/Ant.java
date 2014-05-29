@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.world.unit.ant;
 
@@ -17,78 +17,89 @@ import eir.world.environment.nav.Route;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.Damage;
 import eir.world.unit.Faction;
+import eir.world.unit.Hull;
+import eir.world.unit.IDamager;
 import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
  *
  */
-public class Ant extends Unit
+public class Ant extends Unit implements IDamager
 {
 
 
-	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas", 
+	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas",
 			"explosion02");
 
 	NavMesh <SurfaceNavNode> mesh;
 	Route  <SurfaceNavNode> route;
-	
+
 	protected float stateTime;
-	
+
 	protected float size = 5;
 	Vector2 velocity = new Vector2();
-	
+
 	float speed = 10f;
-	
+
 	private float screamTime;
 	float nodeOffset;
-	
+
 	SurfaceNavNode nextNode, targetNode;
+
+	Damage damage = new Damage(1, 1, 1, 1);
 
 	public Ant()
 	{
+		super();
 	}
-	
+
 	@Override
-	public void init()
+	protected void init()
 	{
 		super.init();
-		
+
 		this.mesh = faction.getEnvironment().getGroundMesh();
-		
+
 		route = null;
 		velocity.set( 0,0 );
 		stateTime = RandomUtil.R( 10 );
 
+		this.hull = new Hull(1, 0, new double [] {0,0,0,0});
+
 	}
 
 	@Override
-	public void update( float delta )
+	public void update( final float delta )
 	{
 		super.update( delta );
-		
+
 		stateTime += delta;
 	}
 
 	@Override
-	public void draw(SpriteBatch batch)
+	public void draw(final SpriteBatch batch)
 	{
 		Vector2 position = getBody().getAnchor();
 		TextureRegion region = faction.getAntAnimation().getKeyFrame( stateTime, true );
-		batch.draw( region, 
+		batch.draw( region,
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
-				region.getRegionWidth()/2,region.getRegionHeight()/2, 
-				region.getRegionWidth(), region.getRegionHeight(), 
-				size/region.getRegionWidth(), 
+				region.getRegionWidth()/2,region.getRegionHeight()/2,
+				region.getRegionWidth(), region.getRegionHeight(),
+				size/region.getRegionWidth(),
 				size/region.getRegionWidth(), angle);
 
 		// TODO: remove debug rendering
 		if(Debug.debug.drawNavMesh)
 		{
 			if(stateTime - screamTime < 1)
+			{
 				Debug.FONT.draw( batch, "Yarr!", position.x, position.y );
+			}
 			if(targetNode != null)
+			{
 				Debug.FONT.draw( batch, String.valueOf( targetNode.getIndex() ), position.x+2, position.y-2 );
+			}
 		}
 	}
 

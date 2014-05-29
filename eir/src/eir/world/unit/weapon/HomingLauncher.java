@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.world.unit.weapon;
 
@@ -19,38 +19,39 @@ import eir.world.unit.Unit;
 public class HomingLauncher extends IWeapon
 {
 	private Animation bulletAnimation;
-	
+
 	private IBulletBehavior bulletBehavior;
-	
+
 	private Damage bulletDamage;
-	
+
 	private float burstAngle;
 
-		
+
 //	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
 	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket02.atlas", "bullet" );
 	private static final int TRAIL_AID = GameFactory.registerAnimation( "anima//effects//smoke//smoke.atlas", "smoke" );
 	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion03.atlas", "explosion03" );
 	private static final int HIT_02_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion05.atlas", "explosion05" );
-	
-	public HomingLauncher(Unit unit)
+
+	public HomingLauncher(final Unit unit)
 	{
 		super(unit);
 
-		
+
 		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
-		
+
 		bulletBehavior = new HomingBehavior(this);
-		
-		bulletDamage = new Damage();
+
+		bulletDamage = new Damage(2,0,0,0);
+
 	}
-	
+
 	@Override
 	public float getSize() { return 3; }
 
 
 	@Override
-	public int getBurstSize() { return 13; }
+	public int getBurstSize() { return 3; }
 
 	@Override
 	public float getMagazineReloadTime() { return 0.3f; }
@@ -76,22 +77,22 @@ public class HomingLauncher extends IWeapon
 	protected float createAngle()
 	{
 
-//		burstAngle = (weaponDir.crs( spider.getAxis() ) < 0 ? 90 : -90) + 
+//		burstAngle = (weaponDir.crs( spider.getAxis() ) < 0 ? 90 : -90) +
 //				( 15 - RandomUtil.N( 30 ) );
-		int dir = (burstAngle < 0 ? 1 : -1);
+		int dir = burstAngle < 0 ? 1 : -1;
 		burstAngle = dir * 90 + dir * ( 15 + RandomUtil.STD( 0, 5 ) );
-		
+
 		return RandomUtil.STD( burstAngle + weaponDir.angle(), getAccuracy());
 	}
 
 	@Override
-	public Effect createHitEffect(Bullet bullet)
+	public Effect createHitEffect(final Bullet bullet)
 	{
 		if(RandomUtil.oneOf( 5 ))
-			return Effect.getEffect( HIT_01_AID, 
+			return Effect.getEffect( HIT_01_AID,
 					RandomUtil.STD( 25, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
 		else
-			return Effect.getEffect( HIT_02_AID, 
+			return Effect.getEffect( HIT_02_AID,
 					RandomUtil.STD( 10, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
 
 	}
@@ -107,9 +108,10 @@ public class HomingLauncher extends IWeapon
 	{
 		return bulletDamage;
 	}
-	
-	public Effect createTraceEffect(Bullet bullet)
+
+	@Override
+	public Effect createTraceEffect(final Bullet bullet)
 	{
-		return Effect.getEffect( TRAIL_AID, RandomUtil.N( 4 ) + 2, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), RandomUtil.STD( 2, 0.15f ) );
+		return Effect.getEffect( TRAIL_AID, RandomUtil.N( 4 ) + 2, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), 5f*RandomUtil.STD( 2, 0.15f ) );
 	}
 }

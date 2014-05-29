@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.world.unit.weapon;
 
@@ -22,8 +22,8 @@ public abstract class IWeapon
 
 	//////////////////////////////////
 	// properties
-	
-	
+
+
 	////////////////////////////////
 	// state
 	protected Vector2 weaponDir;
@@ -31,53 +31,63 @@ public abstract class IWeapon
 	protected int bulletsInMagazine;
 
 
-	protected Level level;
-	
 	private Unit owner;
 	/**
-	 * 
+	 *
 	 */
-	public IWeapon(Unit owner)
+	public IWeapon(final Unit owner)
 	{
 		super();
-		
+
 		this.owner = owner;
-		
+
 		weaponDir = new Vector2();
 	}
 
-	public Bullet createBullet(Level level, Vector2 targetPos)
+	public Bullet fire( final Vector2 shootingTarget )
+	{
+		Bullet bullet = createBullet( shootingTarget, owner.getFaction().getLevel().getUnitsFactory() );
+		if(bullet != null)
+		{
+			owner.getFaction().getLevel().addUnit( bullet );
+		}
+		return null;
+	}
+
+	protected Bullet createBullet(final Vector2 targetPos, final UnitsFactory unitFactory)
 	{
 		if(timeToReload > 0)
-		{
 			return null;
-		}
 		if(bulletsInMagazine == 0)
+		{
 			bulletsInMagazine = getBurstSize();
-		
+		}
+
 		Vector2 weaponPos = owner.getArea().getAnchor();
-		
+
 		weaponDir.set( targetPos ).sub( weaponPos ).nor();
 		float angle = createAngle();
 		weaponDir.setAngle( angle );
-		
+
 		float speed = createSpeed();
-		Bullet bullet = UnitsFactory.getUnit(UnitsFactory.BULLET, weaponPos.x, weaponPos.y, angle, owner.getFaction());
-				
+		Bullet bullet = unitFactory.getUnit(UnitsFactory.BULLET, weaponPos.x, weaponPos.y, angle, owner.getFaction());
+
 		bullet.weapon = this;
 		bullet.velocity.set(this.getDirection()).mul( speed );
 		bullet.size = this.getSize();
-		bullet.target.set(targetPos);
-		
+		bullet.target = targetPos;
+
 		bullet.angle = weaponDir.angle();
-		this.level = level;
-		
+
 		bulletsInMagazine --;
 		if(bulletsInMagazine > 0)
+		{
 			timeToReload = getReloadingTime();
-		else
+		} else
+		{
 			timeToReload = getMagazineReloadTime();
-		
+		}
+
 		return bullet;
 	}
 
@@ -86,11 +96,11 @@ public abstract class IWeapon
 	 */
 	protected abstract float createAngle();
 
-	public void update(float delta)
+	public void update(final float delta)
 	{
 		timeToReload -= delta;
 	}
-	
+
 	/**
 	 * @return the size
 	 */
@@ -143,15 +153,16 @@ public abstract class IWeapon
 	public abstract float getLifeDuration();
 
 	/**
-	 * 
+	 *
 	 */
 	public abstract Damage getDamage();
 
-	public Level getLevel() { return level; }
-	
+	public Level getLevel() { return owner.getFaction().getLevel(); }
+
 	public Faction getFaction() { return owner.getFaction(); }
-	
+
 	public Vector2 getDirection() { return weaponDir; }
 
 	public Unit getOwner() { return owner; }
+
 }

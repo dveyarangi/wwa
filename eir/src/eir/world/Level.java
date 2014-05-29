@@ -10,7 +10,6 @@ import java.util.Set;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 
 import eir.debug.Debug;
 import eir.resources.LevelLoadingContext;
@@ -21,13 +20,15 @@ import eir.world.environment.parallax.Background;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
+import eir.world.unit.ai.AttackingOrder;
 import eir.world.unit.ai.RandomTravelingOrder;
+import eir.world.unit.spider.Spider;
 
 public class Level
 {
 	////////////////////////////////////////////////////////////////
 	// level physical environment:
-	
+
 	private String name;
 
 	/**
@@ -40,11 +41,6 @@ public class Level
 	 * Level spatial and navigational environment
 	 */
 	private Environment environment;
-	
-	/** 
-	 * Physical world, should be moved into Environment
-	 */
-	private World world;
 
 	////////////////////////////////////////////////////////////////
 	// renderables
@@ -53,33 +49,33 @@ public class Level
 	 */
 	private Background background;
 
-	
+
 	private final List <Effect> effects;
 
 	////////////////////////////////////////////////////////////////
-	
-	
+
+
 	/**
 	 * List of asteroids
 	 */
 	private List <Asteroid> asteroids;
-	
+
 	/**
 	 * Participating factions
 	 */
 	private Faction [] factions;
-	
+
 	/**
 	 * Set of units in game
 	 * TODO: swap to identity set?
 	 */
 	private final Set <Unit> units;
-	
+
 	/**
 	 * List of webs
 	 */
 	private List <Web> webs;
-	
+
 	////////////////////////////////////////////////////////////////
 
 	private Unit playerUnit;
@@ -88,19 +84,21 @@ public class Level
 	 * Units to add queue
 	 */
 	private final Queue <Unit> unitsToAdd = new LinkedList <Unit> ();
-	
+
 	private final Queue <Unit> unitsToRemove = new LinkedList <Unit> ();
+
+	private UnitsFactory unitsFactory;
 
 	public Level()
 	{
 		units = new HashSet <Unit> ();
 		effects = new LinkedList <Effect> ();
 	}
-	
+
 	public List <Asteroid> getAsteroids() { return asteroids;}
 
 	public List <Web> getWebs() { return webs; }
-	
+
 	public Set <Unit> getUnits() { return units; }
 
 	/**
@@ -111,71 +109,75 @@ public class Level
 	 * @return
 	 */
 	public float getWidth() { return width; }
-	
+
 	/**
 	 * @param startingNode
 	 */
-	public Unit addUnit(Unit unit)
+	public Unit addUnit(final Unit unit)
 	{
 		debug("Unit added: " + unit);
 		unitsToAdd.add(unit);
 		unit.getFaction().addUnit( unit );
-		
+
 		return unit;
 	}
 
-	
-	public void addEffect(Effect effect)
+
+	public void addEffect(final Effect effect)
 	{
 		effects.add( effect );
 	}
 	/**
-	 * @param context 
-	 * @param factory  
+	 * @param context
+	 * @param factory
 	 */
-	public void init(LevelLoadingContext context)
+	public void init(final LevelLoadingContext context)
 	{
-		
+
 		halfWidth = width / 2;
 		halfHeight = height / 2;
-		
-		world = new World(new Vector2(0, 0), true); 
-		
-		
-		environment = new Environment( context, this );
-	
-		
+
+		this.environment = context.environment;
+		environment.init( context, this );
+
+		this.unitsFactory = context.unitsFactory;
+
 		for(Faction faction : factions)
 		{
 			faction.init( this );
 
 			faction.getScheduler().addOrder( "ant", new RandomTravelingOrder( environment, 0 ) );
-		}		
-				
+			faction.getScheduler().addOrder( "cannon", new AttackingOrder( 0 ) );
+		}
+
 		for(Asteroid asteroid : asteroids)
 		{
 			asteroid.init( this );
 		}
-		
+
 		for( Web web : webs )
 		{
 			web.init( environment.getGroundMesh() );
 		}
-		
-		
+
+
 
 		for(Unit unit : units)
 		{
+			unit.postinit( this );
+
 			addUnit( unit );
 		}
-		
-		addUnit(playerUnit);
+
+		this.playerUnit = new Spider( unitsFactory );
+
+		//		addUnit(playerUnit);
 
 
 
 		// nav mesh initiated after this point
 		////////////////////////////////////////////////////
-		
+
 	}
 
 
@@ -184,33 +186,35 @@ public class Level
 	/**
 	 * @param delta
 	 */
-	public void update(float delta)
+	public void update(final float delta)
 	{
 
-		
+
 		reassesUnits();
-		
+
 		for(Faction faction : factions)
+		{
 			faction.update( delta );
-				
+		}
+
 		Iterator <Unit> unIt = units.iterator();
 		while(unIt.hasNext())
 		{
 			Unit unit = unIt.next();
-			
+
 			if(unit.isAlive()) // unit may already be dead from previous hits
 			{
 				// updating position:
 				unit.update(delta);
 				environment.update( unit );
 			}
-			
+
 			if(!unit.isAlive() ||
-				!inWorldBounds(unit.getArea().getAnchor())) // unit may be dead from the collision
+					!inWorldBounds(unit.getArea().getAnchor())) // unit may be dead from the collision
 			{
 				unitsToRemove.add ( unit );
 			}
-			
+
 		}
 
 		Iterator <Effect> effectIt = effects.iterator();
@@ -225,28 +229,28 @@ public class Level
 				Effect.free( effect );
 			}
 
-		}	
-		
-		
+		}
+
+
 	}
-	
-	public void draw(SpriteBatch batch)
+
+	public void draw(final SpriteBatch batch)
 	{
 
-		
+
 		batch.begin();
-		
+
 		// TODO: clipping?
 		for(Asteroid asteroid : getAsteroids())
 		{
 			asteroid.draw( batch );
 		}
-		
+
 		for( Web web : getWebs() )
 		{
 			web.draw( batch );
 		}
-		
+
 		for(Unit unit : getUnits())
 		{
 			unit.draw( batch );
@@ -256,9 +260,9 @@ public class Level
 		{
 			effect.draw( batch );
 		}
-		
-		
-		batch.end();		
+
+
+		batch.end();
 	}
 
 	/**
@@ -268,38 +272,38 @@ public class Level
 	{
 		return playerUnit;
 	}
-	
-	public boolean inWorldBounds(Vector2 position)
+
+	public boolean inWorldBounds(final Vector2 position)
 	{
 		return position.x < halfWidth  && position.x > -halfWidth
-			&& position.y < halfHeight && position.y > -halfHeight;	
+				&& position.y < halfHeight && position.y > -halfHeight;
 	}
 
 	/**
 	 * @param sourceNode
 	 * @param targetNode
 	 */
-	public void toggleWeb(SurfaceNavNode sourceNode, SurfaceNavNode targetNode)
+	public void toggleWeb(final SurfaceNavNode sourceNode, final SurfaceNavNode targetNode)
 	{
-		
+
 		if(sourceNode.getDescriptor().getObject() == targetNode.getDescriptor().getObject())
 			return;
-		
+
 		NavEdge <SurfaceNavNode> edge = environment.getGroundMesh().getEdge( sourceNode, targetNode );
-		
+
 		if(edge == null)
 		{
-			Web web = new Web(sourceNode, targetNode, 
-  			"models/web_thread_01.png",
-			"models/web_source_01.png",
-			"models/web_target_01.png"	
-			);
-			
+			Web web = new Web(sourceNode, targetNode,
+					"models/web_thread_01.png",
+					"models/web_source_01.png",
+					"models/web_target_01.png"
+					);
+
 			webs.add( web );
 			web.init( environment.getGroundMesh() );
-			
-			
-			
+
+
+
 		}
 		else
 		{
@@ -308,15 +312,17 @@ public class Level
 			while(webIt.hasNext())
 			{
 				Web web = webIt.next();
-				if(( web.getSource() == sourceNode ) && ( web.getTarget() == targetNode )
-				|| ( web.getTarget() == sourceNode ) && ( web.getSource() == targetNode ) )
+				if(web.getSource() == sourceNode && web.getTarget() == targetNode
+						|| web.getTarget() == sourceNode && web.getSource() == targetNode )
+				{
 					webIt.remove();
+				}
 			}
-			
+
 			environment.getGroundMesh().unlinkNodes( sourceNode, targetNode );
 		}
-		
-		
+
+
 		Debug.startTiming("navmesh calculation");
 		environment.getGroundMesh().update();
 		Debug.stopTiming("navmesh calculation");
@@ -326,12 +332,10 @@ public class Level
 
 	public Background getBackground() { return background; }
 
-	public World getWorld() { return world; }
-
 	public String getName() { return null; }
 
 	public Environment getEnvironment() { return environment; }
-	
+
 	/**
 	 * Add and remove pending units
 	 */
@@ -343,7 +347,7 @@ public class Level
 			units.add( unit );
 			environment.add( unit );
 		}
-		
+
 		while(!unitsToRemove.isEmpty())
 		{
 			Unit unit = unitsToRemove.poll();
@@ -351,21 +355,30 @@ public class Level
 			environment.remove( unit );
 			Effect hitEffect = unit.getDeathEffect();
 			if(hitEffect != null)
+			{
 				effects.add( hitEffect );
-			
+			}
+
 			// dat questionable construct:
 			unit.getFaction().removeUnit( unit );
-			
-			UnitsFactory.free( unit );
+
+			unitsFactory.free( unit );
 			debug("Unit removed: " + unit);
 		}
 	}
-	
 
-	
-	private void debug(String message)
+
+
+	private void debug(final String message)
 	{
 		Gdx.app.debug( name, message);
+	}
+
+	public UnitsFactory getUnitsFactory() {	return unitsFactory; }
+
+	public Faction[] getFactions()
+	{
+		return factions;
 	}
 
 }

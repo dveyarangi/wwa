@@ -8,15 +8,15 @@ import eir.world.unit.ai.TaskStage;
 public class BehaviorFactory <U extends Unit>
 {
 
-	
+
 	private Map <TaskStage, UnitBehavior <U>> behaviors = new HashMap <TaskStage, UnitBehavior<U>> ();
-	
-	public void registerBehavior(TaskStage stage, UnitBehavior <U> behavior)
+
+	protected void registerBehavior(final TaskStage stage, final UnitBehavior <U> behavior)
 	{
 		behaviors.put( stage, behavior );
 	}
-	
-	public UnitBehavior <U> getBehavior(TaskStage stage)
+
+	public UnitBehavior <U> getBehavior(final TaskStage stage)
 	{
 		return behaviors.get(stage);
 	}

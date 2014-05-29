@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.world.unit.weapon;
 
@@ -19,30 +19,30 @@ import eir.world.unit.Unit;
  */
 public class Minigun extends IWeapon
 {
-	
-	
+
+
 	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
 	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion04.atlas", "explosion04" );
-	
+
 	private Animation bulletAnimation;
-	
+
 	private IBulletBehavior bulletBehavior;
-	
+
 	private Damage bulletDamage;
-	
-	public Minigun(Unit unit)
+
+	public Minigun(final Unit unit)
 	{
-		
-		super(unit); 
+
+		super(unit);
 //		bulletSprite = new Sprite(GameFactory.loadTexture("models/fireball.png"));
 //		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
 //		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );
-		
+
 		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
-		
+
 		bulletBehavior = new MassDriverBehavior();
-		
-		bulletDamage = new Damage();
+
+		bulletDamage = new Damage(1,0,0,0);
 	}
 
 
@@ -80,14 +80,14 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public Effect createHitEffect(Bullet bullet)
+	public Effect createHitEffect(final Bullet bullet)
 	{
-		return Effect.getEffect( HIT_01_AID, 
+		return Effect.getEffect( HIT_01_AID,
 				10, bullet.getBody().getAnchor(), RandomUtil.N( 360 ), 3 );
 	}
-	
+
 	@Override
-	public Effect createTraceEffect(Bullet bullet) { return null; }
+	public Effect createTraceEffect(final Bullet bullet) { return null; }
 
 
 	@Override

@@ -11,7 +11,7 @@
 			"background" : { 
 				"layers" : [
 					{	
-						"depth" : 2,
+						"depth" :5,
 						"texture" : "levels/plasma_01.png",
 						"tiling" : false
 					},
@@ -375,57 +375,57 @@
 		########################################
 			"webs" : [
 				{
-					"source" : { "asteroid" : "red_ass", "navIdx" : 14 },
+					"source" : { "asteroid" : "red_ass", "navIdx" : 18 },
 					"target" : { "asteroid" : "red_right_leg", "navIdx" : 32 },
 
-					"threadTexture" : "models/web_thread_01.png",
-					"sourceTexture" : "models/web_source_01.png",
-					"targetTexture" : "models/web_target_01.png"
+					"threadTexture" : "models/glowing_thread_01.png",
+					"sourceTexture" : "models/glowing_ending_01.png",
+					"targetTexture" : "models/glowing_ending_01.png"
 					
+				},
+				{
+					"source" : { "asteroid" : "red_right_foot", "navIdx" : 28 },
+					"target" : { "asteroid" : "red_right_leg", "navIdx" : 8 },
+					"threadTexture" : "models/glowing_thread_01.png",
+					"sourceTexture" : "models/glowing_ending_01.png",
+					"targetTexture" : "models/glowing_ending_01.png"
 				},
 				{
 					"source" : { "asteroid" : "red_ass", "navIdx" : 8 },
 					"target" : { "asteroid" : "red_left_leg", "navIdx" : 19 },
 
-					"threadTexture" : "models/web_thread_01.png",
-					"sourceTexture" : "models/web_source_01.png",
-					"targetTexture" : "models/web_target_01.png"
+					"threadTexture" : "models/glowing_thread_01.png",
+					"sourceTexture" : "models/glowing_ending_01.png",
+					"targetTexture" : "models/glowing_ending_01.png"
 					
 				},
 				{
 					"source" : { "asteroid" : "red_left_foot", "navIdx" : 16 },
 					"target" : { "asteroid" : "red_left_leg", "navIdx" : 3 },
 
-					"threadTexture" : "models/web_thread_01.png",
-					"sourceTexture" : "models/web_source_01.png",
-					"targetTexture" : "models/web_target_01.png"
+					"threadTexture" : "models/glowing_thread_01.png",
+					"sourceTexture" : "models/glowing_ending_01.png",
+					"targetTexture" : "models/glowing_ending_01.png"
 					
 				},				
 				{
-					"source" : { "asteroid" : "red_back", "navIdx" : 18 },
-					"target" : { "asteroid" : "red_ass", "navIdx" : 23 },
+					"source" : { "asteroid" : "red_back", "navIdx" : 8 },
+					"target" : { "asteroid" : "red_ass", "navIdx" : 4 },
 
-					"threadTexture" : "models/web_thread_01.png",
-					"sourceTexture" : "models/web_source_01.png",
-					"targetTexture" : "models/web_target_01.png"
+					"threadTexture" : "models/glowing_thread_01.png",
+					"sourceTexture" : "models/glowing_ending_01.png",
+					"targetTexture" : "models/glowing_ending_01.png"
 					
-				},				
+				}				
 /*				{
 					"source" : { "asteroid" : "red_back", "navIdx" : 23 },
 					"target" : { "asteroid" : "red_head", "navIdx" : 2 },
 
-					"threadTexture" : "models/web_thread_01.png",
-					"sourceTexture" : "models/web_source_01.png",
-					"targetTexture" : "models/web_target_01.png"
+					"threadTexture" : "models/glowing_thread_01.png",
+					"sourceTexture" : "models/glowing_ending_01.png",
+					"targetTexture" : "models/glowing_ending_01.png"
 					
 				},*/
-								{
-					"source" : { "asteroid" : "red_right_foot", "navIdx" : 28 },
-					"target" : { "asteroid" : "red_right_leg", "navIdx" : 8 },
-					"threadTexture" : "models/web_thread_02.png",
-					"sourceTexture" : "models/web_source_02.png",
-					"targetTexture" : "models/web_target_02.png"
-				}
 			],
 		########################################
 		# FACTIONS
@@ -464,6 +464,26 @@
 		########################################
 			"units" : [
 				{
+					"type" : "cannon",
+					"faction" : 1,
+					"anchor" : { "asteroid" : "red_back", "navIdx" : 10 }
+				},				
+				{
+					"type" : "cannon",
+					"faction" : 1,
+					"anchor" : { "asteroid" : "red_back", "navIdx" : 8 }
+				},				
+				{
+					"type" : "cannon",
+					"faction" : 1,
+					"anchor" : { "asteroid" : "red_right_arm", "navIdx" : 5 }
+				},				
+				{
+					"type" : "cannon",
+					"faction" : 1,
+					"anchor" : { "asteroid" : "red_right_palm", "navIdx" : 36 }
+				},				
+				{
 					"type" : "spawner",
 					"faction" : 2,
 					"anchor" : { "asteroid" : "red_left_foot", "navIdx" : 1 },
@@ -488,8 +508,18 @@
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 16 },
 					"unitType" : "birdy", 
 					"maxUnits" : 50,
-					"spawnInterval" : 1.5f
-				}/*,
+					"spawnInterval" : 2f
+				},
+								{
+					"type" : "spawner",
+					"faction" : 3,
+					"anchor" : { "asteroid" : "red_ass", "navIdx" : 10 },
+					"unitType" : "birdy", 
+					"maxUnits" : 50,
+					"spawnInterval" : 2f
+				}
+				
+				/*,
 				{
 					"type" : "spawner",
 					"faction" : 3,
@@ -506,13 +536,13 @@
 					"maxUnits" : 50,
 					"spawnInterval" : 1.5f
 				}	*/			
-			],
+			]/*,
 			
 			"playerUnit" : {
 					"type" : "spider",
 					"faction" : 1,
 					"anchor" : { "asteroid" : "center", "navIdx" : 1 }
-				}
+				}*/
 		########################################
 
 
