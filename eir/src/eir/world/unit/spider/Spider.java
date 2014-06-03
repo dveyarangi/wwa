@@ -18,6 +18,7 @@ import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.weapon.TargetProvider;
 /**
  * Spider
  *
@@ -41,7 +42,7 @@ public class Spider extends Unit implements IControllableUnit
 
 	private boolean walkCW, walkCCW, walkUp, walkDown;
 
-	private Unit shootingTarget;
+	private TargetProvider shootingTarget;
 
 	private IWeapon weapon;
 
@@ -243,13 +244,6 @@ public class Spider extends Unit implements IControllableUnit
 		batch.draw( spiderTexture, getBody().getAnchor().x-2.5f, getBody().getAnchor().y-2f, 4, 4 );
 	}
 
-	/**
-	 * @param b
-	 */
-	public void setShootingTarget(final Unit targetPos)
-	{
-		this.shootingTarget = targetPos;
-	}
 
 	/**
 	 * @return

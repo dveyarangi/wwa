@@ -59,4 +59,7 @@ public class Spawner extends Unit
 
 	@Override
 	public float getSize() { return size; }
+
+	@Override
+	public float getMaxSpeed() { return 0; }
 }

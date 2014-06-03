@@ -14,19 +14,20 @@ public class ResouceProducer extends ResourceCapacitorUnit
 {
 
 	@Override
-	public void draw(SpriteBatch batch) 
+	public void draw(final SpriteBatch batch)
 	{
 	}
 
+
 	@Override
-	public float getSize() 
-	{
-		return 0;
-	}
-	
-	@Override
-	public void update(float delta)
+	public void update(final float delta)
 	{
 		super.update(delta);
 	}
+
+	@Override
+	public float getSize() { return 0; }
+
+	@Override
+	public float getMaxSpeed() { return 0; }
 }
