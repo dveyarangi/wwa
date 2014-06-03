@@ -49,7 +49,7 @@ public class GameScreen extends AbstractScreen
 	{
 		super.render( delta );
 		inputController.update( delta );
-		level.update( delta );
+		level.update( inputController.getTimeModifier() * delta );
 
 //		Gdx.gl.glClearColor( 0.8f, 0.8f, 1f, 1 );
 //		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );

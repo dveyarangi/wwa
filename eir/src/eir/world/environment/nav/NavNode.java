@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.world.environment.nav;
 
@@ -15,9 +15,9 @@ import eir.world.environment.spatial.ISpatialObject;
 /**
  * That aint public on purpose, all modifications should go through
  * {@link NavMesh}
- * 
+ *
  * @author dveyarangi
- * 
+ *
  */
 public class NavNode implements ISpatialObject
 {
@@ -42,7 +42,7 @@ public class NavNode implements ISpatialObject
 	private int						spatialId;
 
 	/**
-	 * 
+	 *
 	 * @param point
 	 *            location of the node
 	 * @param rawPoint
@@ -52,7 +52,7 @@ public class NavNode implements ISpatialObject
 	 * @param aIdx
 	 *            index of the asteroid containing this node
 	 */
-	NavNode( NavNodeDescriptor descriptor, Vector2 point, int idx )
+	NavNode( final NavNodeDescriptor descriptor, final Vector2 point, final int idx )
 	{
 		this.descriptor = descriptor;
 		this.idx = idx;
@@ -74,7 +74,7 @@ public class NavNode implements ISpatialObject
 	/**
 	 * @param nb
 	 */
-	void addNeighbour( NavNode node )
+	void addNeighbour( final NavNode node )
 	{
 		neighbours.add( node );
 	}
@@ -87,6 +87,7 @@ public class NavNode implements ISpatialObject
 		return neighbours;
 	}
 
+	@Override
 	public String toString()
 	{
 		return new StringBuilder().append( "navnode [" ).append( idx ).append( " (" )
@@ -108,7 +109,7 @@ public class NavNode implements ISpatialObject
 	/**
 	 * @param nb
 	 */
-	public void removeNeighbour( NavNode node )
+	public void removeNeighbour( final NavNode node )
 	{
 		neighbours.remove( node );
 	}
@@ -117,6 +118,9 @@ public class NavNode implements ISpatialObject
 	{
 		return descriptor;
 	}
+
+	@Override
+	public boolean isAlive() { return true; }
 
 
 }

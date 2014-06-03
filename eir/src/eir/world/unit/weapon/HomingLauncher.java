@@ -6,9 +6,11 @@ package eir.world.unit.weapon;
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
+import eir.world.unit.AOEFunction;
 import eir.world.unit.Damage;
 import eir.world.unit.Unit;
 
@@ -24,7 +26,7 @@ public class HomingLauncher extends IWeapon
 
 	private Damage bulletDamage;
 
-	private float burstAngle;
+	private int burstChirality = 1;
 
 
 //	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
@@ -42,7 +44,7 @@ public class HomingLauncher extends IWeapon
 
 		bulletBehavior = new HomingBehavior(this);
 
-		bulletDamage = new Damage(2,0,0,0);
+		bulletDamage = new Damage( AOEFunction.LINEAR_DECAY, 100f,0f,0f,0f );
 
 	}
 
@@ -54,10 +56,10 @@ public class HomingLauncher extends IWeapon
 	public int getBurstSize() { return 3; }
 
 	@Override
-	public float getMagazineReloadTime() { return 0.3f; }
+	public float getMagazineReloadTime() { return 1f; }
 
 	@Override
-	public float getReloadingTime() { return 0.02f; }
+	public float getReloadingTime() { return 0.15f; }
 
 	@Override
 	public float getAccuracy() { return 15; }
@@ -74,15 +76,18 @@ public class HomingLauncher extends IWeapon
 	public float getMaxSpeed() { return 100; }
 
 	@Override
-	protected float createAngle()
+	protected float createAngle( final Vector2 firingDir)
 	{
-
+		if(this.bulletsInMagazine == 0)
+		{
+			burstChirality *= -1;
 //		burstAngle = (weaponDir.crs( spider.getAxis() ) < 0 ? 90 : -90) +
 //				( 15 - RandomUtil.N( 30 ) );
-		int dir = burstAngle < 0 ? 1 : -1;
-		burstAngle = dir * 90 + dir * ( 15 + RandomUtil.STD( 0, 5 ) );
+		}
 
-		return RandomUtil.STD( burstAngle + weaponDir.angle(), getAccuracy());
+		float burstAngle = burstChirality * 90 + burstChirality * ( 15 + RandomUtil.STD( 0, 5 ) );
+
+		return RandomUtil.STD( burstAngle + this.getOwner().getAngle(), getAccuracy());
 	}
 
 	@Override
@@ -90,17 +95,17 @@ public class HomingLauncher extends IWeapon
 	{
 		if(RandomUtil.oneOf( 5 ))
 			return Effect.getEffect( HIT_01_AID,
-					RandomUtil.STD( 25, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
+					RandomUtil.STD( 25, 4 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 3 );
 		else
 			return Effect.getEffect( HIT_02_AID,
-					RandomUtil.STD( 10, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 1 );
+					RandomUtil.STD( 10, 2 ), bullet.getBody().getAnchor(), RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 3 );
 
 	}
 
 	@Override
-	public float getLifeDuration()
+	public float getBulletLifeDuration()
 	{
-		return 50;
+		return 10;
 	}
 
 	@Override
@@ -112,6 +117,6 @@ public class HomingLauncher extends IWeapon
 	@Override
 	public Effect createTraceEffect(final Bullet bullet)
 	{
-		return Effect.getEffect( TRAIL_AID, RandomUtil.N( 4 ) + 2, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), 5f*RandomUtil.STD( 2, 0.15f ) );
+		return Effect.getEffect( TRAIL_AID, RandomUtil.N( 4 ) + 2, bullet.getArea().getAnchor(), RandomUtil.N( 360 ), 10f*RandomUtil.STD( 2, 0.15f ) );
 	}
 }

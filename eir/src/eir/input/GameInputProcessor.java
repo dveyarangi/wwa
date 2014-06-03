@@ -2,6 +2,7 @@ package eir.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import eir.debug.Debug;
 import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.unit.UnitsFactory;
@@ -47,6 +49,10 @@ public class GameInputProcessor implements InputProcessor
 
 	private final PickingSensor pickingSensor;
 
+	private float timeModifier = 1;
+
+	private UIInputProcessor uiProcessor;
+
 	public GameInputProcessor(final Level level)
 	{
 
@@ -61,7 +67,34 @@ public class GameInputProcessor implements InputProcessor
 		camController = freeController;
 
 		inputMultiplexer = new InputMultiplexer();
-		inputMultiplexer.addProcessor( new UIInputProcessor() );
+
+
+		this.uiProcessor = new UIInputProcessor();
+
+		Debug.registerDebugActions( uiProcessor );
+
+		uiProcessor.registerAction( Keys.PLUS, new InputAction() {
+			@Override
+			public void execute( final InputContext context )
+			{
+				if(timeModifier < 4)
+				{
+					timeModifier *= 2;
+				}
+			}
+		});
+		uiProcessor.registerAction( Keys.MINUS, new InputAction() {
+			@Override
+			public void execute( final InputContext context )
+			{
+				if(timeModifier >= 0.25)
+				{
+					timeModifier /= 2;
+				}
+			}
+		});
+
+		inputMultiplexer.addProcessor( uiProcessor );
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
 		inputMultiplexer.addProcessor( this );
 
@@ -298,4 +331,6 @@ public class GameInputProcessor implements InputProcessor
 	 {
 		 return pointerPosition2;
 	 }
+
+	public float getTimeModifier() { return timeModifier ; }
 }

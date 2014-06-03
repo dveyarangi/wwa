@@ -14,13 +14,19 @@ public abstract class Route <N extends NavNode> implements Poolable
 	 * @return
 	 */
 	public abstract boolean hasNext();
-	
+
+	/**
+	 * get next node if available
+	 * @return
+	 */
+	public abstract N curr();
+
 	/**
 	 * get next node if available
 	 * @return
 	 */
 	public abstract N next();
-	
+
 	/**
 	 * recycle this route. <b>MAKE SURE NOT TO KEEP THE REF AFTER CALLING</b>
 	 */

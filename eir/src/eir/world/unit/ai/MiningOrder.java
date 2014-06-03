@@ -1,6 +1,6 @@
 package eir.world.unit.ai;
 
-import eir.world.environment.nav.NavNode;
+import eir.world.environment.spatial.ISpatialObject;
 
 
 /**
@@ -10,27 +10,20 @@ import eir.world.environment.nav.NavNode;
  */
 public class MiningOrder extends Order
 {
+
 	/**
 	 * @param priority
 	 * @param sourceNode
 	 * @param targetNode
 	 */
-	public MiningOrder(float priority, NavNode sourceNode, NavNode targetNode)
+	public MiningOrder(final float priority, final ISpatialObject source, final ISpatialObject target)
 	{
-		super(priority, sourceNode, targetNode, null);
-	}
-
-	@Override
-	public Task createTask(Scheduler scheduler)
-	{
-		return new Task(scheduler, 
-				this, 
-				new TaskStage[] { 
-					TaskStage.TRAVEL_TO_TARGET,
-					TaskStage.MINING,
-				},
-				false
-			);
+		super(new TaskStage[] {
+				TaskStage.TRAVEL_TO_TARGET,
+				TaskStage.MINING,
+			},
+			false,
+			priority, source, target);
 	}
 
 }

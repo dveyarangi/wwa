@@ -1,78 +1,82 @@
 package eir.input;
 
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
-import eir.debug.Debug;
+import com.badlogic.gdx.InputProcessor;
 
 /**
  * @author Ni
- * 
+ *
  */
 public class UIInputProcessor implements InputProcessor
 {
 
-	@Override
-	public boolean keyDown( int keycode )
-	{
-		if( keycode == Keys.J )
-			Debug.toggleCoordinateGrid();
-		if( keycode == Keys.K )
-			Debug.toggleNavMesh();
-		if( keycode == Keys.L )
-			Debug.toggleSpatialGrid();
-		if( keycode == Keys.SEMICOLON )
-			Debug.toggleFactions();
-		if( keycode == Keys.APOSTROPHE )
-			Debug.toggleBox2D();
+	private TIntObjectHashMap <InputAction> keyActions = new TIntObjectHashMap <InputAction> ();
 
-		return false;
+	private InputContext context = new InputContext();
+
+	public void registerAction(final int keycode, final InputAction action)
+	{
+		this.keyActions.put( keycode, action );
 	}
 
 	@Override
-	public boolean keyUp( int keycode )
+	public boolean keyDown( final int keycode )
 	{
-		// TODO Auto-generated method stub
-		return false;
+		InputAction action = keyActions.get( keycode );
+		if(action == null)
+			return false;
+
+		action.execute( context );
+
+
+		return true;
 	}
 
 	@Override
-	public boolean keyTyped( char character )
+	public boolean keyUp( final int keycode )
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean touchDown( int screenX, int screenY, int pointer, int button )
+	public boolean keyTyped( final char character )
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean touchUp( int screenX, int screenY, int pointer, int button )
+	public boolean touchDown( final int screenX, final int screenY, final int pointer, final int button )
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean touchDragged( int screenX, int screenY, int pointer )
+	public boolean touchUp( final int screenX, final int screenY, final int pointer, final int button )
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean mouseMoved( int screenX, int screenY )
+	public boolean touchDragged( final int screenX, final int screenY, final int pointer )
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean scrolled( int amount )
+	public boolean mouseMoved( final int screenX, final int screenY )
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled( final int amount )
 	{
 		// TODO Auto-generated method stub
 		return false;

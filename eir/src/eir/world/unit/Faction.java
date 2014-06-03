@@ -17,6 +17,8 @@ import eir.world.Level;
 import eir.world.controllers.IController;
 import eir.world.environment.Environment;
 import eir.world.environment.nav.SurfaceNavNode;
+import eir.world.environment.sensors.ISensingFilter;
+import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.ai.Scheduler;
 
 /**
@@ -55,6 +57,21 @@ public class Faction
 	private IController controller;
 
 	private Scheduler scheduler;
+
+	private ISensingFilter enemyFilter = new ISensingFilter() {
+
+		@Override
+		public boolean accept( final ISpatialObject entity )
+		{
+			if( ! ( entity instanceof IUnit ) )
+				return false;
+
+			Unit unit = (Unit) entity;
+
+			return isEnemy( unit );
+		}
+
+	};
 
 
 	public Faction()
@@ -134,6 +151,8 @@ public class Faction
 	{
 		return this != unit.getFaction();
 	}
+
+	public ISensingFilter getEnemyFilter() { return enemyFilter; }
 
 
 }

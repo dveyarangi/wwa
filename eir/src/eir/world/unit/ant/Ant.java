@@ -19,13 +19,14 @@ import eir.world.unit.Damage;
 import eir.world.unit.Faction;
 import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
+import eir.world.unit.TaskedUnit;
 import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
  *
  */
-public class Ant extends Unit implements IDamager
+public class Ant extends TaskedUnit implements IDamager
 {
 
 
@@ -65,7 +66,7 @@ public class Ant extends Unit implements IDamager
 		velocity.set( 0,0 );
 		stateTime = RandomUtil.R( 10 );
 
-		this.hull = new Hull(1, 0, new double [] {0,0,0,0});
+		this.hull = new Hull(1f, 0f, new float [] {0f,0f,0f,0f});
 
 	}
 
@@ -122,5 +123,26 @@ public class Ant extends Unit implements IDamager
 	public Damage getDamage() {	return damage; }
 
 	@Override public float getSize() { return size; }
+	@Override
+	public Unit getSource()
+	{
+		return this; // TODO: maybe generalize to drone and make source the spawner?
+	}
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+
+		if( route != null)
+		{
+			route.recycle();
+		}
+	}
+
+	@Override
+	public float getMaxSpeed()
+	{
+		return speed;
+	}
 
 }

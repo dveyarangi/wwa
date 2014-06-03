@@ -1,6 +1,6 @@
 package eir.world.environment.sensors;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
@@ -22,24 +22,25 @@ public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>,
 
 	private final float radius;
 
-	private Vector2 location;
+	private Unit baseUnit;
 
 
-	private List <Unit> units;
+	private List <ISpatialObject> units;
 
 	private boolean isOccluded = false;
 
+	private ISensingFilter filter;
 
-	public Sensor(final float radius, final Vector2 location, final ISpatialIndex <ISpatialObject> index, final World world)
+	public Sensor(final float radius, final Unit baseUnit, final ISpatialIndex <ISpatialObject> index, final World world )
 	{
 
-		this.units = new LinkedList <Unit> ();
+		this.units = new ArrayList <ISpatialObject> ();
 
 		this.index = index;
 		this.world = world;
 
 		this.radius = radius;
-		this.location = location;
+		this.baseUnit = baseUnit;
 	}
 
 	@Override
@@ -57,35 +58,39 @@ public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>,
 	}
 
 	@Override
-	public List <Unit> sense()
+	public List <ISpatialObject> sense( final ISensingFilter filter )
 	{
 		clear();
-		index.queryRadius( this, location.x, location.y, radius);
+
+		this.filter = filter;
+
+		index.queryRadius( this, baseUnit.getArea().getAnchor().x, baseUnit.getArea().getAnchor().y, radius);
 
 		return units;
 	}
 
 	@Override
-	public boolean objectFound( final ISpatialObject unit )
+	public boolean objectFound( final ISpatialObject object )
 	{
-		if(!(unit instanceof Unit))
+		if( filter != null && ! filter.accept( object ) )
 			return false;
 
-		if(unit.getArea().getAnchor() == location) // TODO: self
+		if(object == this.baseUnit) // TODO: self
 			return false;
 
 		isOccluded = false;
 
-		float distanceSquare = unit.getArea().getAnchor().dst2( location );
+
+		float distanceSquare = object.getArea().getAnchor().dst2( baseUnit.getArea().getAnchor() );
 
 		if(distanceSquare < 0.1f)
 			return false;
-		world.rayCast( this, location, unit.getArea().getAnchor() );
+		world.rayCast( this, baseUnit.getArea().getAnchor(), object.getArea().getAnchor() );
 
 		if(isOccluded)
 			return true;
 
-		units.add( (Unit)unit );
+		units.add( object );
 
 		return false;
 	}
@@ -95,6 +100,8 @@ public class Sensor implements RayCastCallback, ISpatialSensor <ISpatialObject>,
 	{
 		isOccluded = false;
 		units.clear();
+
+		this.filter = null;
 	}
 
 }

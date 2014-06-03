@@ -12,11 +12,13 @@ import eir.world.environment.nav.NavMeshGenerator;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.sensors.ISensor;
 import eir.world.environment.sensors.Sensor;
+import eir.world.environment.spatial.AOECollider;
 import eir.world.environment.spatial.ISpatialFilter;
 import eir.world.environment.spatial.ISpatialIndex;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.SpatialHashMap;
 import eir.world.environment.spatial.UnitCollider;
+import eir.world.unit.IDamager;
 import eir.world.unit.Unit;
 
 public class Environment
@@ -27,6 +29,8 @@ public class Environment
 	private ISpatialIndex <ISpatialObject> index;
 
 	private final UnitCollider collider;
+
+	private final AOECollider aoeCollider;
 
 	/**
 	 * Physical world, should be moved into Environment
@@ -46,6 +50,8 @@ public class Environment
 		world = new World(new Vector2(0, 0), true);
 
 		collider = new UnitCollider();
+
+		aoeCollider = new AOECollider();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -103,8 +109,23 @@ public class Environment
 		collider.setAnt( unit );
 		index.queryAABB(collider, unit.getArea() );
 
-	}
 
+	}
+	public void update( final float delta )
+	{
+		for( int idx = 0; idx < collider.getAOEDamage().size(); idx ++ )
+		{
+			IDamager damager = collider.getAOEDamage().get( idx );
+			aoeCollider.setDamager( damager );
+			Unit damagingUnit = (Unit) damager;
+			index.queryRadius( aoeCollider,
+					damagingUnit.getArea().getAnchor().x,
+					damagingUnit.getArea().getAnchor().y, damager.getSize() );
+			aoeCollider.clear();
+		}
+
+		collider.clear();
+	}
 
 	public void remove( final Unit unit ) { index.remove( unit ); }
 
@@ -140,8 +161,8 @@ public class Environment
 
 	}
 
-	public ISensor createSensor( final Vector2 location, final float radius )
+	public ISensor createSensor( final Unit unit, final float radius )
 	{
-		return new Sensor( radius, location, index, world );
+		return new Sensor( radius, unit, index, world );
 	}
 }

@@ -463,7 +463,7 @@
 		# UNITS
 		########################################
 			"units" : [
-				{
+				/*{
 					"type" : "cannon",
 					"faction" : 1,
 					"anchor" : { "asteroid" : "red_back", "navIdx" : 10 }
@@ -482,7 +482,7 @@
 					"type" : "cannon",
 					"faction" : 1,
 					"anchor" : { "asteroid" : "red_right_palm", "navIdx" : 36 }
-				},				
+				},	*/			
 				{
 					"type" : "spawner",
 					"faction" : 2,
@@ -508,7 +508,7 @@
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 16 },
 					"unitType" : "birdy", 
 					"maxUnits" : 50,
-					"spawnInterval" : 2f
+					"spawnInterval" : 0.2f
 				},
 								{
 					"type" : "spawner",
@@ -516,7 +516,7 @@
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 10 },
 					"unitType" : "birdy", 
 					"maxUnits" : 50,
-					"spawnInterval" : 2f
+					"spawnInterval" : 0.2f
 				}
 				
 				/*,

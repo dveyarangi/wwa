@@ -38,17 +38,17 @@ public class BodyLoader {
         // Ctors
         // -------------------------------------------------------------------------
 
-        public BodyLoader(FileHandle file) {
+        public BodyLoader(final FileHandle file) {
                 if (file == null) throw new NullPointerException("file is null");
                 model = readJson(file.readString());
         }
 
-        public BodyLoader(String str) {
+        public BodyLoader(final String str) {
                 if (str == null) throw new NullPointerException("str is null");
                 model = readJson(str);
         }
-          
-        public static Model readModel(String str)
+
+        public static Model readModel(final String str)
         {
         	Gson gson = new Gson();
         	Model model = gson.fromJson( str, Model.class );
@@ -83,9 +83,9 @@ public class BodyLoader {
          * @param fd The fixture parameters to apply to the created body fixture.
          * @param scale The desired scale of the body. The default width is 1.
          */
-        public void attachFixture(Body body, String name, FixtureDef fd, float scale) {
+        public void attachFixture(final Body body, final String name, final FixtureDef fd, final float scale) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
-                if (rbModel == null) 
+                if (rbModel == null)
                 	throw new RuntimeException("Name '" + name + "' was not found.");
 
                 for (int i=0, n=rbModel.polygons.size(); i<n; i++) {
@@ -123,7 +123,7 @@ public class BodyLoader {
         /**
          * Gets the image path attached to the given name.
          */
-        public String getImagePath(String name) {
+        public String getImagePath(final String name) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
@@ -136,7 +136,7 @@ public class BodyLoader {
          * size. Warning: this method returns the same Vector2 object each time, so
          * copy it if you need it for later use.
          */
-        public Vector2 getOrigin(String name, float scale) {
+        public Vector2 getOrigin(final String name, final float scale) {
                 RigidBodyModel rbModel = model.rigidBodies.get(name);
                 if (rbModel == null) throw new RuntimeException("Name '" + name + "' was not found.");
 
@@ -173,9 +173,9 @@ public class BodyLoader {
                 public List<Vector2> vertices = new ArrayList<Vector2>();
                 private Vector2[] buffer; // used to avoid allocation in attachFixture()
         }
-        
+
         public static enum ShapeType { POLYGON }
-        
+
         public static class ShapeModel {
  //       	private ShapeType type;
         	public Vector2 [] vertices;
@@ -190,7 +190,7 @@ public class BodyLoader {
         // Json reading process
         // -------------------------------------------------------------------------
 
-        private Model readJson(String str) {
+        private Model readJson(final String str) {
                 Model m = new Model();
                 OrderedMap<String,?> rootElem = (OrderedMap<String,?>) new JsonReader().parse(str);
 
@@ -205,7 +205,7 @@ public class BodyLoader {
                 return m;
         }
 
-        private RigidBodyModel readRigidBody(OrderedMap<String,?> bodyElem) {
+        private RigidBodyModel readRigidBody(final OrderedMap<String,?> bodyElem) {
                 RigidBodyModel rbModel = new RigidBodyModel();
                 rbModel.name = (String) bodyElem.get("name");
                 rbModel.imagePath = (String) bodyElem.get("imagePath");
@@ -258,7 +258,7 @@ public class BodyLoader {
                 return vectorPool.isEmpty() ? new Vector2() : vectorPool.remove(0);
         }
 
-        private void free(Vector2 v) {
+        private void free(final Vector2 v) {
                 vectorPool.add(v);
         }
 }

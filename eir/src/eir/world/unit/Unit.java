@@ -3,8 +3,6 @@
  */
 package eir.world.unit;
 
-import yarangi.numbers.RandomUtil;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -19,16 +17,16 @@ import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.unit.ai.Task;
 
 /**
  * @author dveyarangi
  *
  */
-public abstract class Unit implements ISpatialObject
+public abstract class Unit implements ISpatialObject, IUnit
 {
 	///////////////////////////////////////////////
 	// loaded by level loader
+
 
 	protected String type;
 
@@ -42,25 +40,57 @@ public abstract class Unit implements ISpatialObject
 
 	///////////////////////////////////////////
 
-	private AABB body;
-
 	private int id;
+
+	private AABB body;
 
 	public float angle;
 
-	private Task task;
-
-	private boolean isAlive = true;
+	private boolean isAlive;
 
 	protected Hull hull;
 
-
+	/**
+	 * Time since unit creation
+	 */
 	public float lifetime;
 
+	/**
+	 * Max time length
+	 */
+	public float lifelen;
+
+	public ISpatialObject target;
+
+	public float timeToPulse = 0;
+
+	public final Vector2 velocity = new Vector2();
 
 	public Unit()
 	{
+
+		velocity.set(0,0);
+
+		timeToPulse = 0;
+
 		this.body = AABB.createPoint( 0, 0 );
+	}
+
+	/**
+	 * Override this method to reset subclass's custom properties
+	 */
+	protected void init()
+	{
+
+		this.isAlive = true;
+		this.id = Environment.createObjectId();
+
+		this.type = type.intern();
+
+		this.lifetime = 0;
+		this.lifelen = Float.NaN;
+
+		this.target = null;
 	}
 
 	public void init(final String type, final NavNode anchor, final Faction faction)
@@ -94,18 +124,11 @@ public abstract class Unit implements ISpatialObject
 		init();
 	}
 
-
-	protected void init()
+	public void dispose()
 	{
-
-		this.isAlive = true;
-		this.id = Environment.createObjectId();
-		this.task = null;
-
-		this.type = type.intern();
-
-		this.lifetime = 0;
 	}
+
+
 
 	public void postinit( final Level level )
 	{
@@ -122,6 +145,8 @@ public abstract class Unit implements ISpatialObject
 	@Override
 	public AABB getArea() { return body; }
 
+	public float getAngle() { return angle; }
+
 	@Override
 	public int getId() { return id; }
 
@@ -134,25 +159,15 @@ public abstract class Unit implements ISpatialObject
 
 	public void update(final float delta)
 	{
+
+		// this is sad:
 		lifetime += delta;
 
-		if(task == null || task.isFinished())
+		if( lifetime > lifelen )
 		{
-			// requesting a new task:
-			task = faction.getScheduler().gettaTask( this );
-			if(task == null)
-				return;
+			setDead();
+			return;
 		}
-
-		//TODO simple solution for now, if task is finished return it and ask for another
-		if(task.isFinished())
-		{
-			faction.getScheduler().taskComplete(task);
-			task = faction.getScheduler().gettaTask(this);
-		}
-
-		// performing task:
-		task.getBehavior( this ).update( delta, task, this );
 
 	}
 
@@ -165,62 +180,80 @@ public abstract class Unit implements ISpatialObject
 		shape.setColor(faction.color.r,faction.color.g,faction.color.b,0.5f);
 		shape.filledCircle(getBody().getAnchor().x, getBody().getAnchor().y, getSize() / 2);
 		shape.end();
+
+		if( this.target != null)
+		{
+			shape.begin(ShapeType.Line);
+			shape.line( this.getArea().getAnchor().x, this.getArea().getAnchor().y,
+					this.target.getArea().getAnchor().x, this.target.getArea().getAnchor().y );
+			shape.end();
+			shape.begin(ShapeType.Circle);
+			shape.circle( this.target.getArea().getAnchor().x,
+					      this.target.getArea().getAnchor().y,
+					      this.target.getArea().getRX());
+			shape.end();
+
+		}
 	}
 
 
+	@Override
 	public boolean isAlive() { return isAlive; }
 
 	public void setDead() { this.isAlive = false; }
 
 
 	/**
+	 * @param damageReduction
 	 * @param damage
 	 */
-	public void hit(final Damage source, final IDamager damager)
+	public float hit(final Damage source, final IDamager damager, final float damageCoef)
 	{
-		damage( damager.getDamage() );
+		float damage = damage( damager.getDamage(), damageCoef );
 		faction.getController().yellUnitHit( this, damager );
-		if(task != null)
-		{
-			task.cancel();
-			task = null;
-		}
+
+		return damage;
 	}
 
-	protected Damage damage( final Damage source )
+	protected float damage( final Damage source, final float damageCoef )
 	{
 		if(hull == null) // TODO: stub
 		{
 			Debug.log( "Unit has no hull: " + this);
 //			setDead();
-			return source;
+			return 0;
 		}
 
-		hull.hit( source );
+		float damage = hull.hit( source, damageCoef );
 
 		if(hull.isBreached())
 		{
-			setDead();
+			setDead(); // TODO: consider decision by unit controller
 		}
 
-		return source;
+		return damage;
 	}
 	/**
 	 * @return
 	 */
 	public Effect getDeathEffect()
 	{
-		return Effect.getEffect( hitAnimationId, 25, body.getAnchor(), RandomUtil.N( 360 ), 1 );
+		return null;//Effect.getEffect( hitAnimationId, 25, body.getAnchor(), RandomUtil.N( 360 ), 1 );
 	}
 
 
 	public abstract float getSize();
 
 
-	public void setShootingTarget(final Vector2 targetPos) {}
-	public void walkDown(final boolean b) {}
-	public void walkCCW(final boolean b) {}
-	public void walkCW(final boolean b) {}
-	public void walkUp(final boolean b) {}
 
+	public SurfaceNavNode getAnchorNode()
+	{
+		return anchor;
+	}
+
+	public boolean dealsFriendlyDamage() { return false; }
+
+	public ISpatialObject getTarget() { return target; }
+
+	public abstract float getMaxSpeed();
 }

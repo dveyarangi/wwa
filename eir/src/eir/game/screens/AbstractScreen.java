@@ -27,14 +27,14 @@ public abstract class AbstractScreen implements Screen
     private BitmapFont font;
     private SpriteBatch batch;
     private TextureAtlas atlas;
-    
 
-    public AbstractScreen( EirGame game )
+
+    public AbstractScreen( final EirGame game )
     {
         this.game = game;
         int width = isGameScreen() ? GAME_VIEWPORT_WIDTH : MENU_VIEWPORT_WIDTH;
         int height = isGameScreen() ? GAME_VIEWPORT_HEIGHT : MENU_VIEWPORT_HEIGHT;
-        this.stage = new Stage( width, height, true );
+        this.stage = new Stage();
     }
 
     protected String getName()
@@ -87,15 +87,15 @@ public abstract class AbstractScreen implements Screen
 
     @Override
     public void resize(
-        int width,
-        int height )
+        final int width,
+        final int height )
     {
     	Debug.log( "Resizing screen to: " + width + " x " + height );
     }
 
     @Override
     public void render(
-        float delta )
+        final float delta )
     {
         // (1) process the game logic
 
@@ -141,11 +141,20 @@ public abstract class AbstractScreen implements Screen
     	Debug.log( "Disposing screen" );
 
         // as the collaborators are lazily loaded, they may be null
-        if( font != null ) font.dispose();
-        if( batch != null ) batch.dispose();
-        if( atlas != null ) atlas.dispose();
+        if( font != null )
+		{
+			font.dispose();
+		}
+        if( batch != null )
+		{
+			batch.dispose();
+		}
+        if( atlas != null )
+		{
+			atlas.dispose();
+		}
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
 
 }

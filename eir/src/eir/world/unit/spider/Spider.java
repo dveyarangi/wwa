@@ -13,6 +13,7 @@ import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.unit.Faction;
+import eir.world.unit.IControllableUnit;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.weapon.HomingLauncher;
@@ -21,7 +22,7 @@ import eir.world.unit.weapon.IWeapon;
  * Spider
  *
  */
-public class Spider extends Unit
+public class Spider extends Unit implements IControllableUnit
 {
 	private Faction faction;
 
@@ -40,7 +41,7 @@ public class Spider extends Unit
 
 	private boolean walkCW, walkCCW, walkUp, walkDown;
 
-	private Vector2 shootingTarget;
+	private Unit shootingTarget;
 
 	private IWeapon weapon;
 
@@ -62,6 +63,7 @@ public class Spider extends Unit
 	protected void init( )
 	{
 		super.init();
+
 		this.speed = 10*speed;
 
 
@@ -244,8 +246,7 @@ public class Spider extends Unit
 	/**
 	 * @param b
 	 */
-	@Override
-	public void setShootingTarget(final Vector2 targetPos)
+	public void setShootingTarget(final Unit targetPos)
 	{
 		this.shootingTarget = targetPos;
 	}
@@ -267,5 +268,14 @@ public class Spider extends Unit
 	public float getSize() {
 		return size;
 	}
+
+	@Override
+	public void setShootingTarget( final Vector2 targetPos )
+	{
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public float getMaxSpeed() { return 0; }
 
 }

@@ -1,5 +1,7 @@
 package eir.world.unit.ai;
 
+import com.badlogic.gdx.utils.Pool;
+
 import eir.world.unit.Unit;
 import eir.world.unit.UnitBehavior;
 
@@ -13,8 +15,8 @@ import eir.world.unit.UnitBehavior;
  */
 public class Task
 {
-	protected final Scheduler scheduler;
-	protected final Order order;
+	protected Scheduler scheduler;
+	protected Order order;
 	protected TaskStage stage;
 
 	public static enum Status { ONGOING, COMPLETED, CANCELED };
@@ -25,18 +27,53 @@ public class Task
 	protected boolean cycle = false;
 	protected int stageIdx = 0;
 
+	/**
+	 * Pool of AABB objects
+	 */
+	public static final Pool<Task> pool =
+			new Pool<Task>()
+			{
+				@Override
+				protected Task newObject()
+				{
+					return new Task();
+				}
+			};
 
-	public Task(final Scheduler scheduler, final Order order, final TaskStage [] stages, final boolean cycle)
+	protected static Task create(final Scheduler scheduler, final Order order, final TaskStage [] stages, final boolean cycle)
+	{
+		return pool.obtain().update( scheduler, order, stages, cycle );
+	}
+
+	public static void free(final Task task)
+	{
+		pool.free( task );
+	}
+
+	protected Task()
+	{
+
+	}
+
+	protected Task update(final Scheduler scheduler, final Order order, final TaskStage [] stages, final boolean cycle)
 	{
 
 		this.scheduler = scheduler;
 		this.order = order;
 
 		this.stages = stages;
-		this.stage = stages[stageIdx ++];
+		this.stageIdx ++;
+		this.stage = stages[0];
 		this.cycle = cycle;
 
 		this.status = Status.ONGOING;
+
+		return this;
+	}
+
+	void free()
+	{
+		Task.free( this );
 	}
 
 	public TaskStage nextStage()
@@ -78,7 +115,7 @@ public class Task
 
 	public boolean isFinished()
 	{
-		return ( status == Status.CANCELED ) || ( status == Status.COMPLETED );
+		return status == Status.CANCELED || status == Status.COMPLETED;
 	}
 
 	/**

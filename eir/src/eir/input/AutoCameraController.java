@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.input;
 
@@ -16,55 +16,56 @@ import eir.world.Level;
 public class AutoCameraController implements ICameraController
 {
 	private GameInputProcessor inputProcessor;
-	
+
 	private Level level;
-	
+
 	private OrthographicCamera camera;
-	
+
 	private Vector2 lastPosition;
-	
+
 	private Vector2 scrollTarget;
 	public float zoomTarget;
-	
+
 	private static final int TRANSPOSE_LATENCY = 10;
 	private static final int ZOOM_LATENCY = 10;
-	
-	public AutoCameraController(OrthographicCamera camera, GameInputProcessor inputProcessor, Level level)
+
+	public AutoCameraController(final OrthographicCamera camera, final GameInputProcessor inputProcessor, final Level level)
 	{
 		this.camera = camera;
 		this.inputProcessor = inputProcessor;
-		
+
 		lastPosition = level.getControlledUnit().getBody().getAnchor().cpy();
 		camera.position.x = lastPosition.x;
 		camera.position.y = lastPosition.y;
 		zoomTarget = camera.zoom = 0.1f;
 		this.level = level;
-		
+
 		scrollTarget = new Vector2();
-		
+
 
 	}
-	
-	public void update( float delta )
+
+	@Override
+	public void update( final float delta )
 	{
 		Vector2 spiderPos = level.getControlledUnit().getBody().getAnchor();
 		Vector2 pointerPos = inputProcessor.getCrosshairPosition();
-		
-		updateCameraPosition( spiderPos, pointerPos ); 
+
+		updateCameraPosition( spiderPos, pointerPos );
 
 		// calculating matrices:
 		camera.update();
 
 
 	}
-	
-	private void updateCameraPosition(Vector2 playerPos, Vector2 pointerPos)
+
+	private void updateCameraPosition(final Vector2 playerPos, final Vector2 pointerPos)
 	{
-		
+
 		scrollTarget.set( pointerPos ).sub( playerPos );
-		
+
 		scrollTarget.div( 2 ).add( playerPos );
-		
+
 		camera.position.x += (scrollTarget.x - camera.position.x) / TRANSPOSE_LATENCY;
 		camera.position.y += (scrollTarget.y - camera.position.y) / TRANSPOSE_LATENCY;
 		camera.zoom += (zoomTarget - camera.zoom) / ZOOM_LATENCY;
@@ -72,49 +73,56 @@ public class AutoCameraController implements ICameraController
 		// storing last camera position:
 		lastPosition.x = camera.position.x;
 		lastPosition.y = camera.position.y;
-		
+
 	}
-	
-	
+
+
 	/**
 	 * @param width
 	 * @param height
 	 */
-	public void resize(int width, int height)
+	@Override
+	public void resize(final int width, final int height)
 	{
 		camera.setToOrtho( false, width, height );
 		camera.position.x = lastPosition.x;
 		camera.position.y = lastPosition.y;
-		
+
 		// move cursor to the spider to avoid the initial camera jump:
 		Gdx.input.setCursorPosition( (int)camera.viewportWidth/2, (int)camera.viewportHeight/2 );
 		updateCameraPosition( lastPosition, lastPosition );
 	}
 
 	@Override
-	public void setUnderUserControl(boolean b)
+	public void setUnderUserControl(final boolean b)
 	{
-		
+
 	}
 
 	@Override
-	public void injectLinearImpulse(float x, float y, float z)
+	public void injectLinearImpulse(final float x, final float y, final float z)
 	{
 		if(z == 0)
 			return;
-		
+
 		if(z > 0)
+		{
 			zoomTarget /= 0.9f;
-		else
+		} else
+		{
 			zoomTarget *= 0.9f;
-		
+		}
+
 		// bounding zoom
 		// TODO: to level config
 		if(zoomTarget > 1.5f)
+		{
 			zoomTarget = 1.5f;
-		else
+		} else
 		if(zoomTarget < 0.05f)
-			zoomTarget = 0.05f;		
+		{
+			zoomTarget = 0.05f;
+		}
 	}
 
 	@Override

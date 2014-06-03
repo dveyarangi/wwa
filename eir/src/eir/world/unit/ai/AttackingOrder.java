@@ -1,9 +1,9 @@
 /**
- * 
+ *
  */
 package eir.world.unit.ai;
 
-import eir.world.unit.Unit;
+import eir.world.environment.spatial.ISpatialObject;
 
 
 /**
@@ -12,25 +12,20 @@ import eir.world.unit.Unit;
  */
 public class AttackingOrder extends Order
 {
-	private Unit unit;
-	
-	public float timeout;
 
 	/**
 	 * @param priority
 	 * @param sourceNode
 	 * @param targetNode
 	 */
-	public AttackingOrder(float priority)
+	public AttackingOrder(final float priority)
 	{
-		super( priority, null, null, null );
+		this( priority, null );
 	}
 
-	@Override
-	public Task createTask(Scheduler scheduler)
+	public AttackingOrder(final float priority, final ISpatialObject target)
 	{
-		return new Task(scheduler, this, new TaskStage [] { TaskStage.ATTACK }, false);
+		super( new TaskStage [] { TaskStage.ATTACK }, false, priority, null, target );
 	}
-
 
 }

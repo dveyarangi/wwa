@@ -2,8 +2,8 @@ package eir.world.environment.spatial;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import yarangi.math.FastMath;
 
@@ -19,8 +19,9 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 	 * buckets array
 	 * see {@link #hash(int, int)} for indices here
 	 * TODO: hashmap is slow!!!
+	 * no duplicates here is important, and depends on correctness of the iteration over the inserted shape
 	 */
-	protected Set <O> [] map;
+	protected List <O> [] map;
 
 	/**
 	 * This is cache of object location;
@@ -87,10 +88,10 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 		this.halfGridWidth = (int)(width/2f/cellSize);
 		this.halfGridHeight = (int)(height/2f/cellSize);
 		this.halfCellSize = cellSize/2.f;
-		map = new Set[size];
+		map = new List[size];
 		for(int idx = 0; idx < size; idx ++)
 		{
-			map[idx] = new HashSet <O> ();
+			map[idx] = new ArrayList <O> ();
 		}
 	}
 
@@ -128,7 +129,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 	 * @param y
 	 * @return
 	 */
-	public final Set <O> getBucket(final int x, final int y)
+	public final List <O> getBucket(final int x, final int y)
 	{
 		return map[hash(x, y)];
 	}
@@ -300,7 +301,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 		int currx, curry;
 		int hash;
 
-		Set <O> cell;
+		List <O> cell;
 
 		for(currx = minIdxx; currx <= maxIdxx; currx ++)
 		{
@@ -356,8 +357,9 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 		int passId = getNextPassId();
 		int hash;
 
-		Set <O> cell;
+		List <O> cell;
 		AABB objectArea;
+		O obj = null;
 
 		found: for(currx = minIdxx; currx <= maxIdxx; currx ++)
 		{
@@ -372,8 +374,9 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 				}
 				cell = map[hash];
 
-				for(O obj : cell)
+				for(int idx = 0; idx < cell.size(); idx ++ )
 				{
+					obj = cell.get( idx );
 					objectArea = obj.getArea();
 					if(objectArea.getPassId() == passId)
 					{
@@ -415,7 +418,9 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 
 //		System.out.println("dim: " + minx + " " + maxx + " " + miny + " " + maxy + "area size: " + (maxx-minx)*(maxy-miny));
 		// removing the object from all overlapping buckets:
-		Set <O> cell;
+		List <O> cell;
+		AABB objectArea;
+		O object = null;
 		for(int tx = minx; tx <= maxx; tx ++)
 		{
 			for(int ty = miny; ty <= maxy; ty ++)
@@ -431,16 +436,18 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 //				System.out.println(aabb.r+radius + " : " + Math.sqrt(distanceSquare));
 
 				// TODO: make it strictier:
-				for(O object : cell)
+				for(int idx = 0; idx < cell.size(); idx ++ )
 				{
-					if(object.getArea().getPassId() == passId)
+					object = cell.get( idx );
+					objectArea = object.getArea();
+					if(objectArea.getPassId() == passId)
 					{
 						continue;
 					}
 
 					distanceSquare =
-							FastMath.powOf2(x - object.getArea().getCenterX()) +
-							FastMath.powOf2(y - object.getArea().getCenterY());
+							FastMath.powOf2(x - objectArea.getCenterX()) +
+							FastMath.powOf2(y - objectArea.getCenterY());
 					if(radiusSquare < distanceSquare)
 					{
 						continue;
@@ -478,15 +485,19 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 		float closestDistanceSquare = Float.MAX_VALUE;
 		float squareRadius = 0;
 		float distanceSquare = 0;
-		Set <O> cell;
+		List <O> cell;
 
 		O closestNeighbor = null;
 		cell = map[hash(minx, miny)];
+		O object = null;
+		AABB objectArea;
 
 		// TODO: make it strictier:
-		for(O object : cell)
+		for(int idx = 0; idx < cell.size(); idx ++ )
 		{
-			if(object.getArea().getPassId() == passId)
+			object = cell.get( idx );
+			objectArea = object.getArea();
+			if(objectArea.getPassId() == passId)
 			{
 				continue;
 			}
@@ -497,8 +508,8 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 			}
 
 			distanceSquare =
-					FastMath.powOf2(x - object.getArea().getCenterX()) +
-					FastMath.powOf2(y - object.getArea().getCenterY());
+					FastMath.powOf2(x - objectArea.getCenterX()) +
+					FastMath.powOf2(y - objectArea.getCenterY());
 
 			if(distanceSquare < closestDistanceSquare)
 			{
@@ -527,14 +538,16 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 
 					cell = map[hash(tx+xdelta*idx, ty+ydelta*idx)];
 
-					for(O object : cell)
+					for(idx = 0; idx < cell.size(); idx ++ )
 					{
-						if(object.getArea().getPassId() == passId)
+						object = cell.get( idx );
+						objectArea = object.getArea();
+						if(objectArea.getPassId() == passId)
 						{
 							continue;
 						}
 
-						if(!object.getArea().overlaps( x, y, x, y ))
+						if(!objectArea.overlaps( x, y, x, y ))
 						{
 							continue;
 						}
@@ -545,8 +558,8 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 						}
 
 						distanceSquare =
-								FastMath.powOf2(x - object.getArea().getCenterX()) +
-								FastMath.powOf2(y - object.getArea().getCenterY());
+								FastMath.powOf2(x - objectArea.getCenterX()) +
+								FastMath.powOf2(y - objectArea.getCenterY());
 
 						if(distanceSquare < closestDistanceSquare)
 						{
@@ -634,6 +647,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 		float tMaxX, tMaxY;
 		float tDeltaX, tDeltaY;
 		int stepX, stepY;
+
 		if(dx > 0)
 		{
 			tMaxX = (currGridx*cellSize + halfCellSize - ox) / dx;
@@ -666,7 +680,9 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 
 		// marks entity area to avoid reporting entity multiple times
 		int passId = getNextPassId();
-		Set <O> cell;
+		List <O> cell;
+		O object = null;
+		AABB objectArea;
 		while(tMaxX <= 1 || tMaxY <= 1)
 		{
 			if(tMaxX < tMaxY)
@@ -680,9 +696,11 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 				currGridy += stepY;
 			}
 			cell = map[hash(currGridx, currGridy)];
-			for(O object : cell)
+
+			for(int idx = 0; idx < cell.size(); object = cell.get( idx ++ ))
 			{
-				if(object.getArea().getPassId() == passId)
+				objectArea = object.getArea();
+				if(objectArea.getPassId() == passId)
 				{
 					continue;
 				}
@@ -694,7 +712,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 						break;
 					}
 
-				object.getArea().setPassId( passId );
+				objectArea.setPassId( passId );
 			}
 		}
 

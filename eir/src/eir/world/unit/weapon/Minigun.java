@@ -7,6 +7,7 @@ package eir.world.unit.weapon;
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
@@ -73,9 +74,9 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	protected float createAngle()
+	protected float createAngle( final Vector2 firingDir )
 	{
-		return RandomUtil.STD( weaponDir.angle(), getAccuracy());
+		return RandomUtil.STD( firingDir.angle(), getAccuracy());
 	}
 
 
@@ -91,7 +92,7 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public float getLifeDuration()
+	public float getBulletLifeDuration()
 	{
 		return 2;
 	}

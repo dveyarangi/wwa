@@ -1,12 +1,11 @@
 package eir.world.unit.ai;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import yarangi.numbers.RandomUtil;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
@@ -23,9 +22,9 @@ public class Scheduler
 	/**
 	 * Orders by unit types?
 	 */
-	private final Multimap <String, Order> orders;
+	private final ListMultimap <String, Order> orders;
 
-	private final Multimap <Order, Task> tasks;
+	private final ListMultimap <Order, Task> tasks;
 
 	private final UnitsFactory unitsFactory;
 
@@ -34,9 +33,9 @@ public class Scheduler
 	{
 		this.unitsFactory = unitsFactory;
 
-		this.orders = HashMultimap.create();
+		this.orders = ArrayListMultimap.create();
 
-		tasks = HashMultimap.create();
+		tasks = ArrayListMultimap.create();
 	}
 
 	public void addOrder(final String unitType, final Order order)
@@ -49,8 +48,13 @@ public class Scheduler
 	 * @param ant identify yourself!
 	 * @return
 	 */
-	public Task gettaTask( final Unit unit )
+	public Task gettaTask( final Unit unit, final Task finishedTask )
 	{
+		if( finishedTask != null)
+		{
+			taskComplete( finishedTask );
+		}
+
 		if(orders.isEmpty())
 			return null;
 
@@ -58,17 +62,19 @@ public class Scheduler
 
 
 		//
-		Collection <Order> unitOrders = orders.get( unit.getType() );
-		if(( unitOrders == null ) || ( unitOrders.size() == 0 ))
+		List <Order> unitOrders = orders.get( unit.getType() );
+		if(unitOrders == null || unitOrders.size() == 0)
 			return null;
 
 		Order order = null;
 		do
 		{
 			int orderIdx = RandomUtil.N( unitOrders.size() );
-			order = new ArrayList <Order> (unitOrders).get(orderIdx);
+			order = unitOrders.get(orderIdx);
 		}
 		while(!order.isActive());
+
+
 
 		Task task = null;
 
@@ -92,6 +98,7 @@ public class Scheduler
 	public void taskComplete( final Task task )
 	{
 		tasks.remove(task.getOrder(), task);
+		task.free();
 	}
 
 	/**
@@ -102,6 +109,7 @@ public class Scheduler
 	{
 		task.setCanceled();
 		tasks.remove(task.getOrder(), task);
+		task.free();
 	}
 
 	public void removeOrder(final String unitType, final Order order)
@@ -109,6 +117,7 @@ public class Scheduler
 		for(Task task : tasks.get(order))
 		{
 			task.setCanceled();
+			task.free();
 		}
 
 		tasks.removeAll(order);

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.world.unit.weapon;
 
@@ -15,20 +15,50 @@ public class HomingBehavior implements IBulletBehavior
 {
 
 	private IWeapon weapon;
-	
-	public HomingBehavior(IWeapon weapon)
+
+	public HomingBehavior(final IWeapon weapon)
 	{
 		this.weapon = weapon;
 	}
-	
+
 	@Override
-	public void update(float delta, Bullet bullet)
+	public void update(final float delta, final Bullet bullet)
 	{
+		if(bullet.target == null || !bullet.target.isAlive())
+		{
+			bullet.target = bullet.getTarget(); // last known target
+		}
+		if( bullet.target == null)
+		{
+			bullet.lifetime = bullet.weapon.getBulletLifeDuration();
+
+			float dx = bullet.getVelocity().x * delta;
+			float dy = bullet.getVelocity().y * delta;
+			bullet.getBody().getAnchor().add( dx, dy );
+			return;
+		}
+
+		Vector2	target = bullet.target.getArea().getAnchor();
+
+/*			float chirality = hashCode() % 2 == 0 ? -1 : 1;
+			target = Vector2.tmp3.set( chirality * bullet.getVelocity().y/2, -chirality * bullet.getVelocity().x*2 )
+					.nor()
+					.mul( (float)Math.log( bullet.lifetime) * 1 )
+					.add( bullet.getArea().getAnchor() );*/
+
+
+//			float chirality = hashCode() % 2 == 0 ? -1 : 1;
+/*			target = Vector2.tmp3.set( bullet.getBody().getAnchor() ).add( bullet.velocity )
+					.add( RandomUtil.STD( 10, 5 ), RandomUtil.STD( 10, 5 ) );*/
+
+//			bullet.lifetime += (bullet.weapon.getLifeDuration() - bullet.lifetime) / 2 * delta;
+
+
 		float dx = bullet.getVelocity().x * delta;
-		float dy = bullet.getVelocity().y * delta; 
+		float dy = bullet.getVelocity().y * delta;
 		bullet.getBody().getAnchor().add( dx, dy );
-		
-		Vector2 force = bullet.getTarget().tmp().sub( bullet.getBody().getAnchor() ).nor()
+
+		Vector2 force = target.tmp().sub( bullet.getBody().getAnchor() ).nor()
 							.mul( 1000 * bullet.lifetime * bullet.lifetime * delta );
 		if(bullet.lifetime < 0.4)
 		{
@@ -36,17 +66,21 @@ public class HomingBehavior implements IBulletBehavior
 		}
 		else
 		{
+			bullet.leaveTrace = true;
 			bullet.getVelocity().add( force );
-			if(bullet.getVelocity().len2() > weapon.getMaxSpeed()*weapon.getMaxSpeed())
-				bullet.getVelocity().nor().mul( weapon.getMaxSpeed() );
+			if(bullet.getVelocity().len2() > bullet.getMaxSpeed()*bullet.getMaxSpeed())
+			{
+				bullet.getVelocity().nor().mul( bullet.getMaxSpeed() );
+			}
+
+			bullet.angle = force.angle();
 		}
-		
-		bullet.angle = force.angle();
+
 		// hit:
-		if(bullet.getBody().getAnchor().dst2( bullet.getTarget() ) < 1)
+/*		if(bullet.getBody().getAnchor().dst2( target ) < 1)
 		{
 			bullet.setDead();
-		}
+		}*/
 	}
 
 

@@ -18,6 +18,7 @@ import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.parallax.Background;
 import eir.world.unit.Faction;
+import eir.world.unit.IControllableUnit;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.ai.AttackingOrder;
@@ -78,7 +79,7 @@ public class Level
 
 	////////////////////////////////////////////////////////////////
 
-	private Unit playerUnit;
+	private IControllableUnit playerUnit;
 
 	/**
 	 * Units to add queue
@@ -115,7 +116,7 @@ public class Level
 	 */
 	public Unit addUnit(final Unit unit)
 	{
-		debug("Unit added: " + unit);
+//		debug("Unit added: " + unit);
 		unitsToAdd.add(unit);
 		unit.getFaction().addUnit( unit );
 
@@ -146,8 +147,8 @@ public class Level
 		{
 			faction.init( this );
 
-			faction.getScheduler().addOrder( "ant", new RandomTravelingOrder( environment, 0 ) );
-			faction.getScheduler().addOrder( "cannon", new AttackingOrder( 0 ) );
+			faction.getScheduler().addOrder( UnitsFactory.ANT, new RandomTravelingOrder( environment, 0 ) );
+			faction.getScheduler().addOrder( UnitsFactory.CANNON, new AttackingOrder( 0 ) );
 		}
 
 		for(Asteroid asteroid : asteroids)
@@ -217,6 +218,8 @@ public class Level
 
 		}
 
+		environment.update( delta );
+
 		Iterator <Effect> effectIt = effects.iterator();
 		while(effectIt.hasNext())
 		{
@@ -261,14 +264,13 @@ public class Level
 			effect.draw( batch );
 		}
 
-
 		batch.end();
 	}
 
 	/**
 	 * @return
 	 */
-	public Unit getControlledUnit()
+	public IControllableUnit getControlledUnit()
 	{
 		return playerUnit;
 	}
@@ -351,6 +353,7 @@ public class Level
 		while(!unitsToRemove.isEmpty())
 		{
 			Unit unit = unitsToRemove.poll();
+
 			units.remove( unit );
 			environment.remove( unit );
 			Effect hitEffect = unit.getDeathEffect();
@@ -363,7 +366,7 @@ public class Level
 			unit.getFaction().removeUnit( unit );
 
 			unitsFactory.free( unit );
-			debug("Unit removed: " + unit);
+//			debug("Unit removed: " + unit);
 		}
 	}
 

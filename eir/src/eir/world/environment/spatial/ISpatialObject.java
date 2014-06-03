@@ -3,7 +3,7 @@ package eir.world.environment.spatial;
 /**
  * Interface for object with AABB for indexing in {@link SpatialHashMap}.
  */
-public interface ISpatialObject 
+public interface ISpatialObject
 {
 
 	/**
@@ -17,4 +17,6 @@ public interface ISpatialObject
 	 * @return
 	 */
 	public int getId();
+
+	public boolean isAlive();
 }

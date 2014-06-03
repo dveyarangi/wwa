@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.debug;
 
@@ -9,6 +9,7 @@ import java.util.Map;
 import yarangi.java.InvokationMapper;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -19,6 +20,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 import eir.input.GameInputProcessor;
+import eir.input.InputAction;
+import eir.input.InputContext;
+import eir.input.UIInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.environment.nav.NavEdge;
@@ -101,9 +105,9 @@ public class Debug
 
 	public void update(final float delta)
 	{
-		int sampleIdx = (frameCount ++ % SAMPLES);
+		int sampleIdx = frameCount ++ % SAMPLES;
 		deltas[sampleIdx] = delta;
-		if(sampleIdx >= ( SAMPLES-1 ))
+		if(sampleIdx >= SAMPLES-1)
 		{
 			float maxDelta = Float.MIN_VALUE;
 			for(int idx = 0; idx < SAMPLES; idx ++)
@@ -130,7 +134,7 @@ public class Debug
 			isFirstBatch = false;
 		}
 		deltaPeak -= 0.00001f;
-		if(!isFirstBatch && ( delta > ( deltaPeak * 0.5 ) ))
+		if(!isFirstBatch && delta > deltaPeak * 0.5)
 		{
 			//			log("Delta peak: " + delta);
 			//			deltaPeak *= 2;
@@ -249,5 +253,29 @@ public class Debug
 		String [] path = new Exception().getStackTrace()[1].getClassName().split( "\\." );
 
 		Gdx.app.log( path[path.length-2] + "#" + path[path.length-1], ">> " + message);
+	}
+
+	public static void registerDebugActions( final UIInputProcessor uiProcessor )
+	{
+		uiProcessor.registerAction( Keys.J, new InputAction() {
+			@Override
+			public void execute( final InputContext context )	{ toggleCoordinateGrid(); }
+		});
+		uiProcessor.registerAction( Keys.K, new InputAction() {
+			@Override
+			public void execute( final InputContext context )	{ Debug.toggleNavMesh(); }
+		});
+		uiProcessor.registerAction( Keys.L, new InputAction() {
+			@Override
+			public void execute( final InputContext context )	{ Debug.toggleSpatialGrid(); }
+		});
+		uiProcessor.registerAction( Keys.SEMICOLON, new InputAction() {
+			@Override
+			public void execute( final InputContext context )	{ Debug.toggleFactions(); }
+		});
+		uiProcessor.registerAction( Keys.APOSTROPHE, new InputAction() {
+			@Override
+			public void execute( final InputContext context )	{ Debug.toggleBox2D(); }
+		});
 	}
 }

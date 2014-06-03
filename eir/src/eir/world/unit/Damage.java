@@ -16,8 +16,15 @@ public class Damage
 
 	private final double [] damage = new double [4];
 
+	private AOEFunction aoeFunc;
+
 	public Damage(final double kinetic, final double thermal, final double divine, final double voidd)
 	{
+		this( null, kinetic, thermal, divine, voidd );
+	}
+	public Damage(final AOEFunction aoeFunc, final double kinetic, final double thermal, final double divine, final double voidd)
+	{
+		this.aoeFunc = aoeFunc;
 		damage[KINETIC] = kinetic;
 		damage[THERMAL] = thermal;
 		damage[ELECTRO_MAGNETIC] = divine;
@@ -28,6 +35,9 @@ public class Damage
 	{
 		return damage[type];
 	}
+
+	public AOEFunction getAOE() { return aoeFunc; }
+
 
 	@Override
 	public String toString() {

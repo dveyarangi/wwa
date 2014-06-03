@@ -11,13 +11,14 @@ import eir.resources.GameFactory;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
+import eir.world.unit.TaskedUnit;
 import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
  *
  */
-public class Birdy extends Unit implements IDamager
+public class Birdy extends TaskedUnit implements IDamager
 {
 	///////////////////////////////////////////
 
@@ -25,34 +26,21 @@ public class Birdy extends Unit implements IDamager
 //	private static Sprite sprite = GameFactory.createSprite( "anima//gears//birdy.png" );
 	private static int animationId = GameFactory.registerAnimation("anima//glow//glow.atlas",	"glow");
 
-	float pulseLength = 1;
-
-	float pulseStreght = 30;
-
-	float pulseDecay = 0.98f;
+	private  float maxSpeed = 30;
 
 	private float size = 5;
 
 	///////////////////////////////////////////
 
-	float timeToPulse = 0;
-
-	Vector2 velocity = new Vector2();
-
-	public int quantum;
-
 	public Damage damage = new Damage(1,1,1,1);
+
+	public Vector2 impactImpulse;
 
 	@Override
 	protected void init()
 	{
 		super.init();
-
-		velocity.set(0,0);
-
-		timeToPulse = 0;
-		quantum = 0;
-		this.hull = new Hull(50, 0, new double [] {0,0,0,0});
+		this.hull = new Hull(100f, 0f, new float [] {0f,0f,0f,0f});
 	}
 
 	@Override
@@ -79,7 +67,25 @@ public class Birdy extends Unit implements IDamager
 	{
 		super.update( delta );
 	}
+	@Override
+	public float hit(final Damage source, final IDamager damager, final float damageCoef)
+	{
+		float damage = super.hit( source, damager, damageCoef );
 
+
+		Unit unit = (Unit)damager;
+
+		impactImpulse = this.getArea().getAnchor().tmp()
+				.sub(
+						unit.getArea().getAnchor() )
+				.nor()
+				.mul( 10 );
+
+
+		velocity.add( impactImpulse );
+
+		return damage;
+	}
 
 	@Override
 	public float getSize() { return size; }
@@ -87,5 +93,12 @@ public class Birdy extends Unit implements IDamager
 	@Override
 	public Damage getDamage() {	return damage; }
 
+	@Override
+	public Unit getSource()
+	{
+		return this; // TODO: maybe generalize to drone and make source the spawner?
+	}
+
+	public float getMaxSpeed() { return maxSpeed; }
 
 }

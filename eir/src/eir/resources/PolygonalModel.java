@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.resources;
 
@@ -23,60 +23,60 @@ public class PolygonalModel
 	 * number of vertices
 	 */
 	private final int len;
-	
+
 	/**
 	 * polygon origin point
 	 */
 	private final	Vector2 origin;
-	
+
 	/**
 	 * scaled, rotated and transposed vertices
 	 */
 	private final Vector2 [] vertices;
-	
+
 	/**
 	 * normals of polygon edges
 	 */
 	private final Vector2 [] normals;
-	
+
 	/**
 	 * directions of polygon edges
 	 */
-	
+
 	private final Vector2 [] directions;
-	
+
 	/**
 	 * slopes of polygon edges
 	 */
 	private final float [] slopes;
-	
+
 	/**
 	 * lengths of polygon edges
 	 */
 	private final float [] lengths;
-	
+
 	/**
 	 * navigation nodes corresponding to polygon vertices
 	 */
 	private final SurfaceNavNode [] nodes;
-	
+
 	private float maxSurfaceIdx;
 
-	
+
 	/**
-	 * @param navMesh 
-	 * @param origin 
-	 * @param polygons 
+	 * @param navMesh
+	 * @param origin
+	 * @param polygons
 	 * @param body
 	 * @param sprite
 	 */
-	public PolygonalModel(FloydWarshal navMesh, Asteroid asteroid, Vector2 origin, Vector2 [] rawVertices, List<List<Vector2>> polygons)
+	public PolygonalModel(final FloydWarshal navMesh, final Asteroid asteroid, final Vector2 origin, final Vector2 [] rawVertices, final List<List<Vector2>> polygons)
 	{
 		super();
 		this.origin = origin;
-		
+
 		len = rawVertices.length;
-		
+
 		// preparing stuff for faster nav calculation:
 		this.vertices = new Vector2[len];
 
@@ -85,13 +85,13 @@ public class PolygonalModel
 		for(int idx = 0; idx < len; idx ++)
 		{
 			vertices[idx] = rawVertices[idx].tmp()
-					.sub( origin.x, origin.y ) // making relative to origin 
+					.sub( origin.x, origin.y ) // making relative to origin
 					.rotate( asteroid.getAngle() ) // rotating
 					.mul( asteroid.getSize() ) // scaling
 					.add( asteroid.getPosition() )  // transposing
 					.cpy();      // tmp ref is not to be saved!
 		}
-		
+
 		// normals for each poly edge:
 		normals = new Vector2 [len];
 		// directions for each poly edge:
@@ -100,7 +100,7 @@ public class PolygonalModel
 		slopes = new float [len];
 		// lengths of poly edges:
 		lengths = new float [len];
-		
+
 		nodes = new SurfaceNavNode[len];
 
 		navMesh.beginAsteroid();
@@ -112,83 +112,95 @@ public class PolygonalModel
 			int nidx = (idx+1)%len;
 			Vector2 a = vertices[idx];
 			Vector2 b = vertices[nidx];
-			
+
 			directions[idx] = new Vector2( b.x-a.x, b.y-a.y ).nor();
-			
+
 			// TODO: checkout about vertical ones
 			slopes[idx] = directions[idx].y / directions[idx].x;
-			
+
 			normals[idx] = b.tmp().sub( a ).nor().rotate( 90 ).cpy();
-			
+
 			lengths[idx] = (float)Math.hypot( b.x-a.x, b.y-a.y );
-			
+
 			nodes[idx] = currNode;
 			prevNode = currNode;
-			
+
 			if(nidx != 0)
+			{
 				currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, nidx),  b /*, rawVertices[nidx]*/ );
-			else
+			} else
+			{
 				currNode = navMesh.getNode(startingIdx);
+			}
 			navMesh.linkNodes( currNode, prevNode, NavEdge.Type.LAND );
-			
+
 			maxSurfaceIdx ++;
 		}
 		navMesh.endAsteroid();
 	}
-	
+
 	/**
 	 * @param navNodeIdx
 	 * @return
 	 */
-	public SurfaceNavNode getNavNode(int navNodeIdx)
+	public SurfaceNavNode getNavNode(final int navNodeIdx)
 	{
-		return nodes[navNodeIdx];
+		return nodes[ navNodeIdx >= 0 ? navNodeIdx % getSize() : navNodeIdx+getSize() ];
 	}
 
 	public int getNavNodesCount() { return nodes.length; }
-	
+
 	public Vector2 getOrigin()
 	{
 		return origin;
 	}
-	
+
 	public Vector2 [] getVertices() { return vertices; }
-	
+
 	/**
 	 * Returns a new index, that is resulting from stepping the specified stepLen from the initial index
 	 * @param surfaceIdx
 	 * @param stepLen
 	 * @return
 	 */
-	public float getStepSurfaceIndex(float surfaceIdx, float stepLen)
+	public float getStepSurfaceIndex(final float surfaceIdx, float stepLen)
 	{
 		int dir = stepLen > 0 ? 1 : -1;
-		int idx = ((int) surfaceIdx) % len;
-		
+		int idx = (int) surfaceIdx % len;
+
 		// offset scaled by edge length:
 		float scaledOffset = ( surfaceIdx - idx ) * lengths[idx];
-		
+
 		// rounding to int surface idx in step direction:
-		stepLen -= (dir > 0) ? (lengths[idx] - scaledOffset) : -scaledOffset;
+		stepLen -= dir > 0 ? lengths[idx] - scaledOffset : -scaledOffset;
 		int nidx = idx;
-		
+
 		// adding edges lenghts until we are past the stepLen:
 		// loop is required since step may skip several poly vertices:
-		while(dir*stepLen > 0) 
+		while(dir*stepLen > 0)
 		{
 			nidx += dir;
-			if(nidx >= len) nidx = 0;
-			else if(nidx < 0) nidx = len-1;
-			
+			if(nidx >= len)
+			{
+				nidx = 0;
+			} else if(nidx < 0)
+			{
+				nidx = len-1;
+			}
+
 			stepLen -= dir*lengths[nidx];
 		}
-		
-		float newSurfaceIdx = (dir > 0 ? (lengths[nidx] + stepLen) : stepLen) / lengths[nidx] + nidx;
+
+		float newSurfaceIdx = (dir > 0 ? lengths[nidx] + stepLen : stepLen) / lengths[nidx] + nidx;
 		if(newSurfaceIdx < 0)
+		{
 			newSurfaceIdx += len;
+		}
 		if(newSurfaceIdx >= len)
+		{
 			newSurfaceIdx -= len;
-		
+		}
+
 		return newSurfaceIdx;
 	}
 	/**
@@ -197,18 +209,18 @@ public class PolygonalModel
 	 * @param surfaceIdx
 	 * @return
 	 */
-	public void getSurfacePoint(float surfaceIdx, Vector2 result)
+	public void getSurfacePoint(final float surfaceIdx, final Vector2 result)
 	{
 		int idx = getIdx(surfaceIdx);
-		
+
 		// surface idx offset from the floor vertex:
 		float offset = surfaceIdx - idx;
-		
+
 		// offset scaled by edge length:
 		float scaledOffset = offset * lengths[idx];
-		
+
 		Vector2 dir = directions[idx];
-		
+
 		result.set(dir).mul( scaledOffset ).add( vertices[idx] );
 	}
 
@@ -216,7 +228,7 @@ public class PolygonalModel
 	 * @param surfaceIdx
 	 * @return
 	 */
-	public float getSlope(float surfaceIdx)
+	public float getSlope(final float surfaceIdx)
 	{
 		return slopes[getIdx(surfaceIdx)];
 	}
@@ -225,20 +237,20 @@ public class PolygonalModel
 	 * @param surfaceIdx
 	 * @return Normalized normal
 	 */
-	public Vector2 getNormal(float surfaceIdx)
+	public Vector2 getNormal(final float surfaceIdx)
 	{
 		return normals[getIdx(surfaceIdx)];
 	}
 
-	private float normalSurfaceIdx(float surfaceIdx)
+	private float normalSurfaceIdx(final float surfaceIdx)
 	{
-		return (surfaceIdx > 0 ? surfaceIdx : (maxSurfaceIdx+surfaceIdx));
+		return surfaceIdx > 0 ? surfaceIdx : maxSurfaceIdx+surfaceIdx;
 	}
-	
-	
-	private final int getIdx(float surfaceIdx)
+
+
+	private final int getIdx(final float surfaceIdx)
 	{
-		return ((int)normalSurfaceIdx(surfaceIdx)) % len;
+		return (int)normalSurfaceIdx(surfaceIdx) % len;
 
 	}
 

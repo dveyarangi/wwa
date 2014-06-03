@@ -3,40 +3,34 @@ package eir.world.unit.ai;
 import yarangi.numbers.RandomUtil;
 import eir.world.environment.Environment;
 import eir.world.environment.nav.NavMesh;
-import eir.world.environment.nav.NavNode;
+import eir.world.environment.spatial.ISpatialObject;
 
 
-public class RandomTravelingOrder extends Order 
+public class RandomTravelingOrder extends Order
 {
-	
+
 	private NavMesh mesh;
 
-	public RandomTravelingOrder(Environment environment, float priority) {
-		super(priority, null, null, null);
-		
+	public RandomTravelingOrder(final Environment environment, final float priority) {
+		super( new TaskStage[] {
+				TaskStage.TRAVEL_TO_SOURCE,
+				TaskStage.TRAVEL_TO_TARGET
+			},
+			false,
+			priority, null, null );
+
 		this.mesh = environment.getGroundMesh();
 	}
 
+
 	@Override
-	public Task createTask(Scheduler scheduler) {
-		return new Task(scheduler, 
-						this, 
-						new TaskStage[] { 
-							TaskStage.TRAVEL_TO_SOURCE,
-							TaskStage.TRAVEL_TO_TARGET
-						},
-						false
-		);
-	}
-	
-	@Override
-	public NavNode getSourceNode() 
-	{ 
+	public ISpatialObject getSource()
+	{
 		return mesh.getNode(RandomUtil.N( mesh.getNodesNum()) );
 	}
-	
+
 	@Override
-	public NavNode getTargetNode()
+	public ISpatialObject getTarget()
 	{
 		return mesh.getNode(RandomUtil.N( mesh.getNodesNum()) );
 	}

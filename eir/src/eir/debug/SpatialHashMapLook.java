@@ -1,6 +1,6 @@
 package eir.debug;
 
-import java.util.Set;
+import java.util.List;
 
 import yarangi.math.FastMath;
 
@@ -12,21 +12,21 @@ import eir.world.environment.spatial.SpatialHashMap;
 
 /**
  * Renders entity index
- * 
+ *
  * @author dveyarangi
  *
  */
 public class SpatialHashMapLook
 {
-	
+
 	private final SpatialHashMap <ISpatialObject> map;
-	
-	public SpatialHashMapLook(SpatialHashMap <ISpatialObject> map)
+
+	public SpatialHashMapLook(final SpatialHashMap <ISpatialObject> map)
 	{
 		this.map = map;
 	}
-	
-	public void draw(ShapeRenderer renderer) 
+
+	public void draw(final ShapeRenderer renderer)
 	{
 		int cellX, cellY;
 		float cellsize = map.getCellSize();
@@ -41,7 +41,7 @@ public class SpatialHashMapLook
 		{
 			renderer.line( minx, y, maxx, y);
 		}
-		
+
 		for(float x = minx; x <= maxx; x += map.getCellSize())
 		{
 			renderer.line( x, miny,x, maxy);
@@ -49,8 +49,8 @@ public class SpatialHashMapLook
 		}
 
 		renderer.end();
-		
-		Set <ISpatialObject> bucket = null;
+
+		List <ISpatialObject> bucket = null;
 		for(float y = miny; y <= maxy; y += map.getCellSize())
 		{
 			cellY = FastMath.round(y / map.getCellSize());
@@ -67,8 +67,10 @@ public class SpatialHashMapLook
 				if(bucket != null && bucket.size() != 0)
 				{
 					boolean isReal = false;
-					for(ISpatialObject o : bucket)
+					ISpatialObject o = null;
+					for(int idx = 0; idx < bucket.size(); idx ++)
 					{
+						o = bucket.get(idx);
 						if(o.getArea().overlaps( x, y, x+cellsize, y+cellsize ))
 						{
 							isReal = true;
@@ -78,11 +80,11 @@ public class SpatialHashMapLook
 					if(isReal)
 					{
 						renderer.setColor(0.8f, 0.6f, 0.8f, 0.2f);
-						renderer.begin( ShapeType.Rectangle );
-						renderer.rect( x, y, cellsize, cellsize);
+						renderer.begin( ShapeType.FilledRectangle );
+						renderer.filledRect( x, y, cellsize, cellsize);
 						renderer.end();
 					}
-				}	
+				}
 			}
 		}
 	}

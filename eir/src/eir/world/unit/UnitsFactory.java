@@ -104,6 +104,8 @@ public class UnitsFactory
 	@SuppressWarnings("unchecked")
 	public void free(final Unit unit)
 	{
+		unit.dispose();
+
 		UnitFactory <Unit> factory = (UnitFactory <Unit>) factories.get( unit.getType() );
 		factory.pool.free( unit );
 	}

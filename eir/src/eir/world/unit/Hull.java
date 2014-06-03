@@ -4,16 +4,17 @@ import java.util.Arrays;
 
 public class Hull implements Cloneable
 {
-	private double maxHitPoints;
-	private double hitPoints;
+	private float maxHitPoints;
 
-	private double [] resistances;
-	private double armor;
+	private float [] resistances;
+	private float armor;
 
-	public static Hull DUMMY() { return new Hull( 0, 0, new double [] {0,0,0,0} ); }
+	private float hitPoints;
+
+	public static Hull DUMMY() { return new Hull( 0, 0, new float [] {0,0,0,0} ); }
 
 
-	public Hull(final double maxHitPoints, final double armor, final double [] resistances)
+	public Hull(final float maxHitPoints, final float armor, final float [] resistances)
 	{
 		this.maxHitPoints = maxHitPoints;
 		this.hitPoints = maxHitPoints;
@@ -21,10 +22,10 @@ public class Hull implements Cloneable
 		this.armor = armor;
 	}
 
-	public double hit(final Damage damage)
+	public float hit(final Damage damage, final float damageCoef)
 	{
 
-		double totalDamage = 0;
+		float totalDamage = 0;
 		for(int type : Damage.TYPES)
 		{
 //			System.out.println(damage);
@@ -32,7 +33,7 @@ public class Hull implements Cloneable
 			double dam = damage.getDamage(type) * (1-resistances[type]);
 			if (dam > armor)
 			{
-				totalDamage += dam - armor;
+				totalDamage += (dam - armor) * damageCoef;
 			}
 		}
 
@@ -44,7 +45,7 @@ public class Hull implements Cloneable
 		return totalDamage;
 	}
 
-	public void recover(final double hitPoints)
+	public void recover(final float hitPoints)
 	{
 		this.hitPoints += hitPoints;
 		if (this.hitPoints > maxHitPoints )

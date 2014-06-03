@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
+import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
@@ -37,21 +38,19 @@ public class Bullet extends Unit implements IDamager
 	 */
 	Vector2 velocity;
 
-	Vector2 target;
-
 //	public IWeapon weapon;
 
 	float angle;
 
+	TargetProvider targetProvider;
 
+	boolean leaveTrace = false;
 
 	Bullet()
 	{
 		super();
 
 		velocity = Vector2.Zero.cpy();
-
-		target = Vector2.Zero.cpy();
 	}
 
 	@Override
@@ -59,7 +58,10 @@ public class Bullet extends Unit implements IDamager
 	{
 		super.init();
 		this.lifetime = 0;
-		this.hull = new Hull(0.001, 0, new double [] {0,0,0,0});
+		this.hull = new Hull(0.001f, 0f, new float [] {0f,0f,0f,0f});
+		this.target = null;
+		this.targetProvider = null;
+		this.leaveTrace = false;
 	}
 
 
@@ -69,12 +71,8 @@ public class Bullet extends Unit implements IDamager
 	@Override
 	public void update(final float delta)
 	{
-		lifetime += delta;
-		if(lifetime > weapon.getLifeDuration())
-		{
-			setDead();
-			return;
-		}
+		super.update( delta );
+
 		weapon.getBulletBehavior().update( delta, this );
 	}
 
@@ -94,24 +92,28 @@ public class Bullet extends Unit implements IDamager
 		{
 			TextureRegion crossHairregion = crosshair.getKeyFrame( lifetime, true );
 			batch.draw( crossHairregion,
-					target.x-crossHairregion.getRegionWidth()/2, target.y-crossHairregion.getRegionHeight()/2,
+					target.getArea().getAnchor().x-crossHairregion.getRegionWidth()/2, target.getArea().getAnchor().y-crossHairregion.getRegionHeight()/2,
 					crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2,
 					crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(),
 					5f/crossHairregion.getRegionWidth(),
 					5f/crossHairregion.getRegionWidth(), angle);
 		}
 
-		Effect effect = weapon.createTraceEffect(this);
-		if(effect != null)
+		if(leaveTrace)
 		{
-			weapon.getLevel().addEffect( effect );
+			Effect effect = weapon.createTraceEffect(this);
+			if(effect != null)
+			{
+				weapon.getLevel().addEffect( effect );
+			}
 		}
 
 	}
 
 	public Vector2 getVelocity() { return velocity; }
 
-	public Vector2 getTarget() { return target; }
+	@Override
+	public ISpatialObject getTarget() { return targetProvider.getTarget(); }
 
 
 	@Override
@@ -134,4 +136,12 @@ public class Bullet extends Unit implements IDamager
 	{
 		return weapon.getDamage();
 	}
+	@Override
+	public Unit getSource()
+	{
+		return getWeapon().getOwner();
+	}
+
+	@Override
+	public float getMaxSpeed() {return weapon.getMaxSpeed(); }
 }

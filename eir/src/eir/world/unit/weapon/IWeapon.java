@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Effect;
 import eir.world.Level;
+import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
 import eir.world.unit.Faction;
 import eir.world.unit.Unit;
@@ -44,9 +45,9 @@ public abstract class IWeapon
 		weaponDir = new Vector2();
 	}
 
-	public Bullet fire( final Vector2 shootingTarget )
+	public Bullet fire( final TargetProvider targetProvider )
 	{
-		Bullet bullet = createBullet( shootingTarget, owner.getFaction().getLevel().getUnitsFactory() );
+		Bullet bullet = createBullet( targetProvider, owner.getFaction().getLevel().getUnitsFactory() );
 		if(bullet != null)
 		{
 			owner.getFaction().getLevel().addUnit( bullet );
@@ -54,7 +55,7 @@ public abstract class IWeapon
 		return null;
 	}
 
-	protected Bullet createBullet(final Vector2 targetPos, final UnitsFactory unitFactory)
+	protected Bullet createBullet(final TargetProvider targetProvider, final UnitsFactory unitFactory)
 	{
 		if(timeToReload > 0)
 			return null;
@@ -65,19 +66,23 @@ public abstract class IWeapon
 
 		Vector2 weaponPos = owner.getArea().getAnchor();
 
-		weaponDir.set( targetPos ).sub( weaponPos ).nor();
-		float angle = createAngle();
-		weaponDir.setAngle( angle );
+		ISpatialObject target = targetProvider.getTarget();
+
+		Vector2 firingDir = Vector2.tmp.set( target.getArea().getAnchor() ).sub( weaponPos ).nor();
+		float angle = createAngle( firingDir );
+//		weaponDir.setAngle( angle );
 
 		float speed = createSpeed();
 		Bullet bullet = unitFactory.getUnit(UnitsFactory.BULLET, weaponPos.x, weaponPos.y, angle, owner.getFaction());
 
 		bullet.weapon = this;
-		bullet.velocity.set(this.getDirection()).mul( speed );
+		bullet.velocity.set(firingDir).mul( speed );
 		bullet.size = this.getSize();
-		bullet.target = targetPos;
+		bullet.targetProvider = targetProvider;
 
-		bullet.angle = weaponDir.angle();
+		bullet.angle = angle;
+
+		bullet.lifelen = getBulletLifeDuration();
 
 		bulletsInMagazine --;
 		if(bulletsInMagazine > 0)
@@ -92,9 +97,10 @@ public abstract class IWeapon
 	}
 
 	/**
+	 * @param firingDir
 	 * @return
 	 */
-	protected abstract float createAngle();
+	protected abstract float createAngle(Vector2 firingDir);
 
 	public void update(final float delta)
 	{
@@ -125,6 +131,8 @@ public abstract class IWeapon
 	 */
 	public abstract float getAccuracy();
 
+
+	public abstract float getBulletLifeDuration();
 	/**
 	 * @return the bulletBehavior
 	 */
@@ -150,8 +158,6 @@ public abstract class IWeapon
 	public abstract Effect createHitEffect(Bullet bullet);
 	public abstract Effect createTraceEffect(Bullet bullet);
 
-	public abstract float getLifeDuration();
-
 	/**
 	 *
 	 */
@@ -164,5 +170,8 @@ public abstract class IWeapon
 	public Vector2 getDirection() { return weaponDir; }
 
 	public Unit getOwner() { return owner; }
+
+	public float getTimeToReload() { return timeToReload; }
+
 
 }
