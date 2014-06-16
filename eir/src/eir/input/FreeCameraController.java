@@ -21,7 +21,7 @@ public class FreeCameraController implements ICameraController
 	private final Vector3 a = new Vector3(0,0,0); // acceleration
 	private final float b = 7.5f; // Viscosity coefficient
 	private final float maxZoomOut = 2;
-	private final float maxZoomIn = 0.1f;
+	private final float maxZoomIn = 0.01f;
 
 	private boolean underUserControl = false;
 
@@ -47,7 +47,6 @@ public class FreeCameraController implements ICameraController
 	 * @param y up/down
 	 * @param z zoom in/out
 	 */
-	@Override
 	public void injectLinearImpulse( final float x, final float y, final float z )
 	{
 		v.add(x*camera.zoom, y*camera.zoom, z*camera.zoom);
@@ -64,85 +63,89 @@ public class FreeCameraController implements ICameraController
 		{
 			if( camera.zoom < maxZoomIn )
 			{
-				injectLinearImpulse(0, 0, (maxZoomIn - camera.zoom)*100 );
+				camera.zoom = maxZoomIn;
+				// injectLinearImpulse(0, 0, maxZoomOut - camera.zoom );
 			}
 			else if( camera.zoom > maxZoomOut )
 			{
-				injectLinearImpulse(0, 0, maxZoomOut - camera.zoom );
+				camera.zoom = maxZoomOut;
+//				injectLinearImpulse(0, 0, (maxZoomIn - camera.zoom)*100 );
 			}
 
-			if( camera.position.x < -level.getWidth()/2 )
+			if( camera.position.x < -level.getHalfWidth() )
 			{
-				injectLinearImpulse( level.getWidth()/2-camera.position.x, 0, 0);
+				injectLinearImpulse( level.getHalfWidth() - camera.position.x, 0, 0);
 			}
-			else if ( camera.position.x > level.getWidth()/2 )
+			else if ( camera.position.x > level.getHalfWidth() )
 			{
-				injectLinearImpulse( level.getWidth()/2-camera.position.x*2, 0, 0);
+				injectLinearImpulse( level.getHalfWidth() - camera.position.x*2, 0, 0);
 			}
 
-			if( camera.position.y<-level.getHeight()/2 )
+			if( camera.position.y < -level.getHalfHeight() )
 			{
-				injectLinearImpulse( 0, level.getHeight()/2-camera.position.y, 0);
+				injectLinearImpulse( 0, level.getHalfHeight() - camera.position.y, 0);
 			}
-			else if( camera.position.y>level.getHeight()/2 )
+			else if( camera.position.y > level.getHalfHeight() )
 			{
-				injectLinearImpulse( 0, level.getHeight()/2-camera.position.y*2, 0);
+				injectLinearImpulse( 0, level.getHalfHeight() - camera.position.y*2, 0);
 			}
 		}
 
-		a.set( Vector3.tmp.set(0,0,0).sub(v.tmp2().mul(b)) );
+		a.set( Vector3.tmp.set(0,0,0).sub( v.tmp2().mul(b)) );
 		v.add( a.tmp().mul(delta) );
 
 		float nextzoom = camera.zoom + v.z*delta + a.z*delta*delta/2;
 		float nextx = camera.position.x + v.x*delta + a.x*delta*delta/2;
 		float nexty = camera.position.y + v.y*delta + a.y*delta*delta/2;
 
-		if( nextzoom < maxZoomOut && camera.zoom > maxZoomOut )
+		if( nextzoom > maxZoomOut )
 		{
 			camera.zoom = maxZoomOut;
 			v.z = 0;
 			a.z = 0;
 		}
-		else if ( nextzoom > maxZoomIn && camera.zoom < maxZoomIn || nextzoom<0 )
+		else if ( nextzoom < maxZoomIn)
 		{
 			camera.zoom = maxZoomIn;
 			v.z = 0;
 			a.z = 0;
-		} else
+		}
+		else
 		{
 			camera.zoom = nextzoom;
 		}
 
-
-		if( nextx < level.getWidth()/2 && camera.position.x > level.getWidth()/2 && !underUserControl )
+		if( nextx < level.getWidth()/2 && camera.position.x > level.getWidth()/2 )
 		{
 			camera.position.x = level.getWidth()/2;
 			v.x = 0;
 			a.x = 0;
 		}
-		else if( nextx > -level.getWidth()/2 && camera.position.x < -level.getWidth()/2 && !underUserControl )
+		else if( nextx > -level.getWidth()/2 && camera.position.x < -level.getWidth()/2 )
 		{
 			camera.position.x = -level.getWidth()/2;
 			v.x = 0;
 			a.x = 0;
-		} else
+		}
+		else
 		{
 			camera.position.x = nextx;
 		}
 
 
-		if( nexty > -level.getHeight()/2 && camera.position.y < -level.getHeight()/2 && !underUserControl )
+		if( nexty > -level.getHeight()/2 && camera.position.y < -level.getHeight()/2 )
 		{
 			camera.position.y = -level.getHeight()/2;
 			v.y = 0;
 			a.y = 0;
 		}
-		else if( nexty < level.getHeight()/2 && camera.position.y > level.getHeight()/2 && !underUserControl )
+		else if( nexty < level.getHeight()/2 && camera.position.y > level.getHeight()/2 )
 		{
 			camera.position.y = level.getHeight()/2;
 			v.y = 0;
 			a.y = 0;
-		} else
+		}
+		else
 		{
 			camera.position.y = nexty;
 		}
@@ -186,4 +189,15 @@ public class FreeCameraController implements ICameraController
 	 */
 	@Override
 	public OrthographicCamera getCamera() { return camera; }
+
+
+
+	@Override
+	public void zoomTo( final float x, final float y, final float amount )
+	{
+		injectLinearImpulse(
+				  2 * Math.abs( amount) * (x - getCamera().viewportWidth /2),
+				- 2 * Math.abs( amount) * (y - getCamera().viewportHeight/2),
+				amount);
+	}
 }

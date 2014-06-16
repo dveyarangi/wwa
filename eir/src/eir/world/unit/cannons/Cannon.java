@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
 import eir.world.Asteroid;
+import eir.world.IRenderer;
 import eir.world.Level;
 import eir.world.environment.sensors.ISensor;
 import eir.world.environment.spatial.ISpatialObject;
@@ -77,14 +78,16 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 			target = targetingModule.pickTarget( units );
 		}
 
-
 		super.update( delta );
+
+		this.angle = weapon.getAngle();
 	}
-	private static Sprite sprite = GameFactory.createSprite( "anima//cannons//fan_canon_01.png" );
+	private static Sprite sprite = GameFactory.createSprite( "anima//cannons//cannon_hybrid_01.png" );
 
 	@Override
-	public void draw( final SpriteBatch batch )
+	public void draw( final IRenderer renderer )
 	{
+		final SpriteBatch batch = renderer.getSpriteBatch();
 		Vector2 position = getBody().getAnchor();
 		batch.draw( sprite,
 				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,

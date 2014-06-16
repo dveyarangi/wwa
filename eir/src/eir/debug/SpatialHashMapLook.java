@@ -4,6 +4,9 @@ import java.util.List;
 
 import yarangi.math.FastMath;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
@@ -28,6 +31,9 @@ public class SpatialHashMapLook
 
 	public void draw(final ShapeRenderer renderer)
 	{
+		GLCommon gl = Gdx.gl;
+		gl.glEnable(GL20.GL_BLEND);
+
 		int cellX, cellY;
 		float cellsize = map.getCellSize();
 		float halfCellSize = cellsize / 2.f;

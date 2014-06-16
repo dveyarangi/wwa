@@ -11,6 +11,8 @@ import yarangi.java.InvokationMapper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -147,6 +149,9 @@ public class Debug
 	 */
 	public void draw(final SpriteBatch batch, final ShapeRenderer shape)
 	{
+		GLCommon gl = Gdx.gl;
+		gl.glEnable(GL20.GL_BLEND);
+
 		// a libgdx helper class that logs the current FPS each second
 		//fpsLogger.log();
 

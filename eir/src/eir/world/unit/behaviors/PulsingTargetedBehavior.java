@@ -51,30 +51,30 @@ public class PulsingTargetedBehavior <U extends Unit> implements UnitBehavior <U
 
 			dir.div(dist).mul( pulseDef.getPulseStrength() );
 
-			unit.velocity.add( dir );
+			unit.getVelocity().add( dir );
 
 
-			unit.angle = unit.velocity.angle();
+			unit.angle = unit.getVelocity().angle();
 		}
 
-		float speed = unit.velocity.len();
-		Vector2 velocityNor = unit.velocity.tmp().div( speed );
+		float speed = unit.getVelocity().len();
+		Vector2 velocityNor = unit.getVelocity().tmp().div( speed );
 		if(speed > unit.getMaxSpeed())
 		{
-			unit.velocity.mul(unit.getMaxSpeed() / speed );
+			unit.getVelocity().mul(unit.getMaxSpeed() / speed );
 		}
 
 		speed = Math.min( speed, unit.getMaxSpeed() );
 
 
-		unit.getArea().getAnchor().add( Vector2.tmp2.set( unit.velocity ).mul( delta ) );
+		unit.getArea().getAnchor().add( Vector2.tmp2.set( unit.getVelocity() ).mul( delta ) );
 
 		if(speed == 0 || speed < pulseDef.getPulseDecay() * delta)
 		{
-			unit.velocity.set(0,0);
+			unit.getVelocity().set(0,0);
 		} else
 		{
-			unit.velocity.sub(velocityNor.mul( pulseDef.getPulseDecay() * delta ));
+			unit.getVelocity().sub(velocityNor.mul( pulseDef.getPulseDecay() * delta ));
 		}
 
 		unit.timeToPulse -= delta;

@@ -120,7 +120,7 @@ public class Environment
 			Unit damagingUnit = (Unit) damager;
 			index.queryRadius( aoeCollider,
 					damagingUnit.getArea().getAnchor().x,
-					damagingUnit.getArea().getAnchor().y, damager.getSize() );
+					damagingUnit.getArea().getAnchor().y, damager.getDamage().getRadius() );
 			aoeCollider.clear();
 		}
 

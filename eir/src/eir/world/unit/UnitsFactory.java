@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.IdentityMap;
 import com.badlogic.gdx.utils.Pool;
 
 import eir.debug.Debug;
+import eir.world.LevelRenderer;
 import eir.world.environment.Environment;
 import eir.world.environment.nav.NavNode;
 import eir.world.unit.ai.TaskStage;
@@ -71,6 +72,8 @@ public class UnitsFactory
 		U unit = fctory.pool.obtain();
 
 		unit.init(type, anchor, faction);
+
+		unit.toggleOverlay( LevelRenderer.INTEGRITY_OID);
 
 		return unit;
 	}

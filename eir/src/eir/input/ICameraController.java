@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.input;
 
@@ -17,12 +17,8 @@ public interface ICameraController
 	 */
 	void setUnderUserControl(boolean b);
 
-	/**
-	 * @param i
-	 * @param j
-	 * @param k
-	 */
-	void injectLinearImpulse(float i, float j, float k);
+
+	public void zoomTo( float x, float y, float amount );
 
 	/**
 	 * @param delta

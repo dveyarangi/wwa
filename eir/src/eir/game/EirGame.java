@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import eir.debug.Debug;
-import eir.game.screens.MenuScreen;
+import eir.game.screens.GameScreen;
 
 /**
  * The game's main class, called as application events are fired.
@@ -18,7 +18,7 @@ public class EirGame extends Game
     // whether we are in development mode
     public static final boolean DEV_MODE = true;
 
- 
+
     public EirGame()
     {
     }
@@ -33,7 +33,7 @@ public class EirGame extends Game
     }
 
     @Override
-    public void resize( int width, int height )
+    public void resize( final int width, final int height )
     {
         super.resize( width, height );
         Debug.log("Resizing game to: " + width + " x " + height );
@@ -44,7 +44,8 @@ public class EirGame extends Game
  //           setScreen( new SplashScreen( this ) );
  //       }
         if( getScreen() == null ) {
-        	setScreen( new MenuScreen( this ) );
+        	setScreen( new GameScreen( this ) );
+        	//setScreen( new MenuScreen( this ) );
         }
 /*        else
         	setScreen( getScreen() );*/
@@ -72,7 +73,7 @@ public class EirGame extends Game
     }
 
     @Override
-    public void setScreen( Screen screen )
+    public void setScreen( final Screen screen )
     {
         super.setScreen( screen );
         Debug.log("Setting screen: " + screen.getClass().getSimpleName() );
@@ -85,6 +86,6 @@ public class EirGame extends Game
         Debug.log("Disposing game" );
 
     }
-    
- 
+
+
 }

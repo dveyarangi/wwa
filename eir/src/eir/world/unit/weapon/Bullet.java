@@ -4,12 +4,14 @@
 package eir.world.unit.weapon;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Effect;
+import eir.world.IRenderer;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
@@ -33,34 +35,24 @@ public class Bullet extends Unit implements IDamager
 
 	float size = 1;
 
-	/**
-	 * Bullet velocity
-	 */
-	Vector2 velocity;
 
 //	public IWeapon weapon;
 
 	float angle;
-
-	TargetProvider targetProvider;
 
 	boolean leaveTrace = false;
 
 	Bullet()
 	{
 		super();
-
-		velocity = Vector2.Zero.cpy();
 	}
 
 	@Override
 	protected void init()
 	{
 		super.init();
-		this.lifetime = 0;
 		this.hull = new Hull(0.001f, 0f, new float [] {0f,0f,0f,0f});
 		this.target = null;
-		this.targetProvider = null;
 		this.leaveTrace = false;
 	}
 
@@ -77,22 +69,32 @@ public class Bullet extends Unit implements IDamager
 	}
 
 	@Override
-	public void draw( final SpriteBatch batch )
+	public void draw( final IRenderer renderer )
 	{
+		final SpriteBatch batch = renderer.getSpriteBatch();
+
 		Vector2 position = getBody().getAnchor();
-		TextureRegion region = weapon.getBulletAnimation().getKeyFrame( lifetime, true );
+/*		TextureRegion region = weapon.getBulletAnimation().getKeyFrame( getLifetime(), true );
 		batch.draw( region,
 				position.x-region.getRegionWidth()/2, position.y-region.getRegionHeight()/2,
 				region.getRegionWidth()/2,region.getRegionHeight()/2,
 				region.getRegionWidth(), region.getRegionHeight(),
 				size/region.getRegionWidth(),
 				size/region.getRegionWidth(), angle);
+*/
+		Sprite sprite = weapon.getBulletSprite();
+		batch.draw( sprite,
+				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
+				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
+				sprite.getRegionWidth(), sprite.getRegionHeight(),
+				getSize()/sprite.getRegionWidth(),
+				getSize()/sprite.getRegionHeight(), angle);
 
-		if(weapon.getBulletBehavior().requiresTarget() && target != null)
+		if(weapon.getBulletBehavior().requiresTarget() && getTarget() != null)
 		{
-			TextureRegion crossHairregion = crosshair.getKeyFrame( lifetime, true );
+			TextureRegion crossHairregion = crosshair.getKeyFrame( getLifetime(), true );
 			batch.draw( crossHairregion,
-					target.getArea().getAnchor().x-crossHairregion.getRegionWidth()/2, target.getArea().getAnchor().y-crossHairregion.getRegionHeight()/2,
+					getTarget().getArea().getAnchor().x-crossHairregion.getRegionWidth()/2, getTarget().getArea().getAnchor().y-crossHairregion.getRegionHeight()/2,
 					crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2,
 					crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(),
 					5f/crossHairregion.getRegionWidth(),
@@ -101,19 +103,20 @@ public class Bullet extends Unit implements IDamager
 
 		if(leaveTrace)
 		{
-			Effect effect = weapon.createTraceEffect(this);
-			if(effect != null)
+//			if(RandomUtil.oneOf( 3 ))
 			{
-				weapon.getLevel().addEffect( effect );
+				Effect effect = weapon.createTraceEffect(this);
+				if(effect != null)
+				{
+					renderer.addEffect( effect );
+				}
 			}
 		}
 
 	}
 
-	public Vector2 getVelocity() { return velocity; }
-
 	@Override
-	public ISpatialObject getTarget() { return targetProvider.getTarget(); }
+	public ISpatialObject getTarget() { return target; }
 
 
 	@Override

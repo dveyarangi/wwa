@@ -197,16 +197,15 @@ public class AABB
 	public final float getMinY() { return ref.y - dim.y; }
 	public final float getMaxY() { return ref.y + dim.y; }
 
-	public final float getRX() {return dim.x; }
-	public final float getRY() {return dim.y; }
-	public final float getCenterX()
-	{
-		return ref.x;
-	}
-	public final float getCenterY()
-	{
-		return ref.y;
-	}
+	public final float getCenterX() { return ref.x;	}
+	public final float getCenterY() { return ref.y;	}
+	public final float cx() { return getCenterX(); }
+	public final float cy() { return getCenterY(); }
+
+	public final float getHalfWidth()  { return dim.x; }
+	public final float getHalfHeight() { return dim.y; }
+	public final float rx() { return getHalfWidth();  }
+	public final float ry() { return getHalfHeight(); }
 
 
 	public final int getPassId() { return passId; }

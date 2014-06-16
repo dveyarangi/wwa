@@ -3,8 +3,7 @@
  */
 package eir.world.unit.structure;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import eir.world.IRenderer;
 import eir.world.unit.Unit;
 
 /**
@@ -53,7 +52,7 @@ public class Spawner extends Unit
 
 
 	@Override
-	public void draw(final SpriteBatch batch)
+	public void draw(final IRenderer renderer)
 	{
 	}
 

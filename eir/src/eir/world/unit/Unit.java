@@ -3,7 +3,6 @@
  */
 package eir.world.unit;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
@@ -11,12 +10,14 @@ import com.badlogic.gdx.math.Vector2;
 import eir.debug.Debug;
 import eir.resources.GameFactory;
 import eir.world.Effect;
+import eir.world.IRenderer;
 import eir.world.Level;
 import eir.world.environment.Environment;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
+import gnu.trove.list.array.TIntArrayList;
 
 /**
  * @author dveyarangi
@@ -44,6 +45,9 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	private AABB body;
 
+	/**
+	 * TODO
+	 */
 	public float angle;
 
 	private boolean isAlive;
@@ -53,10 +57,11 @@ public abstract class Unit implements ISpatialObject, IUnit
 	/**
 	 * Time since unit creation
 	 */
-	public float lifetime;
+	private float lifetime;
 
 	/**
 	 * Max time length
+	 * TODO:
 	 */
 	public float lifelen;
 
@@ -64,7 +69,14 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	public float timeToPulse = 0;
 
-	public final Vector2 velocity = new Vector2();
+	private final Vector2 velocity = new Vector2();
+
+	/**
+	 * List of overlays that are toggled on for this unit.
+	 */
+	private TIntArrayList overlays;
+
+	private TIntArrayList hoverOverlays;
 
 	public Unit()
 	{
@@ -74,6 +86,9 @@ public abstract class Unit implements ISpatialObject, IUnit
 		timeToPulse = 0;
 
 		this.body = AABB.createPoint( 0, 0 );
+
+		this.overlays = new TIntArrayList ();
+		this.hoverOverlays = new TIntArrayList ();
 	}
 
 	/**
@@ -91,6 +106,9 @@ public abstract class Unit implements ISpatialObject, IUnit
 		this.lifelen = Float.NaN;
 
 		this.target = null;
+
+		this.overlays.clear();
+		this.hoverOverlays.clear();
 	}
 
 	public void init(final String type, final NavNode anchor, final Faction faction)
@@ -112,6 +130,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		init();
 	}
+
 	public void init(final String type, final float x, final float y, final float angle, final Faction faction)
 	{
 		this.type = type;
@@ -145,6 +164,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	@Override
 	public AABB getArea() { return body; }
 
+	@Override
 	public float getAngle() { return angle; }
 
 	@Override
@@ -171,7 +191,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	}
 
-	public abstract void draw( final SpriteBatch batch );
+	public abstract void draw( IRenderer renderer );
 
 
 	public void draw( final ShapeRenderer shape )
@@ -188,9 +208,9 @@ public abstract class Unit implements ISpatialObject, IUnit
 					this.target.getArea().getAnchor().x, this.target.getArea().getAnchor().y );
 			shape.end();
 			shape.begin(ShapeType.Circle);
-			shape.circle( this.target.getArea().getAnchor().x,
-					      this.target.getArea().getAnchor().y,
-					      this.target.getArea().getRX());
+			shape.circle( this.target.getArea().cx(),
+					      this.target.getArea().cy(),
+					      this.target.getArea().rx());
 			shape.end();
 
 		}
@@ -256,4 +276,22 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public ISpatialObject getTarget() { return target; }
 
 	public abstract float getMaxSpeed();
+	public float getLifetime() { return lifetime; }
+	public Vector2 getVelocity() { return velocity; }
+
+	public void toggleOverlay(final int oid)
+	{
+		if(overlays.contains( oid ))
+		{
+			overlays.remove( oid );
+		} else
+		{
+			overlays.add( oid );
+		}
+	}
+
+	@Override
+	public Hull getHull() { return hull; }
+
+	public TIntArrayList getActiveOverlays() { return overlays; }
 }

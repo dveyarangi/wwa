@@ -46,7 +46,7 @@ public class GameGestureListener implements GestureListener
 	@Override
 	public boolean zoom(final float initialDistance, final float distance)
 	{
-		camController.injectLinearImpulse(0, 0, distance-initialDistance);
+		camController.zoomTo( camController.getCamera().position.x, camController.getCamera().position.y, initialDistance - distance );
 		return true;
 	}
 

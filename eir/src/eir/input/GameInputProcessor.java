@@ -228,7 +228,7 @@ public class GameInputProcessor implements InputProcessor
 	{
 		if(dragging)
 		{
-			camController.injectLinearImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
+//			camController.injectLinearImpulse((lastx-screenX)*10, (screenY-lasty)*10, 0);
 		}
 		lastx = screenX;
 		lasty = screenY;
@@ -248,9 +248,7 @@ public class GameInputProcessor implements InputProcessor
 	@Override
 	public boolean scrolled(final int amount)
 	{
-		camController.injectLinearImpulse(-amount*(lastx - camController.getCamera().viewportWidth/2)*2,
-				amount*(lasty - camController.getCamera().viewportHeight/2)*2,
-				amount*1.2f);
+		camController.zoomTo( lastx, lasty, amount*1.2f );
 		return true;
 	}
 

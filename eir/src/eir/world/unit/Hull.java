@@ -54,12 +54,12 @@ public class Hull implements Cloneable
 		}
 	}
 
-	public double getMaxHitPoints()
+	public float getMaxHitPoints()
 	{
 		return maxHitPoints;
 	}
 
-	public double getHitPoints() {
+	public float getHitPoints() {
 		return hitPoints;
 	}
 

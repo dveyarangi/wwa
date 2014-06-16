@@ -9,16 +9,17 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
 import eir.world.Asteroid;
+import eir.world.IRenderer;
 import eir.world.environment.nav.NavEdge;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.SurfaceNavNode;
+import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Faction;
 import eir.world.unit.IControllableUnit;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
-import eir.world.unit.weapon.TargetProvider;
 /**
  * Spider
  *
@@ -42,7 +43,7 @@ public class Spider extends Unit implements IControllableUnit
 
 	private boolean walkCW, walkCCW, walkUp, walkDown;
 
-	private TargetProvider shootingTarget;
+	private ISpatialObject shootingTarget;
 
 	private IWeapon weapon;
 
@@ -232,8 +233,10 @@ public class Spider extends Unit implements IControllableUnit
 	 * @param shape
 	 */
 	@Override
-	public void draw(final SpriteBatch batch)
+	public void draw( final IRenderer renderer)
 	{
+		final SpriteBatch batch = renderer.getSpriteBatch();
+
 		/*		sprite.setPosition( position.x-sprite.getOriginX(), position.y-sprite.getOriginY() );
 		sprite.setRotation( axis.angle() + 90 );
 		sprite.draw( batch );*/

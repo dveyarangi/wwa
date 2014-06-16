@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import eir.debug.Debug;
 import eir.resources.GameFactory;
 import eir.world.Effect;
+import eir.world.IRenderer;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.Route;
 import eir.world.environment.nav.SurfaceNavNode;
@@ -79,8 +80,9 @@ public class Ant extends TaskedUnit implements IDamager
 	}
 
 	@Override
-	public void draw(final SpriteBatch batch)
+	public void draw( final IRenderer renderer )
 	{
+		final SpriteBatch batch = renderer.getSpriteBatch();
 		Vector2 position = getBody().getAnchor();
 		TextureRegion region = faction.getAntAnimation().getKeyFrame( stateTime, true );
 		batch.draw( region,
@@ -88,7 +90,7 @@ public class Ant extends TaskedUnit implements IDamager
 				region.getRegionWidth()/2,region.getRegionHeight()/2,
 				region.getRegionWidth(), region.getRegionHeight(),
 				size/region.getRegionWidth(),
-				size/region.getRegionWidth(), angle);
+				size/region.getRegionWidth(), getAngle());
 
 		// TODO: remove debug rendering
 		if(Debug.debug.drawNavMesh)
@@ -110,7 +112,7 @@ public class Ant extends TaskedUnit implements IDamager
 	@Override
 	public Effect getDeathEffect()
 	{
-		return Effect.getEffect( hitAnimationId, 25, getBody().getAnchor(), RandomUtil.N( 360 ), 1 );
+		return Effect.getEffect( hitAnimationId, 25, getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 1 );
 	}
 
 	@Override

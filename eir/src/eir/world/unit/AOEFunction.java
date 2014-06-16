@@ -28,4 +28,5 @@ public interface AOEFunction
 
 	public float getDamageReduction(Vector2 damager, Vector2 target);
 
+
 }

@@ -1,13 +1,11 @@
 package eir.game.screens;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-
 import eir.debug.Debug;
 import eir.game.EirGame;
 import eir.input.GameInputProcessor;
 import eir.resources.GameFactory;
 import eir.world.Level;
+import eir.world.LevelRenderer;
 
 /**
  * place holder screen for now. does same as application listener from sample
@@ -19,10 +17,7 @@ import eir.world.Level;
 public class GameScreen extends AbstractScreen
 {
 	private GameInputProcessor inputController;
-
-	private SpriteBatch batch;
-	private ShapeRenderer shapeRenderer;
-
+	private LevelRenderer renderer;
 	private Level level;
 
 	public GameScreen(final EirGame game)
@@ -31,9 +26,6 @@ public class GameScreen extends AbstractScreen
 
 		GameFactory.init();
 
-		batch = new SpriteBatch();
-
-		shapeRenderer = new ShapeRenderer();
 
 		level = GameFactory.loadLevel( "levels/level_exodus_01.dat" );
 
@@ -42,6 +34,8 @@ public class GameScreen extends AbstractScreen
 		level.getBackground().init( inputController );
 
 		Debug.init( level, inputController );
+
+		this.renderer = new LevelRenderer( inputController, level );
 	}
 
 	@Override
@@ -49,33 +43,18 @@ public class GameScreen extends AbstractScreen
 	{
 		super.render( delta );
 		inputController.update( delta );
-		level.update( inputController.getTimeModifier() * delta );
+
+		float modifiedTime = inputController.getTimeModifier() * delta;
+
+		level.update( modifiedTime );
+		Debug.debug.update( delta );
 
 //		Gdx.gl.glClearColor( 0.8f, 0.8f, 1f, 1 );
 //		Gdx.gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 
-		level.getBackground().update( delta );
-		level.getBackground().draw( batch );
+		level.getBackground().update( modifiedTime );
 
-
-		// setting renderers to camera view:
-		// TODO: those are copying matrix arrays, maybe there is a lighter way to do this
-		// TODO: at least optimize to not set if camera has not moved
-		batch.setProjectionMatrix( inputController.getCamera().projection );
-		batch.setTransformMatrix( inputController.getCamera().view );
-
-		shapeRenderer.setProjectionMatrix( inputController.getCamera().projection);
-		shapeRenderer.setTransformMatrix( inputController.getCamera().view );
-
-
-
-		level.draw(batch);
-
-		//////////////////////////////////////////////////////////////////
-		// debug rendering
-		inputController.draw( batch, shapeRenderer );
-		Debug.debug.update( delta );
-		Debug.debug.draw(batch, shapeRenderer);
+		renderer.render( modifiedTime );
 
 	}
 
@@ -119,11 +98,7 @@ public class GameScreen extends AbstractScreen
 	{
 		super.dispose();
 
-		// dispose sprite batch renderer:
-		batch.dispose();
-
-		// dispose shape renderer:
-		shapeRenderer.dispose();
+		renderer.dispose();
 
 		// dispose textures and stuff:
 		GameFactory.dispose();

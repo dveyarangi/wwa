@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package eir.input;
 
@@ -17,12 +17,13 @@ public class PickingSensor implements ISpatialSensor<ISpatialObject>
 	private SurfaceNavNode pickedNode;
 
 	@Override
-	public boolean objectFound(ISpatialObject object)
+	public boolean objectFound(final ISpatialObject object)
 	{
 		if(object instanceof SurfaceNavNode)
 		{
 			pickedNode = (SurfaceNavNode) object;
 		}
+
 		return false;
 	}
 

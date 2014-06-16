@@ -23,14 +23,12 @@ public class Task
 
 	protected Status status;
 
-	protected TaskStage [] stages;
-	protected boolean cycle = false;
 	protected int stageIdx = 0;
 
 	/**
 	 * Pool of AABB objects
 	 */
-	public static final Pool<Task> pool =
+	private static final Pool<Task> pool =
 			new Pool<Task>()
 			{
 				@Override
@@ -40,9 +38,11 @@ public class Task
 				}
 			};
 
-	protected static Task create(final Scheduler scheduler, final Order order, final TaskStage [] stages, final boolean cycle)
+	protected static Task create(final Scheduler scheduler, final Order order)
 	{
-		return pool.obtain().update( scheduler, order, stages, cycle );
+		return pool
+				.obtain()
+				.update( scheduler, order );
 	}
 
 	public static void free(final Task task)
@@ -55,16 +55,14 @@ public class Task
 
 	}
 
-	protected Task update(final Scheduler scheduler, final Order order, final TaskStage [] stages, final boolean cycle)
+	protected Task update(final Scheduler scheduler, final Order order)
 	{
 
 		this.scheduler = scheduler;
 		this.order = order;
 
-		this.stages = stages;
-		this.stageIdx ++;
-		this.stage = stages[0];
-		this.cycle = cycle;
+		this.stageIdx = 0;
+		this.stage = order.getStages()[stageIdx ++];
 
 		this.status = Status.ONGOING;
 
@@ -78,9 +76,9 @@ public class Task
 
 	public TaskStage nextStage()
 	{
-		if(stageIdx >= stages.length)
+		if(stageIdx >= order.getStages().length)
 		{
-			if(!cycle)
+			if(!order.cycleTask())
 			{
 				this.setCompleted();
 				return null;
@@ -89,7 +87,7 @@ public class Task
 			stageIdx = 0;
 		}
 
-		return stages [stageIdx ++];
+		return order.getStages() [stageIdx ++];
 	}
 
 	public void cancel()

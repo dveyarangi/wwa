@@ -287,7 +287,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 	 */
 	private void iterateOverAABB( final AABB aabb, final boolean remove, final O object)
 	{
-		iterateOverAABB( aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY(), remove, object );
+		iterateOverAABB( aabb.cx(), aabb.cy(), aabb.rx(), aabb.ry(), remove, object );
 	}
 
 	private void iterateOverAABB( final float cx, final float cy, final float rx, final float ry, final boolean remove, final O object)
@@ -333,7 +333,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 	@Override
 	public ISpatialSensor <O> queryAABB(final ISpatialSensor <O> sensor, final AABB aabb)
 	{
-		return queryAABB( sensor, aabb.getCenterX(), aabb.getCenterY(), aabb.getRX(), aabb.getRY() );
+		return queryAABB( sensor, aabb.cx(), aabb.cy(), aabb.rx(), aabb.ry() );
 	}
 
 	/**

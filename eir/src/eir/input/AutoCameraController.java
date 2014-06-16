@@ -99,13 +99,20 @@ public class AutoCameraController implements ICameraController
 
 	}
 
+
 	@Override
-	public void injectLinearImpulse(final float x, final float y, final float z)
+	public OrthographicCamera getCamera()
 	{
-		if(z == 0)
+		return camera;
+	}
+
+	@Override
+	public void zoomTo( final float x, final float y, final float amount )
+	{
+		if(amount == 0)
 			return;
 
-		if(z > 0)
+		if(amount > 0)
 		{
 			zoomTarget /= 0.9f;
 		} else
@@ -123,12 +130,6 @@ public class AutoCameraController implements ICameraController
 		{
 			zoomTarget = 0.05f;
 		}
-	}
-
-	@Override
-	public OrthographicCamera getCamera()
-	{
-		return camera;
 	}
 
 }

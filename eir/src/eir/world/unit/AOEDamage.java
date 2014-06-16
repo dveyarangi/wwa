@@ -1,6 +1,6 @@
 package eir.world.unit;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import eir.world.IRenderer;
 
 public class AOEDamage extends Unit
 {
@@ -13,7 +13,7 @@ public class AOEDamage extends Unit
 	}
 
 	@Override
-	public void draw( final SpriteBatch batch )
+	public void draw( final IRenderer renderer )
 	{
 		// TODO Auto-generated method stub
 

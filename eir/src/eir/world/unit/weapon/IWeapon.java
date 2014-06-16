@@ -3,7 +3,10 @@
  */
 package eir.world.unit.weapon;
 
+import yarangi.math.Vector2D;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Effect;
@@ -28,11 +31,22 @@ public abstract class IWeapon
 	////////////////////////////////
 	// state
 	protected Vector2 weaponDir;
+
+	protected float angle;
+
 	protected float timeToReload;
 	protected int bulletsInMagazine;
 
+	protected Vector2 targetOrientation;
+
+	protected Vector2 relativePosition;
+
 
 	private Unit owner;
+
+	private static final float PLANK_CONST = 0.0001f;
+
+	private boolean isOriented = false;
 	/**
 	 *
 	 */
@@ -42,12 +56,26 @@ public abstract class IWeapon
 
 		this.owner = owner;
 
-		weaponDir = new Vector2();
+		weaponDir = new Vector2(0,1);
+
+		this.angle = owner.getAngle();
+		weaponDir.setAngle( angle );
+
+		targetOrientation = weaponDir.cpy();
+
+
+		// TODO: set position of weapon relative to host
+		this.relativePosition = new Vector2();
 	}
 
-	public Bullet fire( final TargetProvider targetProvider )
+	public Bullet fire( final ISpatialObject target, final Vector2 direction )
 	{
-		Bullet bullet = createBullet( targetProvider, owner.getFaction().getLevel().getUnitsFactory() );
+		Vector2 weaponPos = Vector2.tmp2.set( owner.getArea().getAnchor() ).add( relativePosition );
+
+		Vector2 firingDir = direction;//Vector2.tmp.set( target.getArea().getAnchor() ).sub( weaponPos ).nor();
+
+		targetOrientation.set( direction );
+		Bullet bullet = createBullet( target, weaponPos, firingDir, owner.getFaction().getLevel().getUnitsFactory() );
 		if(bullet != null)
 		{
 			owner.getFaction().getLevel().addUnit( bullet );
@@ -55,30 +83,31 @@ public abstract class IWeapon
 		return null;
 	}
 
-	protected Bullet createBullet(final TargetProvider targetProvider, final UnitsFactory unitFactory)
+	protected Bullet createBullet(final ISpatialObject target, final Vector2 weaponPos, final Vector2 direction, final UnitsFactory unitFactory)
 	{
 		if(timeToReload > 0)
 			return null;
+
+		if(! isOriented )
+			return null;
+
 		if(bulletsInMagazine == 0)
 		{
 			bulletsInMagazine = getBurstSize();
 		}
 
-		Vector2 weaponPos = owner.getArea().getAnchor();
+		float angle = createAngle( direction );
 
-		ISpatialObject target = targetProvider.getTarget();
-
-		Vector2 firingDir = Vector2.tmp.set( target.getArea().getAnchor() ).sub( weaponPos ).nor();
-		float angle = createAngle( firingDir );
-//		weaponDir.setAngle( angle );
+		direction.setAngle( angle );
 
 		float speed = createSpeed();
 		Bullet bullet = unitFactory.getUnit(UnitsFactory.BULLET, weaponPos.x, weaponPos.y, angle, owner.getFaction());
 
+
 		bullet.weapon = this;
-		bullet.velocity.set(firingDir).mul( speed );
-		bullet.size = this.getSize();
-		bullet.targetProvider = targetProvider;
+		bullet.getVelocity().set( direction ).mul( speed );
+		bullet.size = this.getBulletSize();
+		bullet.target = target;
 
 		bullet.angle = angle;
 
@@ -105,12 +134,58 @@ public abstract class IWeapon
 	public void update(final float delta)
 	{
 		timeToReload -= delta;
+
+		// angle delta
+		float da = delta * getAngularSpeed();
+
+		float targetAngle = targetOrientation.angle();
+
+		float diffAngle =
+				(float)Math.acos( targetOrientation.dot( weaponDir ) /
+				(
+						targetOrientation.len() * weaponDir.len()
+				) );
+
+//		float absDistance = Math.abs( angle - targetOrientation.angle() );
+		float absDistance = Math.abs( diffAngle );
+
+		if( absDistance < getMaxFireAngle())
+		{
+			isOriented = true;
+		} else
+		{
+			isOriented = false;
+		}
+
+		if( absDistance < da ) // arrived
+		{
+			angle = targetAngle;
+		}
+		else
+		{
+			if(Vector2D.crossZComponent(
+					weaponDir.x, weaponDir.y,
+					targetOrientation.x, targetOrientation.y )
+				> 0)
+			{
+				angle -= da;
+				angle = angle % 360;
+			}
+			else
+			{
+				angle += da;
+				angle = angle % 360;
+			}
+		}
+
+		weaponDir.setAngle( angle );
+
 	}
 
 	/**
 	 * @return the size
 	 */
-	public abstract float getSize();
+	public abstract float getBulletSize();
 	/**
 	 * @return the burstSize
 	 */
@@ -141,11 +216,20 @@ public abstract class IWeapon
 	 * @return the bulletSprite
 	 */
 	public abstract Animation getBulletAnimation();
+	public abstract Sprite getBulletSprite();
 
 	/**
 	 * @return the speed
 	 */
 	public abstract float createSpeed();
+
+	public abstract float getAngularSpeed();
+
+	/**
+	 * Max angular offset from target orientation when weapon is allowed to fire
+	 * @return
+	 */
+	public abstract float getMaxFireAngle();
 
 	/**
 	 * @return
@@ -172,6 +256,8 @@ public abstract class IWeapon
 	public Unit getOwner() { return owner; }
 
 	public float getTimeToReload() { return timeToReload; }
+
+	public float getAngle() { return angle; }
 
 
 }

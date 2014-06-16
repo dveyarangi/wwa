@@ -31,7 +31,11 @@ public abstract class TaskedUnit extends Unit
 		}
 
 		// performing task:
-		task.getBehavior( this ).update( delta, task, this );
+		UnitBehavior behavior = task.getBehavior( this );
+		if( behavior == null)
+			return;
+
+		behavior.update( delta, task, this );
 
 
 	}

@@ -36,7 +36,7 @@ public abstract class Order
 
 	public Task createTask(final Scheduler scheduler)
 	{
-		return Task.create( scheduler, this, stages, cycleStages );
+		return Task.create( scheduler, this );
 	}
 
 	/**
@@ -51,5 +51,9 @@ public abstract class Order
 	public String getUnitType() { return unitType; }
 
 	public boolean isActive() { return isActive; }
+
+	public TaskStage[] getStages() { return stages; }
+
+	public boolean cycleTask() { return cycleStages; }
 
 }

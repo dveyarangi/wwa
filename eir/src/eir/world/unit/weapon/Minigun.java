@@ -7,6 +7,7 @@ package eir.world.unit.weapon;
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
@@ -31,6 +32,8 @@ public class Minigun extends IWeapon
 
 	private Damage bulletDamage;
 
+	private static Sprite bulletSprite = GameFactory.createSprite( "anima//bullets//fireball.png" );
+
 	public Minigun(final Unit unit)
 	{
 
@@ -48,7 +51,7 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public float getSize() { return 0.5f; }
+	public float getBulletSize() { return 0.5f; }
 
 
 	@Override
@@ -70,6 +73,9 @@ public class Minigun extends IWeapon
 	public Animation getBulletAnimation() { return bulletAnimation; }
 
 	@Override
+	public Sprite getBulletSprite() { return bulletSprite; }
+
+	@Override
 	public float createSpeed() { return 100; }
 
 
@@ -84,7 +90,7 @@ public class Minigun extends IWeapon
 	public Effect createHitEffect(final Bullet bullet)
 	{
 		return Effect.getEffect( HIT_01_AID,
-				10, bullet.getBody().getAnchor(), RandomUtil.N( 360 ), 3 );
+				10, bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 3 );
 	}
 
 	@Override
@@ -103,4 +109,11 @@ public class Minigun extends IWeapon
 	{
 		return bulletDamage;
 	}
+	@Override
+	public float getAngularSpeed() { return 1f; }
+
+
+	@Override
+	public float getMaxFireAngle() { return 10f; }
+
 }

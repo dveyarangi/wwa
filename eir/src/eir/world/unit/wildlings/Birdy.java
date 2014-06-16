@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
+import eir.world.IRenderer;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
@@ -28,7 +29,7 @@ public class Birdy extends TaskedUnit implements IDamager
 
 	private  float maxSpeed = 30;
 
-	private float size = 5;
+	private float size = 3;
 
 	///////////////////////////////////////////
 
@@ -44,8 +45,9 @@ public class Birdy extends TaskedUnit implements IDamager
 	}
 
 	@Override
-	public void draw( final SpriteBatch batch)
+	public void draw( final IRenderer renderer)
 	{
+		final SpriteBatch batch = renderer.getSpriteBatch();
 		Vector2 position = getBody().getAnchor();
 		batch.draw( sprite,
 				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
@@ -82,7 +84,7 @@ public class Birdy extends TaskedUnit implements IDamager
 				.mul( 10 );
 
 
-		velocity.add( impactImpulse );
+		getVelocity().add( impactImpulse );
 
 		return damage;
 	}
@@ -99,6 +101,7 @@ public class Birdy extends TaskedUnit implements IDamager
 		return this; // TODO: maybe generalize to drone and make source the spawner?
 	}
 
+	@Override
 	public float getMaxSpeed() { return maxSpeed; }
 
 }

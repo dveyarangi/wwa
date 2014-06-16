@@ -18,17 +18,21 @@ public class Damage
 
 	private AOEFunction aoeFunc;
 
+	private float radius;
+
 	public Damage(final double kinetic, final double thermal, final double divine, final double voidd)
 	{
-		this( null, kinetic, thermal, divine, voidd );
+		this( null, 0, kinetic, thermal, divine, voidd);
 	}
-	public Damage(final AOEFunction aoeFunc, final double kinetic, final double thermal, final double divine, final double voidd)
+	public Damage(final AOEFunction aoeFunc, final float aoeRadius, final double kinetic, final double thermal, final double divine, final double voidd)
 	{
 		this.aoeFunc = aoeFunc;
 		damage[KINETIC] = kinetic;
 		damage[THERMAL] = thermal;
 		damage[ELECTRO_MAGNETIC] = divine;
 		damage[VOID] = voidd;
+
+		this.radius = aoeRadius;
 	}
 
 	public double getDamage(final int type)
@@ -38,6 +42,8 @@ public class Damage
 
 	public AOEFunction getAOE() { return aoeFunc; }
 
+
+	public float getRadius() { return radius; }
 
 	@Override
 	public String toString() {

@@ -49,12 +49,9 @@ public class Level
 	 * Level background images
 	 */
 	private Background background;
-
-
-	private final List <Effect> effects;
-
 	////////////////////////////////////////////////////////////////
 
+	private LevelRenderer renderer;
 
 	/**
 	 * List of asteroids
@@ -93,7 +90,6 @@ public class Level
 	public Level()
 	{
 		units = new HashSet <Unit> ();
-		effects = new LinkedList <Effect> ();
 	}
 
 	public List <Asteroid> getAsteroids() { return asteroids;}
@@ -112,6 +108,15 @@ public class Level
 	public float getWidth() { return width; }
 
 	/**
+	 * @return
+	 */
+	public float getHalfHeight() { return halfHeight; }
+	/**
+	 * @return
+	 */
+	public float getHalfWidth() { return halfWidth; }
+
+	/**
 	 * @param startingNode
 	 */
 	public Unit addUnit(final Unit unit)
@@ -123,11 +128,6 @@ public class Level
 		return unit;
 	}
 
-
-	public void addEffect(final Effect effect)
-	{
-		effects.add( effect );
-	}
 	/**
 	 * @param context
 	 * @param factory
@@ -220,20 +220,6 @@ public class Level
 
 		environment.update( delta );
 
-		Iterator <Effect> effectIt = effects.iterator();
-		while(effectIt.hasNext())
-		{
-			Effect effect = effectIt.next();
-			effect.update( delta );
-			if(!effect.isAlive())
-			{
-
-				effectIt.remove();
-				Effect.free( effect );
-			}
-
-		}
-
 
 	}
 
@@ -241,30 +227,6 @@ public class Level
 	{
 
 
-		batch.begin();
-
-		// TODO: clipping?
-		for(Asteroid asteroid : getAsteroids())
-		{
-			asteroid.draw( batch );
-		}
-
-		for( Web web : getWebs() )
-		{
-			web.draw( batch );
-		}
-
-		for(Unit unit : getUnits())
-		{
-			unit.draw( batch );
-		}
-
-		for(Effect effect : effects)
-		{
-			effect.draw( batch );
-		}
-
-		batch.end();
 	}
 
 	/**
@@ -356,12 +318,6 @@ public class Level
 
 			units.remove( unit );
 			environment.remove( unit );
-			Effect hitEffect = unit.getDeathEffect();
-			if(hitEffect != null)
-			{
-				effects.add( hitEffect );
-			}
-
 			// dat questionable construct:
 			unit.getFaction().removeUnit( unit );
 
