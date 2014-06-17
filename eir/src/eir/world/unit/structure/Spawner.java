@@ -4,6 +4,7 @@
 package eir.world.unit.structure;
 
 import eir.world.IRenderer;
+import eir.world.unit.Hull;
 import eir.world.unit.Unit;
 
 /**
@@ -31,6 +32,9 @@ public class Spawner extends Unit
 		super.init();
 
 		unitType = unitType.intern();
+
+		this.hull = new Hull(10000f, 0f, new float [] {0f,0f,0f,0f});
+
 
 	}
 

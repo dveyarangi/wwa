@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
@@ -13,6 +11,7 @@ import eir.resources.PolygonalModel;
 import eir.world.Asteroid;
 import eir.world.IRenderer;
 import eir.world.Level;
+import eir.world.LevelRenderer;
 import eir.world.environment.sensors.ISensor;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
@@ -20,8 +19,8 @@ import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
 import eir.world.unit.TaskedUnit;
 import eir.world.unit.Unit;
-import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.weapon.Minigun;
 import eir.world.unit.weapon.TargetProvider;
 
 public class Cannon extends TaskedUnit implements IDamager, TargetProvider
@@ -50,8 +49,8 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 
 		this.sensor = level.getEnvironment().createSensor( this, SENSOR_RADIUS );
 
-		this.weapon = new HomingLauncher( this );
-//		this.weapon = new Minigun( this );
+//		this.weapon = new HomingLauncher( this );
+		this.weapon = new Minigun( this );
 		this.hull = new Hull(500f, 0f, new float [] {0f,0f,0f,0f});
 
 		int navIdx = this.getAnchorNode().getDescriptor().getIndex();
@@ -97,26 +96,13 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 				getSize()/sprite.getRegionWidth(), angle);
 	}
 
-
-	@Override
-	public void draw( final ShapeRenderer shape )
-	{
-		shape.begin(ShapeType.FilledCircle);
-		shape.setColor(faction.color.r,faction.color.g,faction.color.b,0.5f);
-		shape.filledCircle(getBody().getAnchor().x, getBody().getAnchor().y, getSize() / 2);
-		shape.end();
-		shape.begin(ShapeType.Circle);
-		shape.setColor(faction.color.r,faction.color.g,faction.color.b,0.5f);
-		shape.circle(getBody().getAnchor().x, getBody().getAnchor().y, SENSOR_RADIUS);
-		shape.end();
-	}
-
 	@Override
 	public float getSize()
 	{
 		return 10;
 	}
 
+	@Override
 	public IWeapon getWeapon() { return weapon; }
 
 	@Override
@@ -127,4 +113,13 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 
 	@Override
 	public float getMaxSpeed() { return 0; }
+
+	@Override
+	protected void registerOverlays()
+	{
+		super.registerOverlays();
+		addHoverOverlay( LevelRenderer.WEAPON_OID);
+	}
+
+
 }

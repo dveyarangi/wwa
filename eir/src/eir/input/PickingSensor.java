@@ -3,25 +3,36 @@
  */
 package eir.input;
 
-import eir.world.environment.nav.SurfaceNavNode;
+import eir.world.environment.spatial.ISpatialFilter;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.environment.spatial.ISpatialSensor;
 
 /**
- * @author dveyarangi
+ * This is processor for mouse picking query;
  *
+ * Uses filter to determine whether the object should be picked
+ *
+ * @author dveyarangi
  */
-public class PickingSensor implements ISpatialSensor<ISpatialObject>
+public class PickingSensor implements ISpatialSensor <ISpatialObject>
 {
 
-	private SurfaceNavNode pickedNode;
+	private ISpatialObject pickedObject;
+
+	private ISpatialFilter <ISpatialObject> filter;
+
+	public PickingSensor( final ISpatialFilter <ISpatialObject> filter)
+	{
+		this.filter = filter;
+	}
 
 	@Override
 	public boolean objectFound(final ISpatialObject object)
 	{
-		if(object instanceof SurfaceNavNode)
+		if(filter.accept( object ))
 		{
-			pickedNode = (SurfaceNavNode) object;
+			pickedObject = object;
+			return true;
 		}
 
 		return false;
@@ -30,15 +41,15 @@ public class PickingSensor implements ISpatialSensor<ISpatialObject>
 	@Override
 	public void clear()
 	{
-		pickedNode = null;
+		pickedObject = null;
 	}
 
 	/**
 	 * @return
 	 */
-	public SurfaceNavNode getNode()
+	public ISpatialObject getPickedObject()
 	{
-		return pickedNode;
+		return pickedObject;
 	}
 
 }

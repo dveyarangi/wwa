@@ -12,11 +12,13 @@ import eir.resources.GameFactory;
 import eir.world.Effect;
 import eir.world.IRenderer;
 import eir.world.Level;
+import eir.world.LevelRenderer;
 import eir.world.environment.Environment;
 import eir.world.environment.nav.NavNode;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.unit.weapon.IWeapon;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -78,6 +80,8 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	private TIntArrayList hoverOverlays;
 
+	private boolean isHovered = false;
+
 	public Unit()
 	{
 
@@ -107,8 +111,16 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		this.target = null;
 
+
+		registerOverlays();
+	}
+
+	protected void registerOverlays()
+	{
 		this.overlays.clear();
 		this.hoverOverlays.clear();
+
+		toggleOverlay( LevelRenderer.INTEGRITY_OID);
 	}
 
 	public void init(final String type, final NavNode anchor, final Faction faction)
@@ -240,7 +252,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 		if(hull == null) // TODO: stub
 		{
 			Debug.log( "Unit has no hull: " + this);
-//			setDead();
+			setDead();
 			return 0;
 		}
 
@@ -279,7 +291,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public float getLifetime() { return lifetime; }
 	public Vector2 getVelocity() { return velocity; }
 
-	public void toggleOverlay(final int oid)
+	protected void toggleOverlay(final int oid)
 	{
 		if(overlays.contains( oid ))
 		{
@@ -290,8 +302,19 @@ public abstract class Unit implements ISpatialObject, IUnit
 		}
 	}
 
+	protected void addHoverOverlay( final int oid ) { hoverOverlays.add( oid ); }
 	@Override
 	public Hull getHull() { return hull; }
 
 	public TIntArrayList getActiveOverlays() { return overlays; }
+	public TIntArrayList getHoverOverlays() { return hoverOverlays; }
+
+	public float cx() { return body.getAnchor().x; }
+	public float cy() { return body.getAnchor().y; }
+
+	public IWeapon getWeapon() { return null; }
+
+	public void setIsHovered(final boolean isHovered)	{ this.isHovered = isHovered; }
+	public boolean isHovered() { return isHovered; }
+
 }

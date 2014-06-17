@@ -14,7 +14,6 @@ import eir.world.Effect;
 import eir.world.IRenderer;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
-import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
 import eir.world.unit.Unit;
 
@@ -51,7 +50,7 @@ public class Bullet extends Unit implements IDamager
 	protected void init()
 	{
 		super.init();
-		this.hull = new Hull(0.001f, 0f, new float [] {0f,0f,0f,0f});
+		//this.hull = new Hull(0.001f, 0f, new float [] {0f,0f,0f,0f});
 		this.target = null;
 		this.leaveTrace = false;
 	}
@@ -124,6 +123,7 @@ public class Bullet extends Unit implements IDamager
 		return size;
 	}
 
+	@Override
 	public IWeapon getWeapon() {
 		return weapon;
 	}

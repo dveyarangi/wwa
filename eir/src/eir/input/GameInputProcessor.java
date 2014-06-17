@@ -6,20 +6,16 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import eir.debug.Debug;
-import eir.resources.GameFactory;
+import eir.world.IRenderer;
 import eir.world.Level;
-import eir.world.unit.UnitsFactory;
-import eir.world.unit.cannons.Cannon;
+import eir.world.environment.spatial.ISpatialObject;
 
 /**
  * handles input for game
@@ -42,12 +38,12 @@ public class GameInputProcessor implements InputProcessor
 
 	private boolean dragging = false;
 
-	private static int crosshairId = GameFactory.registerAnimation("anima//ui//crosshair01.atlas", "crosshair");
-	private static Animation crosshair = GameFactory.getAnimation( crosshairId );
-
 	private float lifeTime = 0;
 
-	private final PickingSensor pickingSensor;
+	private final IControlMode [] controlModes;
+	private int controlModeIdx;
+
+	private ISpatialObject pickedObject;
 
 	private float timeModifier = 1;
 
@@ -94,6 +90,14 @@ public class GameInputProcessor implements InputProcessor
 			}
 		});
 
+
+		controlModes = new IControlMode [] {
+				new BuildingControlMode( level ),
+				new OrderingControlMode()
+		};
+
+		controlModeIdx = 0;
+
 		inputMultiplexer.addProcessor( uiProcessor );
 		inputMultiplexer.addProcessor( new GestureDetector(new GameGestureListener(camController)) );
 		inputMultiplexer.addProcessor( this );
@@ -102,8 +106,6 @@ public class GameInputProcessor implements InputProcessor
 
 		lastx = (int) camController.getCamera().viewportWidth/2;
 		lasty = (int) camController.getCamera().viewportHeight/2;
-
-		pickingSensor = new PickingSensor();
 
 	}
 
@@ -127,6 +129,11 @@ public class GameInputProcessor implements InputProcessor
 
 		case Input.Keys.S:
 			level.getControlledUnit().walkDown(true);
+			break;
+
+		case Input.Keys.M:
+			controlModeIdx = (controlModeIdx + 1) % controlModes.length;
+			controlModes[controlModeIdx].reset();
 			break;
 
 		case Input.Keys.SPACE:
@@ -184,19 +191,9 @@ public class GameInputProcessor implements InputProcessor
 			camController.setUnderUserControl(true);
 			dragging = true;
 
-			if(pickingSensor.getNode() != null)
+			if( pickedObject != null )
 			{
-
-				Cannon cannon = level.getUnitsFactory().getUnit( UnitsFactory.CANNON, pickingSensor.getNode(), level.getFactions()[0] );
-
-				level.addUnit( cannon );
-
-				cannon.postinit( level );
-
-//				NavNode sourceNode = level.getControlledUnit().anchor;
-//				NavNode targetNode = pickingSensor.getNode();
-
-//				level.toggleWeb((SurfaceNavNode)sourceNode, (SurfaceNavNode)targetNode);
+				controlModes[controlModeIdx].touchUnit( pickedObject );
 			}
 		}
 
@@ -275,17 +272,40 @@ public class GameInputProcessor implements InputProcessor
 		 pointerPosition2.y = pointerPosition3.y;
 		 camController.update( delta );
 		 lifeTime += delta;
-		 pickingSensor.clear();
-		 level.getEnvironment().getIndex().queryAABB( pickingSensor,
+
+		 IControlMode mode = controlModes[controlModeIdx];
+		 PickingSensor sensor = mode.getPickingSensor();
+		 sensor.clear();
+		 level.getEnvironment().getIndex().queryAABB( sensor,
 				 pointerPosition2.x,
 				 pointerPosition2.y, 3, 3 );
 
 
+		 if(pickedObject != sensor.getPickedObject())
+		 {
+			 if(pickedObject != null)
+			 {
+				 mode.objectUnpicked( pickedObject );
+			 }
+
+			 pickedObject = sensor.getPickedObject();
+			 if(pickedObject != null)
+			 {
+				 mode.objectPicked( pickedObject );
+			 }
+
+		 }
+
+
 	 }
 
-	 public void draw(final SpriteBatch batch, final ShapeRenderer renderer)
+	 public void draw( final IRenderer renderer )
 	 {
-		 batch.begin();
+
+		 final SpriteBatch batch = renderer.getSpriteBatch();
+		 final ShapeRenderer shape = renderer.getShapeRenderer();
+
+/*		 batch.begin();
 		 TextureRegion crossHairregion = crosshair.getKeyFrame( lifeTime, true );
 		 batch.draw( crossHairregion,
 				 pointerPosition2.x-crossHairregion.getRegionWidth()/2, pointerPosition2.y-crossHairregion.getRegionHeight()/2,
@@ -293,26 +313,18 @@ public class GameInputProcessor implements InputProcessor
 				 crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(),
 				 5f/crossHairregion.getRegionWidth(),
 				 5f/crossHairregion.getRegionWidth(), 0);
-		 batch.end();
+		 batch.end();*/
 
-		 renderer.setColor( 0, 1, 0, 0.1f );
-		 renderer.begin( ShapeType.Line );
-		 renderer.line( level.getControlledUnit().getBody().getAnchor().x, level.getControlledUnit().getBody().getAnchor().y,
+/*		 shape.setColor( 0, 1, 0, 0.1f );
+		 shape.begin( ShapeType.Line );
+		 shape.line( level.getControlledUnit().getBody().getAnchor().x, level.getControlledUnit().getBody().getAnchor().y,
 				 pointerPosition2.x, pointerPosition2.y );
-		 renderer.end();
+		 shape.end();*/
 
-		 if(pickingSensor.getNode() != null)
-		 {
-			 Vector2 point = pickingSensor.getNode().getPoint();
-			 batch.begin();
-			 crossHairregion = crosshair.getKeyFrame( lifeTime, true );
-			 batch.draw( crossHairregion,
-					 point.x-crossHairregion.getRegionWidth()/2, point.y-crossHairregion.getRegionHeight()/2,
-					 crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2,
-					 crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(),
-					 5f/crossHairregion.getRegionWidth(),
-					 5f/crossHairregion.getRegionWidth(), 0);
-			 batch.end();		}
+		 IControlMode mode = controlModes[controlModeIdx];
+
+		 mode.render( renderer );
+
 	 }
 
 	 /**
@@ -331,4 +343,5 @@ public class GameInputProcessor implements InputProcessor
 	 }
 
 	public float getTimeModifier() { return timeModifier ; }
+
 }

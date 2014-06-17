@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
+import eir.debug.Debug;
 import eir.world.IRenderer;
 import eir.world.environment.spatial.AABB;
 import eir.world.unit.Hull;
@@ -29,8 +30,12 @@ public class IntegrityOverlay <U extends IUnit> implements IOverlay <U>
 	@Override
 	public void draw( final U unit, final IRenderer renderer )
 	{
-		ShapeRenderer shape = renderer.getShapeRenderer();
 		Hull hull = unit.getHull();
+		if(hull == null)
+		{
+			Debug.log( "Unit has no hull: " + unit );
+			return;
+		}
 
 		float maxHP = hull.getMaxHitPoints();
 		float currHP = hull.getHitPoints();
@@ -44,6 +49,8 @@ public class IntegrityOverlay <U extends IUnit> implements IOverlay <U>
 
 		float width = area.rx()*2;
 		float filledWidth = width * percentage;
+
+		ShapeRenderer shape = renderer.getShapeRenderer();
 
 		shape.setColor( 1 - percentage, 0, percentage, 1 );
 		shape.begin( ShapeType.Rectangle );

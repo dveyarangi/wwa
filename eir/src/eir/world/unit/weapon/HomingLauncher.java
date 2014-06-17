@@ -129,7 +129,7 @@ public class HomingLauncher extends IWeapon
 				RandomUtil.N( 4 ) + 2,
 				bullet.getArea().getAnchor(),
 				Vector2.tmp2.set( 0,0 ).sub(bullet.getVelocity().tmp().nor()).mul( 50f ),
-				RandomUtil.N( 360 ), 5f*RandomUtil.STD( 2, 0.15f ) );
+				RandomUtil.N( 360 ), 7f*RandomUtil.STD( 2, 0.15f ) );
 	}
 
 	@Override

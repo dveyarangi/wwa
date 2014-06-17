@@ -12,6 +12,7 @@ import eir.input.GameInputProcessor;
 import eir.world.unit.IOverlay;
 import eir.world.unit.Unit;
 import eir.world.unit.overlays.IntegrityOverlay;
+import eir.world.unit.overlays.WeaponOverlay;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 public class LevelRenderer implements IRenderer
@@ -30,6 +31,7 @@ public class LevelRenderer implements IRenderer
 	private TIntObjectHashMap <IOverlay> overlays;
 
 	public static final int INTEGRITY_OID = 1;
+	public static final int WEAPON_OID = 2;
 
 	public LevelRenderer( final GameInputProcessor inputController, final Level level )
 	{
@@ -45,6 +47,7 @@ public class LevelRenderer implements IRenderer
 		this.overlays = new TIntObjectHashMap <IOverlay> ();
 
 		overlays.put( INTEGRITY_OID, new IntegrityOverlay() );
+		overlays.put( WEAPON_OID, new WeaponOverlay() );
 	}
 
 	public void render(final float delta)
@@ -126,11 +129,19 @@ public class LevelRenderer implements IRenderer
 				int oid = unit.getActiveOverlays().get( oidx );
 				overlays.get( oid ).draw( unit, this );
 			}
+			if( unit.isHovered() )
+			{
+				for(int oidx = 0; oidx < unit.getHoverOverlays().size(); oidx ++)
+				{
+					int oid = unit.getHoverOverlays().get( oidx );
+					overlays.get( oid ).draw( unit, this );
+				}
+			}
 		}
 
 		//////////////////////////////////////////////////////////////////
 		// debug rendering
-		inputController.draw( batch, shapeRenderer );
+		inputController.draw( this );
 		Debug.debug.draw(batch, shapeRenderer);
 	}
 
