@@ -67,7 +67,7 @@ public class HomingBehavior implements IBulletBehavior
 							.mul( 1000 * bullet.getLifetime() * bullet.getLifetime() * delta );
 		if(bullet.getLifetime() < 0.4)
 		{
-			bullet.getVelocity().mul( 0.95f );
+			bullet.getVelocity().mul( 0.95f  );
 		}
 		else
 		{

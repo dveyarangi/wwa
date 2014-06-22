@@ -40,6 +40,8 @@ public abstract class TaskedUnit extends Unit
 
 	}
 
+	protected Task getTask() { return task; }
+
 	@Override
 	public float hit(final Damage source, final IDamager damager, final float damageCoef)
 	{

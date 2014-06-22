@@ -3,8 +3,6 @@
  */
 package eir.world.unit.weapon;
 
-import yarangi.math.Vector2D;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -32,7 +30,7 @@ public abstract class IWeapon
 	// state
 	protected Vector2 weaponDir;
 
-	protected float angle;
+//	protected float angle;
 
 	protected float timeToReload;
 	protected int bulletsInMagazine;
@@ -56,10 +54,10 @@ public abstract class IWeapon
 
 		this.owner = owner;
 
-		weaponDir = new Vector2(0,1);
+		weaponDir = new Vector2(1,0);
 
-		this.angle = owner.getAngle();
-		weaponDir.setAngle( angle );
+//		this.angle = owner.getAngle();
+		weaponDir.setAngle( owner.getAngle() );
 
 		targetOrientation = weaponDir.cpy();
 
@@ -75,7 +73,7 @@ public abstract class IWeapon
 		Vector2 firingDir = direction;//Vector2.tmp.set( target.getArea().getAnchor() ).sub( weaponPos ).nor();
 
 		targetOrientation.set( direction );
-		Bullet bullet = createBullet( target, weaponPos, firingDir, owner.getFaction().getLevel().getUnitsFactory() );
+		Bullet bullet = createBullet( target, weaponPos, weaponDir, owner.getFaction().getLevel().getUnitsFactory() );
 		if(bullet != null)
 		{
 			owner.getFaction().getLevel().addUnit( bullet );
@@ -135,20 +133,15 @@ public abstract class IWeapon
 	{
 		timeToReload -= delta;
 
-		// angle delta
-		float da = delta * getAngularSpeed();
-
-		float targetAngle = targetOrientation.angle();
+		weaponDir.lerp( targetOrientation, delta * getAngularSpeed() );
+		weaponDir.nor();
 
 		float diffAngle =
-				(float)Math.acos( targetOrientation.dot( weaponDir ) /
-				(
-						targetOrientation.len() * weaponDir.len()
-				) );
+				(float) Math.acos( targetOrientation.dot( weaponDir ) /
+						( targetOrientation.len() * weaponDir.len()	) );
 
 //		float absDistance = Math.abs( angle - targetOrientation.angle() );
-		float absDistance = Math.abs( diffAngle );
-
+		float absDistance = (float) (Math.abs( diffAngle ) * Math.PI * 2f);
 		if( absDistance < getMaxFireAngle())
 		{
 			isOriented = true;
@@ -156,29 +149,6 @@ public abstract class IWeapon
 		{
 			isOriented = false;
 		}
-
-		if( absDistance < da ) // arrived
-		{
-			angle = targetAngle;
-		}
-		else
-		{
-			if(Vector2D.crossZComponent(
-					weaponDir.x, weaponDir.y,
-					targetOrientation.x, targetOrientation.y )
-				> 0)
-			{
-				angle -= da;
-				angle = angle % 360;
-			}
-			else
-			{
-				angle += da;
-				angle = angle % 360;
-			}
-		}
-
-		weaponDir.setAngle( angle );
 
 	}
 
@@ -204,7 +174,7 @@ public abstract class IWeapon
 	/**
 	 * @return the accuracy
 	 */
-	public abstract float getAccuracy();
+	public abstract float getDispersion();
 
 
 	public abstract float getBulletLifeDuration();
@@ -257,7 +227,7 @@ public abstract class IWeapon
 
 	public float getTimeToReload() { return timeToReload; }
 
-	public float getAngle() { return angle; }
+//	public float getAngle() { return angle; }
 
 
 }

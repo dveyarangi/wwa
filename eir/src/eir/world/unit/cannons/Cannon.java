@@ -46,11 +46,10 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 	public void postinit( final Level level )
 	{
 		this.targetingModule = TargetingModule.RANDOM_TARGETER( this );
+		this.targetingModule = TargetingModule.CLOSEST_TARGETER( this );
 
 		this.sensor = level.getEnvironment().createSensor( this, SENSOR_RADIUS );
 
-//		this.weapon = new HomingLauncher( this );
-		this.weapon = new Minigun( this );
 		this.hull = new Hull(500f, 0f, new float [] {0f,0f,0f,0f});
 
 		int navIdx = this.getAnchorNode().getDescriptor().getIndex();
@@ -63,6 +62,9 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 
 
 		this.angle = surface.rotate( 90 ).angle();
+
+//		this.weapon = new HomingLauncher( this );
+		this.weapon = new Minigun( this );
 	}
 
 	@Override
@@ -79,8 +81,9 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 
 		super.update( delta );
 
-		this.angle = weapon.getAngle();
+		this.angle = weapon.getDirection().angle();
 	}
+
 	private static Sprite sprite = GameFactory.createSprite( "anima//cannons//cannon_hybrid_01.png" );
 
 	@Override

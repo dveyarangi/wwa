@@ -67,7 +67,7 @@ public class HomingLauncher extends IWeapon
 	public float getReloadingTime() { return 0.15f; }
 
 	@Override
-	public float getAccuracy() { return 15; }
+	public float getDispersion() { return 15; }
 
 	@Override
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
@@ -95,7 +95,7 @@ public class HomingLauncher extends IWeapon
 
 		float burstAngle = burstChirality * 90 + burstChirality * ( 15 + RandomUtil.STD( 0, 5 ) );
 
-		return RandomUtil.STD( burstAngle + this.getOwner().getAngle(), getAccuracy());
+		return RandomUtil.STD( burstAngle + this.getOwner().getAngle(), getDispersion());
 	}
 
 	@Override

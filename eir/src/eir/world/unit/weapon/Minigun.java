@@ -46,7 +46,7 @@ public class Minigun extends IWeapon
 
 		bulletBehavior = new MassDriverBehavior();
 
-		bulletDamage = new Damage(1,0,0,0);
+		bulletDamage = new Damage(5,0,0,0);
 	}
 
 
@@ -55,16 +55,16 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public int getBurstSize() { return 3; }
+	public int getBurstSize() { return 7; }
 
 	@Override
-	public float getMagazineReloadTime() { return 0.05f; }
+	public float getMagazineReloadTime() { return 1f; }
 
 	@Override
-	public float getReloadingTime() { return 0.05f; }
+	public float getReloadingTime() { return 0.01f; }
 
 	@Override
-	public float getAccuracy() { return 0.5f; }
+	public float getDispersion() { return 0.1f; }
 
 	@Override
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
@@ -82,7 +82,7 @@ public class Minigun extends IWeapon
 	@Override
 	protected float createAngle( final Vector2 firingDir )
 	{
-		return RandomUtil.STD( firingDir.angle(), getAccuracy());
+		return RandomUtil.STD( firingDir.angle(), getDispersion());
 	}
 
 
@@ -100,7 +100,7 @@ public class Minigun extends IWeapon
 	@Override
 	public float getBulletLifeDuration()
 	{
-		return 2;
+		return 1;
 	}
 
 
@@ -110,7 +110,7 @@ public class Minigun extends IWeapon
 		return bulletDamage;
 	}
 	@Override
-	public float getAngularSpeed() { return 1f; }
+	public float getAngularSpeed() { return 5f; }
 
 
 	@Override

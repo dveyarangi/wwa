@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.debug.Debug;
 import eir.resources.GameFactory;
 import eir.world.Effect;
 import eir.world.IRenderer;
@@ -47,7 +46,7 @@ public class Ant extends TaskedUnit implements IDamager
 	private float screamTime;
 	float nodeOffset;
 
-	SurfaceNavNode nextNode, targetNode;
+	SurfaceNavNode nextNode;
 
 	Damage damage = new Damage(1, 1, 1, 1);
 
@@ -76,6 +75,8 @@ public class Ant extends TaskedUnit implements IDamager
 	{
 		super.update( delta );
 
+		this.target = getTask() == null ? null : getTask().getOrder().getTarget();
+
 		stateTime += delta;
 	}
 
@@ -92,18 +93,7 @@ public class Ant extends TaskedUnit implements IDamager
 				size/region.getRegionWidth(),
 				size/region.getRegionWidth(), getAngle());
 
-		// TODO: remove debug rendering
-		if(Debug.debug.drawNavMesh)
-		{
-			if(stateTime - screamTime < 1)
-			{
-				Debug.FONT.draw( batch, "Yarr!", position.x, position.y );
-			}
-			if(targetNode != null)
-			{
-				Debug.FONT.draw( batch, String.valueOf( targetNode.getIndex() ), position.x+2, position.y-2 );
-			}
-		}
+
 	}
 
 	/**
