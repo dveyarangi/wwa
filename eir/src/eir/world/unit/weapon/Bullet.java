@@ -164,7 +164,7 @@ public class Bullet extends Unit implements IDamager
 	}
 
 	@Override
-	public float getMaxSpeed() {return weapon.getMaxSpeed(); }
+	public float getMaxSpeed() {return weapon.getBulletSpeed(); }
 
 	public void setDecaying( final boolean decaying ) { this.decaying = decaying; }
 

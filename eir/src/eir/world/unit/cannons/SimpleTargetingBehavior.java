@@ -22,8 +22,6 @@ public class SimpleTargetingBehavior implements UnitBehavior<Cannon>
 		Vector2 targetDir = target.getArea().getAnchor().tmp().sub( unit.getArea().getAnchor() ).nor();
 
 
-		unit.getWeapon().fire( target, targetDir );
-
 //		unit.getWeapon().angle = target.getArea().getAnchor().tmp().sub( unit.getArea().getAnchor() ).angle();
 	}
 

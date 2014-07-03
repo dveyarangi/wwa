@@ -27,9 +27,9 @@ public class Birdy extends TaskedUnit implements IDamager
 //	private static Sprite sprite = GameFactory.createSprite( "anima//gears//birdy.png" );
 	private static int animationId = GameFactory.registerAnimation("anima//glow//glow.atlas",	"glow");
 
-	private  float maxSpeed = 30;
+	private  float maxSpeed = 40;
 
-	private float size = 3;
+	private float size = 1;
 
 	///////////////////////////////////////////
 

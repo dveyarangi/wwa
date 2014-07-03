@@ -19,8 +19,8 @@ import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
 import eir.world.unit.TaskedUnit;
 import eir.world.unit.Unit;
-import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.weapon.Minigun;
 
 public class Cannon extends TaskedUnit implements IDamager
 {
@@ -62,51 +62,56 @@ public class Cannon extends TaskedUnit implements IDamager
 		this.angle = surface.rotate( 90 ).angle();
 
 		///*
-		this.weapon = new HomingLauncher( this );
-		this.targetProvider = TargetProvider.RANDOM_TARGETER( this );
+//		this.weapon = new HomingLauncher( this );
+//		this.targetProvider = TargetProvider.RANDOM_TARGETER( this );
 
-		this.targetingModule = new LinearTargetingModule();
 		/**/
-		//this.weapon = new Minigun( this );
-		//this.targetingModule = TargetingModule.CLOSEST_TARGETER( this );
+		this.weapon = new Minigun( this );
+		this.targetProvider = TargetProvider.CLOSEST_TARGETER( this );
 
  		/***/
+		this.targetingModule = new LinearTargetingModule();
 	}
 
 	@Override
 	public void update(final float delta)
 	{
+
+		super.update( delta );
+
 		List <ISpatialObject> units = sensor.sense( faction.getEnemyFilter() );
 
-		weapon.update( delta );
-
-		if(weapon.getTimeToReload() > 0)
-			return;
-
-		if(! weapon.isOriented() )
-			return;
 
 		if(weapon.getBulletsInMagazine() == 0)
 		{
 			weapon.reload();
 		}
 
-		weapon.update( delta );
+//		if(target == null || !target.isAlive() )
+//		{
+//		}
 
 
-		if(target == null || !getTarget().isAlive() ||
-				weapon.getBulletsInMagazine() <= 0 && weapon.getTimeToReload() <= 0)
+
+		target = targetProvider.pickTarget( units );
+		Vector2 targetDirection = targetingModule.getShootingDirection( target, this );
+		if(targetDirection != null)
 		{
-			target = targetProvider.pickTarget( units );
+			weapon.getTargetOrientation().set( targetDirection );
 		}
 
-		Vector2 targetDirection = targetingModule.getShootingDirection( target, this );
+		weapon.update( delta );
 
-		weapon.fire( target, targetDirection );
+		if(! weapon.isOriented() )
+			return;
 
-		super.update( delta );
+		if( target != null)
+		{
 
-		this.angle = weapon.getDirection().angle();
+			if(weapon.getTimeToReload() > 0)
+				return;
+			weapon.fire( target );
+		}
 	}
 
 	private static Sprite sprite = GameFactory.createSprite( "anima//cannons//cannon_hybrid_01.png" );

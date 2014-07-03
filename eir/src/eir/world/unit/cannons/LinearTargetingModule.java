@@ -9,7 +9,20 @@ public class LinearTargetingModule extends TargetingModule
 {
 
 	/**
-	 * Predicts point of impact assuming the target velocity is not going to change
+	 * Predicts point of impact assuming the target velocity is not going to change.
+	 *
+	 * Solves equation
+	 *
+	 * 	L(ti) = L(t0) + VT * ti ;
+	 *  abs(L(ti)) = abs(L(t0) + VT * ti) = vb * ti
+	 *
+	 * where:
+	 *
+	 * * L(t) - target location at time t
+	 * * t0 - 0
+	 * * ti - impact time
+	 * * VT - target velocity vector
+	 * * vb - bullet velocity scalar
 	 */
 	@Override
 	public Vector2 getShootingDirection( final ISpatialObject target, final Cannon cannon  )
@@ -30,7 +43,7 @@ public class LinearTargetingModule extends TargetingModule
 
 		double C = targetUnit.getVelocity().x * targetUnit.getVelocity().x +
 				   targetUnit.getVelocity().y * targetUnit.getVelocity().y -
-				   cannon.getWeapon().getMaxSpeed() * cannon.getWeapon().getMaxSpeed();
+				   cannon.getWeapon().getBulletSpeed() * cannon.getWeapon().getBulletSpeed();
 
 		double D = B*B - 4*A*C;
 		if( D < 0 )

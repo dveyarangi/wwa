@@ -44,8 +44,9 @@ import eir.world.unit.Faction;
 import eir.world.unit.Unit;
 
 /**
- * @author dveyarangi
+ * TODO: vivisect this monstrosity
  *
+ * @author dveyarangi
  */
 public class LevelLoader
 {
@@ -275,7 +276,7 @@ public class LevelLoader
 				{
 					faction = rawGson.fromJson( elem, type );
 					context.factions.put(faction.getOwnerId(), faction);
-					
+
 
 					return faction;
 				}

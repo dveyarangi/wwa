@@ -3,6 +3,8 @@
  */
 package eir.world.unit.weapon;
 
+import yarangi.math.Angles;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -66,8 +68,9 @@ public abstract class IWeapon
 		this.relativePosition = new Vector2();
 	}
 
-	public Bullet fire( final ISpatialObject target, final Vector2 direction )
+	public Bullet fire( final ISpatialObject target )
 	{
+
 		Vector2 weaponPos = Vector2.tmp2.set( owner.getArea().getAnchor() ).add( relativePosition );
 
 		Bullet bullet = createBullet( target, weaponPos, weaponDir, owner.getFaction().getLevel().getUnitsFactory() );
@@ -78,10 +81,11 @@ public abstract class IWeapon
 		return null;
 	}
 
-	protected Bullet createBullet(final ISpatialObject target, final Vector2 weaponPos, final Vector2 direction, final UnitsFactory unitFactory)
+	protected Bullet createBullet(final ISpatialObject target, final Vector2 weaponPos, final Vector2 fireDir, final UnitsFactory unitFactory)
 	{
-		float angle = createAngle( direction );
+		float angle = createAngle( fireDir );
 
+		Vector2 direction = Vector2.tmp.set( 0, 1 );
 		direction.setAngle( angle );
 
 		float speed = createSpeed();
@@ -119,22 +123,20 @@ public abstract class IWeapon
 	{
 		timeToReload -= delta;
 
+
 		weaponDir.lerp( targetOrientation, delta * getAngularSpeed() );
-		weaponDir.nor();
+
+		owner.angle = weaponDir.angle();
+//		weaponDir.nor();
 
 		float diffAngle =
 				(float) Math.acos( targetOrientation.dot( weaponDir ) /
 						( targetOrientation.len() * weaponDir.len()	) );
 
 //		float absDistance = Math.abs( angle - targetOrientation.angle() );
-		float absDistance = (float) (Math.abs( diffAngle ) * Math.PI * 2f);
-		if( absDistance < getMaxFireAngle())
-		{
-			isOriented = true;
-		} else
-		{
-			isOriented = false;
-		}
+		float absDistance = (float) (Math.abs( diffAngle ) * Angles.TO_DEG);
+
+		isOriented = absDistance < getMaxFireAngle();
 
 	}
 
@@ -190,7 +192,7 @@ public abstract class IWeapon
 	/**
 	 * @return
 	 */
-	public float getMaxSpeed() { return createSpeed(); }
+	public abstract float getBulletSpeed();
 
 	/**
 	 * @return
@@ -219,6 +221,8 @@ public abstract class IWeapon
 
 	public boolean isOriented() { return isOriented; }
 	public void reload() { bulletsInMagazine = getBurstSize(); }
+
+	public Vector2 getTargetOrientation() { return targetOrientation; }
 
 //	public float getAngle() { return angle; }
 

@@ -54,7 +54,7 @@ public class HomingLauncher extends IWeapon
 	}
 
 	@Override
-	public float getBulletSize() { return 3; }
+	public float getBulletSize() { return 1; }
 
 
 	@Override
@@ -79,9 +79,10 @@ public class HomingLauncher extends IWeapon
 	public Sprite getBulletSprite() { return bulletSprite; }
 
 	@Override
-	public float createSpeed() { return RandomUtil.STD( 50, 10 ); }
+	public float createSpeed() { return RandomUtil.STD( getBulletSpeed(), 10 ); }
+
 	@Override
-	public float getMaxSpeed() { return 100; }
+	public float getBulletSpeed() { return 50; }
 
 	@Override
 	protected float createAngle( final Vector2 firingDir)
@@ -103,10 +104,10 @@ public class HomingLauncher extends IWeapon
 	{
 		if(RandomUtil.oneOf( 5 ))
 			return Effect.getEffect( HIT_01_AID,
-					RandomUtil.STD( 40, 4 ), bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 3 );
+					RandomUtil.STD( 20, 4 ), bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 3 );
 		else
 			return Effect.getEffect( HIT_02_AID,
-					RandomUtil.STD( 15, 2 ), bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 3 );
+					RandomUtil.STD( 8, 2 ), bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 3 );
 
 	}
 
@@ -126,9 +127,9 @@ public class HomingLauncher extends IWeapon
 	public Effect createTraceEffect(final Bullet bullet)
 	{
 		return Effect.getEffect( TRAIL_AID,
-				RandomUtil.N( 4 ) + 2,
+				RandomUtil.N( 2 ) + 1,
 				bullet.getArea().getAnchor(),
-				Vector2.tmp2.set( 0,0 ).sub(bullet.getVelocity().tmp().nor()).mul( 50f ),
+				Vector2.tmp2.set( 0,0 ).sub(bullet.getVelocity().tmp().nor()).mul( getBulletSpeed()*2f/3f ),
 				RandomUtil.N( 360 ), 10f*RandomUtil.STD( 2, 0.15f ) );
 	}
 
