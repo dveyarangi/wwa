@@ -19,11 +19,10 @@ import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
 import eir.world.unit.TaskedUnit;
 import eir.world.unit.Unit;
+import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
-import eir.world.unit.weapon.Minigun;
-import eir.world.unit.weapon.TargetProvider;
 
-public class Cannon extends TaskedUnit implements IDamager, TargetProvider
+public class Cannon extends TaskedUnit implements IDamager
 {
 
 	public static final int SENSOR_RADIUS = 100;
@@ -34,6 +33,7 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 
 	private Damage impactDamage = new Damage( 10, 1, 0, 0 );
 
+	private TargetProvider targetProvider;
 	private TargetingModule targetingModule;
 
 
@@ -45,8 +45,6 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 	@Override
 	public void postinit( final Level level )
 	{
-		this.targetingModule = TargetingModule.RANDOM_TARGETER( this );
-		this.targetingModule = TargetingModule.CLOSEST_TARGETER( this );
 
 		this.sensor = level.getEnvironment().createSensor( this, SENSOR_RADIUS );
 
@@ -63,8 +61,16 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 
 		this.angle = surface.rotate( 90 ).angle();
 
-//		this.weapon = new HomingLauncher( this );
-		this.weapon = new Minigun( this );
+		///*
+		this.weapon = new HomingLauncher( this );
+		this.targetProvider = TargetProvider.RANDOM_TARGETER( this );
+
+		this.targetingModule = new LinearTargetingModule();
+		/**/
+		//this.weapon = new Minigun( this );
+		//this.targetingModule = TargetingModule.CLOSEST_TARGETER( this );
+
+ 		/***/
 	}
 
 	@Override
@@ -74,10 +80,29 @@ public class Cannon extends TaskedUnit implements IDamager, TargetProvider
 
 		weapon.update( delta );
 
-		if(target == null || !getTarget().isAlive() || weapon.getTimeToReload() <= 0)
+		if(weapon.getTimeToReload() > 0)
+			return;
+
+		if(! weapon.isOriented() )
+			return;
+
+		if(weapon.getBulletsInMagazine() == 0)
 		{
-			target = targetingModule.pickTarget( units );
+			weapon.reload();
 		}
+
+		weapon.update( delta );
+
+
+		if(target == null || !getTarget().isAlive() ||
+				weapon.getBulletsInMagazine() <= 0 && weapon.getTimeToReload() <= 0)
+		{
+			target = targetProvider.pickTarget( units );
+		}
+
+		Vector2 targetDirection = targetingModule.getShootingDirection( target, this );
+
+		weapon.fire( target, targetDirection );
 
 		super.update( delta );
 

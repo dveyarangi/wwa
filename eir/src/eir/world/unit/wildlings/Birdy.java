@@ -81,7 +81,7 @@ public class Birdy extends TaskedUnit implements IDamager
 				.sub(
 						unit.getArea().getAnchor() )
 				.nor()
-				.mul( 10 );
+				.mul( damage );
 
 
 		getVelocity().add( impactImpulse );

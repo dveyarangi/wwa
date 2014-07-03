@@ -59,7 +59,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	/**
 	 * Time since unit creation
 	 */
-	private float lifetime;
+	protected float lifetime;
 
 	/**
 	 * Max time length
@@ -82,6 +82,8 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	private boolean isHovered = false;
 
+	private int hashcode;
+
 	public Unit()
 	{
 
@@ -93,6 +95,8 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		this.overlays = new TIntArrayList ();
 		this.hoverOverlays = new TIntArrayList ();
+
+		this.hashcode = hashCode();
 	}
 
 	/**
@@ -317,4 +321,5 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public void setIsHovered(final boolean isHovered)	{ this.isHovered = isHovered; }
 	public boolean isHovered() { return isHovered; }
 
+	@Override public int hashCode() {	return hashcode; }
 }

@@ -70,9 +70,6 @@ public abstract class IWeapon
 	{
 		Vector2 weaponPos = Vector2.tmp2.set( owner.getArea().getAnchor() ).add( relativePosition );
 
-		Vector2 firingDir = direction;//Vector2.tmp.set( target.getArea().getAnchor() ).sub( weaponPos ).nor();
-
-		targetOrientation.set( direction );
 		Bullet bullet = createBullet( target, weaponPos, weaponDir, owner.getFaction().getLevel().getUnitsFactory() );
 		if(bullet != null)
 		{
@@ -83,17 +80,6 @@ public abstract class IWeapon
 
 	protected Bullet createBullet(final ISpatialObject target, final Vector2 weaponPos, final Vector2 direction, final UnitsFactory unitFactory)
 	{
-		if(timeToReload > 0)
-			return null;
-
-		if(! isOriented )
-			return null;
-
-		if(bulletsInMagazine == 0)
-		{
-			bulletsInMagazine = getBurstSize();
-		}
-
 		float angle = createAngle( direction );
 
 		direction.setAngle( angle );
@@ -226,6 +212,13 @@ public abstract class IWeapon
 	public Unit getOwner() { return owner; }
 
 	public float getTimeToReload() { return timeToReload; }
+
+	public int getBulletsInMagazine() {	return bulletsInMagazine; }
+
+	public abstract boolean decayOnNoTarget();
+
+	public boolean isOriented() { return isOriented; }
+	public void reload() { bulletsInMagazine = getBurstSize(); }
 
 //	public float getAngle() { return angle; }
 

@@ -4,9 +4,9 @@
 package eir.world.unit.weapon;
 
 
-import com.badlogic.gdx.math.Vector2;
+import yarangi.numbers.RandomUtil;
 
-import eir.world.environment.spatial.ISpatialObject;
+import com.badlogic.gdx.math.Vector2;
 
 
 
@@ -27,24 +27,23 @@ public class HomingBehavior implements IBulletBehavior
 	@Override
 	public void update(final float delta, final Bullet bullet)
 	{
-		ISpatialObject targetUnit = bullet.getTarget();
-		if(targetUnit == null || ! targetUnit.isAlive())
-		{
-			targetUnit = bullet.getTarget(); // last known target
-		}
-
-		if( targetUnit == null )
+		Vector2	target;
+		if( bullet.target == null )
 		{
 //			bullet.lifetime = bullet.weapon.getBulletLifeDuration();
+			float chirality = hashCode() % 2 == 0 ? -1 : 1;
 
-			float dx = bullet.getVelocity().x * delta;
-			float dy = bullet.getVelocity().y * delta;
-			bullet.getBody().getAnchor().add( dx, dy );
-			return;
+			target = bullet.getArea().getAnchor().tmp().add(
+					Vector2.tmp.set( bullet.getVelocity() )
+					.mul(100)
+							.rotate( chirality * RandomUtil.STD( 0, 10 ) )
+					);
+
 		}
-
-		Vector2	target = bullet.getTarget().getArea().getAnchor();
-
+		else
+		{
+			target = bullet.getTarget().getArea().getAnchor();
+		}
 /*			float chirality = hashCode() % 2 == 0 ? -1 : 1;
 			target = Vector2.tmp3.set( chirality * bullet.getVelocity().y/2, -chirality * bullet.getVelocity().x*2 )
 					.nor()
@@ -67,7 +66,7 @@ public class HomingBehavior implements IBulletBehavior
 							.mul( 1000 * bullet.getLifetime() * bullet.getLifetime() * delta );
 		if(bullet.getLifetime() < 0.4)
 		{
-			bullet.getVelocity().mul( 0.95f  );
+			bullet.getVelocity().mul( 1 - 0.75f*delta  );
 		}
 		else
 		{

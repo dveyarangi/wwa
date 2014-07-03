@@ -13,51 +13,14 @@ import yarangi.math.FastMath;
  * Note: cannot be used in multi-threaded environment, due to passId optimization (and lack of any type of synchronization).
  * @param <O>
  */
-public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex <O>
+public class SpatialHashMap <O extends ISpatialObject> extends Grid<List <O>> implements ISpatialIndex <O>
 {
-	/**
-	 * buckets array
-	 * see {@link #hash(int, int)} for indices here
-	 * TODO: hashmap is slow!!!
-	 * no duplicates here is important, and depends on correctness of the iteration over the inserted shape
-	 */
-	protected List <O> [] map;
-
 	/**
 	 * This is cache of object location;
 	 * For each indexed object, we keep copy of it's AABB, so when object asks for AABB
 	 * update, the hashmap can fix buckets accordingly.
 	 */
 	private final TIntObjectHashMap<AABB> aabbs = new TIntObjectHashMap<AABB> ();
-
-	/**
-	 * number of buckets
-	 */
-	private int size;
-
-	/**
-	 * dimensions of area this hashmap represents
-	 */
-	private float width, height;
-
-	/**
-	 * size of single hash cell
-	 */
-	private float cellSize;
-
-	/**
-	 * 1/cellSize, to speed up some calculations
-	 */
-	private float invCellsize;
-
-	/**
-	 * cellSize/2
-	 */
-	private float halfCellSize;
-	/**
-	 * hash cells amounts
-	 */
-	private int halfGridWidth, halfGridHeight;
 
 	/**
 	 * Used by query methods to mark tested objects and avoid result duplication;
@@ -79,48 +42,22 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 	@SuppressWarnings("unchecked")
 	public SpatialHashMap(final String name, final int size, final float cellSize, final float width, final float height)
 	{
-		this.size = size;
+		super(name, size, cellSize, width, height);
+	}
 
-		this.width = width;
-		this.height = height;
-		this.cellSize = cellSize;
-		this.invCellsize = 1.f / this.cellSize;
-		this.halfGridWidth = (int)(width/2f/cellSize);
-		this.halfGridHeight = (int)(height/2f/cellSize);
-		this.halfCellSize = cellSize/2.f;
-		map = new List[size];
+
+	@Override
+	public List<O> [] createGrid()
+	{
+
+		List [] map = new List[size];
 		for(int idx = 0; idx < size; idx ++)
 		{
 			map[idx] = new ArrayList <O> ();
 		}
+
+		return map;
 	}
-
-	/**
-	 * TODO: Optimizing constructor
-	 * @param width
-	 * @param height
-	 * @param averageAmount
-	 */
-	public SpatialHashMap(final String name, final int width, final int height, final int averageAmount)
-	{
-		throw new IllegalStateException("Not implemented yet.");
-	}
-
-
-	/**
-	 * @return width of the area, covered by this map
-	 */
-	public final float getHeight() { return height; }
-
-	/**
-	 * @return height of the area, covered by this map
-	 */
-	public final float getWidth() { return width; }
-
-	/**
-	 * @return size (height and width) of a single cell
-	 */
-	public final float getCellSize() { return cellSize; }
 
 	/**
 	 * Retrieves content of the bucket that holds the contents of (x,y) cell.
@@ -131,7 +68,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 	 */
 	public final List <O> getBucket(final int x, final int y)
 	{
-		return map[hash(x, y)];
+		return map[index(x, y)];
 	}
 
 	/**
@@ -146,7 +83,8 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 	 * @param y cell y cell coordinate (can range from -halfHeight to halfHeight)
 	 * @return
 	 */
-	protected final int hash(final int x, final int y)
+	@Override
+	protected final int index(final int x, final int y)
 	{
 		return ((x+halfGridWidth)*6184547 + (y+halfGridHeight)* 2221069) % size;
 	}
@@ -308,7 +246,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 			for(curry = minIdxy; curry <= maxIdxy; curry ++)
 			{
 //				System.out.println(minx + " " + miny + " " + maxx + " " + maxy);
-				hash = hash(currx, curry);
+				hash = index(currx, curry);
 
 				if(hash < 0)
 				{
@@ -366,7 +304,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 			for(curry = minIdxy; curry <= maxIdxy; curry ++)
 			{
 //				System.out.println(minx + " " + miny + " " + maxx + " " + maxy);
-				hash = hash(currx, curry);
+				hash = index(currx, curry);
 
 				if(hash < 0)
 				{
@@ -425,7 +363,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 		{
 			for(int ty = miny; ty <= maxy; ty ++)
 			{
-				cell = map[hash(tx, ty)];
+				cell = map[index(tx, ty)];
 
 				float distanceSquare = FastMath.powOf2(x - tx*cellSize) + FastMath.powOf2(y - ty*cellSize);
 				if(radiusSquare < distanceSquare)
@@ -488,7 +426,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 		List <O> cell;
 
 		O closestNeighbor = null;
-		cell = map[hash(minx, miny)];
+		cell = map[index(minx, miny)];
 		O object = null;
 		AABB objectArea;
 
@@ -536,7 +474,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 				for(int idx = -radius; idx <= radius; idx ++)
 				{
 
-					cell = map[hash(tx+xdelta*idx, ty+ydelta*idx)];
+					cell = map[index(tx+xdelta*idx, ty+ydelta*idx)];
 
 					for(idx = 0; idx < cell.size(); idx ++ )
 					{
@@ -695,7 +633,7 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 				tMaxY += tDeltaY;
 				currGridy += stepY;
 			}
-			cell = map[hash(currGridx, currGridy)];
+			cell = map[index(currGridx, currGridy)];
 
 			for(int idx = 0; idx < cell.size(); object = cell.get( idx ++ ))
 			{
@@ -725,15 +663,6 @@ public class SpatialHashMap <O extends ISpatialObject> implements ISpatialIndex 
 		return ++passId;
 	}
 
-	public final int toGridIndex(final float value)
-	{
-		return FastMath.round(value * invCellsize);
-	}
-
-	public final boolean isInvalidIndex(final int x, final int y)
-	{
-		return x < -halfGridWidth || x > halfGridWidth || y < -halfGridHeight || y > halfGridHeight;
-	}
 
 
 }

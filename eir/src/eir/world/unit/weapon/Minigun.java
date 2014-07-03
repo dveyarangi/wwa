@@ -55,13 +55,13 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public int getBurstSize() { return 7; }
+	public int getBurstSize() { return 3; }
 
 	@Override
-	public float getMagazineReloadTime() { return 1f; }
+	public float getMagazineReloadTime() { return 0.3f; }
 
 	@Override
-	public float getReloadingTime() { return 0.01f; }
+	public float getReloadingTime() { return 0.002f; }
 
 	@Override
 	public float getDispersion() { return 0.1f; }
@@ -110,10 +110,14 @@ public class Minigun extends IWeapon
 		return bulletDamage;
 	}
 	@Override
-	public float getAngularSpeed() { return 5f; }
+	public float getAngularSpeed() { return 1f; }
 
 
 	@Override
 	public float getMaxFireAngle() { return 10f; }
+
+
+	@Override
+	public boolean decayOnNoTarget() { return false; }
 
 }

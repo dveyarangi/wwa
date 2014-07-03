@@ -40,6 +40,7 @@ public class Bullet extends Unit implements IDamager
 	float angle;
 
 	boolean leaveTrace = false;
+	boolean decaying = false;
 
 	Bullet()
 	{
@@ -51,8 +52,9 @@ public class Bullet extends Unit implements IDamager
 	{
 		super.init();
 		//this.hull = new Hull(0.001f, 0f, new float [] {0f,0f,0f,0f});
-		this.target = null;
 		this.leaveTrace = false;
+
+		this.decaying = false;
 	}
 
 
@@ -63,6 +65,22 @@ public class Bullet extends Unit implements IDamager
 	public void update(final float delta)
 	{
 		super.update( delta );
+
+		if(this.target == null || ! this.target.isAlive() )
+		{
+			this.setDecaying( true );
+			this.target = null;
+		}
+
+		if( weapon.decayOnNoTarget() && isDecaying() )
+		{
+			this.lifetime += delta * (this.lifelen - this.lifetime) * 5f;
+		}
+
+		if(this.target != null && this.getArea().getAnchor().dst2( this.target.getArea().getAnchor() )  < 1)
+		{
+			this.setDead();
+		}
 
 		weapon.getBulletBehavior().update( delta, this );
 	}
@@ -147,4 +165,8 @@ public class Bullet extends Unit implements IDamager
 
 	@Override
 	public float getMaxSpeed() {return weapon.getMaxSpeed(); }
+
+	public void setDecaying( final boolean decaying ) { this.decaying = decaying; }
+
+	public boolean isDecaying() { return decaying; }
 }

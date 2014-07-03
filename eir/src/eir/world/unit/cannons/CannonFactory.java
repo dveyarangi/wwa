@@ -2,7 +2,6 @@ package eir.world.unit.cannons;
 
 import eir.world.environment.Environment;
 import eir.world.unit.UnitsFactory.UnitFactory;
-import eir.world.unit.ai.TaskStage;
 
 public class CannonFactory extends UnitFactory <Cannon>
 {
@@ -15,7 +14,7 @@ public class CannonFactory extends UnitFactory <Cannon>
 	{
 		this.environment = environment;
 
-		behaviors.put( TaskStage.ATTACK, new SimpleTargetingBehavior() );
+//		behaviors.put( TaskStage.ATTACK, new LinearTargetingBehavior() );
 	}
 
 	@Override
