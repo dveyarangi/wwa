@@ -46,7 +46,7 @@ public class Minigun extends IWeapon
 
 		bulletBehavior = new MassDriverBehavior();
 
-		bulletDamage = new Damage(100,0,0,0);
+		bulletDamage = new Damage(50f,0,0,0);
 	}
 
 
@@ -58,10 +58,10 @@ public class Minigun extends IWeapon
 	public int getBurstSize() { return 1; }
 
 	@Override
-	public float getMagazineReloadTime() { return 0.5f; }
+	public float getMagazineReloadTime() { return 0.4f; }
 
 	@Override
-	public float getReloadingTime() { return 0.002f; }
+	public float getReloadingTime() { return 0.04f; }
 
 	@Override
 	public float getDispersion() { return 0.0f; }
@@ -79,7 +79,7 @@ public class Minigun extends IWeapon
 	public float createSpeed() { return getBulletSpeed(); }
 
 	@Override
-	public float getBulletSpeed() { return 100; }
+	public float getBulletSpeed() { return 50; }
 
 
 	@Override
@@ -90,10 +90,10 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public Effect createHitEffect(final Bullet bullet)
+	public Effect createHitEffect(final Bullet bullet, final boolean isTargetDead)
 	{
 		return Effect.getEffect( HIT_01_AID,
-				10, bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 3 );
+				15, bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 3 );
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public float getBulletLifeDuration() { return 1; }
+	public float getBulletLifeDuration() { return 2; }
 
 
 	@Override
@@ -117,6 +117,6 @@ public class Minigun extends IWeapon
 	public float getMaxFireAngle() { return 10f; }
 
 	@Override
-	public boolean decayOnNoTarget() { return false; }
+	public boolean decayOnNoTarget() { return true; }
 
 }

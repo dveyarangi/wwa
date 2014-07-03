@@ -45,6 +45,10 @@ public class Effect implements Poolable
 
 		return effect;
 	}
+	public static Effect getEffect(final int animationId, final float size, final Vector2 position, final float angle, final float timeModifier)
+	{
+		return getEffect( animationId, size, position, Vector2.Zero, angle, timeModifier );
+	}
 
 	public static void free(final Effect effect)
 	{
@@ -103,5 +107,6 @@ public class Effect implements Poolable
 				size/region.getRegionWidth(),
 				size/region.getRegionWidth(), angle);
 	}
+
 
 }

@@ -132,7 +132,7 @@ public class Cannon extends TaskedUnit implements IDamager
 	@Override
 	public float getSize()
 	{
-		return 10;
+		return 4;
 	}
 
 	@Override

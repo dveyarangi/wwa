@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
-import eir.resources.GameFactory;
 import eir.world.Effect;
 import eir.world.IRenderer;
 import eir.world.Level;
@@ -36,9 +35,6 @@ public abstract class Unit implements ISpatialObject, IUnit
 	protected Faction faction;
 
 	public SurfaceNavNode anchor;
-
-	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas",
-			"explosion02");
 
 
 	///////////////////////////////////////////

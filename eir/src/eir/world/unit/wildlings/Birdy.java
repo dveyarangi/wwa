@@ -3,11 +3,14 @@
  */
 package eir.world.unit.wildlings;
 
+import yarangi.numbers.RandomUtil;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
+import eir.world.Effect;
 import eir.world.IRenderer;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
@@ -27,9 +30,12 @@ public class Birdy extends TaskedUnit implements IDamager
 //	private static Sprite sprite = GameFactory.createSprite( "anima//gears//birdy.png" );
 	private static int animationId = GameFactory.registerAnimation("anima//glow//glow.atlas",	"glow");
 
-	private  float maxSpeed = 40;
+	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas",
+			"explosion02");
 
-	private float size = 1;
+	private  float maxSpeed = 20;
+
+	private float size = 2;
 
 	///////////////////////////////////////////
 
@@ -41,7 +47,7 @@ public class Birdy extends TaskedUnit implements IDamager
 	protected void init()
 	{
 		super.init();
-		this.hull = new Hull(100f, 0f, new float [] {0f,0f,0f,0f});
+		this.hull = new Hull(300f, 0f, new float [] {0f,0f,0f,0f});
 	}
 
 	@Override
@@ -77,14 +83,14 @@ public class Birdy extends TaskedUnit implements IDamager
 
 		Unit unit = (Unit)damager;
 
-		impactImpulse = this.getArea().getAnchor().tmp()
+/*		impactImpulse = this.getArea().getAnchor().tmp()
 				.sub(
 						unit.getArea().getAnchor() )
 				.nor()
 				.mul( damage );
 
 
-		getVelocity().add( impactImpulse );
+		getVelocity().add( impactImpulse );*/
 
 		return damage;
 	}
@@ -103,5 +109,9 @@ public class Birdy extends TaskedUnit implements IDamager
 
 	@Override
 	public float getMaxSpeed() { return maxSpeed; }
-
+	@Override
+	public Effect getDeathEffect()
+	{
+		return Effect.getEffect( hitAnimationId, 10, getBody().getAnchor(), RandomUtil.N( 360 ), 3 );
+	}
 }

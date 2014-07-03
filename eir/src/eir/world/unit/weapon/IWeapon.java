@@ -197,7 +197,7 @@ public abstract class IWeapon
 	/**
 	 * @return
 	 */
-	public abstract Effect createHitEffect(Bullet bullet);
+	public abstract Effect createHitEffect(Bullet bullet, boolean isTargetDead);
 	public abstract Effect createTraceEffect(Bullet bullet);
 
 	/**

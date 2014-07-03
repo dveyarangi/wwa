@@ -100,7 +100,7 @@ public class HomingLauncher extends IWeapon
 	}
 
 	@Override
-	public Effect createHitEffect(final Bullet bullet)
+	public Effect createHitEffect(final Bullet bullet, final boolean isTargetDead)
 	{
 		if(RandomUtil.oneOf( 5 ))
 			return Effect.getEffect( HIT_01_AID,

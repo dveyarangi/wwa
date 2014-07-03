@@ -45,7 +45,7 @@ public class GameInputProcessor implements InputProcessor
 
 	private ISpatialObject pickedObject;
 
-	private float timeModifier = 1;
+	private TimeController timeController;
 
 	private UIInputProcessor uiProcessor;
 
@@ -69,24 +69,20 @@ public class GameInputProcessor implements InputProcessor
 
 		Debug.registerDebugActions( uiProcessor );
 
+		this.timeController = new TimeController();
+
 		uiProcessor.registerAction( Keys.PLUS, new InputAction() {
 			@Override
 			public void execute( final InputContext context )
 			{
-				if(timeModifier < 4)
-				{
-					timeModifier *= 2;
-				}
+				timeController.setTarget( timeController.getTargetModifier() * 2f);
 			}
 		});
 		uiProcessor.registerAction( Keys.MINUS, new InputAction() {
 			@Override
 			public void execute( final InputContext context )
 			{
-				if(timeModifier >= 0.25)
-				{
-					timeModifier /= 2;
-				}
+				timeController.setTarget( timeController.getTargetModifier() / 2f);
 			}
 		});
 
@@ -297,6 +293,7 @@ public class GameInputProcessor implements InputProcessor
 		 }
 
 
+		 timeController.update( delta );
 	 }
 
 	 public void draw( final IRenderer renderer )
@@ -342,6 +339,6 @@ public class GameInputProcessor implements InputProcessor
 		 return pointerPosition2;
 	 }
 
-	public float getTimeModifier() { return timeModifier ; }
+	public float getTimeModifier() { return timeController.getModifier() ; }
 
 }

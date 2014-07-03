@@ -41,6 +41,7 @@ public class Spawner extends Unit
 	@Override
 	public void update( final float delta )
 	{
+		super.update( delta );
 		timeToSpawn -= delta;
 		if(timeToSpawn < 0)
 		{

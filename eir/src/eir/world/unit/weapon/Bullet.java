@@ -147,9 +147,9 @@ public class Bullet extends Unit implements IDamager
 	}
 
 	@Override
-	public Effect getDeathEffect()
+	public Effect getDeathEffect(  )
 	{
-		return weapon.createHitEffect( this );
+		return weapon.createHitEffect( this, true );
 	}
 
 	@Override
