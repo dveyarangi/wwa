@@ -3,13 +3,12 @@
  */
 package eir.resources;
 
-import java.util.List;
-
 import com.badlogic.gdx.math.Vector2;
 
 import eir.world.Asteroid;
 import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavEdge;
+import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavNodeDescriptor;
 import eir.world.environment.nav.SurfaceNavNode;
 
@@ -66,11 +65,10 @@ public class PolygonalModel
 	/**
 	 * @param navMesh
 	 * @param origin
-	 * @param polygons
 	 * @param body
 	 * @param sprite
 	 */
-	public PolygonalModel(final FloydWarshal navMesh, final Asteroid asteroid, final Vector2 origin, final Vector2 [] rawVertices, final List<List<Vector2>> polygons)
+	public PolygonalModel(final Vector2 [] rawVertices, final Vector2 origin, final Vector2 position, final float size, final float angle)
 	{
 		super();
 		this.origin = origin;
@@ -86,9 +84,9 @@ public class PolygonalModel
 		{
 			vertices[idx] = rawVertices[idx].tmp()
 					.sub( origin.x, origin.y ) // making relative to origin
-					.rotate( asteroid.getAngle() ) // rotating
-					.mul( asteroid.getSize() ) // scaling
-					.add( asteroid.getPosition() )  // transposing
+					.rotate( angle ) // rotating
+					.mul( size ) // scaling
+					.add( position )  // transposing
 					.cpy();      // tmp ref is not to be saved!
 		}
 
@@ -103,10 +101,6 @@ public class PolygonalModel
 
 		nodes = new SurfaceNavNode[len];
 
-		navMesh.beginAsteroid();
-		SurfaceNavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0] /*, rawVertices[0]*/ );
-		int startingIdx = currNode.getIndex();
-		SurfaceNavNode prevNode;
 		for(int idx = 0; idx < len; idx ++)
 		{
 			int nidx = (idx+1)%len;
@@ -121,22 +115,41 @@ public class PolygonalModel
 			normals[idx] = b.tmp().sub( a ).nor().rotate( 90 ).cpy();
 
 			lengths[idx] = (float)Math.hypot( b.x-a.x, b.y-a.y );
+			maxSurfaceIdx ++;
+		}
+
+	}
+
+	public void addToMesh(final NavMesh mesh, final Asteroid asteroid)
+	{
+		FloydWarshal navMesh = (FloydWarshal) mesh;
+		navMesh.beginAsteroid();
+		SurfaceNavNode currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, 0), vertices[0]  );
+		int startingIdx = currNode.getIndex();
+		SurfaceNavNode prevNode;
+		for(int idx = 0; idx < len; idx ++)
+		{
+			int nidx = (idx+1)%len;
+			Vector2 vertex = vertices[nidx];
+
 
 			nodes[idx] = currNode;
 			prevNode = currNode;
 
 			if(nidx != 0)
 			{
-				currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, nidx),  b /*, rawVertices[nidx]*/ );
+				currNode = navMesh.insertNode( new NavNodeDescriptor(asteroid, nidx), vertex );
 			} else
 			{
 				currNode = navMesh.getNode(startingIdx);
 			}
+
 			navMesh.linkNodes( currNode, prevNode, NavEdge.Type.LAND );
 
 			maxSurfaceIdx ++;
 		}
 		navMesh.endAsteroid();
+
 	}
 
 	/**

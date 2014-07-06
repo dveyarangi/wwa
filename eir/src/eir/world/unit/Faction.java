@@ -13,10 +13,14 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import eir.resources.GameFactory;
+import eir.resources.levels.FactionDef;
+import eir.resources.levels.UnitDef;
 import eir.world.Level;
+import eir.world.controllers.ControllerFactory;
 import eir.world.controllers.IController;
 import eir.world.environment.Environment;
-import eir.world.environment.nav.SurfaceNavNode;
+import eir.world.environment.nav.NavNode;
 import eir.world.environment.sensors.ISensingFilter;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.ai.Scheduler;
@@ -35,21 +39,16 @@ public class Faction
 	/**
 	 * unit owner for hits resolving
 	 */
-	public int ownerId;
+	private FactionDef def;
 
-	/**
-	 * unit type
-	 */
-	public int unitType;
 
 	public Animation antAnimation;
-
-	public Color color;
-
 	/////////////////////////////////////////////////////
 	//
 
 	public Level level;
+
+	private GameFactory gameFactory;
 
 	public Set <Unit> units;
 	public Multimap <String, Unit> unitsByTypes;
@@ -81,14 +80,21 @@ public class Faction
 		this.unitsByTypes = HashMultimap.create ();
 	}
 
-	public void init(final Level level)
+	public void init(final GameFactory gameFactory, final Level level, final FactionDef def)
 	{
+		this.gameFactory = gameFactory;
+		this.def = def;
 		this.level = level;
+
+		this.controller = ControllerFactory.createController( def.getControllerType() );
+		controller.init( this );
 		this.controller.init( this );
 		scheduler = new Scheduler( level.getUnitsFactory() );
+
+
 	}
 
-	public int getOwnerId()	{ return ownerId; }
+	public int getOwnerId()	{ return def.getOwnerId(); }
 
 	public void addUnit( final Unit unit )
 	{
@@ -139,9 +145,9 @@ public class Faction
 	 */
 	public Environment getEnvironment() { return level.getEnvironment(); }
 
-	public Unit createUnit( final String type, final SurfaceNavNode anchor )
+	public Unit createUnit( final UnitDef def, final NavNode anchor )
 	{
-		Unit unit = level.getUnitsFactory().getUnit( type, anchor, this );
+		Unit unit = level.getUnitsFactory().getUnit( gameFactory, level, def, anchor, this );
 		getLevel().addUnit( unit );
 
 		return unit;
@@ -153,6 +159,8 @@ public class Faction
 	}
 
 	public ISensingFilter getEnemyFilter() { return enemyFilter; }
+
+	public Color getColor() { return def.getColor(); }
 
 
 }

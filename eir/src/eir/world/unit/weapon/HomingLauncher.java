@@ -6,14 +6,16 @@ package eir.world.unit.weapon;
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
+import eir.resources.levels.UnitDef;
 import eir.world.Effect;
+import eir.world.Level;
 import eir.world.unit.AOEFunction;
 import eir.world.unit.Damage;
 import eir.world.unit.Unit;
+import eir.world.unit.UnitsFactory;
 
 /**
  * @author dveyarangi
@@ -30,22 +32,15 @@ public class HomingLauncher extends IWeapon
 	private int burstChirality = 1;
 
 
-//	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
-	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket02.atlas", "bullet" );
 
-	private static final int TRAIL_AID  = GameFactory.registerAnimation( "anima//effects//smoke//smoke.atlas", "smoke" );
-	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion03.atlas", "explosion03" );
-	private static final int HIT_02_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion05.atlas", "explosion05" );
-
-
-	private static Sprite bulletSprite = GameFactory.createSprite( "anima//bullets//rocket01.png" );
+	private Animation hitAnimation01;
+	private Animation hitAnimation02;
+	private Animation trailAnimation;
 
 	public HomingLauncher(final Unit unit)
 	{
 		super(unit);
 
-
-		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
 
 		bulletBehavior = new HomingBehavior(this);
 
@@ -54,7 +49,14 @@ public class HomingLauncher extends IWeapon
 	}
 
 	@Override
-	public float getBulletSize() { return 1; }
+	public void init( final GameFactory gameFactory, final Level level )
+	{
+		super.init( gameFactory, level );
+		this.hitAnimation01 = gameFactory.getAnimation( GameFactory.EXPLOSION_03_ANIM );
+		this.hitAnimation02 = gameFactory.getAnimation( GameFactory.EXPLOSION_05_ANIM );
+		this.trailAnimation = gameFactory.getAnimation( GameFactory.SMOKE_ANIM );
+	}
+
 
 
 	@Override
@@ -73,13 +75,7 @@ public class HomingLauncher extends IWeapon
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
 
 	@Override
-	public Animation getBulletAnimation() { return bulletAnimation; }
-
-	@Override
-	public Sprite getBulletSprite() { return bulletSprite; }
-
-	@Override
-	public float createSpeed() { return RandomUtil.STD( getBulletSpeed(), 10 ); }
+	public float createSpeed() { return RandomUtil.STD( getBulletSpeed()/2, getBulletSpeed()/10 ); }
 
 	@Override
 	public float getBulletSpeed() { return 50; }
@@ -103,10 +99,10 @@ public class HomingLauncher extends IWeapon
 	public Effect createHitEffect(final Bullet bullet, final boolean isTargetDead)
 	{
 		if(RandomUtil.oneOf( 5 ))
-			return Effect.getEffect( HIT_01_AID,
+			return Effect.getEffect( hitAnimation01,
 					RandomUtil.STD( 20, 4 ), bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 3 );
 		else
-			return Effect.getEffect( HIT_02_AID,
+			return Effect.getEffect( hitAnimation02,
 					RandomUtil.STD( 8, 2 ), bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), Math.abs( RandomUtil.STD( 0, 0.5f )) + 3 );
 
 	}
@@ -126,7 +122,7 @@ public class HomingLauncher extends IWeapon
 	@Override
 	public Effect createTraceEffect(final Bullet bullet)
 	{
-		return Effect.getEffect( TRAIL_AID,
+		return Effect.getEffect( trailAnimation,
 				RandomUtil.N( 2 ) + 1,
 				bullet.getArea().getAnchor(),
 				Vector2.tmp2.set( 0,0 ).sub(bullet.getVelocity().tmp().nor()).mul( getBulletSpeed()*2f/3f ),
@@ -140,5 +136,11 @@ public class HomingLauncher extends IWeapon
 
 	@Override
 	public boolean decayOnNoTarget() { return true; }
+
+	@Override
+	public UnitDef getBulletDef()
+	{
+		return new UnitDef( UnitsFactory.BULLET, 2f, GameFactory.ROCKET_TXR, null );
+	}
 
 }

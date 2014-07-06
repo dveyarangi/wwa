@@ -3,7 +3,9 @@
  */
 package eir.world.unit.structure;
 
-import eir.world.IRenderer;
+import eir.rendering.IRenderer;
+import eir.resources.GameFactory;
+import eir.world.Level;
 import eir.world.unit.Hull;
 import eir.world.unit.Unit;
 
@@ -13,29 +15,15 @@ import eir.world.unit.Unit;
  */
 public class Spawner extends Unit
 {
-	public float spawnInterval;
-
 	public float timeToSpawn;
 
-	/**
-	 * Max units to spawn
-	 */
-	private int maxUnits = 1;
-
-	private String unitType;
-
-	private float size = 10;
 
 	@Override
-	protected void init()
+	protected void reset( final GameFactory gameFactory, final Level level )
 	{
-		super.init();
-
-		unitType = unitType.intern();
+		super.reset( gameFactory, level );
 
 		this.hull = new Hull(10000f, 0f, new float [] {0f,0f,0f,0f});
-
-
 	}
 
 	@Override
@@ -45,13 +33,14 @@ public class Spawner extends Unit
 		timeToSpawn -= delta;
 		if(timeToSpawn < 0)
 		{
+			SpawnerDef sdef = (SpawnerDef) def;
 
-			if(faction.units.size() < maxUnits)
+			if(faction.units.size() < sdef.getMaxUnits())
 			{
-				faction.createUnit( unitType, anchor );
+				faction.createUnit( sdef.getSpawnedUnit(), anchor );
 			}
 
-			timeToSpawn = spawnInterval;
+			timeToSpawn = sdef.getSpawnInterval();
 		}
 	}
 
@@ -62,8 +51,7 @@ public class Spawner extends Unit
 	}
 
 	@Override
-	public float getSize() { return size; }
-
-	@Override
 	public float getMaxSpeed() { return 0; }
+
+
 }

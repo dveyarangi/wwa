@@ -1,16 +1,17 @@
 /**
- * 
+ *
  */
 package eir.world;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 
+import eir.rendering.EntityRenderer;
+import eir.rendering.IRenderer;
+import eir.rendering.SpriteRenderer;
 import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
-import eir.world.environment.nav.NavMesh;
+import eir.resources.levels.AsteroidDef;
 
 /**
  * @author dveyarangi
@@ -18,69 +19,46 @@ import eir.world.environment.nav.NavMesh;
  */
 public class Asteroid
 {
-	/**
-	 * Asteroid id for whatever we will need tihs
-	 */
-	private String name;
 
-	/**
-	 * Position of asteroid
-	 */
-	private Vector2 position;
-
-	/**
-	 * Angle, huh
-	 */
-	private float angle;
-
-	/**
-	 * Size
-	 */
-	private float size;
-
-	/**
-	 * Asteroid poly + texture model id (such models may potentialy be reused)
-	 */
-	private String modelId;
+	private AsteroidDef def;
 
 	/**
 	 * Asteroid sprite overlay
 	 */
-	private Sprite sprite;
+	private EntityRenderer <Asteroid> renderer;
 
 	/**
 	 * Underlying polygon model with navigation and ambulation helpers.
 	 */
 	private PolygonalModel model;
 
-	private Body body;
-
-	public Asteroid()
+	public Asteroid( )
 	{
-
 	}
 
 	public PolygonalModel getModel() { return model; }
 
-	public String getName() { return name; }
+	public String getName() { return def.getName(); }
 
-	public float getAngle()	{ return angle;	}
-	public Vector2 getPosition() { return position;	}
-	public float getSize() { return size; }
+	public float getAngle()	{ return def.getAngle();	}
+	public Vector2 getPosition() { return def.getPosition();	}
+	public float getSize() { return def.getSize(); }
 
-	/**
-	 * This is required to initialize sprite and model
-	 * @param factory
-	 */
-	public void preinit(final NavMesh mesh)
+	public void init(final GameFactory gameFactory, final Level level, final AsteroidDef def)
 	{
-		model = GameFactory.loadAsteroidModel( mesh, this, modelId );
-		sprite = GameFactory.createSprite( modelId, position, model.getOrigin(), size, size, angle );
-	}
+		this.def = def;
 
-	public void init(final Level level)
-	{
-		this.body = GameFactory.loadBody(modelId, this);
+		model = GameFactory.loadAsteroidModel( this, def.getModelId() );
+
+		Sprite sprite = gameFactory.createSprite(
+				def.getTexture(),
+				def.getPosition(),
+				model.getOrigin(),
+				def.getSize(), def.getSize(), def.getAngle() );
+
+		this.renderer = new SpriteRenderer <Asteroid>( sprite );
+
+		model.addToMesh( level.getEnvironment().getGroundMesh(), this );
 	}
 
 
@@ -88,9 +66,9 @@ public class Asteroid
 	 * @param batch
 	 * @param shapeRenderer
 	 */
-	public void draw( final SpriteBatch batch )
+	public void draw( final IRenderer renderer )
 	{
-		sprite.draw( batch );
+		this.renderer.draw( renderer, this );
 	}
 
 

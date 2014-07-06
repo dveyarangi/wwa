@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.debug.Debug;
-import eir.world.IRenderer;
+import eir.rendering.IRenderer;
 import eir.world.unit.IOverlay;
 import eir.world.unit.Unit;
 import eir.world.unit.cannons.Cannon;

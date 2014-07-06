@@ -2,7 +2,7 @@ package eir.world.unit;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import eir.world.IRenderer;
+import eir.rendering.IRenderer;
 
 /**
  * Unit decorator

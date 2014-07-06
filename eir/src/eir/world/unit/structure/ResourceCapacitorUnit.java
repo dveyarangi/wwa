@@ -1,10 +1,11 @@
-package eir.world.unit;
+package eir.world.unit.structure;
 
 import java.util.HashMap;
 
 import eir.world.resource.IResourceCapacitor;
 import eir.world.resource.Resource;
 import eir.world.resource.Resource.Type;
+import eir.world.unit.Unit;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
 

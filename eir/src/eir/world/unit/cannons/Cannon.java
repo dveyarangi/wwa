@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.rendering.IRenderer;
+import eir.rendering.LevelRenderer;
 import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
 import eir.world.Asteroid;
-import eir.world.IRenderer;
 import eir.world.Level;
-import eir.world.LevelRenderer;
 import eir.world.environment.sensors.ISensor;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
@@ -19,8 +19,8 @@ import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
 import eir.world.unit.TaskedUnit;
 import eir.world.unit.Unit;
+import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
-import eir.world.unit.weapon.Minigun;
 
 public class Cannon extends TaskedUnit implements IDamager
 {
@@ -43,8 +43,9 @@ public class Cannon extends TaskedUnit implements IDamager
 	}
 
 	@Override
-	public void postinit( final Level level )
+	protected void reset( final GameFactory gameFactory, final Level level )
 	{
+		super.reset( gameFactory, level );
 
 		this.sensor = level.getEnvironment().createSensor( this, SENSOR_RADIUS );
 
@@ -62,14 +63,15 @@ public class Cannon extends TaskedUnit implements IDamager
 		this.angle = surface.rotate( 90 ).angle();
 
 		///*
-//		this.weapon = new HomingLauncher( this );
-//		this.targetProvider = TargetProvider.RANDOM_TARGETER( this );
+		this.weapon = new HomingLauncher( this );
+		this.targetProvider = TargetProvider.RANDOM_TARGETER( this );
 
 		/**/
-		this.weapon = new Minigun( this );
-		this.targetProvider = TargetProvider.CLOSEST_TARGETER( this );
+//		this.weapon = new Minigun( this );
+//		this.targetProvider = TargetProvider.CLOSEST_TARGETER( this );
 
  		/***/
+		this.weapon.init( gameFactory, level );
 		this.targetingModule = new LinearTargetingModule();
 	}
 
@@ -114,13 +116,12 @@ public class Cannon extends TaskedUnit implements IDamager
 		}
 	}
 
-	private static Sprite sprite = GameFactory.createSprite( "anima//cannons//cannon_hybrid_01.png" );
-
 	@Override
 	public void draw( final IRenderer renderer )
 	{
 		final SpriteBatch batch = renderer.getSpriteBatch();
 		Vector2 position = getBody().getAnchor();
+		Sprite sprite = getUnitSprite();
 		batch.draw( sprite,
 				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
 				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,

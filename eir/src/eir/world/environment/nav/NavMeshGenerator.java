@@ -1,5 +1,6 @@
 package eir.world.environment.nav;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,16 +33,16 @@ public class NavMeshGenerator
 	{
 		triangulator = new Delaunay2D();
 	}
-	
+
 	/**
 	 * Filter for triangulated stuff
 	 */
-	private static class AsteroidFilter implements MeshFilter 
+	private static class AsteroidFilter implements MeshFilter
 	{
 		private Vector2 minCorner, maxCorner;
 		private List<Polygon> polygons;
-		
-		public AsteroidFilter(List<Polygon> polygons, Vector2 minCorner, Vector2 maxCorner)
+
+		public AsteroidFilter(final List<Polygon> polygons, final Vector2 minCorner, final Vector2 maxCorner)
 		{
 			this.maxCorner = maxCorner;
 			this.minCorner = minCorner;
@@ -49,30 +50,28 @@ public class NavMeshGenerator
 		}
 
 		@Override
-		public boolean accept( Edge edge )
+		public boolean accept( final Edge edge )
 		{
 			return true;
 		}
 
 		@Override
-		public boolean accept( IVector2D node )
+		public boolean accept( final IVector2D node )
 		{
-			if( node.x() < minCorner.x || node.y() < minCorner.y 
+			if( node.x() < minCorner.x || node.y() < minCorner.y
 			 || node.x() > maxCorner.x || node.y() > maxCorner.y )
 				return false;
-			
+
 			for( Polygon polygon : polygons )
 			{
 				if( polygon.contains( (float)node.x(), (float)node.y() ))
-				{
 					return false;
-				}
 			}
 			return true;
 		}
 	}
 
-	public NavMesh generateMesh( List<Asteroid> asteroids, final Vector2 minCorner, final Vector2 maxCorner )
+	public NavMesh generateMesh( final Collection <Asteroid> asteroids, final Vector2 minCorner, final Vector2 maxCorner )
 	{
 		NavMesh resultMesh = new AirNavMesh();
 
@@ -114,9 +113,9 @@ public class NavMeshGenerator
 			}
 		}*/
 		//		TriangleStore store2 = triangulator.triangulate( mesh1.getNodes() );
-		
+
 /*		Mesh mesh2 = VoronoiDiagram.invertTriangleStore( store2, new AsteroidFilter( polygons, minCorner, maxCorner ));
-		
+
 /*		for(Edge edge : store2.getEdges())
 		{
 			NavNode node1 = nodes.get( new Vector2((float)edge.first().x(), (float)edge.first().y() ) );
@@ -124,9 +123,9 @@ public class NavMeshGenerator
 			mesh.linkNodes( node1, node2, Type.AIR );
 		}
 		*/
-		
+
 		// converting voronoi regions to nav mesh:
-		
+
 		Map<Vector2, NavNode> nodes = new HashMap<Vector2, NavNode>();
 		edges: for( Edge edge : mesh.getEdges() )
 		{
@@ -138,22 +137,24 @@ public class NavMeshGenerator
 			if( nodes.containsKey( c1 ) )
 			{
 				node1 = nodes.get( c1 );
-			}
-			else
+			} else
+			{
 				nodes.put( c1, node1 = resultMesh.insertNode( null, c1 ) );
+			}
 			NavNode node2;
-			
+
 			if( nodes.containsKey( c2 ) )
 			{
 				node2 = nodes.get( c2 );
-			}
-			else
+			} else
+			{
 				nodes.put( c2, node2 = resultMesh.insertNode( null, c2 ) );
+			}
 
 			resultMesh.linkNodes( node1, node2, Type.AIR );
 
 		}
-		
+
 		return resultMesh;
 	}
 }

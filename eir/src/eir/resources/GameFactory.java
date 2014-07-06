@@ -1,12 +1,14 @@
 /**
- * 
+ *
  */
 package eir.resources;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,23 +19,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 import eir.debug.Debug;
+import eir.resources.levels.LevelDef;
 import eir.world.Asteroid;
-import eir.world.Level;
-import eir.world.environment.MazeType;
-import eir.world.environment.nav.FloydWarshal;
-import eir.world.environment.nav.NavMesh;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import eir.world.unit.UnitsFactory;
 
 
 /**
  * TODO: this class becomes crumbled, split to rendering and in-game stuff (them probably should go to level)
- * 
+ *
  * @author dveyarangi
  */
 public class GameFactory
@@ -43,67 +38,106 @@ public class GameFactory
 
 	private static final String MODELS_PATH = "models/";
 
-	private static GameFactory instance;
+	/**
+	 * Loaded textures by name (filename, actually)
+	 */
+	private final Set <TextureHandle> textureHandles = new HashSet <TextureHandle> ();
+	/**
+	 * Loaded textures by name (filename, actually)
+	 */
+	private final Set <TextureAtlasHandle> atlasHandles = new HashSet <TextureAtlasHandle> ();
+	/**
+	 * Loaded textures by name (filename, actually)
+	 */
+	private final Set <AnimationHandle> animationHandles = new HashSet <AnimationHandle> ();
 
 	/**
 	 * Loaded textures by name (filename, actually)
 	 */
-	private final Map <String, Texture> textureCache = new HashMap <String, Texture> ();
+	private final Map <TextureHandle, Texture> textureCache = new HashMap <TextureHandle, Texture> ();
 	/**
 	 * Loaded textures by name (filename, actually)
 	 */
-	private final Map <String, TextureAtlas> atlasCache = new HashMap <String, TextureAtlas> ();
+	private final Map <TextureAtlasHandle, TextureAtlas> atlasCache = new HashMap <TextureAtlasHandle, TextureAtlas> ();
+	/**
+	 * Loaded textures by name (filename, actually)
+	 */
+	private final Map <AnimationHandle, Animation> animationCache = new HashMap <AnimationHandle, Animation> ();
 
-	private static Level level;
+	public GameFactory() { }
 
-	private static int ANIMATION_ID = 0;
 
-	private static TIntObjectHashMap<Animation> animations = new TIntObjectHashMap <Animation> ();
-
-	private GameFactory() { }
-
-	public static void init()
+	public void dispose()
 	{
-		if(instance != null)
-			throw new IllegalStateException("Game factory is already initialized.");
-
-		instance = new GameFactory();
-	}
-
-
-	public static void dispose()
-	{
-		Debug.log("Disposing textures");
-		for(Texture texture : instance.textureCache.values())
+		Debug.log("Disposing textures...");
+		for(Texture texture : textureCache.values())
 		{
 			texture.dispose();
 		}
-		Debug.log("Disposing atlases");
-		for(TextureAtlas atlas : instance.atlasCache.values())
+		textureCache.clear();
+		Debug.log("Disposing animations...");
+		for(TextureAtlas atlas : atlasCache.values())
 		{
 			atlas.dispose();
 		}
 
-		animations.clear();
-		ANIMATION_ID = 0;
-
-		GameFactory.level = null;
+		textureCache.clear();
+//		Debug.log("Disposing animations");
+		animationCache.clear();
 	}
 
 	/**
 	 * @param string
 	 * @return
 	 */
-	public static Level loadLevel(final String levelName)
+	public LevelDef readLevelDefs(final String levelName, final UnitsFactory unitsFactory)
 	{
-		final LevelLoadingContext context = new LevelLoadingContext();
 		LevelLoader loader = new LevelLoader();
 
-		level = loader.readLevel( levelName, context );
+		LevelDef levelDef = loader.readLevel( levelName, this, unitsFactory );
 
-		level.init(context);
+		registerSharedResources();
 
-		return level;
+		return levelDef;
+	}
+
+	public final static TextureHandle ROCKET_TXR = new TextureHandle( "anima//bullets//rocket01" );
+	public final static TextureHandle FIREBALL_TXR = new TextureHandle( "anima//bullets//fireball" );
+	public final static TextureHandle CANNON_HYBRID_TXR = new TextureHandle( "anima//cannons//cannon_hybrid_01" );
+
+	public static final TextureAtlasHandle EXPLOSION_03_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion03.atlas" );
+	public static final AnimationHandle EXPLOSION_03_ANIM = new AnimationHandle(EXPLOSION_03_ATLAS, "explosion03");
+	public static final TextureAtlasHandle EXPLOSION_04_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion04.atlas" );
+	public static final AnimationHandle EXPLOSION_04_ANIM = new AnimationHandle(EXPLOSION_04_ATLAS, "explosion04");
+	public static final TextureAtlasHandle EXPLOSION_05_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion05.atlas" );
+	public static final AnimationHandle EXPLOSION_05_ANIM = new AnimationHandle(EXPLOSION_05_ATLAS, "explosion05");
+
+	public static final TextureAtlasHandle CROSSHAIR_ATLAS = new TextureAtlasHandle( "anima//ui//crosshair01.atlas" );
+	public static final AnimationHandle CROSSHAIR_ANIM = new AnimationHandle(CROSSHAIR_ATLAS, "crosshair");
+	public static final TextureAtlasHandle SMOKE_ATLAS = new TextureAtlasHandle( "anima//effects//smoke//smoke.atlas" );
+	public static final AnimationHandle SMOKE_ANIM = new AnimationHandle(SMOKE_ATLAS, "smoke");
+
+
+	private void registerSharedResources()
+	{
+
+		registerAnimation( CROSSHAIR_ANIM);
+		registerAnimation( SMOKE_ANIM );
+		registerAnimation( EXPLOSION_03_ANIM );
+		registerAnimation( EXPLOSION_04_ANIM );
+		registerAnimation( EXPLOSION_05_ANIM );
+
+		registerTexture( FIREBALL_TXR );
+		registerTexture( ROCKET_TXR );
+		registerTexture( CANNON_HYBRID_TXR );
+
+
+	}
+
+	public void loadLevelResources()
+	{
+		loadTextures( );
+		loadTextureAtlases( );
 	}
 
 	private static final String createBodyPath(final String modelId)
@@ -119,7 +153,7 @@ public class GameFactory
 		.toString();
 	}
 
-	public static PolygonalModel loadAsteroidModel(final NavMesh mesh, final Asteroid asteroid, final String modelId)
+	public static PolygonalModel loadAsteroidModel(final Asteroid asteroid, final String modelId)
 	{
 		String modelFile = createBodyPath(modelId);
 		Debug.log("Loading asteroid model file [" + modelFile + "]");
@@ -128,15 +162,16 @@ public class GameFactory
 		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
 
 		return new PolygonalModel(
-				(FloydWarshal)mesh,
-				asteroid,
-				bodyModel.origin,
 				vertices,
-				bodyModel.polygons);
+				bodyModel.origin,
+				asteroid.getPosition(),
+				asteroid.getSize(),
+				asteroid.getAngle()
+				);
 
 	}
 
-	public static Body loadBody(final String modelId, final Asteroid asteroid)
+/*	public Body loadBody(final String modelId, final Asteroid asteroid)
 	{
 		String modelFile = createBodyPath(modelId);
 		// 0. Create a loader for the file saved from the editor.
@@ -156,22 +191,23 @@ public class GameFactory
 		fd.restitution = 0.3f;
 
 		// 3. Create a Body, as usual.
-		Body body = level.getEnvironment().getPhyisics().createBody(bd);
+		Body body = context.environment.getPhyisics().createBody(bd);
 
 		body.setUserData( MazeType.ASTEROID );
 		// 4. Create the body fixture automatically by using the loader.
 		loader.attachFixture(body, "Name", fd, asteroid.getSize());
 
 		return body;
+	}*/
+
+	public Sprite createSprite(final TextureHandle handle, final Vector2 position, final Vector2 origin, final float width, final float height, final float degrees)
+	{
+		return createSprite( handle, position, origin.x, origin.y, width, height, degrees);
 	}
 
-	public static Sprite createSprite(final String modelId, final Vector2 position, final Vector2 origin, final float width, final float height, final float degrees)
+	public Sprite createSprite( final TextureHandle handle, final Vector2 position, final float ox, final float oy, final float width, final float height, final float degrees)
 	{
-		return createSprite(modelId, position, origin.x, origin.y, width, height, degrees);
-	}
-	public static Sprite createSprite(final String modelId, final Vector2 position, final float ox, final float oy, final float width, final float height, final float degrees)
-	{
-		Texture texture = loadTexture( createImagePath(modelId) );
+		Texture texture = getTexture( handle );
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		TextureRegion region = new TextureRegion(texture);
@@ -192,9 +228,18 @@ public class GameFactory
 		return sprite;
 	}
 
-	public static Sprite createSprite(final String textureFlie)
+	public Texture getTexture( final TextureHandle handle )
 	{
-		TextureRegion region = new TextureRegion( GameFactory.loadTexture( textureFlie ) );
+		Texture texture = textureCache.get( handle );
+		if( texture == null)
+			throw new IllegalArgumentException("No texture registered for handle " + handle );
+
+		return texture;
+	}
+
+	public Sprite createSprite( final TextureHandle handle )
+	{
+		TextureRegion region = new TextureRegion( getTexture( handle ) );
 
 		Sprite sprite = new Sprite(region);
 		//		float realOX = sprite.getWidth()/2;
@@ -219,73 +264,94 @@ public class GameFactory
 	//	}
 	//
 
+	public TextureHandle registerTexture( final TextureHandle handle )
+	{
+		if(!textureHandles.contains( handle ))
+		{
+			textureHandles.add( handle );
+		}
+
+		return handle;
+	}
 	/**
 	 * @param world
 	 * @param textureFile
 	 * @param size
 	 * @return
 	 */
-	public static Texture loadTexture(final String textureFile)
+	public void loadTextures()
 	{
-		Texture texture = instance.textureCache.get( textureFile );
-		if(texture == null)
+		for( TextureHandle handle : textureHandles )
 		{
-			texture = new Texture(Gdx.files.internal(textureFile));
-			instance.textureCache.put(textureFile, texture);
-			Debug.log("Loaded texture [" + textureFile + "]" );
+			Texture texture = new Texture(Gdx.files.internal( handle.getPath() ) + ".png");
+			textureCache.put(handle, texture);
+
+			Debug.log("Loaded texture [" + handle + "]" );
+
 		}
-		return texture;
 	}
 
 	static NumberFormat ANIMA_NUMBERING = new DecimalFormat( "0000" );
 
-	public TextureAtlas loadTextureAtlas(final String atlasName)
+
+	public AnimationHandle registerAnimation(  final AnimationHandle animationHandle )
 	{
-		TextureAtlas atlas = atlasCache.get( atlasName );
-		if(atlas == null)
+		TextureAtlasHandle atlasHandle = animationHandle.getAtlas();
+		if(!atlasHandles.contains( atlasHandle ))
 		{
-			atlas = new TextureAtlas(Gdx.files.internal(atlasName));
-			atlasCache.put( atlasName, atlas);
+			atlasHandles.add( atlasHandle );
+		}
+		if(!animationHandles.contains( animationHandle ))
+		{
+			animationHandles.add( animationHandle );
 		}
 
-		return atlas;
+		return animationHandle;
+
 	}
 
-	public static Animation getAnimation(final int animationId)
+	public void loadTextureAtlases()
 	{
-		return animations.get(animationId);
+		for(TextureAtlasHandle handle : atlasHandles)
+		{
+			TextureAtlas atlas = new TextureAtlas( Gdx.files.internal(handle.getPath()) );
+			atlasCache.put( handle, atlas);
+		}
+
+		for(AnimationHandle handle : animationHandles)
+		{
+			animationCache.put( handle, createAnimation( handle ) );
+		}
 	}
 
-	public static String getAnimationName(final String atlasName, final String regionName)
-	{
-		return atlasName + "/" + regionName;
-	}
 
-	private static Animation loadAnimation(final String atlasName, final String regionName)
+	private Animation createAnimation(final AnimationHandle handle)
 	{
-		TextureAtlas atlas = instance.loadTextureAtlas( atlasName );
+		TextureAtlas atlas = atlasCache.get( handle.getAtlas() );
 
 		int size = atlas.getRegions().size;
 		TextureRegion[] frames = new TextureRegion[size];
 
 		for(int fidx = 0; fidx < size; fidx ++)
 		{
-			frames[fidx] = atlas.findRegion( regionName + "." + ANIMA_NUMBERING.format(fidx) );
+			frames[fidx] = atlas.findRegion( handle.getRegionName() + "." + ANIMA_NUMBERING.format(fidx) );
 			if(frames[fidx] == null)
-				throw new IllegalArgumentException( "Region array " + regionName + " was not found in atlas " + atlasName );
+				throw new IllegalArgumentException( "Region array " + handle.getRegionName() + " was not found in atlas " + handle );
 		}
 
-		Debug.log("Loaded animation [" + atlasName + "] (region " + regionName + ")");
+		Debug.log("Loaded animation [" + handle + "].");
 
 		Animation animation = new Animation( 0.05f, frames );
 		return animation;
 	}
 
-	public static int registerAnimation(final String atlasName, final String regionName)
+	public Animation getAnimation( final AnimationHandle handle )
 	{
-		Animation animation = loadAnimation(atlasName, regionName);
-		animations.put(ANIMATION_ID, animation);
-		return ANIMATION_ID ++;
+		Animation animation = animationCache.get( handle );
+		if( animation == null)
+			throw new IllegalArgumentException("No animation registered for handle " + handle );
+
+		return animation;
 	}
 	/**
 	 * TODO: cache!

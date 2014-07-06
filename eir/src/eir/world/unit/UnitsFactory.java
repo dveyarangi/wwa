@@ -10,12 +10,14 @@ import com.badlogic.gdx.utils.IdentityMap;
 import com.badlogic.gdx.utils.Pool;
 
 import eir.debug.Debug;
-import eir.world.environment.Environment;
+import eir.resources.GameFactory;
+import eir.resources.levels.IUnitDef;
+import eir.resources.levels.UnitDef;
+import eir.world.Level;
 import eir.world.environment.nav.NavNode;
 import eir.world.unit.ai.TaskStage;
 import eir.world.unit.ant.AntFactory;
 import eir.world.unit.cannons.CannonFactory;
-import eir.world.unit.spider.SpiderFactory;
 import eir.world.unit.structure.SpawnerFactory;
 import eir.world.unit.weapon.BulletFactory;
 import eir.world.unit.wildlings.BirdyFactory;
@@ -33,18 +35,15 @@ public class UnitsFactory
 	public static final String BIDRY = "birdy".intern();
 	public static final String SPAWNER = "spawner".intern();
 	public static final String BULLET = "bullet".intern();
-	public static final String SPIDER = "spider".intern();
+//	public static final String SPIDER = "spider".intern();
 	public static final String CANNON = "cannon".intern();
 
 	private IdentityMap <String, UnitFactory<? extends Unit>> factories = new IdentityMap <String, UnitFactory <? extends Unit>> ();
 
-	private final Environment environment;
-
-	public UnitsFactory(final Environment environment)
+	public UnitsFactory(final GameFactory gameFactory)
 	{
-		this.environment = environment;
 
-		factories.put( ANT,  new AntFactory() );
+		factories.put( ANT,  new AntFactory( gameFactory ) );
 
 		factories.put( BIDRY, new BirdyFactory() );
 
@@ -52,9 +51,9 @@ public class UnitsFactory
 
 		factories.put( BULLET, new BulletFactory() );
 
-		factories.put( SPIDER, new SpiderFactory( this ) );
+//		factories.put( SPIDER, new SpiderFactory( this ) );
 
-		factories.put( CANNON, new CannonFactory( environment ) );
+		factories.put( CANNON, new CannonFactory() );
 	}
 
 	/**
@@ -65,12 +64,12 @@ public class UnitsFactory
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit, F extends Faction> U getUnit(final String type, final NavNode anchor, final Faction faction)
+	public <U extends Unit, F extends Faction> U getUnit(final GameFactory gameFactory, final Level level, final IUnitDef def, final NavNode anchor, final Faction faction)
 	{
-		UnitFactory <U> fctory = (UnitFactory <U>) factories.get( type );
+		UnitFactory <U> fctory = (UnitFactory <U>) factories.get( def.getType() );
 		U unit = fctory.pool.obtain();
 
-		unit.init(type, anchor, faction);
+		unit.init(gameFactory, level, def, anchor, faction);
 
 
 		return unit;
@@ -84,12 +83,12 @@ public class UnitsFactory
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit, F extends Faction> U getUnit(final String type, final float x, final float y, final float angle, final Faction faction)
+	public <U extends Unit, F extends Faction> U getUnit(final GameFactory gameFactory, final Level level, final UnitDef def, final float x, final float y, final float angle, final Faction faction)
 	{
-		UnitFactory <U> factory = (UnitFactory <U>) factories.get( type );
+		UnitFactory <U> factory = (UnitFactory <U>) factories.get( def.getType() );
 		U unit = factory.pool.obtain();
 
-		unit.init(type, x, y, angle, faction);
+		unit.init(gameFactory, level, def, x, y, angle, faction);
 
 		unit.angle = angle;
 
@@ -133,7 +132,15 @@ public class UnitsFactory
 
 			protected abstract U createEmpty();
 
-			protected abstract Class <U> getUnitClass();
+			/**
+			 * Allows mapping extended unit definitions in the level file.
+			 * Unit initialization procedure will rely on this type
+			 * @return
+			 */
+			protected Class <? extends UnitDef> getDefClass()
+			{
+				return UnitDef.class;
+			}
 	}
 
 
@@ -141,9 +148,9 @@ public class UnitsFactory
 	 * @param unitType
 	 * @return
 	 */
-	public Class<?> getUnitClass(final String unitType)
+	public Class<?> getUnitDefClass(final String unitType)
 	{
-		return factories.get( unitType ).getUnitClass();
+		return factories.get( unitType ).getDefClass();
 	}
 
 

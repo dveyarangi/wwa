@@ -1,6 +1,6 @@
 package eir.input;
 
-import eir.world.IRenderer;
+import eir.rendering.IRenderer;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Unit;
 

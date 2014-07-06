@@ -4,9 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 import eir.debug.Debug;
-import eir.resources.LevelLoadingContext;
 import eir.world.Level;
 import eir.world.environment.nav.AirNavNode;
+import eir.world.environment.nav.FloydWarshal;
 import eir.world.environment.nav.NavMesh;
 import eir.world.environment.nav.NavMeshGenerator;
 import eir.world.environment.nav.SurfaceNavNode;
@@ -47,6 +47,8 @@ public class Environment
 
 	public Environment( )
 	{
+		groundMesh = new FloydWarshal();
+
 		world = new World(new Vector2(0, 0), true);
 
 		collider = new UnitCollider();
@@ -55,10 +57,9 @@ public class Environment
 		// TODO Auto-generated constructor stub
 	}
 
-	public void init(final LevelLoadingContext context, final Level level)
+	public void init(final Level level)
 	{
 
-		groundMesh = context.navMesh;
 		index = new SpatialHashMap<ISpatialObject>(
 				"spatial",
 				16f, // size of bucket

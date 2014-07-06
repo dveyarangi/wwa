@@ -5,17 +5,26 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.rendering.IRenderer;
 import eir.resources.GameFactory;
-import eir.world.IRenderer;
+import eir.resources.levels.UnitDef;
 import eir.world.Level;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.cannons.Cannon;
 
+/**
+ * TODO: placeholder for building control mode;
+ *
+ * responds to nav node hovers
+ *
+ * @author Fima
+ *
+ */
 public class BuildingControlMode implements IControlMode
 {
-
+	private static int CONTROLLING_FACTION_ID = 1;
 
 	PickingSensor sensor = new PickingSensor(new IPickingFilter () {
 
@@ -27,16 +36,27 @@ public class BuildingControlMode implements IControlMode
 
 	});
 
-	private static int crosshairId = GameFactory.registerAnimation("anima//ui//crosshair01.atlas", "crosshair");
-	private static Animation crosshair = GameFactory.getAnimation( crosshairId );
-
 	private final Level level;
 
 	private SurfaceNavNode pickedNode;
 
-	BuildingControlMode(final Level level)
+	private Animation crosshair;
+
+	private GameFactory gameFactory;
+
+
+	private UnitDef cannonDef = new UnitDef( UnitsFactory.CANNON, 2,
+			GameFactory.CANNON_HYBRID_TXR,
+			GameFactory.EXPLOSION_04_ANIM);
+
+
+	BuildingControlMode(final GameFactory gameFactory, final Level level)
 	{
+		this.gameFactory = gameFactory;
+
 		this.level = level;
+
+		this.crosshair = gameFactory.getAnimation( GameFactory.CROSSHAIR_ANIM );
 	}
 
 	@Override
@@ -47,14 +67,12 @@ public class BuildingControlMode implements IControlMode
 	{
 		SurfaceNavNode node = (SurfaceNavNode) pickedObject;
 
-		Cannon cannon = level.getUnitsFactory().getUnit(
-				UnitsFactory.CANNON,
+		Cannon cannon = level.getUnitsFactory().getUnit( gameFactory, level,
+				cannonDef,
 				node,
-				level.getFactions()[0] );
+				level.getFaction(CONTROLLING_FACTION_ID) );
 
 		level.addUnit( cannon );
-
-		cannon.postinit( level );
 
 //			NavNode sourceNode = level.getControlledUnit().anchor;
 //			NavNode targetNode = pickingSensor.getNode();

@@ -9,8 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
-
-import eir.resources.GameFactory;
+import com.google.common.base.Preconditions;
 
 /**
  * @author dveyarangi
@@ -29,13 +28,13 @@ public class Effect implements Poolable
 		}
 	};
 
-	public static Effect getEffect(final int animationId, final float size, final Vector2 position, final Vector2 velocity, final float angle, final float timeModifier)
+	public static Effect getEffect( final Animation animation, final float size, final Vector2 position, final Vector2 velocity, final float angle, final float timeModifier)
 	{
 		Effect effect = pool.obtain();
 
 		effect.reset();
 
-		effect.animation = GameFactory.getAnimation( animationId );
+		effect.animation = Preconditions.checkNotNull( animation );
 
 		effect.size = size;
 		effect.position.set( position );
@@ -45,9 +44,9 @@ public class Effect implements Poolable
 
 		return effect;
 	}
-	public static Effect getEffect(final int animationId, final float size, final Vector2 position, final float angle, final float timeModifier)
+	public static Effect getEffect( final Animation animation, final float size, final Vector2 position, final float angle, final float timeModifier)
 	{
-		return getEffect( animationId, size, position, Vector2.Zero, angle, timeModifier );
+		return getEffect( animation, size, position, Vector2.Zero, angle, timeModifier );
 	}
 
 	public static void free(final Effect effect)

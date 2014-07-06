@@ -1,5 +1,7 @@
 package eir.world.unit;
 
+import eir.resources.GameFactory;
+import eir.world.Level;
 import eir.world.unit.ai.Task;
 
 public abstract class TaskedUnit extends Unit
@@ -7,12 +9,15 @@ public abstract class TaskedUnit extends Unit
 
 	private Task task;
 
-
+	protected TaskedUnit()
+	{
+		super();
+	}
 
 	@Override
-	protected void init()
+	protected void reset( final GameFactory factory, final Level level )
 	{
-		super.init();
+		super.reset( factory, level );
 		if(task != null)
 			throw new IllegalStateException("Cannot reset tasked unit: task not cleared.");
 	}

@@ -36,7 +36,7 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 				ant.route.recycle();
 			}
 
-			ant.route = ant.mesh.getShortestRoute(ant.anchor, targetNode);
+			ant.route = ant.mesh.getShortestRoute((SurfaceNavNode)ant.anchor, targetNode);
 
 			if(!ant.route.hasNext())
 			{
@@ -56,7 +56,7 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 		//////////////////////////////////////
 		// traversing
 
-		NavEdge edge = ant.mesh.getEdge( ant.anchor, ant.nextNode );
+		NavEdge edge = ant.mesh.getEdge( (SurfaceNavNode)ant.anchor, ant.nextNode );
 
 		float travelDistance = ant.speed * delta + // the real travel distance
 				ant.nodeOffset;
@@ -95,7 +95,7 @@ public abstract class TravelingBehavior implements UnitBehavior <Ant>
 			ant.nextNode = ant.route.next();
 
 
-			edge = ant.mesh.getEdge( ant.anchor, ant.nextNode );
+			edge = ant.mesh.getEdge( (SurfaceNavNode)ant.anchor, ant.nextNode );
 			if(edge == null)
 			{
 				task.setCanceled();

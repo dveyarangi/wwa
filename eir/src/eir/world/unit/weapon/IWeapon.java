@@ -5,10 +5,10 @@ package eir.world.unit.weapon;
 
 import yarangi.math.Angles;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.resources.GameFactory;
+import eir.resources.levels.UnitDef;
 import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
@@ -47,6 +47,10 @@ public abstract class IWeapon
 	private static final float PLANK_CONST = 0.0001f;
 
 	private boolean isOriented = false;
+
+	private GameFactory gameFactory;
+
+	private Level level;
 	/**
 	 *
 	 */
@@ -66,6 +70,12 @@ public abstract class IWeapon
 
 		// TODO: set position of weapon relative to host
 		this.relativePosition = new Vector2();
+	}
+
+	public void init(final GameFactory gameFactory, final Level level)
+	{
+		this.gameFactory = gameFactory;
+		this.level = level;
 	}
 
 	public Bullet fire( final ISpatialObject target )
@@ -89,15 +99,12 @@ public abstract class IWeapon
 		direction.setAngle( angle );
 
 		float speed = createSpeed();
-		Bullet bullet = unitFactory.getUnit(UnitsFactory.BULLET, weaponPos.x, weaponPos.y, angle, owner.getFaction());
+		Bullet bullet = unitFactory.getUnit(gameFactory, level, getBulletDef(), weaponPos.x, weaponPos.y, angle, owner.getFaction());
 
 
 		bullet.weapon = this;
 		bullet.getVelocity().set( direction ).mul( speed );
-		bullet.size = this.getBulletSize();
 		bullet.target = target;
-
-		bullet.angle = angle;
 
 		bullet.lifelen = getBulletLifeDuration();
 
@@ -139,11 +146,6 @@ public abstract class IWeapon
 		isOriented = absDistance < getMaxFireAngle();
 
 	}
-
-	/**
-	 * @return the size
-	 */
-	public abstract float getBulletSize();
 	/**
 	 * @return the burstSize
 	 */
@@ -170,11 +172,6 @@ public abstract class IWeapon
 	 * @return the bulletBehavior
 	 */
 	public abstract IBulletBehavior getBulletBehavior();
-	/**
-	 * @return the bulletSprite
-	 */
-	public abstract Animation getBulletAnimation();
-	public abstract Sprite getBulletSprite();
 
 	/**
 	 * @return the speed
@@ -194,11 +191,9 @@ public abstract class IWeapon
 	 */
 	public abstract float getBulletSpeed();
 
-	/**
-	 * @return
-	 */
-	public abstract Effect createHitEffect(Bullet bullet, boolean isTargetDead);
 	public abstract Effect createTraceEffect(Bullet bullet);
+
+	public abstract Effect createHitEffect( Bullet bullet, boolean b );
 
 	/**
 	 *
@@ -226,5 +221,6 @@ public abstract class IWeapon
 
 //	public float getAngle() { return angle; }
 
+	public abstract UnitDef getBulletDef();
 
 }

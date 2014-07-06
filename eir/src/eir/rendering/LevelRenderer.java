@@ -1,14 +1,21 @@
-package eir.world;
+package eir.rendering;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import eir.debug.Debug;
 import eir.input.GameInputProcessor;
+import eir.resources.AnimationHandle;
+import eir.resources.GameFactory;
+import eir.world.Asteroid;
+import eir.world.Effect;
+import eir.world.Level;
+import eir.world.Web;
 import eir.world.unit.IOverlay;
 import eir.world.unit.Unit;
 import eir.world.unit.overlays.IntegrityOverlay;
@@ -24,7 +31,7 @@ public class LevelRenderer implements IRenderer
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
 
-
+	private final GameFactory gameFactory;
 
 	private final List <Effect> effects;
 
@@ -33,8 +40,9 @@ public class LevelRenderer implements IRenderer
 	public static final int INTEGRITY_OID = 1;
 	public static final int WEAPON_OID = 2;
 
-	public LevelRenderer( final GameInputProcessor inputController, final Level level )
+	public LevelRenderer( final GameFactory gameFactory, final GameInputProcessor inputController, final Level level )
 	{
+		this.gameFactory = gameFactory;
 		this.inputController = inputController;
 		this.level = level;
 
@@ -71,7 +79,7 @@ public class LevelRenderer implements IRenderer
 		// TODO: clipping?
 		for(Asteroid asteroid : level.getAsteroids())
 		{
-			asteroid.draw( batch );
+			asteroid.draw( this );
 		}
 
 		for( Web web : level.getWebs() )
@@ -166,4 +174,10 @@ public class LevelRenderer implements IRenderer
 
 	@Override
 	public ShapeRenderer getShapeRenderer() { return shapeRenderer;	}
+
+	@Override
+	public Animation getAnimation( final AnimationHandle handle )
+	{
+		return gameFactory.getAnimation( handle );
+	}
 }

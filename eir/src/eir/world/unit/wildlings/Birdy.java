@@ -3,15 +3,13 @@
  */
 package eir.world.unit.wildlings;
 
-import yarangi.numbers.RandomUtil;
-
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.rendering.IRenderer;
 import eir.resources.GameFactory;
-import eir.world.Effect;
-import eir.world.IRenderer;
+import eir.world.Level;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
@@ -25,13 +23,11 @@ import eir.world.unit.Unit;
 public class Birdy extends TaskedUnit implements IDamager
 {
 	///////////////////////////////////////////
-
-	private static Sprite sprite = GameFactory.createSprite( "anima//gears//birdy_02.png" );
 //	private static Sprite sprite = GameFactory.createSprite( "anima//gears//birdy.png" );
-	private static int animationId = GameFactory.registerAnimation("anima//glow//glow.atlas",	"glow");
+//	private static int animationId = GameFactory.registerAnimation("anima//glow//glow.atlas",	"glow");
 
-	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas",
-			"explosion02");
+//	private static int hitAnimationId = GameFactory.registerAnimation("anima//effects//explosion//explosion02.atlas",
+//			"explosion02");
 
 	private  float maxSpeed = 20;
 
@@ -44,9 +40,9 @@ public class Birdy extends TaskedUnit implements IDamager
 	public Vector2 impactImpulse;
 
 	@Override
-	protected void init()
+	protected void reset( final GameFactory gameFactory, final Level level  )
 	{
-		super.init();
+		super.reset( gameFactory, level );
 		this.hull = new Hull(300f, 0f, new float [] {0f,0f,0f,0f});
 	}
 
@@ -55,6 +51,7 @@ public class Birdy extends TaskedUnit implements IDamager
 	{
 		final SpriteBatch batch = renderer.getSpriteBatch();
 		Vector2 position = getBody().getAnchor();
+		Sprite sprite = getUnitSprite();
 		batch.draw( sprite,
 				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
 				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
@@ -109,9 +106,5 @@ public class Birdy extends TaskedUnit implements IDamager
 
 	@Override
 	public float getMaxSpeed() { return maxSpeed; }
-	@Override
-	public Effect getDeathEffect()
-	{
-		return Effect.getEffect( hitAnimationId, 10, getBody().getAnchor(), RandomUtil.N( 360 ), 3 );
-	}
+
 }

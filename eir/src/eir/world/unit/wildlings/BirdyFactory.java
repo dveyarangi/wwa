@@ -24,8 +24,4 @@ public class BirdyFactory extends UnitFactory <Birdy>
 	@Override
 	protected Birdy createEmpty() { return new Birdy(); }
 
-	@Override
-	protected Class<Birdy> getUnitClass() { return Birdy.class; }
-
-
 }

@@ -13,7 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import eir.debug.Debug;
-import eir.world.IRenderer;
+import eir.rendering.IRenderer;
+import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
 
@@ -25,8 +26,6 @@ import eir.world.environment.spatial.ISpatialObject;
 public class GameInputProcessor implements InputProcessor
 {
 	private final InputMultiplexer inputMultiplexer;
-
-	private final AutoCameraController autoController;
 	private final FreeCameraController freeController;
 	private ICameraController camController;
 
@@ -49,7 +48,7 @@ public class GameInputProcessor implements InputProcessor
 
 	private UIInputProcessor uiProcessor;
 
-	public GameInputProcessor(final Level level)
+	public GameInputProcessor(final GameFactory factory, final Level level)
 	{
 
 
@@ -58,7 +57,6 @@ public class GameInputProcessor implements InputProcessor
 		OrthographicCamera camera = new OrthographicCamera( w, h );
 
 		freeController = new FreeCameraController(camera, level);
-		autoController = new AutoCameraController(camera, this, level);
 
 		camController = freeController;
 
@@ -88,7 +86,7 @@ public class GameInputProcessor implements InputProcessor
 
 
 		controlModes = new IControlMode [] {
-				new BuildingControlMode( level ),
+				new BuildingControlMode( factory, level ),
 				new OrderingControlMode()
 		};
 
@@ -111,28 +109,12 @@ public class GameInputProcessor implements InputProcessor
 		switch(keycode)
 		{
 
-		case Input.Keys.A:
-			level.getControlledUnit().walkCCW(true);
-			break;
-
-		case Input.Keys.D:
-			level.getControlledUnit().walkCW(true);
-			break;
-
-		case Input.Keys.W:
-			level.getControlledUnit().walkUp(true);
-			break;
-
-		case Input.Keys.S:
-			level.getControlledUnit().walkDown(true);
-			break;
-
 		case Input.Keys.M:
 			controlModeIdx = (controlModeIdx + 1) % controlModes.length;
 			controlModes[controlModeIdx].reset();
 			break;
 
-		case Input.Keys.SPACE:
+/*		case Input.Keys.SPACE:
 			if(camController == freeController)
 			{
 				autoController.zoomTarget = camController.getCamera().zoom;
@@ -142,11 +124,12 @@ public class GameInputProcessor implements InputProcessor
 			{
 				camController = freeController;
 			}
-			break;
+			break;*/
 		default:
 			return false;
 		}
-		return true;
+
+		return false;
 	}
 
 	@Override
@@ -154,22 +137,11 @@ public class GameInputProcessor implements InputProcessor
 	{
 		switch(keycode)
 		{
-		case Input.Keys.A:
-			level.getControlledUnit().walkCCW(false);
-			break;
-		case Input.Keys.D:
-			level.getControlledUnit().walkCW(false);
-			break;
-		case Input.Keys.W:
-			level.getControlledUnit().walkUp(false);
-			break;
-		case Input.Keys.S:
-			level.getControlledUnit().walkDown(false);
-			break;
 		default:
 			return false;
 		}
-		return true;	}
+//		return false;
+	}
 
 	@Override
 	public boolean keyTyped(final char character)
@@ -193,11 +165,6 @@ public class GameInputProcessor implements InputProcessor
 			}
 		}
 
-		if(button == Input.Buttons.LEFT)
-		{
-			level.getControlledUnit().setShootingTarget( pointerPosition2 );
-		}
-
 		return true;
 	}
 
@@ -208,10 +175,6 @@ public class GameInputProcessor implements InputProcessor
 		{
 			dragging = false;
 			camController.setUnderUserControl(false);
-		}
-		if(button == Input.Buttons.LEFT)
-		{
-			level.getControlledUnit().setShootingTarget( null );
 		}
 		return true;
 	}
@@ -330,7 +293,7 @@ public class GameInputProcessor implements InputProcessor
 	  */
 	 public void resize(final int width, final int height)
 	 {
-		 autoController.resize(width, height);
+//		 autoController.resize(width, height);
 		 freeController.resize(width, height);
 	 }
 

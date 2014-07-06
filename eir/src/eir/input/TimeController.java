@@ -1,5 +1,11 @@
 package eir.input;
 
+/**
+ * Provides game time modifier coefficient;
+ *
+ * @author Fima
+ *
+ */
 public class TimeController
 {
 	float currentModifier;

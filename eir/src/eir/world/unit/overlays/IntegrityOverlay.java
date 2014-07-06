@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-import eir.world.IRenderer;
+import eir.rendering.IRenderer;
 import eir.world.environment.spatial.AABB;
 import eir.world.unit.Hull;
 import eir.world.unit.IOverlay;

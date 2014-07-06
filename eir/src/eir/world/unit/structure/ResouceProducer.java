@@ -1,7 +1,6 @@
 package eir.world.unit.structure;
 
-import eir.world.IRenderer;
-import eir.world.unit.ResourceCapacitorUnit;
+import eir.rendering.IRenderer;
 
 
 /**

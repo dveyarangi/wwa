@@ -7,13 +7,15 @@ package eir.world.unit.weapon;
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.resources.GameFactory;
+import eir.resources.levels.UnitDef;
 import eir.world.Effect;
+import eir.world.Level;
 import eir.world.unit.Damage;
 import eir.world.unit.Unit;
+import eir.world.unit.UnitsFactory;
 
 /**
  * @author dveyarangi
@@ -23,27 +25,19 @@ public class Minigun extends IWeapon
 {
 
 
-	private static final int BULLET_AID = GameFactory.registerAnimation( "anima//bullets//rocket01.atlas", "bullet" );
-	private static final int HIT_01_AID = GameFactory.registerAnimation( "anima//effects//explosion//explosion04.atlas", "explosion04" );
-
-	private Animation bulletAnimation;
+//	private Animation bulletAnimation;
 
 	private IBulletBehavior bulletBehavior;
 
 	private Damage bulletDamage;
 
-	private static Sprite bulletSprite = GameFactory.createSprite( "anima//bullets//fireball.png" );
+	private Animation hitAnimation;
+
 
 	public Minigun(final Unit unit)
 	{
 
 		super(unit);
-//		bulletSprite = new Sprite(GameFactory.loadTexture("models/fireball.png"));
-//		bulletSprite.setOrigin( bulletSprite.getWidth()/2, bulletSprite.getHeight()/2 );
-//		bulletSprite.setScale( getSize() / bulletSprite.getWidth() );
-
-		bulletAnimation = GameFactory.getAnimation( BULLET_AID );
-
 		bulletBehavior = new MassDriverBehavior();
 
 		bulletDamage = new Damage(50f,0,0,0);
@@ -51,7 +45,11 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public float getBulletSize() { return 0.5f; }
+	public void init( final GameFactory gameFactory, final Level level )
+	{
+		super.init( gameFactory, level );
+		this.hitAnimation = gameFactory.getAnimation( GameFactory.EXPLOSION_04_ANIM );
+	}
 
 
 	@Override
@@ -70,12 +68,6 @@ public class Minigun extends IWeapon
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
 
 	@Override
-	public Animation getBulletAnimation() { return bulletAnimation; }
-
-	@Override
-	public Sprite getBulletSprite() { return bulletSprite; }
-
-	@Override
 	public float createSpeed() { return getBulletSpeed(); }
 
 	@Override
@@ -86,14 +78,6 @@ public class Minigun extends IWeapon
 	protected float createAngle( final Vector2 firingDir )
 	{
 		return RandomUtil.STD( firingDir.angle(), getDispersion());
-	}
-
-
-	@Override
-	public Effect createHitEffect(final Bullet bullet, final boolean isTargetDead)
-	{
-		return Effect.getEffect( HIT_01_AID,
-				15, bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 3 );
 	}
 
 	@Override
@@ -118,5 +102,19 @@ public class Minigun extends IWeapon
 
 	@Override
 	public boolean decayOnNoTarget() { return true; }
+
+
+	@Override
+	public UnitDef getBulletDef()
+	{
+		return new UnitDef( UnitsFactory.BULLET, 0.5f, GameFactory.FIREBALL_TXR, null );
+	}
+
+
+	@Override
+	public Effect createHitEffect( final Bullet bullet, final boolean b ) {
+		return Effect.getEffect( hitAnimation,
+				15, bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 3 );
+	}
 
 }

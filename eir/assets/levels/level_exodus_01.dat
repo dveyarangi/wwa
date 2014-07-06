@@ -7,23 +7,38 @@
 			
 			# length of the game world in tiles
 			"height" : "1536",
+			
+			"initialSettings" : {
+				"cameraPosition" : { "x" : 0, "y" : 0 }
+			},
 
 			"background" : { 
 				"layers" : [
 					{	
 						"depth" :5,
-						"texture" : "levels/plasma_01.png",
+						"texture" : "levels/plasma_01",
 						"tiling" : false
 					},
 					{	
 						"depth" : 0.9,
-						"texture" : "levels/fog_01.png",
+						"texture" : "levels/fog_01",
 						"scroll" : { "x" : "500", "y" : "0" },
 						"tiling" : true,
 						"zoomFactor" : 0.9
 					}
 				]
 			},
+			
+
+			
+			/*"animations" : [
+
+				{"name" : "explosion02",    "atlasId" : "anima//effects//explosion//explosion02.atlas",    "regionId" : "explosion02" },
+				{"name" : "bullet",         "atlasId" : "anima//bullets//rocket01.atlas",                  "regionId" : "bullet" },
+				{"name" : "explosion04",    "atlasId" : "anima//effects//explosion//explosion04.atlas",    "regionId" : "explosion04" }
+
+			
+			],*/
 			
 		########################################
 		# ASTEROIDS
@@ -34,27 +49,16 @@
 				  "position" : { "x":"0",  "y":"0" },
 				  "angle" : "0",
 				  "size" : "120",
+				  "texture" : "models/exodus_01/exodus_01_center",
 				  "modelId" : "exodus_01/exodus_01_center"
 				},
-				/*{ 
-				  "name" : "center",
-				  "position" : { "x":"0",  "y":"0" },
-				  "angle" : "0",
-				  "size" : "120",
-				  "modelId" : "junkyard/asteroid_junkyard_01"
-				},
-				{ 
-				  "name" : "junkheap",
-				  "position" : { "x":"-100",  "y":"49" },
-				  "angle" : "0",
-				  "size" : "120",
-				  "modelId" : "junkyard/asteroid_junkyard_02"
-				},*/
+
 				{ 
 				  "name" : "red_head",
 				  "position" : { "x":"-120",  "y":"49" },
 				  "angle" : "180",
 				  "size" : "115",
+				  "texture" : "models/exodus_01/exodus_01_red_head",
 				  "modelId" : "exodus_01/exodus_01_red_head"
 				},			
 				{ 
@@ -62,6 +66,7 @@
 				  "position" : { "x":"-249",  "y":"91" },
 				  "angle" : "0",
 				  "size" : "170",
+				  "texture" : "models/exodus_01/exodus_01_red_back",
 				  "modelId" : "exodus_01/exodus_01_red_back"
 				},				
 				{ 
@@ -69,6 +74,7 @@
 				  "position" : { "x":"-374",  "y":"-8" },
 				  "angle" : "0",
 				  "size" : "110",
+				  "texture" : "models/exodus_01/city_01",
 				  "modelId" : "exodus_01/city_01"
 				},					
 				{ 
@@ -76,6 +82,7 @@
 				  "position" : { "x":"-180",  "y":"271" },
 				  "angle" : "0",
 				  "size" : "70",
+				  "texture" : "models/exodus_01/exodus_01_grasp",
 				  "modelId" : "exodus_01/exodus_01_grasp"
 				},					
 				{ 
@@ -83,6 +90,7 @@
 				  "position" : { "x":"-619",  "y":"38" },
 				  "angle" : "0",
 				  "size" : "105",
+				  "texture" : "models/exodus_01/exodus_01_red_left_foot",
 				  "modelId" : "exodus_01/exodus_01_red_left_foot"
 				},					
 				{ 
@@ -90,6 +98,7 @@
 				  "position" : { "x":"-483",  "y":"33" },
 				  "angle" : "0",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_red_left_leg",
 				  "modelId" : "exodus_01/exodus_01_red_left_leg"
 				},					
 				{ 
@@ -97,6 +106,7 @@
 				  "position" : { "x":"-224",  "y":"197" },
 				  "angle" : "0",
 				  "size" : "86",
+				  "texture" : "models/exodus_01/exodus_01_red_left_palm",
 				  "modelId" : "exodus_01/exodus_01_red_left_palm"
 				},					
 				{ 
@@ -104,6 +114,7 @@
 				  "position" : { "x":"-234",  "y":"12" },
 				  "angle" : "0",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_red_right_arm",
 				  "modelId" : "exodus_01/exodus_01_red_right_arm"
 				},					
 				{  
@@ -111,6 +122,7 @@
 				  "position" : { "x":"-586",  "y":"-180" },
 				  "angle" : "0",
 				  "size" : "105",
+				  "texture" : "models/exodus_01/exodus_01_red_right_foot",
 				  "modelId" : "exodus_01/exodus_01_red_right_foot"
 				},				
 				{ 
@@ -118,6 +130,7 @@
 				  "position" : { "x":"-485",  "y":"-105" },
 				  "angle" : "0",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_red_right_leg",
 				  "modelId" : "exodus_01/exodus_01_red_right_leg"
 				},				
 				{ 
@@ -125,22 +138,25 @@
 				  "position" : { "x":"-277",  "y":"-87" },
 				  "angle" : "0",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_red_right_palm",
 				  "modelId" : "exodus_01/exodus_01_red_right_palm"
 				},			
 				
 			    #######
-				{ 
+				/*{ 
 				  "name" : "blue_head",
 				  "position" : { "y":"-120",  "x":"-49" },
 				  "angle" : "90",
 				  "size" : "125",
-				  "modelId" : "asteroid_head_04"
-				},			
+				  "texture" : "models/exodus_01/asteroid_head_04",
+				  "modelId" : "exodus_01/asteroid_head_04"
+				},		*/	
 				{ 
 				  "name" : "blue_back",
 				  "position" : { "y":"-249",  "x":"-91" },
 				  "angle" : "90",
 				  "size" : "170",
+				  "texture" : "models/exodus_01/exodus_01_blue_back",
 				  "modelId" : "exodus_01/exodus_01_blue_back"
 				},				
 				{ 
@@ -148,6 +164,7 @@
 				  "position" : { "y":"-374",  "x":"8" },
 				  "angle" : "90",
 				  "size" : "110",
+				  "texture" : "models/exodus_01/exodus_01_blue_ass",
 				  "modelId" : "exodus_01/exodus_01_blue_ass"
 				},					
 				{ 
@@ -155,6 +172,7 @@
 				  "position" : { "y":"-180",  "x":"-271" },
 				  "angle" : "90",
 				  "size" : "70",
+				  "texture" : "models/exodus_01/exodus_01_grasp",
 				  "modelId" : "exodus_01/exodus_01_grasp"
 				},					
 				{ 
@@ -162,6 +180,7 @@
 				  "position" : { "y":"-619",  "x":"-38" },
 				  "angle" : "90",
 				  "size" : "105",
+				  "texture" : "models/exodus_01/exodus_01_blue_left_foot",
 				  "modelId" : "exodus_01/exodus_01_blue_left_foot"
 				},					
 				{ 
@@ -169,6 +188,7 @@
 				  "position" : { "y":"-483",  "x":"-33" },
 				  "angle" : "90",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_blue_left_leg",
 				  "modelId" : "exodus_01/exodus_01_blue_left_leg"
 				},					
 				{ 
@@ -176,6 +196,7 @@
 				  "position" : { "y":"-224",  "x":"-197" },
 				  "angle" : "90",
 				  "size" : "86",
+				  "texture" : "models/exodus_01/exodus_01_blue_left_palm",
 				  "modelId" : "exodus_01/exodus_01_blue_left_palm"
 				},					
 				{ 
@@ -183,6 +204,7 @@
 				  "position" : { "y":"-234",  "x":"-12" },
 				  "angle" : "90",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_blue_right_arm",
 				  "modelId" : "exodus_01/exodus_01_blue_right_arm"
 				},					
 				{  
@@ -190,6 +212,7 @@
 				  "position" : { "y":"-586",  "x":"180" },
 				  "angle" : "90",
 				  "size" : "105",
+				  "texture" : "models/exodus_01/exodus_01_blue_right_foot",
 				  "modelId" : "exodus_01/exodus_01_blue_right_foot"
 				},				
 				{ 
@@ -197,6 +220,7 @@
 				  "position" : { "y":"-485",  "x":"105" },
 				  "angle" : "90",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_blue_right_leg",
 				  "modelId" : "exodus_01/exodus_01_blue_right_leg"
 				},				
 				{ 
@@ -204,6 +228,7 @@
 				  "position" : { "y":"-277",  "x":"87" },
 				  "angle" : "90",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_blue_right_palm",
 				  "modelId" : "exodus_01/exodus_01_blue_right_palm"
 				},	
 				
@@ -215,6 +240,7 @@
 				  "position" : { "x":"120",  "y":"-49" },
 				  "angle" : "180",
 				  "size" : "115",
+				  "texture" : "models/exodus_01/exodus_01_red_head",
 				  "modelId" : "exodus_01/exodus_01_red_head"
 				},			
 				{ 
@@ -222,6 +248,7 @@
 				  "position" : { "x":"249",  "y":"-91" },
 				  "angle" : "180",
 				  "size" : "170",
+				  "texture" : "models/exodus_01/exodus_01_red_back",
 				  "modelId" : "exodus_01/exodus_01_red_back"
 				},				
 				{ 
@@ -229,6 +256,7 @@
 				  "position" : { "x":"374",  "y":"8" },
 				  "angle" : "180",
 				  "size" : "110",
+				  "texture" : "models/exodus_01/exodus_01_red_ass",
 				  "modelId" : "exodus_01/exodus_01_red_ass"
 				},					
 				{ 
@@ -236,6 +264,7 @@
 				  "position" : { "x":"180",  "y":"-271" },
 				  "angle" : "180",
 				  "size" : "70",
+				  "texture" : "models/exodus_01/exodus_01_grasp",
 				  "modelId" : "exodus_01/exodus_01_grasp"
 				},					
 				{ 
@@ -243,6 +272,7 @@
 				  "position" : { "x":"619",  "y":"-38" },
 				  "angle" : "180",
 				  "size" : "105",
+				  "texture" : "models/exodus_01/exodus_01_red_left_foot",
 				  "modelId" : "exodus_01/exodus_01_red_left_foot"
 				},					
 				{ 
@@ -250,6 +280,7 @@
 				  "position" : { "x":"483",  "y":"-33" },
 				  "angle" : "180",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_red_left_leg",
 				  "modelId" : "exodus_01/exodus_01_red_left_leg"
 				},					
 				{ 
@@ -257,6 +288,7 @@
 				  "position" : { "x":"224",  "y":"-197" },
 				  "angle" : "180",
 				  "size" : "86",
+				  "texture" : "models/exodus_01/exodus_01_red_left_palm",
 				  "modelId" : "exodus_01/exodus_01_red_left_palm"
 				},					
 				{ 
@@ -264,6 +296,7 @@
 				  "position" : { "x":"234",  "y":"-12" },
 				  "angle" : "180",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_red_right_arm",
 				  "modelId" : "exodus_01/exodus_01_red_right_arm"
 				},					
 				{  
@@ -271,6 +304,7 @@
 				  "position" : { "x":"586",  "y":"180" },
 				  "angle" : "180",
 				  "size" : "105",
+				  "texture" : "models/exodus_01/exodus_01_red_right_foot",
 				  "modelId" : "exodus_01/exodus_01_red_right_foot"
 				},				
 				{ 
@@ -278,6 +312,7 @@
 				  "position" : { "x":"485",  "y":"105" },
 				  "angle" : "180",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_red_right_leg",
 				  "modelId" : "exodus_01/exodus_01_red_right_leg"
 				},				
 				{ 
@@ -285,6 +320,7 @@
 				  "position" : { "x":"277",  "y":"87" },
 				  "angle" : "180",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_red_right_palm",
 				  "modelId" : "exodus_01/exodus_01_red_right_palm"
 				},
 				
@@ -295,6 +331,7 @@
 				  "position" : { "y":"120",  "x":"49" },
 				  "angle" : "-90",
 				  "size" : "125",
+				  "texture" : "models/exodus_01/exodus_01_blue_head",
 				  "modelId" : "exodus_01/exodus_01_blue_head"
 				},			
 				{ 
@@ -302,6 +339,7 @@
 				  "position" : { "y":"249",  "x":"91" },
 				  "angle" : "-90",
 				  "size" : "170",
+				  "texture" : "models/exodus_01/exodus_01_blue_back",
 				  "modelId" : "exodus_01/exodus_01_blue_back"
 				},				
 				{ 
@@ -309,6 +347,7 @@
 				  "position" : { "y":"374",  "x":"-8" },
 				  "angle" : "-90",
 				  "size" : "110",
+				  "texture" : "models/exodus_01/exodus_01_blue_ass",
 				  "modelId" : "exodus_01/exodus_01_blue_ass"
 				},					
 				{ 
@@ -316,6 +355,7 @@
 				  "position" : { "y":"180",  "x":"271" },
 				  "angle" : "-90",
 				  "size" : "70",
+				  "texture" : "models/exodus_01/exodus_01_grasp",
 				  "modelId" : "exodus_01/exodus_01_grasp"
 				},					
 				{ 
@@ -323,6 +363,7 @@
 				  "position" : { "y":"619",  "x":"38" },
 				  "angle" : "-90",
 				  "size" : "105",
+				  "texture" : "models/exodus_01/exodus_01_blue_left_foot",
 				  "modelId" : "exodus_01/exodus_01_blue_left_foot"
 				},					
 				{ 
@@ -330,6 +371,7 @@
 				  "position" : { "y":"483",  "x":"33" },
 				  "angle" : "-90",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_blue_left_leg",
 				  "modelId" : "exodus_01/exodus_01_blue_left_leg"
 				},					
 				{ 
@@ -337,6 +379,7 @@
 				  "position" : { "y":"224",  "x":"197" },
 				  "angle" : "-90",
 				  "size" : "86",
+				  "texture" : "models/exodus_01/exodus_01_blue_left_palm",
 				  "modelId" : "exodus_01/exodus_01_blue_left_palm"
 				},					
 				{ 
@@ -344,6 +387,7 @@
 				  "position" : { "y":"234",  "x":"12" },
 				  "angle" : "-90",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_blue_right_arm",
 				  "modelId" : "exodus_01/exodus_01_blue_right_arm"
 				},					
 				{  
@@ -351,6 +395,7 @@
 				  "position" : { "y":"586",  "x":"-180" },
 				  "angle" : "-90",
 				  "size" : "105",
+				  "texture" : "models/exodus_01/exodus_01_blue_right_foot",
 				  "modelId" : "exodus_01/exodus_01_blue_right_foot"
 				},				
 				{ 
@@ -358,6 +403,7 @@
 				  "position" : { "y":"485",  "x":"-105" },
 				  "angle" : "-90",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_blue_right_leg",
 				  "modelId" : "exodus_01/exodus_01_blue_right_leg"
 				},				
 				{ 
@@ -365,6 +411,7 @@
 				  "position" : { "y":"277",  "x":"-87" },
 				  "angle" : "-90",
 				  "size" : "100",
+				  "texture" : "models/exodus_01/exodus_01_blue_right_palm",
 				  "modelId" : "exodus_01/exodus_01_blue_right_palm"
 				  
 				}
@@ -434,26 +481,20 @@
 			"factions" : [
 				{
 					"ownerId" : 1,
-					"controller" : {
-					 	"type" : "PlayerController"
-					},
+					"controller" : "PlayerController",
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_white.atlas", "atlasId" : "blob"},
 					"color" : { "r" : 0.8, "g" : 0.8, "b" : 0.8 }
 					
 				},
 				{
 					"ownerId" : 2,
-					"controller" : {
-					 	"type" : "DummyController"
-					},
+					"controller" : "DummyController",
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"},
 					"color" : { "r" : 0.2, "g" : 0.2, "b" : 0.2 }
 				},			
 				{
 					"ownerId" : 3,
-					"controller" : {
-						"type" : "WildlifeController"
-					},
+					"controller" : "WildlifeController",
 					"antAnimation" : { "atlasFile" : "anima//ant//blob_black.atlas", "atlasId" : "blob"},
 					"color" : { "r" : 0.5, "g" : 0.5, "b" : 0 }
 				}			
@@ -483,9 +524,10 @@
 					"faction" : 1,
 					"anchor" : { "asteroid" : "red_right_palm", "navIdx" : 36 }
 				},	*/			
-				{
+/*				{
 					"type" : "spawner",
 					"faction" : 2,
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
 					"anchor" : { "asteroid" : "red_left_foot", "navIdx" : 1 },
 					"unitType" : "ant",
 					"maxUnits" : 50,
@@ -495,26 +537,43 @@
 				{
 					"type" : "spawner",
 					"faction" : 1,
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
 					"anchor" : { "asteroid" : "red_right_foot", "navIdx" : 1 },
 					"unitType" : "ant",
 					
 					"maxUnits" : 50,
 					"spawnInterval" : 1f
 					
-				},
+				},*/
 				{
 					"type" : "spawner",
 					"faction" : 3,
+					"size" : 10,
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 16 },
-					"unitType" : "birdy", 
+					"spawnedUnit" : {
+						"type" : "birdy",
+						"faction" : 3,
+						"size" : 10,
+						"spriteTexture" : "anima//gears//birdy_02",
+						"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" }
+					},			
 					"maxUnits" : 50,
 					"spawnInterval" : 0.2f
 				},
 								{
 					"type" : "spawner",
 					"faction" : 3,
+					"size" : 10,
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 10 },
-					"unitType" : "birdy", 
+					"spawnedUnit" : {
+						"type" : "birdy",
+						"faction" : 3,
+						"size" : 10,
+						"spriteTexture" : "anima//gears//birdy_02",
+						"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" }
+					},			
 					"maxUnits" : 50,
 					"spawnInterval" : 0.2f
 				}
@@ -523,16 +582,30 @@
 				{
 					"type" : "spawner",
 					"faction" : 3,
+					"size" : 10,
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 100 },
-					"unitType" : "birdy", 
+					"spawnedUnit" : {
+						"type" : "birdy",
+						"faction" : 3,
+						"size" : 10,
+						"spriteTexture" : "anima//gears//birdy_02"
+					},			
 					"maxUnits" : 50,
 					"spawnInterval" : 1.5f
 				},
 								{
 					"type" : "spawner",
+					"size" : 10,
 					"faction" : 3,
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 50 },
-					"unitType" : "birdy", 
+					"spawnedUnit" : {
+						"type" : "birdy",
+						"faction" : 3,
+						"size" : 10,
+						"spriteTexture" : "anima//gears//birdy_02"
+					},			
 					"maxUnits" : 50,
 					"spawnInterval" : 1.5f
 				}	*/			

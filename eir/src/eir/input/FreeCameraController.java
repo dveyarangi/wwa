@@ -32,7 +32,8 @@ public class FreeCameraController implements ICameraController
 
 		this.camera = camera;
 
-		lastPosition = level.getControlledUnit().getBody().getAnchor().cpy();
+		lastPosition = level.getInitialSettings().getCameraPosition();
+
 		camera.position.x = lastPosition.x;
 		camera.position.y = lastPosition.y;
 		camera.zoom = 1f;

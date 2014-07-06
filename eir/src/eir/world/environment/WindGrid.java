@@ -24,13 +24,14 @@ public class WindGrid extends Grid <Vector2>
 	}
 
 
-	public Vector2 getWind(float x, final float y, final Vector2 result)
+	public Vector2 getWind(final float x, final float y, final Vector2 result)
 	{
 		int xidx = toGridIndex( x ) + halfGridWidth;
 		int yidx = toGridIndex( y ) + halfGridHeight;
 
-		to
-		float fX = map[xidx][yidx] * x -;
+//		to
+//		float fX = map[xidx][yidx] * x -;
+		return null;
 	}
 
 	@Override

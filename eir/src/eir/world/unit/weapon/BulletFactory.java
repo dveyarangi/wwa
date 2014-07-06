@@ -10,9 +10,4 @@ public class BulletFactory extends UnitFactory <Bullet>
 		return new Bullet();
 	}
 
-	@Override
-	protected Class <Bullet> getUnitClass() {
-		return Bullet.class;
-	}
-
 }

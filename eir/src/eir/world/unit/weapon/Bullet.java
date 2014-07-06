@@ -9,9 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.rendering.IRenderer;
 import eir.resources.GameFactory;
 import eir.world.Effect;
-import eir.world.IRenderer;
+import eir.world.Level;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
 import eir.world.unit.IDamager;
@@ -21,18 +22,13 @@ import eir.world.unit.Unit;
  * @author dveyarangi
  *
  */
-@SuppressWarnings("unused")
+
 public class Bullet extends Unit implements IDamager
 {
 
 	//////////////////////////////////////////////////////////////////
 
-	private static int crosshairAnimationId = GameFactory.registerAnimation("anima//ui//crosshair02.atlas", "crosshair");
-	private static Animation crosshair = GameFactory.getAnimation( crosshairAnimationId );
-
 	IWeapon weapon;
-
-	float size = 1;
 
 
 //	public IWeapon weapon;
@@ -48,9 +44,9 @@ public class Bullet extends Unit implements IDamager
 	}
 
 	@Override
-	protected void init()
+	protected void reset( final GameFactory gameFactory, final Level level )
 	{
-		super.init();
+		super.reset( gameFactory, level );
 		//this.hull = new Hull(0.001f, 0f, new float [] {0f,0f,0f,0f});
 		this.leaveTrace = false;
 
@@ -99,7 +95,7 @@ public class Bullet extends Unit implements IDamager
 				size/region.getRegionWidth(),
 				size/region.getRegionWidth(), angle);
 */
-		Sprite sprite = weapon.getBulletSprite();
+		Sprite sprite = getUnitSprite();
 		batch.draw( sprite,
 				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
 				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
@@ -107,9 +103,11 @@ public class Bullet extends Unit implements IDamager
 				getSize()/sprite.getRegionWidth(),
 				getSize()/sprite.getRegionHeight(), angle);
 
+		Animation crossHair = renderer.getAnimation( GameFactory.CROSSHAIR_ANIM );
+
 		if(weapon.getBulletBehavior().requiresTarget() && getTarget() != null)
 		{
-			TextureRegion crossHairregion = crosshair.getKeyFrame( getLifetime(), true );
+			TextureRegion crossHairregion = crossHair.getKeyFrame( getLifetime(), true );
 			batch.draw( crossHairregion,
 					getTarget().getArea().getAnchor().x-crossHairregion.getRegionWidth()/2, getTarget().getArea().getAnchor().y-crossHairregion.getRegionHeight()/2,
 					crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2,
@@ -135,11 +133,6 @@ public class Bullet extends Unit implements IDamager
 	@Override
 	public ISpatialObject getTarget() { return target; }
 
-
-	@Override
-	public float getSize() {
-		return size;
-	}
 
 	@Override
 	public IWeapon getWeapon() {
