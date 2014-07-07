@@ -72,7 +72,7 @@ public class HomingLauncherDef extends WeaponDef
 	@Override
 	protected float createAngle( final Weapon weapon, final Vector2 firingDir)
 	{
-		if(weapon.getBulletsInMagazine() == 0)
+		if(weapon.getBulletsInMagazine() == weapon.getDef().getBurstSize())
 		{
 			burstChirality *= -1;
 //		burstAngle = (weaponDir.crs( spider.getAxis() ) < 0 ? 90 : -90) +
@@ -122,7 +122,7 @@ public class HomingLauncherDef extends WeaponDef
 	}
 
 	@Override
-	public float getAngularSpeed() { return 0.5f; }
+	public float getAngularSpeed() { return 0f; }
 	@Override
 	public float getMaxFireAngle() { return 180f; }
 

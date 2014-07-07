@@ -3,19 +3,22 @@
  */
 package eir.world.unit.structure;
 
-import eir.rendering.IRenderer;
 import eir.resources.GameFactory;
 import eir.world.Level;
+import eir.world.unit.Damage;
 import eir.world.unit.Hull;
+import eir.world.unit.IDamager;
 import eir.world.unit.Unit;
 
 /**
  * @author dveyarangi
  *
  */
-public class Spawner extends Unit
+public class Spawner extends Unit implements IDamager
 {
 	public float timeToSpawn;
+
+	public  Damage damage = new Damage(100, 100, 100, 100);
 
 
 	@Override
@@ -45,13 +48,15 @@ public class Spawner extends Unit
 	}
 
 
-	@Override
-	public void draw(final IRenderer renderer)
-	{
-	}
 
 	@Override
 	public float getMaxSpeed() { return 0; }
+
+	@Override
+	public Damage getDamage() { return damage; }
+
+	@Override
+	public Unit getSource()	{ return this; }
 
 
 }

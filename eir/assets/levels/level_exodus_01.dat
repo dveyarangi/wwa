@@ -549,7 +549,7 @@
 					"type" : "spawner",
 					"faction" : 3,
 					"size" : 10,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
+					"spriteTexture" : "anima//structures//spawner01.png",
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 16 },
 					"spawnedUnit" : {
 						"type" : "birdy",
@@ -567,7 +567,7 @@
 					"type" : "spawner",
 					"faction" : 3,
 					"size" : 10,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
+					"spriteTexture" : "anima//structures//spawner01.png",
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 10 },
 					"isPickable" : true,
 					"spawnedUnit" : {

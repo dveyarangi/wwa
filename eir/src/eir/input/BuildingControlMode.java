@@ -10,13 +10,14 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
 import eir.resources.GameFactory;
+import eir.resources.levels.UnitDef;
 import eir.world.Level;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
-import eir.world.unit.cannons.Cannon;
 import eir.world.unit.cannons.CannonDef;
+import eir.world.unit.structure.SpawnerDef;
 import eir.world.unit.weapon.HomingLauncherDef;
 import eir.world.unit.weapon.MinigunDef;
 
@@ -31,6 +32,7 @@ import eir.world.unit.weapon.MinigunDef;
 public class BuildingControlMode implements IControlMode
 {
 	private static int CONTROLLING_FACTION_ID = 1;
+	private static int WILDLING_FACTION_ID = 3;
 
 	PickingSensor sensor = new PickingSensor(new IPickingFilter () {
 
@@ -52,8 +54,8 @@ public class BuildingControlMode implements IControlMode
 	private GameFactory gameFactory;
 
 
-	private CannonDef [] defRobin;
-	private int cannonIdx;
+	private UnitDef [] defRobin;
+	private int unitIdx;
 
 
 	BuildingControlMode(final GameFactory gameFactory, final Level level)
@@ -64,7 +66,7 @@ public class BuildingControlMode implements IControlMode
 
 		this.crosshair = gameFactory.getAnimation( GameFactory.CROSSHAIR_ANIM );
 
-		this.defRobin = new CannonDef [] {
+		this.defRobin = new UnitDef [] {
 				new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
 					5,
 					null,
@@ -83,9 +85,38 @@ public class BuildingControlMode implements IControlMode
 					new HomingLauncherDef(
 							UnitsFactory.WEAPON,
 							CONTROLLING_FACTION_ID, 5,
-							GameFactory.CANNON_HYBRID_TXR,
+							GameFactory.CANNON_FAN_TXR,
 							GameFactory.EXPLOSION_04_ANIM, false ),
-					true)
+					true),
+				new SpawnerDef( UnitsFactory.SPAWNER, WILDLING_FACTION_ID,
+						10,
+						GameFactory.SPAWNER_TXR,
+						GameFactory.EXPLOSION_04_ANIM,
+						true,
+						new UnitDef(
+								UnitsFactory.BIDRY,
+								WILDLING_FACTION_ID, 10,
+							 	GameFactory.BIRDY_TXR,
+								GameFactory.EXPLOSION_02_ANIM, true ),
+						50, 0.2f)
+/*						{
+							"type" : "spawner",
+							"faction" : 3,
+							"size" : 10,
+							"spriteTexture" : "anima//structures//spawner01.png",
+							"anchor" : { "asteroid" : "red_ass", "navIdx" : 10 },
+							"isPickable" : true,
+							"spawnedUnit" : {
+								"type" : "birdy",
+								"faction" : 3,
+								"size" : 10,
+								"spriteTexture" : "anima//gears//birdy_02.png",
+								"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" },
+								"isPickable" : true
+							},
+							"maxUnits" : 50,
+							"spawnInterval" : 0.2f
+						}	*/
 		};
 	}
 
@@ -98,12 +129,18 @@ public class BuildingControlMode implements IControlMode
 		if(pickedObject instanceof SurfaceNavNode)
 		{
 			SurfaceNavNode node = (SurfaceNavNode) pickedObject;
-			Cannon cannon = level.getUnitsFactory().getUnit( gameFactory, level,
-					defRobin[cannonIdx],
+			Unit unit = level.getUnitsFactory().getUnit( gameFactory, level,
+					defRobin[unitIdx],
 					node
 					);
 
-			level.addUnit( cannon );
+			level.addUnit( unit );
+		}
+		else
+		if(pickedObject instanceof Unit)
+		{
+			Unit unit = (Unit) pickedObject;
+			unit.setDead();
 		}
 	}
 
@@ -185,10 +222,10 @@ public class BuildingControlMode implements IControlMode
 		{
 
 		case Input.Keys.N:
-			cannonIdx ++;
-			if(cannonIdx >= defRobin.length)
+			unitIdx ++;
+			if(unitIdx >= defRobin.length)
 			{
-				cannonIdx = 0;
+				unitIdx = 0;
 			}
 
 			break;

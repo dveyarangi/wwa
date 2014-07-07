@@ -55,20 +55,22 @@ public class Weapon extends Unit
 
 		weaponDir = new Vector2(1,0);
 
-		targetOrientation = weaponDir.cpy();
-
 
 		// TODO: set position of weapon relative to host
 		this.relativePosition = new Vector2();
 	}
 
-	public void init(final GameFactory gameFactory, final Level level)
+	@Override
+	public void reset(final GameFactory gameFactory, final Level level)
 	{
+		super.reset( gameFactory, level );
 		this.gameFactory = gameFactory;
 		this.level = level;
 		weaponDef = (WeaponDef)def;
 
 		weaponDef.init(gameFactory);
+
+		targetOrientation = weaponDir.cpy();
 	}
 
 	public Bullet fire( final ISpatialObject target )
@@ -96,6 +98,8 @@ public class Weapon extends Unit
 		bullet.weapon = this;
 		bullet.getVelocity().set( direction ).mul( speed );
 		bullet.target = target;
+		bullet.angle = angle;
+
 
 		bullet.lifelen = weaponDef.getBulletLifeDuration();
 
@@ -145,7 +149,6 @@ public class Weapon extends Unit
 		diffAngle =
 				(float) (Math.acos( targetOrientation.dot( weaponDir ) )* Angles.TO_DEG);
 
-//		float absDistance = Math.abs( angle - targetOrientation.angle() );
 		float absDistance = Math.abs( diffAngle );
 
 		isOriented = absDistance < weaponDef.getMaxFireAngle();

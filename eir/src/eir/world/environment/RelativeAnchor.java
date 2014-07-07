@@ -26,4 +26,7 @@ public class RelativeAnchor implements Anchor
 		return unit.getAngle();
 	}
 
+	@Override
+	public Object getParent() { return unit; }
+
 }

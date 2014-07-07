@@ -17,4 +17,6 @@ public interface Anchor
 
 	float getAngle();
 
+	Object getParent();
+
 }

@@ -2,6 +2,8 @@ package eir.world.unit.cannons;
 
 import java.util.List;
 
+import yarangi.numbers.RandomUtil;
+
 import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
@@ -37,6 +39,9 @@ public class Cannon extends Unit implements IDamager
 
 	private Anchor weaponMount;
 
+	private float wanderAngle;
+
+
 	public Cannon( )
 	{
 		super();
@@ -55,15 +60,14 @@ public class Cannon extends Unit implements IDamager
 
 		this.hull = new Hull(500f, 0f, new float [] {0f,0f,0f,0f});
 
-		this.angle = this.getAnchor().getAngle();
-
 		weapon = level.getUnitsFactory().getUnit( gameFactory, level, weaponDef, weaponMount );
+		weapon.getDirection().setAngle( this.angle+90 );
+		weapon.getTargetOrientation().setAngle( this.angle+90 );
+		wanderAngle = this.angle+90;
 
 		this.sensor = level.getEnvironment().createSensor( this, weaponDef.getSensorRadius() );
 
 		this.targetProvider = weaponDef.createTargetProvider( this );
-
-		this.weapon.init( gameFactory, level );
 
 		this.targetingModule = new LinearTargetingModule();
 	}
@@ -89,10 +93,19 @@ public class Cannon extends Unit implements IDamager
 
 
 		target = targetProvider.pickTarget( units );
+		weapon.target = target;
 		Vector2 targetDirection = targetingModule.getShootingDirection( target, this );
 		if(targetDirection != null)
 		{
 			weapon.getTargetOrientation().set( targetDirection ).nor();
+		}
+		else
+		{	// no target, some meaningless behavior:
+			if(RandomUtil.oneOf( 200 ))
+			{
+				wanderAngle = RandomUtil.STD( this.getAngle(), 30 );
+				weapon.getTargetOrientation().setAngle( wanderAngle );
+			}
 		}
 
 		weapon.update( delta );
@@ -141,5 +154,10 @@ public class Cannon extends Unit implements IDamager
 		addHoverOverlay( LevelRenderer.WEAPON_OID);
 	}
 
-
+	@Override
+	public void setDead()
+	{
+		super.setDead();
+		weapon.setDead();
+	}
 }

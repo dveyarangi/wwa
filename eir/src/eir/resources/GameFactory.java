@@ -80,8 +80,13 @@ public class GameFactory
 
 	public final static TextureHandle ROCKET_TXR = new TextureHandle( "anima//bullets//rocket01.png" );
 	public final static TextureHandle FIREBALL_TXR = new TextureHandle( "anima//bullets//fireball.png" );
-	public final static TextureHandle CANNON_HYBRID_TXR = new TextureHandle( "anima//cannons//cannon_hybrid_01.png" );
+	public final static TextureHandle STRIPE_TXR = new TextureHandle( "anima//bullets//stripe.png" );
 
+	public final static TextureHandle CANNON_HYBRID_TXR = new TextureHandle( "anima//cannons//cannon_hybrid_01.png" );
+	public final static TextureHandle CANNON_FAN_TXR = new TextureHandle( "anima//cannons//fan_canon_01.png" );
+
+	public static final TextureAtlasHandle EXPLOSION_02_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion02.atlas" );
+	public static final AnimationHandle EXPLOSION_02_ANIM = new AnimationHandle(EXPLOSION_02_ATLAS, "explosion02");
 	public static final TextureAtlasHandle EXPLOSION_03_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion03.atlas" );
 	public static final AnimationHandle EXPLOSION_03_ANIM = new AnimationHandle(EXPLOSION_03_ATLAS, "explosion03");
 	public static final TextureAtlasHandle EXPLOSION_04_ATLAS = new TextureAtlasHandle( "anima//effects//explosion//explosion04.atlas" );
@@ -94,12 +99,16 @@ public class GameFactory
 	public static final TextureAtlasHandle SMOKE_ATLAS = new TextureAtlasHandle( "anima//effects//smoke//smoke.atlas" );
 	public static final AnimationHandle SMOKE_ANIM = new AnimationHandle(SMOKE_ATLAS, "smoke");
 
+	public final static TextureHandle SPAWNER_TXR = new TextureHandle( "anima//structures//spawner01.png" );
+	public final static TextureHandle BIRDY_TXR = new TextureHandle( "anima//gears//birdy_02.png" );
+
 
 	private void registerSharedResources()
 	{
 
 		registerAnimation( CROSSHAIR_ANIM);
 		registerAnimation( SMOKE_ANIM );
+		registerAnimation( EXPLOSION_02_ANIM );
 		registerAnimation( EXPLOSION_03_ANIM );
 		registerAnimation( EXPLOSION_04_ANIM );
 		registerAnimation( EXPLOSION_05_ANIM );
@@ -107,7 +116,11 @@ public class GameFactory
 		registerTexture( FIREBALL_TXR );
 		registerTexture( ROCKET_TXR );
 		registerTexture( CANNON_HYBRID_TXR );
+		registerTexture( CANNON_FAN_TXR );
+		registerTexture( STRIPE_TXR );
 
+		registerTexture( SPAWNER_TXR );
+		registerTexture( BIRDY_TXR );
 
 	}
 

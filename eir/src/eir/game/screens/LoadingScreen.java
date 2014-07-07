@@ -17,6 +17,8 @@ public class LoadingScreen  extends AbstractScreen
 
 	private float culloutTime;
 
+	private float barProgress = 0;
+
 	public LoadingScreen(final EirGame game, final LevelSetup levelSetup)
 	{
 		super(game);
@@ -31,11 +33,14 @@ public class LoadingScreen  extends AbstractScreen
 //		Debug.log( levelSetup.getState() + " " + levelSetup.getPercentage());
 		float progress = levelSetup.getGameFactory().loadResources();
 
+		// smoothing a little:
+		barProgress += (progress - barProgress)/3;
+
 		renderer.begin( ShapeType.Rectangle );
 		renderer.rect( minx, miny, lw, lh );
 		renderer.end();
 		renderer.begin( ShapeType.FilledRectangle );
-		renderer.filledRect( minx, miny, progress*lw, lh );
+		renderer.filledRect( minx, miny, barProgress*lw, lh );
 		renderer.end();
 
 		if(progress == 1)

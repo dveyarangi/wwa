@@ -27,7 +27,7 @@ public class MinigunDef extends WeaponDef
 
 		bulletDamage = new Damage(30f,0,0,0);
 
-		this.bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 0.5f, GameFactory.FIREBALL_TXR, null, false );
+		this.bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 1f, GameFactory.STRIPE_TXR, null, false );
 	}
 
 	private IBulletBehavior bulletBehavior;

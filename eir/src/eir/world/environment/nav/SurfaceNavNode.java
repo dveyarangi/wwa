@@ -43,8 +43,11 @@ public class SurfaceNavNode extends NavNode implements Anchor
 		Vector2 surface = model.getNavNode( navIdx-1 ).getPoint().tmp()
 					.sub( model.getNavNode( navIdx+1 )                  .getPoint() );
 
-		this.angle = surface.rotate( 90 ).angle();
+		this.angle = surface.angle();
 		return angle;
 	}
+
+	@Override
+	public Object getParent() {	return getDescriptor().getObject();	}
 
 }
