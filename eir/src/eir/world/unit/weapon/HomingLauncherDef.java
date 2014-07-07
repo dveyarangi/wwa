@@ -31,18 +31,19 @@ public class HomingLauncherDef extends WeaponDef
 
 	private int burstChirality = 1;
 	public HomingLauncherDef(final String type, final int faction, final float size,
-			final TextureHandle unitSprite, final AnimationHandle deathAnimation)
+			final TextureHandle unitSprite, final AnimationHandle deathAnimation, final boolean isPickable)
 	{
-		super( type, faction, size, unitSprite, deathAnimation );
+		super( type, faction, size, unitSprite, deathAnimation, isPickable );
 
 		bulletBehavior = new HomingBehavior();
 
 		bulletDamage = new Damage( AOEFunction.LINEAR_DECAY, 10f, 100f,0f,0f,0f );
 
-		bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 2f, GameFactory.ROCKET_TXR, null );
+		bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 2f, GameFactory.ROCKET_TXR, null, false );
 	}
 
 
+	@Override
 	public void init(final GameFactory gameFactory)
 	{
 		this.hitAnimation01 = gameFactory.getAnimation( GameFactory.EXPLOSION_03_ANIM );

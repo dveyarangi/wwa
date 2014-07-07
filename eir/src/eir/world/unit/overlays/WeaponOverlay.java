@@ -1,5 +1,7 @@
 package eir.world.unit.overlays;
 
+import yarangi.math.Angles;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -46,8 +48,8 @@ public class WeaponOverlay implements IOverlay <Unit>
 		float angle = direction.angle();
 		shape.begin(ShapeType.Line);
 		shape.line(unit.cx(), unit.cy(),
-				(float)(unit.cx() + sensorRadius * Math.cos( angle )),
-				(float)(unit.cy() + sensorRadius * Math.sin( angle )));
+				(float)(unit.cx() + sensorRadius * Math.cos( angle * Angles.TO_RAD )),
+				(float)(unit.cy() + sensorRadius * Math.sin( angle * Angles.TO_RAD )));
 		shape.end();
 
 		Vector2 leftAngularMargin = direction.tmp().rotate( weapon.getDef().getMaxFireAngle() );
@@ -57,10 +59,10 @@ public class WeaponOverlay implements IOverlay <Unit>
 		for(angle = rightAngularMargin.angle(); angle < leftAngularMargin.angle()-10; angle += 10)
 		{
 			shape.triangle( unit.cx(), unit.cy(),
-					(float)(unit.cx() + sensorRadius * Math.cos( angle )),
-					(float)(unit.cy() + sensorRadius * Math.sin( angle )),
-					(float)(unit.cx() + sensorRadius * Math.cos( angle+10 )),
-					(float)(unit.cy() + sensorRadius * Math.sin( angle+10 )));
+					(float)(unit.cx() + sensorRadius * Math.cos( angle * Angles.TO_RAD )),
+					(float)(unit.cy() + sensorRadius * Math.sin( angle * Angles.TO_RAD )),
+					(float)(unit.cx() + sensorRadius * Math.cos( (angle+10) * Angles.TO_RAD )),
+					(float)(unit.cy() + sensorRadius * Math.sin( (angle+10) * Angles.TO_RAD )));
 		}
 		shape.end();
 	}

@@ -10,9 +10,9 @@ public class CannonDef extends UnitDef
 	private WeaponDef weaponDef;
 
 	public CannonDef(final String type, final int faction, final float size,
-			final TextureHandle unitSprite, final AnimationHandle deathAnimation, final WeaponDef weaponDef)
+			final TextureHandle unitSprite, final AnimationHandle deathAnimation, final WeaponDef weaponDef, final boolean isPickable)
 	{
-		super( type, faction, size, unitSprite, deathAnimation );
+		super( type, faction, size, unitSprite, deathAnimation, isPickable );
 
 		this.weaponDef = weaponDef;
 	}

@@ -1,5 +1,8 @@
 package eir.input;
 
+import java.util.List;
+
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,9 +13,11 @@ import eir.resources.GameFactory;
 import eir.world.Level;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.ISpatialObject;
+import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.cannons.Cannon;
 import eir.world.unit.cannons.CannonDef;
+import eir.world.unit.weapon.HomingLauncherDef;
 import eir.world.unit.weapon.MinigunDef;
 
 /**
@@ -32,21 +37,23 @@ public class BuildingControlMode implements IControlMode
 		@Override
 		public boolean accept( final ISpatialObject entity )
 		{
-			return entity instanceof SurfaceNavNode;
+			return entity instanceof SurfaceNavNode
+				|| entity instanceof Unit;
 		}
 
 	});
 
 	private final Level level;
 
-	private SurfaceNavNode pickedNode;
+	private ISpatialObject pickedObject;
 
 	private Animation crosshair;
 
 	private GameFactory gameFactory;
 
 
-	private CannonDef cannonDef;
+	private CannonDef [] defRobin;
+	private int cannonIdx;
 
 
 	BuildingControlMode(final GameFactory gameFactory, final Level level)
@@ -57,15 +64,29 @@ public class BuildingControlMode implements IControlMode
 
 		this.crosshair = gameFactory.getAnimation( GameFactory.CROSSHAIR_ANIM );
 
-		this.cannonDef = new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
-				5,
-				null,
-				GameFactory.EXPLOSION_04_ANIM,
-				new MinigunDef(
-						UnitsFactory.WEAPON,
-						CONTROLLING_FACTION_ID, 5,
-						GameFactory.CANNON_HYBRID_TXR,
-						GameFactory.EXPLOSION_04_ANIM ));
+		this.defRobin = new CannonDef [] {
+				new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
+					5,
+					null,
+					GameFactory.EXPLOSION_04_ANIM,
+					new MinigunDef(
+							UnitsFactory.WEAPON,
+							CONTROLLING_FACTION_ID, 5,
+							GameFactory.CANNON_HYBRID_TXR,
+							GameFactory.EXPLOSION_04_ANIM, false ),
+					true),
+
+				new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
+					5,
+					null,
+					GameFactory.EXPLOSION_04_ANIM,
+					new HomingLauncherDef(
+							UnitsFactory.WEAPON,
+							CONTROLLING_FACTION_ID, 5,
+							GameFactory.CANNON_HYBRID_TXR,
+							GameFactory.EXPLOSION_04_ANIM, false ),
+					true)
+		};
 	}
 
 	@Override
@@ -74,54 +95,104 @@ public class BuildingControlMode implements IControlMode
 	@Override
 	public void touchUnit( final ISpatialObject pickedObject )
 	{
-		SurfaceNavNode node = (SurfaceNavNode) pickedObject;
+		if(pickedObject instanceof SurfaceNavNode)
+		{
+			SurfaceNavNode node = (SurfaceNavNode) pickedObject;
+			Cannon cannon = level.getUnitsFactory().getUnit( gameFactory, level,
+					defRobin[cannonIdx],
+					node
+					);
 
-		Cannon cannon = level.getUnitsFactory().getUnit( gameFactory, level,
-				cannonDef,
-				node
-				);
-
-		level.addUnit( cannon );
+			level.addUnit( cannon );
+		}
 	}
 
 	@Override
 	public void render( final IRenderer renderer )
 	{
 
-		 if(pickedNode == null)
+		 if(pickedObject == null)
 			 return;
 
-		 SpriteBatch batch = renderer.getSpriteBatch();
+		 if(pickedObject instanceof SurfaceNavNode)
+		 {
+			 SurfaceNavNode pickedNode = (SurfaceNavNode) pickedObject;
+			 SpriteBatch batch = renderer.getSpriteBatch();
 
-		 Vector2 point = pickedNode.getPoint();
-		 batch.begin();
-		 TextureRegion crossHairregion = crosshair.getKeyFrame( 0, true );
-		 batch.draw( crossHairregion,
-				 point.x-crossHairregion.getRegionWidth()/2, point.y-crossHairregion.getRegionHeight()/2,
-				 crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2,
-				 crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(),
-				 5f/crossHairregion.getRegionWidth(),
-				 5f/crossHairregion.getRegionWidth(), 0);
-		 batch.end();
+			 Vector2 point = pickedNode.getPoint();
+			 batch.begin();
+			 TextureRegion crossHairregion = crosshair.getKeyFrame( 0, true );
+			 batch.draw( crossHairregion,
+					 point.x-crossHairregion.getRegionWidth()/2, point.y-crossHairregion.getRegionHeight()/2,
+					 crossHairregion.getRegionWidth()/2,crossHairregion.getRegionHeight()/2,
+					 crossHairregion.getRegionWidth(), crossHairregion.getRegionHeight(),
+					 5f/crossHairregion.getRegionWidth(),
+					 5f/crossHairregion.getRegionWidth(), 0);
+			 batch.end();
+		 }
 	}
 
 	@Override
-	public void objectPicked( final ISpatialObject pickedObject )
+	public ISpatialObject objectPicked( final List <ISpatialObject> objects )
 	{
-		this.pickedNode = (SurfaceNavNode) pickedObject;
+		pickedObject = null;
+		for(ISpatialObject o : objects)
+		{
+			if(o instanceof SurfaceNavNode)
+			{
+				pickedObject = o;
+			}
+			if(o instanceof Unit)
+			{
+				Unit pickedUnit = (Unit) o;
+				if(!pickedUnit.getDef().isPickable())
+				{
+					continue;
+				}
+
+				pickedUnit.setIsHovered( true );
+				pickedObject = o;
+				break;
+			}
+		}
+
+		return pickedObject;
 	}
 
 	@Override
 	public void objectUnpicked( final ISpatialObject pickedObject )
 	{
 //		assert pickedObject == pickedNode;
-		pickedNode = null;
+		if(pickedObject instanceof Unit)
+		{
+			Unit pickedUnit = (Unit) pickedObject;
+			pickedUnit.setIsHovered( false );
+		}
+
+		this.pickedObject = null;
 	}
 
 	@Override
 	public void reset()
 	{
-		pickedNode = null;
+		pickedObject = null;
+	}
+
+	@Override
+	public void keyDown( final int keycode )
+	{
+		switch(keycode)
+		{
+
+		case Input.Keys.N:
+			cannonIdx ++;
+			if(cannonIdx >= defRobin.length)
+			{
+				cannonIdx = 0;
+			}
+
+			break;
+		}
 	}
 
 }

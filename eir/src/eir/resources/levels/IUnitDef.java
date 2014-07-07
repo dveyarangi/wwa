@@ -18,4 +18,6 @@ public interface IUnitDef
 
 	String getType();
 
+	public boolean isPickable();
+
 }

@@ -92,7 +92,7 @@ public class Cannon extends Unit implements IDamager
 		Vector2 targetDirection = targetingModule.getShootingDirection( target, this );
 		if(targetDirection != null)
 		{
-			weapon.getTargetOrientation().set( targetDirection );
+			weapon.getTargetOrientation().set( targetDirection ).nor();
 		}
 
 		weapon.update( delta );

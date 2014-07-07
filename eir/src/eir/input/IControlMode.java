@@ -1,5 +1,7 @@
 package eir.input;
 
+import java.util.List;
+
 import eir.rendering.IRenderer;
 import eir.world.environment.spatial.ISpatialObject;
 
@@ -30,9 +32,9 @@ public interface IControlMode
 
 	/**
 	 * Game entity mouse hover callback
-	 * @param pickedObject
+	 * @param pickedObjects
 	 */
-	void objectPicked( ISpatialObject pickedObject );
+	ISpatialObject objectPicked( List<ISpatialObject> pickedObjects );
 	/**
 	 * Game entity mouse unhover callback
 	 * @param pickedObject
@@ -44,5 +46,7 @@ public interface IControlMode
 	 * @param renderer
 	 */
 	void render( IRenderer renderer );
+
+	void keyDown( int keycode );
 
 }

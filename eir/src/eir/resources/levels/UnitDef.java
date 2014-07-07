@@ -20,9 +20,14 @@ public class UnitDef implements IUnitDef
 
 	private AnimationHandle deathAnimation;
 
+	private boolean isPickable;
+
 	private UnitDef() {}
 
-	public UnitDef(final String type, final int faction, final float size, final TextureHandle unitSprite, final AnimationHandle deathAnimation)
+	public UnitDef(final String type, final int faction, final float size,
+			final TextureHandle unitSprite,
+			final AnimationHandle deathAnimation,
+			final boolean isPickable)
 	{
 		this.type = type;
 		this.size = size;
@@ -30,6 +35,8 @@ public class UnitDef implements IUnitDef
 
 		this.spriteTexture = unitSprite;
 		this.deathAnimation = deathAnimation;
+
+		this.isPickable = isPickable;
 	}
 
 	@Override
@@ -49,4 +56,8 @@ public class UnitDef implements IUnitDef
 
 	@Override
 	public TextureHandle getUnitSprite() { return spriteTexture; }
+
+	@Override
+	public boolean isPickable() { return isPickable; }
+
 }

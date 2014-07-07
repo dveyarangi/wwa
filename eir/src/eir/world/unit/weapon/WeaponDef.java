@@ -14,9 +14,9 @@ import eir.world.unit.cannons.TargetProvider;
 public abstract class WeaponDef extends UnitDef
 {
 	public WeaponDef(final String type, final int faction, final float size,
-			final TextureHandle unitSprite, final AnimationHandle deathAnimation)
+			final TextureHandle unitSprite, final AnimationHandle deathAnimation, final boolean isPickable)
 	{
-		super( type, faction, size, unitSprite, deathAnimation );
+		super( type, faction, size, unitSprite, deathAnimation, isPickable );
 	}
 
 	/**

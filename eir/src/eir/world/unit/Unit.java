@@ -186,7 +186,8 @@ public abstract class Unit implements ISpatialObject, IUnit
 		this.overlays.clear();
 		this.hoverOverlays.clear();
 
-		toggleOverlay( LevelRenderer.INTEGRITY_OID);
+		addHoverOverlay( LevelRenderer.INTEGRITY_OID);
+//		toggleOverlay( LevelRenderer.INTEGRITY_OID);
 	}
 
 	/**
@@ -391,4 +392,6 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public boolean isHovered() { return isHovered; }
 
 	@Override public int hashCode() {	return hashcode; }
+
+	public IUnitDef getDef() { return def; }
 }

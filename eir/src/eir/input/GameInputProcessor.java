@@ -1,5 +1,7 @@
 package eir.input;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -112,6 +114,8 @@ public class GameInputProcessor implements InputProcessor
 		case Input.Keys.M:
 			controlModeIdx = (controlModeIdx + 1) % controlModes.length;
 			controlModes[controlModeIdx].reset();
+
+
 			break;
 
 /*		case Input.Keys.SPACE:
@@ -126,6 +130,8 @@ public class GameInputProcessor implements InputProcessor
 			}
 			break;*/
 		default:
+
+			controlModes[controlModeIdx].keyDown( keycode );
 			return false;
 		}
 
@@ -240,20 +246,21 @@ public class GameInputProcessor implements InputProcessor
 				 pointerPosition2.y, 3, 3 );
 
 
-		 if(pickedObject != sensor.getPickedObject())
+		 List <ISpatialObject> pickedObjects = sensor.getPickedObjects();
+		 ISpatialObject newPickedObject = null;
+		 if(pickedObjects != null)
 		 {
-			 if(pickedObject != null)
-			 {
-				 mode.objectUnpicked( pickedObject );
-			 }
-
-			 pickedObject = sensor.getPickedObject();
-			 if(pickedObject != null)
-			 {
-				 mode.objectPicked( pickedObject );
-			 }
-
+			 newPickedObject = mode.objectPicked( pickedObjects );
 		 }
+
+
+		 if(newPickedObject != pickedObject)
+		 {
+			 mode.objectUnpicked( pickedObject );
+			 pickedObject = newPickedObject;
+		 }
+
+
 
 
 		 timeController.update( delta );

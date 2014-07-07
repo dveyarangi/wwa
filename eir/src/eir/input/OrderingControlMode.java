@@ -1,5 +1,7 @@
 package eir.input;
 
+import java.util.List;
+
 import eir.rendering.IRenderer;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Unit;
@@ -27,10 +29,12 @@ public class OrderingControlMode implements IControlMode
 	}
 
 	@Override
-	public void objectPicked( final ISpatialObject pickedObject )
+	public ISpatialObject objectPicked( final List <ISpatialObject> pickedObjects )
 	{
-		pickedUnit = (Unit) pickedObject;
+		pickedUnit = (Unit) pickedObjects.iterator().next();
 		pickedUnit.setIsHovered( true );
+
+		return pickedUnit;
 	}
 
 	@Override

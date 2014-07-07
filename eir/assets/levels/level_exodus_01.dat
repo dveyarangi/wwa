@@ -556,59 +556,45 @@
 						"faction" : 3,
 						"size" : 10,
 						"spriteTexture" : "anima//gears//birdy_02.png",
-						"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" }
+						"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" },
+						"isPickable" : true
 					},			
 					"maxUnits" : 50,
-					"spawnInterval" : 0.2f
+					"spawnInterval" : 0.2f,
+					"isPickable" : true
 				},
-								{
-					"type" : "spawner",
-					"faction" : 3,
-					"size" : 10,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
-					"anchor" : { "asteroid" : "red_ass", "navIdx" : 10 },
-					"spawnedUnit" : {
-						"type" : "birdy",
-						"faction" : 3,
-						"size" : 10,
-						"spriteTexture" : "anima//gears//birdy_02.png",
-						"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" }
-					},			
-					"maxUnits" : 50,
-					"spawnInterval" : 0.2f
-				}
-				
-				/*,
 				{
 					"type" : "spawner",
 					"faction" : 3,
 					"size" : 10,
 					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
-					"anchor" : { "asteroid" : "junkheap", "navIdx" : 100 },
+					"anchor" : { "asteroid" : "red_ass", "navIdx" : 10 },
+					"isPickable" : true,
 					"spawnedUnit" : {
 						"type" : "birdy",
 						"faction" : 3,
 						"size" : 10,
-						"spriteTexture" : "anima//gears//birdy_02.png"
+						"spriteTexture" : "anima//gears//birdy_02.png",
+						"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" },
+						"isPickable" : true
 					},			
 					"maxUnits" : 50,
-					"spawnInterval" : 1.5f
-				},
-								{
-					"type" : "spawner",
+					"spawnInterval" : 0.2f
+				}/*,
+				{
+					"type" : "cannon",
+					"faction" : 1,
 					"size" : 10,
-					"faction" : 3,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
-					"anchor" : { "asteroid" : "junkheap", "navIdx" : 50 },
-					"spawnedUnit" : {
-						"type" : "birdy",
-						"faction" : 3,
+					"anchor" : { "asteroid" : "red_back", "navIdx" : 10 },
+					"weaponDef" : {
+						"type" : "weapon",
+						"faction" : 1,
 						"size" : 10,
-						"spriteTexture" : "anima//gears//birdy_02.png"
-					},			
-					"maxUnits" : 50,
-					"spawnInterval" : 1.5f
-				}	*/			
+						"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
+					},
+				}*/
+				
+		
 			]/*,
 			
 			"playerUnit" : {

@@ -116,17 +116,37 @@ public class Weapon extends Unit
 	{
 		timeToReload -= delta;
 
+		float diffAngle =
+				(float)( Math.acos( targetOrientation.dot( weaponDir ) )* Angles.TO_DEG);
+		if(Math.abs( diffAngle ) < Math.abs( delta * weaponDef.getAngularSpeed() ))
+		{
+			weaponDir.set( targetOrientation );
+		}
+		else
+		{
+			// TODO: create spinor utility?
+			int dir = weaponDir.crs( targetOrientation ) > 0 ? 1 : -1;
 
-		weaponDir.lerp( targetOrientation, delta * weaponDef.getAngularSpeed() );
+			float angleDelta = dir * delta * weaponDef.getAngularSpeed();
+
+			float dx = (float) Math.cos(angleDelta * Angles.TO_RAD);
+			float dy = (float) Math.sin(angleDelta * Angles.TO_RAD);
+
+			float x = weaponDir.x * dx - weaponDir.y * dy;
+			float y = weaponDir.y * dx + weaponDir.x * dy;
+
+			weaponDir.set( x, y ).nor();
+		}
+
+//		weaponDir.lerp( targetOrientation, delta * weaponDef.getAngularSpeed() );
 
 //		weaponDir.nor();
 
-		float diffAngle =
-				(float) Math.acos( targetOrientation.dot( weaponDir ) /
-						( targetOrientation.len() * weaponDir.len()	) );
+		diffAngle =
+				(float) (Math.acos( targetOrientation.dot( weaponDir ) )* Angles.TO_DEG);
 
 //		float absDistance = Math.abs( angle - targetOrientation.angle() );
-		float absDistance = (float) (Math.abs( diffAngle ) * Angles.TO_DEG);
+		float absDistance = Math.abs( diffAngle );
 
 		isOriented = absDistance < weaponDef.getMaxFireAngle();
 
@@ -149,6 +169,7 @@ public class Weapon extends Unit
 
 	public int getBulletsInMagazine() {	return bulletsInMagazine; }
 
+	@Override
 	public WeaponDef getDef() { return weaponDef; }
 
 	@Override

@@ -19,15 +19,15 @@ public class MinigunDef extends WeaponDef
 {
 
 	public MinigunDef(final String type, final int faction, final float size,
-			final TextureHandle unitSprite, final AnimationHandle deathAnimation)
+			final TextureHandle unitSprite, final AnimationHandle deathAnimation, final boolean isPickable)
 	{
-		super( type, faction, size, unitSprite, deathAnimation );
+		super( type, faction, size, unitSprite, deathAnimation, isPickable );
 
 		bulletBehavior = new MassDriverBehavior();
 
 		bulletDamage = new Damage(30f,0,0,0);
 
-		this.bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 0.5f, GameFactory.FIREBALL_TXR, null );
+		this.bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 0.5f, GameFactory.FIREBALL_TXR, null, false );
 	}
 
 	private IBulletBehavior bulletBehavior;
@@ -81,7 +81,7 @@ public class MinigunDef extends WeaponDef
 		return bulletDamage;
 	}
 	@Override
-	public float getAngularSpeed() { return 20f; }
+	public float getAngularSpeed() { return 100f; }
 
 
 	@Override
@@ -114,7 +114,7 @@ public class MinigunDef extends WeaponDef
 	}
 
 	@Override
-	public float getSensorRadius() { return 100; }
+	public float getSensorRadius() { return 50; }
 }
 
 
