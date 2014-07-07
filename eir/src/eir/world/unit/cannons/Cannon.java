@@ -17,12 +17,11 @@ import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
-import eir.world.unit.TaskedUnit;
 import eir.world.unit.Unit;
-import eir.world.unit.weapon.HomingLauncher;
 import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.weapon.Minigun;
 
-public class Cannon extends TaskedUnit implements IDamager
+public class Cannon extends Unit implements IDamager
 {
 
 	public static final int SENSOR_RADIUS = 100;
@@ -63,12 +62,12 @@ public class Cannon extends TaskedUnit implements IDamager
 		this.angle = surface.rotate( 90 ).angle();
 
 		///*
-		this.weapon = new HomingLauncher( this );
-		this.targetProvider = TargetProvider.RANDOM_TARGETER( this );
+//		this.weapon = new HomingLauncher( this );
+//		this.targetProvider = TargetProvider.RANDOM_TARGETER( this );
 
 		/**/
-//		this.weapon = new Minigun( this );
-//		this.targetProvider = TargetProvider.CLOSEST_TARGETER( this );
+		this.weapon = new Minigun( this );
+		this.targetProvider = TargetProvider.CLOSEST_TARGETER( this );
 
  		/***/
 		this.weapon.init( gameFactory, level );

@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
-import eir.debug.Debug;
 import eir.rendering.IRenderer;
 import eir.rendering.LevelRenderer;
 import eir.resources.GameFactory;
@@ -305,7 +304,6 @@ public abstract class Unit implements ISpatialObject, IUnit
 	{
 		if(hull == null) // TODO: stub, in future hulless units should not respond to damage
 		{
-			Debug.log( "Unit has no hull: " + this);
 			setDead();
 			return 0;
 		}

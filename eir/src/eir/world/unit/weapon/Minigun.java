@@ -44,7 +44,7 @@ public class Minigun extends IWeapon
 
 		bulletDamage = new Damage(50f,0,0,0);
 
-		this.bulletDef = new UnitDef( UnitsFactory.BULLET, this.getOwner().getId(), 0.5f, GameFactory.FIREBALL_TXR, null );
+		this.bulletDef = new UnitDef( UnitsFactory.BULLET, this.getOwner().getFaction().getOwnerId(), 0.5f, GameFactory.FIREBALL_TXR, null );
 	}
 
 

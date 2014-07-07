@@ -15,6 +15,8 @@ public class LoadingScreen  extends AbstractScreen
 
 	private int minx, miny, lw, lh;
 
+	private float culloutTime;
+
 	public LoadingScreen(final EirGame game, final LevelSetup levelSetup)
 	{
 		super(game);
@@ -38,9 +40,13 @@ public class LoadingScreen  extends AbstractScreen
 
 		if(progress == 1)
 		{
-			game.setScreen( new GameScreen( game, levelSetup ) );
-			Debug.log( "Finished loading level");
-
+			culloutTime += delta;
+			if(culloutTime > 0.1)
+			{
+				this.dispose();
+				game.setScreen( new GameScreen( game, levelSetup ) );
+				Debug.log( "Finished loading level");
+			}
 		}
 	}
     @Override
