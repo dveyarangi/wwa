@@ -8,21 +8,23 @@ import yarangi.numbers.RandomUtil;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.debug.Debug;
 import eir.rendering.IRenderer;
 import eir.rendering.LevelRenderer;
 import eir.resources.GameFactory;
 import eir.resources.levels.IUnitDef;
 import eir.world.Effect;
 import eir.world.Level;
+import eir.world.environment.Anchor;
 import eir.world.environment.Environment;
-import eir.world.environment.nav.NavNode;
 import eir.world.environment.spatial.AABB;
 import eir.world.environment.spatial.ISpatialObject;
-import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.weapon.Weapon;
 import gnu.trove.list.array.TIntArrayList;
 
 /**
@@ -49,9 +51,9 @@ public abstract class Unit implements ISpatialObject, IUnit
 	protected Faction faction;
 
 	/**
-	 * Unit's anchor navigation node, may be null for freely moving units.
+	 * Unit's anchor node, may be null for freely moving units.
 	 */
-	public NavNode anchor;
+	public Anchor anchor;
 
 
 	///////////////////////////////////////////
@@ -163,7 +165,13 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 		this.target = null;
 
-		this.unitSprite = factory.createSprite( def.getUnitSprite() );
+		if(def.getUnitSprite() == null)
+		{
+			Debug.log( "Unit " + this + " has no sprite!" );
+		} else
+		{
+			this.unitSprite = factory.createSprite( def.getUnitSprite() );
+		}
 
 		this.deathAnimation = def.getDeathAnimation() == null ? null :
 			factory.getAnimation( def.getDeathAnimation() );
@@ -189,11 +197,11 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * @param anchor
 	 * @param faction
 	 */
-	public void init( final GameFactory factory, final Level level, final IUnitDef def, final NavNode anchor )
+	public void init( final GameFactory factory, final Level level, final IUnitDef def, final Anchor anchor )
 	{
 		this.anchor = anchor;
 
-		init(factory, level, def, anchor.getPoint().x, anchor.getPoint().y, 0 /*TODO: normal angle? */);
+		init(factory, level, def, anchor.getPoint().x, anchor.getPoint().y, anchor.getAngle());
 	}
 
 	/**
@@ -255,7 +263,20 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 	}
 
-	public abstract void draw( IRenderer renderer );
+	public void draw( final IRenderer renderer )
+	{
+		if(unitSprite == null)
+			return;
+		final SpriteBatch batch = renderer.getSpriteBatch();
+		Vector2 position = getBody().getAnchor();
+		Sprite sprite = getUnitSprite();
+		batch.draw( sprite,
+				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
+				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
+				sprite.getRegionWidth(), sprite.getRegionHeight(),
+				getSize()/sprite.getRegionWidth(),
+				getSize()/sprite.getRegionWidth(), angle);
+	}
 
 
 	public void draw( final ShapeRenderer shape )
@@ -323,7 +344,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public Effect getDeathEffect()
 	{
 		if(deathAnimation != null)
-			return Effect.getEffect( deathAnimation, 25, getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 1 );
+			return Effect.getEffect( deathAnimation, 10, getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 1 );
 		return null;
 	}
 
@@ -333,7 +354,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 
 
 
-	public NavNode getAnchorNode() { return anchor; }
+	public Anchor getAnchor() { return anchor; }
 
 	public boolean dealsFriendlyDamage() { return false; }
 
@@ -364,7 +385,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 	public float cx() { return body.getAnchor().x; }
 	public float cy() { return body.getAnchor().y; }
 
-	public IWeapon getWeapon() { return null; }
+	public Weapon getWeapon() { return null; }
 
 	public void setIsHovered(final boolean isHovered)	{ this.isHovered = isHovered; }
 	public boolean isHovered() { return isHovered; }

@@ -43,7 +43,7 @@ public class LinearTargetingModule extends TargetingModule
 
 		double C = targetUnit.getVelocity().x * targetUnit.getVelocity().x +
 				   targetUnit.getVelocity().y * targetUnit.getVelocity().y -
-				   cannon.getWeapon().getBulletSpeed() * cannon.getWeapon().getBulletSpeed();
+				   cannon.getWeapon().getDef().getBulletSpeed() * cannon.getWeapon().getDef().getBulletSpeed();
 
 		double D = B*B - 4*A*C;
 		if( D < 0 )

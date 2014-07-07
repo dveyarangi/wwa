@@ -2,24 +2,22 @@ package eir.world.unit.cannons;
 
 import java.util.List;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
 import eir.rendering.LevelRenderer;
 import eir.resources.GameFactory;
-import eir.resources.PolygonalModel;
-import eir.world.Asteroid;
 import eir.world.Level;
+import eir.world.environment.Anchor;
+import eir.world.environment.RelativeAnchor;
 import eir.world.environment.sensors.ISensor;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.Damage;
 import eir.world.unit.Hull;
 import eir.world.unit.IDamager;
 import eir.world.unit.Unit;
-import eir.world.unit.weapon.IWeapon;
-import eir.world.unit.weapon.Minigun;
+import eir.world.unit.weapon.Weapon;
+import eir.world.unit.weapon.WeaponDef;
 
 public class Cannon extends Unit implements IDamager
 {
@@ -28,17 +26,21 @@ public class Cannon extends Unit implements IDamager
 
 	private ISensor sensor;
 
-	private IWeapon weapon;
+	private Weapon weapon;
 
 	private Damage impactDamage = new Damage( 10, 1, 0, 0 );
 
 	private TargetProvider targetProvider;
 	private TargetingModule targetingModule;
 
+	private WeaponDef weaponDef;
 
-	public Cannon()
+	private Anchor weaponMount;
+
+	public Cannon( )
 	{
 		super();
+
 	}
 
 	@Override
@@ -46,31 +48,23 @@ public class Cannon extends Unit implements IDamager
 	{
 		super.reset( gameFactory, level );
 
-		this.sensor = level.getEnvironment().createSensor( this, SENSOR_RADIUS );
+		weaponMount = new RelativeAnchor( this );
+
+		weaponDef = ((CannonDef)this.def).getWeaponDef();
+
 
 		this.hull = new Hull(500f, 0f, new float [] {0f,0f,0f,0f});
 
-		int navIdx = this.getAnchorNode().getDescriptor().getIndex();
-		Asteroid asteroid = (Asteroid) getAnchorNode().getDescriptor().getObject();
+		this.angle = this.getAnchor().getAngle();
 
-		PolygonalModel model = asteroid.getModel();
+		weapon = level.getUnitsFactory().getUnit( gameFactory, level, weaponDef, weaponMount );
 
-		Vector2 surface = model.getNavNode( navIdx-1 ).getPoint().tmp()
-					.sub( model.getNavNode( navIdx+1 )                  .getPoint() );
+		this.sensor = level.getEnvironment().createSensor( this, weaponDef.getSensorRadius() );
 
+		this.targetProvider = weaponDef.createTargetProvider( this );
 
-		this.angle = surface.rotate( 90 ).angle();
-
-		///*
-//		this.weapon = new HomingLauncher( this );
-//		this.targetProvider = TargetProvider.RANDOM_TARGETER( this );
-
-		/**/
-		this.weapon = new Minigun( this );
-		this.targetProvider = TargetProvider.CLOSEST_TARGETER( this );
-
- 		/***/
 		this.weapon.init( gameFactory, level );
+
 		this.targetingModule = new LinearTargetingModule();
 	}
 
@@ -118,15 +112,8 @@ public class Cannon extends Unit implements IDamager
 	@Override
 	public void draw( final IRenderer renderer )
 	{
-		final SpriteBatch batch = renderer.getSpriteBatch();
-		Vector2 position = getBody().getAnchor();
-		Sprite sprite = getUnitSprite();
-		batch.draw( sprite,
-				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
-				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
-				sprite.getRegionWidth(), sprite.getRegionHeight(),
-				getSize()/sprite.getRegionWidth(),
-				getSize()/sprite.getRegionWidth(), angle);
+		super.draw( renderer );
+		weapon.draw( renderer );
 	}
 
 	@Override
@@ -136,7 +123,7 @@ public class Cannon extends Unit implements IDamager
 	}
 
 	@Override
-	public IWeapon getWeapon() { return weapon; }
+	public Weapon getWeapon() { return weapon; }
 
 	@Override
 	public Damage getDamage() { return impactDamage; }

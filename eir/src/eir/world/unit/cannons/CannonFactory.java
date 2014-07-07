@@ -1,11 +1,10 @@
 package eir.world.unit.cannons;
 
+import eir.resources.levels.UnitDef;
 import eir.world.unit.UnitsFactory.UnitFactory;
 
 public class CannonFactory extends UnitFactory <Cannon>
 {
-
-	private static final float SENSOR_RANGE = 100;
 
 	public CannonFactory( )
 	{
@@ -18,4 +17,7 @@ public class CannonFactory extends UnitFactory <Cannon>
 	{
 		return new Cannon();
 	}
+
+	@Override
+	protected Class <? extends UnitDef> getDefClass() {	return CannonDef.class;	}
 }

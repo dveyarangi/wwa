@@ -28,7 +28,7 @@ public class Bullet extends Unit implements IDamager
 
 	//////////////////////////////////////////////////////////////////
 
-	IWeapon weapon;
+	Weapon weapon;
 
 
 //	public IWeapon weapon;
@@ -68,7 +68,7 @@ public class Bullet extends Unit implements IDamager
 			this.target = null;
 		}
 
-		if( weapon.decayOnNoTarget() && isDecaying() )
+		if( weapon.getDef().decayOnNoTarget() && isDecaying() )
 		{
 			this.lifetime += delta * (this.lifelen - this.lifetime) * 5f;
 		}
@@ -78,7 +78,7 @@ public class Bullet extends Unit implements IDamager
 			this.setDead();
 		}
 
-		weapon.getBulletBehavior().update( delta, this );
+		weapon.getDef().getBulletBehavior().update( delta, this );
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class Bullet extends Unit implements IDamager
 
 		Animation crossHair = renderer.getAnimation( GameFactory.CROSSHAIR_ANIM );
 
-		if(weapon.getBulletBehavior().requiresTarget() && getTarget() != null)
+		if(weapon.getDef().getBulletBehavior().requiresTarget() && getTarget() != null)
 		{
 			TextureRegion crossHairregion = crossHair.getKeyFrame( getLifetime(), true );
 			batch.draw( crossHairregion,
@@ -120,7 +120,7 @@ public class Bullet extends Unit implements IDamager
 		{
 //			if(RandomUtil.oneOf( 3 ))
 			{
-				Effect effect = weapon.createTraceEffect(this);
+				Effect effect = weapon.getDef().createTraceEffect(this);
 				if(effect != null)
 				{
 					renderer.addEffect( effect );
@@ -135,29 +135,27 @@ public class Bullet extends Unit implements IDamager
 
 
 	@Override
-	public IWeapon getWeapon() {
-		return weapon;
-	}
+	public Weapon getWeapon() {	return weapon; }
 
 	@Override
 	public Effect getDeathEffect(  )
 	{
-		return weapon.createHitEffect( this, true );
+		return weapon.getDef().createHitEffect( this, true );
 	}
 
 	@Override
 	public Damage getDamage()
 	{
-		return weapon.getDamage();
+		return weapon.getDef().getDamage();
 	}
 	@Override
 	public Unit getSource()
 	{
-		return getWeapon().getOwner();
+		return getWeapon();
 	}
 
 	@Override
-	public float getMaxSpeed() {return weapon.getBulletSpeed(); }
+	public float getMaxSpeed() {return weapon.getDef().getBulletSpeed(); }
 
 	public void setDecaying( final boolean decaying ) { this.decaying = decaying; }
 

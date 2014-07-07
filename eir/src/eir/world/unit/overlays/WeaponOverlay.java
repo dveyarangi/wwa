@@ -9,8 +9,7 @@ import eir.debug.Debug;
 import eir.rendering.IRenderer;
 import eir.world.unit.IOverlay;
 import eir.world.unit.Unit;
-import eir.world.unit.cannons.Cannon;
-import eir.world.unit.weapon.IWeapon;
+import eir.world.unit.weapon.Weapon;
 
 public class WeaponOverlay implements IOverlay <Unit>
 {
@@ -31,31 +30,39 @@ public class WeaponOverlay implements IOverlay <Unit>
 			return;
 		}
 
-		IWeapon weapon = unit.getWeapon();
+		Weapon weapon = unit.getWeapon();
 
 		ShapeRenderer shape = renderer.getShapeRenderer();
 
 
+		float sensorRadius = weapon.getDef().getSensorRadius();
+
 		shape.setColor( 0,1,0,0.5f );
 
 		shape.begin(ShapeType.Circle);
-		shape.circle(unit.cx(), unit.cy(), Cannon.SENSOR_RADIUS);
+		shape.circle(unit.cx(), unit.cy(), sensorRadius, 100);
 		shape.end();
 		Vector2 direction = weapon.getDirection();
+		float angle = direction.angle();
 		shape.begin(ShapeType.Line);
-		shape.line(unit.cx(), unit.cy(), unit.cx() + direction.x * Cannon.SENSOR_RADIUS, unit.cy() + direction.y * Cannon.SENSOR_RADIUS);
+		shape.line(unit.cx(), unit.cy(),
+				(float)(unit.cx() + sensorRadius * Math.cos( angle )),
+				(float)(unit.cy() + sensorRadius * Math.sin( angle )));
 		shape.end();
 
+		Vector2 leftAngularMargin = direction.tmp().rotate( weapon.getDef().getMaxFireAngle() );
+		Vector2 rightAngularMargin = direction.tmp().rotate( -weapon.getDef().getMaxFireAngle() );
 
-		Vector2 leftAngularMargin = direction.tmp().rotate( weapon.getMaxFireAngle() );
-		shape.begin(ShapeType.Line);
-		shape.line(unit.cx(), unit.cy(), unit.cx() + leftAngularMargin.x * Cannon.SENSOR_RADIUS, unit.cy() + leftAngularMargin.y * Cannon.SENSOR_RADIUS);
+		shape.begin(ShapeType.FilledTriangle);
+		for(angle = rightAngularMargin.angle(); angle < leftAngularMargin.angle()-10; angle += 10)
+		{
+			shape.triangle( unit.cx(), unit.cy(),
+					(float)(unit.cx() + sensorRadius * Math.cos( angle )),
+					(float)(unit.cy() + sensorRadius * Math.sin( angle )),
+					(float)(unit.cx() + sensorRadius * Math.cos( angle+10 )),
+					(float)(unit.cy() + sensorRadius * Math.sin( angle+10 )));
+		}
 		shape.end();
-		Vector2 rightAngularMargin = direction.tmp().rotate( -weapon.getMaxFireAngle() );
-		shape.begin(ShapeType.Line);
-		shape.line(unit.cx(), unit.cy(), unit.cx() + rightAngularMargin.x * Cannon.SENSOR_RADIUS, unit.cy() + rightAngularMargin.y * Cannon.SENSOR_RADIUS);
-		shape.end();
-
 	}
 
 	@Override

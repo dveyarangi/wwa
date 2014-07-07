@@ -150,7 +150,7 @@ public class WildlifeController implements IController
 		Set <Asteroid> guardTargets = new HashSet <Asteroid> ();
 		for( Unit unit : faction.getUnitsByType( UnitsFactory.SPAWNER ) )
 		{
-			SurfaceNavNode anchor = (SurfaceNavNode)unit.getAnchorNode();
+			SurfaceNavNode anchor = (SurfaceNavNode)unit.getAnchor();
 			Asteroid asteroid = (Asteroid) anchor.getDescriptor().getObject();
 
 			guardTargets.add( asteroid );

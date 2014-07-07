@@ -7,12 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.IRenderer;
 import eir.resources.GameFactory;
-import eir.resources.levels.UnitDef;
 import eir.world.Level;
 import eir.world.environment.nav.SurfaceNavNode;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.cannons.Cannon;
+import eir.world.unit.cannons.CannonDef;
+import eir.world.unit.weapon.MinigunDef;
 
 /**
  * TODO: placeholder for building control mode;
@@ -45,7 +46,7 @@ public class BuildingControlMode implements IControlMode
 	private GameFactory gameFactory;
 
 
-	private UnitDef cannonDef;
+	private CannonDef cannonDef;
 
 
 	BuildingControlMode(final GameFactory gameFactory, final Level level)
@@ -56,10 +57,15 @@ public class BuildingControlMode implements IControlMode
 
 		this.crosshair = gameFactory.getAnimation( GameFactory.CROSSHAIR_ANIM );
 
-		this.cannonDef = new UnitDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
-				2,
-				GameFactory.CANNON_HYBRID_TXR,
-				GameFactory.EXPLOSION_04_ANIM);
+		this.cannonDef = new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
+				5,
+				null,
+				GameFactory.EXPLOSION_04_ANIM,
+				new MinigunDef(
+						UnitsFactory.WEAPON,
+						CONTROLLING_FACTION_ID, 5,
+						GameFactory.CANNON_HYBRID_TXR,
+						GameFactory.EXPLOSION_04_ANIM ));
 	}
 
 	@Override
@@ -76,12 +82,6 @@ public class BuildingControlMode implements IControlMode
 				);
 
 		level.addUnit( cannon );
-
-//			NavNode sourceNode = level.getControlledUnit().anchor;
-//			NavNode targetNode = pickingSensor.getNode();
-
-//			level.toggleWeb((SurfaceNavNode)sourceNode, (SurfaceNavNode)targetNode);
-
 	}
 
 	@Override

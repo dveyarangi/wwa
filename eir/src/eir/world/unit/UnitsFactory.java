@@ -14,12 +14,13 @@ import eir.resources.GameFactory;
 import eir.resources.levels.IUnitDef;
 import eir.resources.levels.UnitDef;
 import eir.world.Level;
-import eir.world.environment.nav.NavNode;
+import eir.world.environment.Anchor;
 import eir.world.unit.ai.TaskStage;
 import eir.world.unit.ant.AntFactory;
 import eir.world.unit.cannons.CannonFactory;
 import eir.world.unit.structure.SpawnerFactory;
 import eir.world.unit.weapon.BulletFactory;
+import eir.world.unit.weapon.WeaponFactory;
 import eir.world.unit.wildlings.BirdyFactory;
 
 /**
@@ -37,6 +38,7 @@ public class UnitsFactory
 	public static final String BULLET = "bullet".intern();
 //	public static final String SPIDER = "spider".intern();
 	public static final String CANNON = "cannon".intern();
+	public static final String WEAPON = "weapon".intern();
 
 	private IdentityMap <String, UnitFactory<? extends Unit>> factories = new IdentityMap <String, UnitFactory <? extends Unit>> ();
 
@@ -54,6 +56,8 @@ public class UnitsFactory
 //		factories.put( SPIDER, new SpiderFactory( this ) );
 
 		factories.put( CANNON, new CannonFactory() );
+
+		factories.put( WEAPON, new WeaponFactory() );
 	}
 
 	/**
@@ -64,7 +68,7 @@ public class UnitsFactory
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit, F extends Faction> U getUnit(final GameFactory gameFactory, final Level level, final IUnitDef def, final NavNode anchor)
+	public <U extends Unit, F extends Faction> U getUnit(final GameFactory gameFactory, final Level level, final IUnitDef def, final Anchor anchor)
 	{
 		UnitFactory <U> fctory = (UnitFactory <U>) factories.get( def.getType() );
 		U unit = fctory.pool.obtain();

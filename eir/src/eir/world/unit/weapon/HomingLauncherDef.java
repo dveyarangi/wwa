@@ -1,6 +1,3 @@
-/**
- *
- */
 package eir.world.unit.weapon;
 
 import yarangi.numbers.RandomUtil;
@@ -8,26 +5,22 @@ import yarangi.numbers.RandomUtil;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.resources.AnimationHandle;
 import eir.resources.GameFactory;
+import eir.resources.TextureHandle;
 import eir.resources.levels.UnitDef;
 import eir.world.Effect;
-import eir.world.Level;
 import eir.world.unit.AOEFunction;
 import eir.world.unit.Damage;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
+import eir.world.unit.cannons.TargetProvider;
 
-/**
- * @author dveyarangi
- *
- */
-public class HomingLauncher extends IWeapon
+public class HomingLauncherDef extends WeaponDef
 {
 	private IBulletBehavior bulletBehavior;
 
 	private Damage bulletDamage;
-
-	private int burstChirality = 1;
 
 	private UnitDef bulletDef;
 
@@ -35,29 +28,27 @@ public class HomingLauncher extends IWeapon
 	private Animation hitAnimation02;
 	private Animation trailAnimation;
 
-	public HomingLauncher(final Unit unit)
+
+	private int burstChirality = 1;
+	public HomingLauncherDef(final String type, final int faction, final float size,
+			final TextureHandle unitSprite, final AnimationHandle deathAnimation)
 	{
-		super(unit);
+		super( type, faction, size, unitSprite, deathAnimation );
 
-
-		bulletBehavior = new HomingBehavior(this);
+		bulletBehavior = new HomingBehavior();
 
 		bulletDamage = new Damage( AOEFunction.LINEAR_DECAY, 10f, 100f,0f,0f,0f );
 
-		bulletDef = new UnitDef( UnitsFactory.BULLET, this.getOwner().getFaction().getOwnerId(), 2f, GameFactory.ROCKET_TXR, null );
-
+		bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 2f, GameFactory.ROCKET_TXR, null );
 	}
 
-	@Override
-	public void init( final GameFactory gameFactory, final Level level )
+
+	public void init(final GameFactory gameFactory)
 	{
-		super.init( gameFactory, level );
 		this.hitAnimation01 = gameFactory.getAnimation( GameFactory.EXPLOSION_03_ANIM );
 		this.hitAnimation02 = gameFactory.getAnimation( GameFactory.EXPLOSION_05_ANIM );
 		this.trailAnimation = gameFactory.getAnimation( GameFactory.SMOKE_ANIM );
 	}
-
-
 
 	@Override
 	public int getBurstSize() { return 3; }
@@ -78,12 +69,9 @@ public class HomingLauncher extends IWeapon
 	public float createSpeed() { return RandomUtil.STD( getBulletSpeed()/2, getBulletSpeed()/10 ); }
 
 	@Override
-	public float getBulletSpeed() { return 50; }
-
-	@Override
-	protected float createAngle( final Vector2 firingDir)
+	protected float createAngle( final Weapon weapon, final Vector2 firingDir)
 	{
-		if(this.bulletsInMagazine == 0)
+		if(weapon.getBulletsInMagazine() == 0)
 		{
 			burstChirality *= -1;
 //		burstAngle = (weaponDir.crs( spider.getAxis() ) < 0 ? 90 : -90) +
@@ -92,8 +80,11 @@ public class HomingLauncher extends IWeapon
 
 		float burstAngle = burstChirality * 90 + burstChirality * ( 15 + RandomUtil.STD( 0, 5 ) );
 
-		return RandomUtil.STD( burstAngle + this.getOwner().getAngle(), getDispersion());
+		return RandomUtil.STD( burstAngle + weapon.getAngle(), getDispersion());
 	}
+
+	@Override
+	public float getBulletSpeed() { return 50; }
 
 	@Override
 	public Effect createHitEffect(final Bullet bullet, final boolean isTargetDead)
@@ -123,7 +114,7 @@ public class HomingLauncher extends IWeapon
 	public Effect createTraceEffect(final Bullet bullet)
 	{
 		return Effect.getEffect( trailAnimation,
-				RandomUtil.N( 2 ) + 1,
+				RandomUtil.N( 2 ) + 2,
 				bullet.getArea().getAnchor(),
 				Vector2.tmp2.set( 0,0 ).sub(bullet.getVelocity().tmp().nor()).mul( getBulletSpeed()/2f ),
 				RandomUtil.N( 360 ), 5f*RandomUtil.STD( 2, 0.15f ) );
@@ -139,5 +130,13 @@ public class HomingLauncher extends IWeapon
 
 	@Override
 	public UnitDef getBulletDef() { return bulletDef; }
+	@Override
+	public TargetProvider createTargetProvider( final Unit owner )
+	{
+		return TargetProvider.RANDOM_TARGETER( owner );
+	}
+
+	@Override
+	public float getSensorRadius() { return 100; }
 
 }

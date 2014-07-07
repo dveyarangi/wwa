@@ -17,11 +17,8 @@ import com.badlogic.gdx.math.Vector2;
 public class HomingBehavior implements IBulletBehavior
 {
 
-	private IWeapon weapon;
-
-	public HomingBehavior(final IWeapon weapon)
+	public HomingBehavior()
 	{
-		this.weapon = weapon;
 	}
 
 	@Override

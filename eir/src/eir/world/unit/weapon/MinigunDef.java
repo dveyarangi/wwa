@@ -1,31 +1,34 @@
-/**
- *
- */
 package eir.world.unit.weapon;
-
 
 import yarangi.numbers.RandomUtil;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 
+import eir.resources.AnimationHandle;
 import eir.resources.GameFactory;
+import eir.resources.TextureHandle;
 import eir.resources.levels.UnitDef;
 import eir.world.Effect;
-import eir.world.Level;
 import eir.world.unit.Damage;
 import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
+import eir.world.unit.cannons.TargetProvider;
 
-/**
- * @author dveyarangi
- *
- */
-public class Minigun extends IWeapon
+public class MinigunDef extends WeaponDef
 {
 
+	public MinigunDef(final String type, final int faction, final float size,
+			final TextureHandle unitSprite, final AnimationHandle deathAnimation)
+	{
+		super( type, faction, size, unitSprite, deathAnimation );
 
-//	private Animation bulletAnimation;
+		bulletBehavior = new MassDriverBehavior();
+
+		bulletDamage = new Damage(30f,0,0,0);
+
+		this.bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 0.5f, GameFactory.FIREBALL_TXR, null );
+	}
 
 	private IBulletBehavior bulletBehavior;
 
@@ -36,31 +39,18 @@ public class Minigun extends IWeapon
 	private UnitDef bulletDef;
 
 
-	public Minigun(final Unit unit)
-	{
-
-		super(unit);
-		bulletBehavior = new MassDriverBehavior();
-
-		bulletDamage = new Damage(50f,0,0,0);
-
-		this.bulletDef = new UnitDef( UnitsFactory.BULLET, this.getOwner().getFaction().getOwnerId(), 0.5f, GameFactory.FIREBALL_TXR, null );
-	}
-
-
 	@Override
-	public void init( final GameFactory gameFactory, final Level level )
+	public void init(final GameFactory gameFactory)
 	{
-		super.init( gameFactory, level );
 		this.hitAnimation = gameFactory.getAnimation( GameFactory.EXPLOSION_04_ANIM );
-	}
 
+	}
 
 	@Override
 	public int getBurstSize() { return 1; }
 
 	@Override
-	public float getMagazineReloadTime() { return 0.4f; }
+	public float getMagazineReloadTime() { return 0.1f; }
 
 	@Override
 	public float getReloadingTime() { return 0.04f; }
@@ -76,13 +66,6 @@ public class Minigun extends IWeapon
 
 	@Override
 	public float getBulletSpeed() { return 50; }
-
-
-	@Override
-	protected float createAngle( final Vector2 firingDir )
-	{
-		return RandomUtil.STD( firingDir.angle(), getDispersion());
-	}
 
 	@Override
 	public Effect createTraceEffect(final Bullet bullet) { return null; }
@@ -118,4 +101,20 @@ public class Minigun extends IWeapon
 				15, bullet.getBody().getAnchor(), Vector2.Zero, RandomUtil.N( 360 ), 3 );
 	}
 
+	@Override
+	protected float createAngle( final Weapon weapon, final Vector2 firingDir )
+	{
+		return RandomUtil.STD( firingDir.angle(), getDispersion());
+	}
+
+	@Override
+	public TargetProvider createTargetProvider( final Unit owner )
+	{
+		return TargetProvider.CLOSEST_TARGETER( owner );
+	}
+
+	@Override
+	public float getSensorRadius() { return 100; }
 }
+
+

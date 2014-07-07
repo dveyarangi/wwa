@@ -19,8 +19,8 @@ import eir.resources.levels.UnitDef;
 import eir.world.Level;
 import eir.world.controllers.ControllerFactory;
 import eir.world.controllers.IController;
+import eir.world.environment.Anchor;
 import eir.world.environment.Environment;
-import eir.world.environment.nav.NavNode;
 import eir.world.environment.sensors.ISensingFilter;
 import eir.world.environment.spatial.ISpatialObject;
 import eir.world.unit.ai.Scheduler;
@@ -145,7 +145,7 @@ public class Faction
 	 */
 	public Environment getEnvironment() { return level.getEnvironment(); }
 
-	public Unit createUnit( final UnitDef def, final NavNode anchor )
+	public Unit createUnit( final UnitDef def, final Anchor anchor )
 	{
 		Unit unit = level.getUnitsFactory().getUnit( gameFactory, level, def, anchor );
 		getLevel().addUnit( unit );
