@@ -23,15 +23,13 @@ import eir.world.unit.UnitsFactory;
  */
 public class HomingLauncher extends IWeapon
 {
-	private Animation bulletAnimation;
-
 	private IBulletBehavior bulletBehavior;
 
 	private Damage bulletDamage;
 
 	private int burstChirality = 1;
 
-
+	private UnitDef bulletDef;
 
 	private Animation hitAnimation01;
 	private Animation hitAnimation02;
@@ -45,6 +43,8 @@ public class HomingLauncher extends IWeapon
 		bulletBehavior = new HomingBehavior(this);
 
 		bulletDamage = new Damage( AOEFunction.LINEAR_DECAY, 10f, 100f,0f,0f,0f );
+
+		bulletDef = new UnitDef( UnitsFactory.BULLET, this.getOwner().getFaction().getOwnerId(), 2f, GameFactory.ROCKET_TXR, null );
 
 	}
 
@@ -125,8 +125,8 @@ public class HomingLauncher extends IWeapon
 		return Effect.getEffect( trailAnimation,
 				RandomUtil.N( 2 ) + 1,
 				bullet.getArea().getAnchor(),
-				Vector2.tmp2.set( 0,0 ).sub(bullet.getVelocity().tmp().nor()).mul( getBulletSpeed()*2f/3f ),
-				RandomUtil.N( 360 ), 10f*RandomUtil.STD( 2, 0.15f ) );
+				Vector2.tmp2.set( 0,0 ).sub(bullet.getVelocity().tmp().nor()).mul( getBulletSpeed()/2f ),
+				RandomUtil.N( 360 ), 5f*RandomUtil.STD( 2, 0.15f ) );
 	}
 
 	@Override
@@ -138,9 +138,6 @@ public class HomingLauncher extends IWeapon
 	public boolean decayOnNoTarget() { return true; }
 
 	@Override
-	public UnitDef getBulletDef()
-	{
-		return new UnitDef( UnitsFactory.BULLET, 2f, GameFactory.ROCKET_TXR, null );
-	}
+	public UnitDef getBulletDef() { return bulletDef; }
 
 }

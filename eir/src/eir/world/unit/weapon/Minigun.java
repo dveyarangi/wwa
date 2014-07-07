@@ -33,6 +33,8 @@ public class Minigun extends IWeapon
 
 	private Animation hitAnimation;
 
+	private UnitDef bulletDef;
+
 
 	public Minigun(final Unit unit)
 	{
@@ -41,6 +43,8 @@ public class Minigun extends IWeapon
 		bulletBehavior = new MassDriverBehavior();
 
 		bulletDamage = new Damage(50f,0,0,0);
+
+		this.bulletDef = new UnitDef( UnitsFactory.BULLET, this.getOwner().getId(), 0.5f, GameFactory.FIREBALL_TXR, null );
 	}
 
 
@@ -105,10 +109,7 @@ public class Minigun extends IWeapon
 
 
 	@Override
-	public UnitDef getBulletDef()
-	{
-		return new UnitDef( UnitsFactory.BULLET, 0.5f, GameFactory.FIREBALL_TXR, null );
-	}
+	public UnitDef getBulletDef() { return bulletDef; }
 
 
 	@Override

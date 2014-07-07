@@ -22,10 +22,11 @@ public class UnitDef implements IUnitDef
 
 	private UnitDef() {}
 
-	public UnitDef(final String type, final float size, final TextureHandle unitSprite, final AnimationHandle deathAnimation)
+	public UnitDef(final String type, final int faction, final float size, final TextureHandle unitSprite, final AnimationHandle deathAnimation)
 	{
 		this.type = type;
 		this.size = size;
+		this.faction = faction;
 
 		this.spriteTexture = unitSprite;
 		this.deathAnimation = deathAnimation;

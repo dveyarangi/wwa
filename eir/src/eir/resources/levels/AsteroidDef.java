@@ -2,6 +2,7 @@ package eir.resources.levels;
 
 import com.badlogic.gdx.math.Vector2;
 
+import eir.resources.PolygonalModelHandle;
 import eir.resources.TextureHandle;
 
 public class AsteroidDef
@@ -32,7 +33,7 @@ public class AsteroidDef
 	 */
 	private TextureHandle texture;
 
-	private String modelId;
+	private PolygonalModelHandle model;
 
 	public String getName() { return name; }
 
@@ -42,5 +43,5 @@ public class AsteroidDef
 
 	public TextureHandle getTexture() { return texture; }
 
-	public String getModelId() { return modelId; }
+	public PolygonalModelHandle getModel() { return model; }
 }

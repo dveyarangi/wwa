@@ -17,7 +17,6 @@ import eir.rendering.IRenderer;
 import eir.rendering.LevelRenderer;
 import eir.resources.GameFactory;
 import eir.resources.levels.IUnitDef;
-import eir.resources.levels.UnitDef;
 import eir.world.Effect;
 import eir.world.Level;
 import eir.world.environment.Environment;
@@ -191,24 +190,11 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * @param anchor
 	 * @param faction
 	 */
-	public void init( final GameFactory factory, final Level level, final IUnitDef def, final NavNode anchor, final Faction faction )
+	public void init( final GameFactory factory, final Level level, final IUnitDef def, final NavNode anchor )
 	{
-		this.def = def;
-
-		if(body == null)
-		{
-			this.body = AABB.createFromCenter( anchor.getPoint().x, anchor.getPoint().y, getSize()/2, getSize()/2 );
-		} else
-		{
-			this.body.update( anchor.getPoint().x, anchor.getPoint().y, getSize()/2, getSize()/2 );
-		}
-
 		this.anchor = anchor;
-		this.faction = faction;
 
-		body.update( anchor.getPoint().x, anchor.getPoint().y, getSize()/2, getSize()/2 );
-
-		reset( factory, level );
+		init(factory, level, def, anchor.getPoint().x, anchor.getPoint().y, 0 /*TODO: normal angle? */);
 	}
 
 	/**
@@ -218,11 +204,11 @@ public abstract class Unit implements ISpatialObject, IUnit
 	 * @param anchor
 	 * @param faction
 	 */
-	public void init(final GameFactory factory, final Level level, final UnitDef def, final float x, final float y, final float angle, final Faction faction)
+	public void init(final GameFactory factory, final Level level, final IUnitDef def, final float x, final float y, final float angle)
 	{
 		this.def = def;
 
-		this.faction = faction;
+		this.faction = level.getFaction( def.getFactionId() );
 
 		this.body.update( x, y, getSize()/2, getSize()/2);
 

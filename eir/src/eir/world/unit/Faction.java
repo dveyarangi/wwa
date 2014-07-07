@@ -147,7 +147,7 @@ public class Faction
 
 	public Unit createUnit( final UnitDef def, final NavNode anchor )
 	{
-		Unit unit = level.getUnitsFactory().getUnit( gameFactory, level, def, anchor, this );
+		Unit unit = level.getUnitsFactory().getUnit( gameFactory, level, def, anchor );
 		getLevel().addUnit( unit );
 
 		return unit;

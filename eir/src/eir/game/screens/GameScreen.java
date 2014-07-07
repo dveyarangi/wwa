@@ -2,6 +2,7 @@ package eir.game.screens;
 
 import eir.debug.Debug;
 import eir.game.EirGame;
+import eir.game.LevelSetup;
 import eir.input.GameInputProcessor;
 import eir.rendering.LevelRenderer;
 import eir.resources.GameFactory;
@@ -24,33 +25,14 @@ public class GameScreen extends AbstractScreen
 	private LevelRenderer renderer;
 	private Level level;
 
-	public GameScreen(final EirGame game)
+	public GameScreen(final EirGame game, final LevelSetup levelSetup)
 	{
 		super( game );
 
-		// game resources registry and loader
-		gameFactory = new GameFactory();
+		gameFactory = levelSetup.getGameFactory();
+		UnitsFactory unitsFactory = levelSetup.getUnitsFactory();
+		LevelDef levelDef = levelSetup.getLevelDef();
 
-/*
-		int width = 1536;
-		int height = 1536;
-		int factionsNum = 3;
-		int asteroidNum = 15;
-
-		LevelParameters levelParams = new LevelParameters( width, height, factionsNum, asteroidNum);
-		Level level = new LevelGenerator().generate( levelParams );
-*/
-
-		// preparing units factory:
-		UnitsFactory unitsFactory = new UnitsFactory( gameFactory );
-
-		// loading level definitions from file:
-		// this call also registers resource handles at the factory for future loading
-		LevelDef levelDef = gameFactory.readLevelDefs( "levels/level_exodus_01.dat", unitsFactory );
-
-		// loading level; this is long procedures that load level resources
-		// TODO: run in separate thread and make loading screen:
-		gameFactory.loadLevelResources();
 
 		// creating level from level definitions:
 		level = new LevelBuilder( gameFactory, unitsFactory ).build( levelDef );

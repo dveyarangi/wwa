@@ -189,9 +189,7 @@ public class Level
 
 			SurfaceNavNode anchor = asteroid.getModel().getNavNode( anchorDef.getNodeIdx() );
 
-			Faction faction = factions.get( unitDef.getFactionId() );
-
-			Unit unit = getUnitsFactory().getUnit( gameFactory, this, unitDef, anchor, faction );
+			Unit unit = getUnitsFactory().getUnit( gameFactory, this, unitDef, anchor );
 
 			addUnit(unit);
 		}

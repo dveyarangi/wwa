@@ -64,12 +64,12 @@ public class UnitsFactory
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit, F extends Faction> U getUnit(final GameFactory gameFactory, final Level level, final IUnitDef def, final NavNode anchor, final Faction faction)
+	public <U extends Unit, F extends Faction> U getUnit(final GameFactory gameFactory, final Level level, final IUnitDef def, final NavNode anchor)
 	{
 		UnitFactory <U> fctory = (UnitFactory <U>) factories.get( def.getType() );
 		U unit = fctory.pool.obtain();
 
-		unit.init(gameFactory, level, def, anchor, faction);
+		unit.init(gameFactory, level, def, anchor);
 
 
 		return unit;
@@ -83,12 +83,12 @@ public class UnitsFactory
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <U extends Unit, F extends Faction> U getUnit(final GameFactory gameFactory, final Level level, final UnitDef def, final float x, final float y, final float angle, final Faction faction)
+	public <U extends Unit, F extends Faction> U getUnit(final GameFactory gameFactory, final Level level, final IUnitDef def, final float x, final float y, final float angle)
 	{
 		UnitFactory <U> factory = (UnitFactory <U>) factories.get( def.getType() );
 		U unit = factory.pool.obtain();
 
-		unit.init(gameFactory, level, def, x, y, angle, faction);
+		unit.init(gameFactory, level, def, x, y, angle);
 
 		unit.angle = angle;
 

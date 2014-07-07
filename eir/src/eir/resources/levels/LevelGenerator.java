@@ -9,15 +9,14 @@ import eir.rendering.MandalaRenderer;
 import eir.resources.LevelParameters;
 import eir.resources.PolygonalModel;
 import eir.world.Asteroid;
-import eir.world.Level;
 import eir.world.unit.UnitsFactory;
 
 public class LevelGenerator
 {
-	public Level generate(final LevelParameters parameters, final UnitsFactory unitsFactory)
+	public LevelDef generate(final LevelParameters parameters, final UnitsFactory unitsFactory)
 	{
 
-		Level level = new Level( unitsFactory );
+		LevelDef levelDef = new LevelDef( );
 
 		for(int aidx = 0; aidx < parameters.getAsteroids(); aidx ++)
 		{
@@ -39,7 +38,7 @@ public class LevelGenerator
 
 		}
 
-		return level;
+		return levelDef;
 	}
 
 

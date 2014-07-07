@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import eir.debug.Debug;
-import eir.game.screens.GameScreen;
+import eir.game.screens.LoadingScreen;
 
 /**
  * The game's main class, called as application events are fired.
@@ -30,6 +30,11 @@ public class EirGame extends Game
     {
         Debug.log("Creating game on " + Gdx.app.getType() );
 
+        LevelSetup levelSetup = new LevelSetup();
+
+        LoadingScreen loadingScreen = new LoadingScreen( this, levelSetup );
+    	setScreen( loadingScreen );
+
     }
 
     @Override
@@ -44,7 +49,6 @@ public class EirGame extends Game
  //           setScreen( new SplashScreen( this ) );
  //       }
         if( getScreen() == null ) {
-        	setScreen( new GameScreen( this ) );
         	//setScreen( new MenuScreen( this ) );
         }
 /*        else

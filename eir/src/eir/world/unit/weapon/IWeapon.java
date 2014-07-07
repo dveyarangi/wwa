@@ -99,7 +99,7 @@ public abstract class IWeapon
 		direction.setAngle( angle );
 
 		float speed = createSpeed();
-		Bullet bullet = unitFactory.getUnit(gameFactory, level, getBulletDef(), weaponPos.x, weaponPos.y, angle, owner.getFaction());
+		Bullet bullet = unitFactory.getUnit(gameFactory, level, getBulletDef(), weaponPos.x, weaponPos.y, angle);
 
 
 		bullet.weapon = this;

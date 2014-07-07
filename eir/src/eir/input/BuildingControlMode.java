@@ -45,9 +45,7 @@ public class BuildingControlMode implements IControlMode
 	private GameFactory gameFactory;
 
 
-	private UnitDef cannonDef = new UnitDef( UnitsFactory.CANNON, 2,
-			GameFactory.CANNON_HYBRID_TXR,
-			GameFactory.EXPLOSION_04_ANIM);
+	private UnitDef cannonDef;
 
 
 	BuildingControlMode(final GameFactory gameFactory, final Level level)
@@ -57,6 +55,11 @@ public class BuildingControlMode implements IControlMode
 		this.level = level;
 
 		this.crosshair = gameFactory.getAnimation( GameFactory.CROSSHAIR_ANIM );
+
+		this.cannonDef = new UnitDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
+				2,
+				GameFactory.CANNON_HYBRID_TXR,
+				GameFactory.EXPLOSION_04_ANIM);
 	}
 
 	@Override
@@ -69,8 +72,8 @@ public class BuildingControlMode implements IControlMode
 
 		Cannon cannon = level.getUnitsFactory().getUnit( gameFactory, level,
 				cannonDef,
-				node,
-				level.getFaction(CONTROLLING_FACTION_ID) );
+				node
+				);
 
 		level.addUnit( cannon );
 

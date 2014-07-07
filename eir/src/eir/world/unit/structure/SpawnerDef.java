@@ -10,10 +10,10 @@ public class SpawnerDef extends UnitDef
 	private int maxUnits;
 	private float spawnInterval;
 
-	public SpawnerDef(final String type, final float size, final TextureHandle unitSprite,
+	public SpawnerDef(final String type, final int factionId, final float size, final TextureHandle unitSprite,
 			final AnimationHandle deathAnimation)
 	{
-		super( type, size, unitSprite, deathAnimation );
+		super( type, factionId, size, unitSprite, deathAnimation );
 	}
 
 	public UnitDef getSpawnedUnit() { return spawnedUnit; }

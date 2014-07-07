@@ -185,6 +185,17 @@ public class LevelLoader
 				}
 			})
 
+			// polygon bodies references
+			.registerTypeAdapter( PolygonalModelHandle.class, new JsonDeserializer<PolygonalModelHandle>()
+					{
+				@Override
+				public PolygonalModelHandle deserialize(final JsonElement elem, final Type type, final JsonDeserializationContext arg2) throws JsonParseException
+				{
+					String modelFile = elem.getAsString();
+
+					return gameFactory.registerModelHandle( new PolygonalModelHandle( modelFile ) );
+				}
+			})
 			// mapping unit definition classes
 			.registerTypeAdapter( IUnitDef.class, new JsonDeserializer<IUnitDef>()
 			{

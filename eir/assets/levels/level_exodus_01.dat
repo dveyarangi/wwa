@@ -16,12 +16,12 @@
 				"layers" : [
 					{	
 						"depth" :5,
-						"texture" : "levels/plasma_01",
+						"texture" : "levels/plasma_01.png",
 						"tiling" : false
 					},
 					{	
 						"depth" : 0.9,
-						"texture" : "levels/fog_01",
+						"texture" : "levels/fog_01.png",
 						"scroll" : { "x" : "500", "y" : "0" },
 						"tiling" : true,
 						"zoomFactor" : 0.9
@@ -49,8 +49,8 @@
 				  "position" : { "x":"0",  "y":"0" },
 				  "angle" : "0",
 				  "size" : "120",
-				  "texture" : "models/exodus_01/exodus_01_center",
-				  "modelId" : "exodus_01/exodus_01_center"
+				  "texture" : "models/exodus_01/exodus_01_center.png",
+				  "model" : "exodus_01/exodus_01_center"
 				},
 
 				{ 
@@ -58,88 +58,88 @@
 				  "position" : { "x":"-120",  "y":"49" },
 				  "angle" : "180",
 				  "size" : "115",
-				  "texture" : "models/exodus_01/exodus_01_red_head",
-				  "modelId" : "exodus_01/exodus_01_red_head"
+				  "texture" : "models/exodus_01/exodus_01_red_head.png",
+				  "model" : "exodus_01/exodus_01_red_head"
 				},			
 				{ 
 				  "name" : "red_back",
 				  "position" : { "x":"-249",  "y":"91" },
 				  "angle" : "0",
 				  "size" : "170",
-				  "texture" : "models/exodus_01/exodus_01_red_back",
-				  "modelId" : "exodus_01/exodus_01_red_back"
+				  "texture" : "models/exodus_01/exodus_01_red_back.png",
+				  "model" : "exodus_01/exodus_01_red_back"
 				},				
 				{ 
 				  "name" : "red_ass",
 				  "position" : { "x":"-374",  "y":"-8" },
 				  "angle" : "0",
 				  "size" : "110",
-				  "texture" : "models/exodus_01/city_01",
-				  "modelId" : "exodus_01/city_01"
+				  "texture" : "models/exodus_01/city_01.png",
+				  "model" : "exodus_01/city_01"
 				},					
 				{ 
 				  "name" : "grasp_01",
 				  "position" : { "x":"-180",  "y":"271" },
 				  "angle" : "0",
 				  "size" : "70",
-				  "texture" : "models/exodus_01/exodus_01_grasp",
-				  "modelId" : "exodus_01/exodus_01_grasp"
+				  "texture" : "models/exodus_01/exodus_01_grasp.png",
+				  "model" : "exodus_01/exodus_01_grasp"
 				},					
 				{ 
 				  "name" : "red_left_foot",
 				  "position" : { "x":"-619",  "y":"38" },
 				  "angle" : "0",
 				  "size" : "105",
-				  "texture" : "models/exodus_01/exodus_01_red_left_foot",
-				  "modelId" : "exodus_01/exodus_01_red_left_foot"
+				  "texture" : "models/exodus_01/exodus_01_red_left_foot.png",
+				  "model" : "exodus_01/exodus_01_red_left_foot"
 				},					
 				{ 
 				  "name" : "red_left_leg",
 				  "position" : { "x":"-483",  "y":"33" },
 				  "angle" : "0",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_red_left_leg",
-				  "modelId" : "exodus_01/exodus_01_red_left_leg"
+				  "texture" : "models/exodus_01/exodus_01_red_left_leg.png",
+				  "model" : "exodus_01/exodus_01_red_left_leg"
 				},					
 				{ 
 				  "name" : "red_left_palm",
 				  "position" : { "x":"-224",  "y":"197" },
 				  "angle" : "0",
 				  "size" : "86",
-				  "texture" : "models/exodus_01/exodus_01_red_left_palm",
-				  "modelId" : "exodus_01/exodus_01_red_left_palm"
+				  "texture" : "models/exodus_01/exodus_01_red_left_palm.png",
+				  "model" : "exodus_01/exodus_01_red_left_palm"
 				},					
 				{ 
 				  "name" : "red_right_arm",
 				  "position" : { "x":"-234",  "y":"12" },
 				  "angle" : "0",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_red_right_arm",
-				  "modelId" : "exodus_01/exodus_01_red_right_arm"
+				  "texture" : "models/exodus_01/exodus_01_red_right_arm.png",
+				  "model" : "exodus_01/exodus_01_red_right_arm"
 				},					
 				{  
 				  "name" : "red_right_foot",
 				  "position" : { "x":"-586",  "y":"-180" },
 				  "angle" : "0",
 				  "size" : "105",
-				  "texture" : "models/exodus_01/exodus_01_red_right_foot",
-				  "modelId" : "exodus_01/exodus_01_red_right_foot"
+				  "texture" : "models/exodus_01/exodus_01_red_right_foot.png",
+				  "model" : "exodus_01/exodus_01_red_right_foot"
 				},				
 				{ 
 				  "name" : "red_right_leg",
 				  "position" : { "x":"-485",  "y":"-105" },
 				  "angle" : "0",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_red_right_leg",
-				  "modelId" : "exodus_01/exodus_01_red_right_leg"
+				  "texture" : "models/exodus_01/exodus_01_red_right_leg.png",
+				  "model" : "exodus_01/exodus_01_red_right_leg"
 				},				
 				{ 
 				  "name" : "red_right_palm",
 				  "position" : { "x":"-277",  "y":"-87" },
 				  "angle" : "0",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_red_right_palm",
-				  "modelId" : "exodus_01/exodus_01_red_right_palm"
+				  "texture" : "models/exodus_01/exodus_01_red_right_palm.png",
+				  "model" : "exodus_01/exodus_01_red_right_palm"
 				},			
 				
 			    #######
@@ -148,88 +148,88 @@
 				  "position" : { "y":"-120",  "x":"-49" },
 				  "angle" : "90",
 				  "size" : "125",
-				  "texture" : "models/exodus_01/asteroid_head_04",
-				  "modelId" : "exodus_01/asteroid_head_04"
+				  "texture" : "models/exodus_01/asteroid_head_04.png",
+				  "model" : "exodus_01/asteroid_head_04"
 				},		*/	
 				{ 
 				  "name" : "blue_back",
 				  "position" : { "y":"-249",  "x":"-91" },
 				  "angle" : "90",
 				  "size" : "170",
-				  "texture" : "models/exodus_01/exodus_01_blue_back",
-				  "modelId" : "exodus_01/exodus_01_blue_back"
+				  "texture" : "models/exodus_01/exodus_01_blue_back.png",
+				  "model" : "exodus_01/exodus_01_blue_back"
 				},				
 				{ 
 				  "name" : "blue_ass",
 				  "position" : { "y":"-374",  "x":"8" },
 				  "angle" : "90",
 				  "size" : "110",
-				  "texture" : "models/exodus_01/exodus_01_blue_ass",
-				  "modelId" : "exodus_01/exodus_01_blue_ass"
+				  "texture" : "models/exodus_01/exodus_01_blue_ass.png",
+				  "model" : "exodus_01/exodus_01_blue_ass"
 				},					
 				{ 
 				  "name" : "grasp_02",
 				  "position" : { "y":"-180",  "x":"-271" },
 				  "angle" : "90",
 				  "size" : "70",
-				  "texture" : "models/exodus_01/exodus_01_grasp",
-				  "modelId" : "exodus_01/exodus_01_grasp"
+				  "texture" : "models/exodus_01/exodus_01_grasp.png",
+				  "model" : "exodus_01/exodus_01_grasp"
 				},					
 				{ 
 				  "name" : "blue_left_foot",
 				  "position" : { "y":"-619",  "x":"-38" },
 				  "angle" : "90",
 				  "size" : "105",
-				  "texture" : "models/exodus_01/exodus_01_blue_left_foot",
-				  "modelId" : "exodus_01/exodus_01_blue_left_foot"
+				  "texture" : "models/exodus_01/exodus_01_blue_left_foot.png",
+				  "model" : "exodus_01/exodus_01_blue_left_foot"
 				},					
 				{ 
 				  "name" : "blue_left_leg",
 				  "position" : { "y":"-483",  "x":"-33" },
 				  "angle" : "90",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_blue_left_leg",
-				  "modelId" : "exodus_01/exodus_01_blue_left_leg"
+				  "texture" : "models/exodus_01/exodus_01_blue_left_leg.png",
+				  "model" : "exodus_01/exodus_01_blue_left_leg"
 				},					
 				{ 
 				  "name" : "blue_left_palm",
 				  "position" : { "y":"-224",  "x":"-197" },
 				  "angle" : "90",
 				  "size" : "86",
-				  "texture" : "models/exodus_01/exodus_01_blue_left_palm",
-				  "modelId" : "exodus_01/exodus_01_blue_left_palm"
+				  "texture" : "models/exodus_01/exodus_01_blue_left_palm.png",
+				  "model" : "exodus_01/exodus_01_blue_left_palm"
 				},					
 				{ 
 				  "name" : "blue_right_arm",
 				  "position" : { "y":"-234",  "x":"-12" },
 				  "angle" : "90",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_blue_right_arm",
-				  "modelId" : "exodus_01/exodus_01_blue_right_arm"
+				  "texture" : "models/exodus_01/exodus_01_blue_right_arm.png",
+				  "model" : "exodus_01/exodus_01_blue_right_arm"
 				},					
 				{  
 				  "name" : "blue_right_foot",
 				  "position" : { "y":"-586",  "x":"180" },
 				  "angle" : "90",
 				  "size" : "105",
-				  "texture" : "models/exodus_01/exodus_01_blue_right_foot",
-				  "modelId" : "exodus_01/exodus_01_blue_right_foot"
+				  "texture" : "models/exodus_01/exodus_01_blue_right_foot.png",
+				  "model" : "exodus_01/exodus_01_blue_right_foot"
 				},				
 				{ 
 				  "name" : "blue_right_leg",
 				  "position" : { "y":"-485",  "x":"105" },
 				  "angle" : "90",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_blue_right_leg",
-				  "modelId" : "exodus_01/exodus_01_blue_right_leg"
+				  "texture" : "models/exodus_01/exodus_01_blue_right_leg.png",
+				  "model" : "exodus_01/exodus_01_blue_right_leg"
 				},				
 				{ 
 				  "name" : "blue_right_palm",
 				  "position" : { "y":"-277",  "x":"87" },
 				  "angle" : "90",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_blue_right_palm",
-				  "modelId" : "exodus_01/exodus_01_blue_right_palm"
+				  "texture" : "models/exodus_01/exodus_01_blue_right_palm.png",
+				  "model" : "exodus_01/exodus_01_blue_right_palm"
 				},	
 				
 				
@@ -240,88 +240,88 @@
 				  "position" : { "x":"120",  "y":"-49" },
 				  "angle" : "180",
 				  "size" : "115",
-				  "texture" : "models/exodus_01/exodus_01_red_head",
-				  "modelId" : "exodus_01/exodus_01_red_head"
+				  "texture" : "models/exodus_01/exodus_01_red_head.png",
+				  "model" : "exodus_01/exodus_01_red_head"
 				},			
 				{ 
 				  "name" : "yellow_back",
 				  "position" : { "x":"249",  "y":"-91" },
 				  "angle" : "180",
 				  "size" : "170",
-				  "texture" : "models/exodus_01/exodus_01_red_back",
-				  "modelId" : "exodus_01/exodus_01_red_back"
+				  "texture" : "models/exodus_01/exodus_01_red_back.png",
+				  "model" : "exodus_01/exodus_01_red_back"
 				},				
 				{ 
 				  "name" : "yellow_ass",
 				  "position" : { "x":"374",  "y":"8" },
 				  "angle" : "180",
 				  "size" : "110",
-				  "texture" : "models/exodus_01/exodus_01_red_ass",
-				  "modelId" : "exodus_01/exodus_01_red_ass"
+				  "texture" : "models/exodus_01/exodus_01_red_ass.png",
+				  "model" : "exodus_01/exodus_01_red_ass"
 				},					
 				{ 
 				  "name" : "grasp_03",
 				  "position" : { "x":"180",  "y":"-271" },
 				  "angle" : "180",
 				  "size" : "70",
-				  "texture" : "models/exodus_01/exodus_01_grasp",
-				  "modelId" : "exodus_01/exodus_01_grasp"
+				  "texture" : "models/exodus_01/exodus_01_grasp.png",
+				  "model" : "exodus_01/exodus_01_grasp"
 				},					
 				{ 
 				  "name" : "yellow_left_foot",
 				  "position" : { "x":"619",  "y":"-38" },
 				  "angle" : "180",
 				  "size" : "105",
-				  "texture" : "models/exodus_01/exodus_01_red_left_foot",
-				  "modelId" : "exodus_01/exodus_01_red_left_foot"
+				  "texture" : "models/exodus_01/exodus_01_red_left_foot.png",
+				  "model" : "exodus_01/exodus_01_red_left_foot"
 				},					
 				{ 
 				  "name" : "yellow_left_leg",
 				  "position" : { "x":"483",  "y":"-33" },
 				  "angle" : "180",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_red_left_leg",
-				  "modelId" : "exodus_01/exodus_01_red_left_leg"
+				  "texture" : "models/exodus_01/exodus_01_red_left_leg.png",
+				  "model" : "exodus_01/exodus_01_red_left_leg"
 				},					
 				{ 
 				  "name" : "yellow_left_palm",
 				  "position" : { "x":"224",  "y":"-197" },
 				  "angle" : "180",
 				  "size" : "86",
-				  "texture" : "models/exodus_01/exodus_01_red_left_palm",
-				  "modelId" : "exodus_01/exodus_01_red_left_palm"
+				  "texture" : "models/exodus_01/exodus_01_red_left_palm.png",
+				  "model" : "exodus_01/exodus_01_red_left_palm"
 				},					
 				{ 
 				  "name" : "yellow_right_arm",
 				  "position" : { "x":"234",  "y":"-12" },
 				  "angle" : "180",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_red_right_arm",
-				  "modelId" : "exodus_01/exodus_01_red_right_arm"
+				  "texture" : "models/exodus_01/exodus_01_red_right_arm.png",
+				  "model" : "exodus_01/exodus_01_red_right_arm"
 				},					
 				{  
 				  "name" : "yellow_right_foot",
 				  "position" : { "x":"586",  "y":"180" },
 				  "angle" : "180",
 				  "size" : "105",
-				  "texture" : "models/exodus_01/exodus_01_red_right_foot",
-				  "modelId" : "exodus_01/exodus_01_red_right_foot"
+				  "texture" : "models/exodus_01/exodus_01_red_right_foot.png",
+				  "model" : "exodus_01/exodus_01_red_right_foot"
 				},				
 				{ 
 				  "name" : "yellow_right_leg",
 				  "position" : { "x":"485",  "y":"105" },
 				  "angle" : "180",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_red_right_leg",
-				  "modelId" : "exodus_01/exodus_01_red_right_leg"
+				  "texture" : "models/exodus_01/exodus_01_red_right_leg.png",
+				  "model" : "exodus_01/exodus_01_red_right_leg"
 				},				
 				{ 
 				  "name" : "yellow_right_palm",
 				  "position" : { "x":"277",  "y":"87" },
 				  "angle" : "180",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_red_right_palm",
-				  "modelId" : "exodus_01/exodus_01_red_right_palm"
+				  "texture" : "models/exodus_01/exodus_01_red_right_palm.png",
+				  "model" : "exodus_01/exodus_01_red_right_palm"
 				},
 				
 								
@@ -331,88 +331,88 @@
 				  "position" : { "y":"120",  "x":"49" },
 				  "angle" : "-90",
 				  "size" : "125",
-				  "texture" : "models/exodus_01/exodus_01_blue_head",
-				  "modelId" : "exodus_01/exodus_01_blue_head"
+				  "texture" : "models/exodus_01/exodus_01_blue_head.png",
+				  "model" : "exodus_01/exodus_01_blue_head"
 				},			
 				{ 
 				  "name" : "green_back",
 				  "position" : { "y":"249",  "x":"91" },
 				  "angle" : "-90",
 				  "size" : "170",
-				  "texture" : "models/exodus_01/exodus_01_blue_back",
-				  "modelId" : "exodus_01/exodus_01_blue_back"
+				  "texture" : "models/exodus_01/exodus_01_blue_back.png",
+				  "model" : "exodus_01/exodus_01_blue_back"
 				},				
 				{ 
 				  "name" : "green_ass",
 				  "position" : { "y":"374",  "x":"-8" },
 				  "angle" : "-90",
 				  "size" : "110",
-				  "texture" : "models/exodus_01/exodus_01_blue_ass",
-				  "modelId" : "exodus_01/exodus_01_blue_ass"
+				  "texture" : "models/exodus_01/exodus_01_blue_ass.png",
+				  "model" : "exodus_01/exodus_01_blue_ass"
 				},					
 				{ 
 				  "name" : "grasp_04",
 				  "position" : { "y":"180",  "x":"271" },
 				  "angle" : "-90",
 				  "size" : "70",
-				  "texture" : "models/exodus_01/exodus_01_grasp",
-				  "modelId" : "exodus_01/exodus_01_grasp"
+				  "texture" : "models/exodus_01/exodus_01_grasp.png",
+				  "model" : "exodus_01/exodus_01_grasp"
 				},					
 				{ 
 				  "name" : "green_left_foot",
 				  "position" : { "y":"619",  "x":"38" },
 				  "angle" : "-90",
 				  "size" : "105",
-				  "texture" : "models/exodus_01/exodus_01_blue_left_foot",
-				  "modelId" : "exodus_01/exodus_01_blue_left_foot"
+				  "texture" : "models/exodus_01/exodus_01_blue_left_foot.png",
+				  "model" : "exodus_01/exodus_01_blue_left_foot"
 				},					
 				{ 
 				  "name" : "green_left_leg",
 				  "position" : { "y":"483",  "x":"33" },
 				  "angle" : "-90",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_blue_left_leg",
-				  "modelId" : "exodus_01/exodus_01_blue_left_leg"
+				  "texture" : "models/exodus_01/exodus_01_blue_left_leg.png",
+				  "model" : "exodus_01/exodus_01_blue_left_leg"
 				},					
 				{ 
 				  "name" : "green_left_palm",
 				  "position" : { "y":"224",  "x":"197" },
 				  "angle" : "-90",
 				  "size" : "86",
-				  "texture" : "models/exodus_01/exodus_01_blue_left_palm",
-				  "modelId" : "exodus_01/exodus_01_blue_left_palm"
+				  "texture" : "models/exodus_01/exodus_01_blue_left_palm.png",
+				  "model" : "exodus_01/exodus_01_blue_left_palm"
 				},					
 				{ 
 				  "name" : "green_right_arm",
 				  "position" : { "y":"234",  "x":"12" },
 				  "angle" : "-90",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_blue_right_arm",
-				  "modelId" : "exodus_01/exodus_01_blue_right_arm"
+				  "texture" : "models/exodus_01/exodus_01_blue_right_arm.png",
+				  "model" : "exodus_01/exodus_01_blue_right_arm"
 				},					
 				{  
 				  "name" : "green_right_foot",
 				  "position" : { "y":"586",  "x":"-180" },
 				  "angle" : "-90",
 				  "size" : "105",
-				  "texture" : "models/exodus_01/exodus_01_blue_right_foot",
-				  "modelId" : "exodus_01/exodus_01_blue_right_foot"
+				  "texture" : "models/exodus_01/exodus_01_blue_right_foot.png",
+				  "model" : "exodus_01/exodus_01_blue_right_foot"
 				},				
 				{ 
 				  "name" : "green_right_leg",
 				  "position" : { "y":"485",  "x":"-105" },
 				  "angle" : "-90",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_blue_right_leg",
-				  "modelId" : "exodus_01/exodus_01_blue_right_leg"
+				  "texture" : "models/exodus_01/exodus_01_blue_right_leg.png",
+				  "model" : "exodus_01/exodus_01_blue_right_leg"
 				},				
 				{ 
 				  "name" : "green_right_palm",
 				  "position" : { "y":"277",  "x":"-87" },
 				  "angle" : "-90",
 				  "size" : "100",
-				  "texture" : "models/exodus_01/exodus_01_blue_right_palm",
-				  "modelId" : "exodus_01/exodus_01_blue_right_palm"
+				  "texture" : "models/exodus_01/exodus_01_blue_right_palm.png",
+				  "model" : "exodus_01/exodus_01_blue_right_palm"
 				  
 				}
 				],
@@ -527,7 +527,7 @@
 /*				{
 					"type" : "spawner",
 					"faction" : 2,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
 					"anchor" : { "asteroid" : "red_left_foot", "navIdx" : 1 },
 					"unitType" : "ant",
 					"maxUnits" : 50,
@@ -537,7 +537,7 @@
 				{
 					"type" : "spawner",
 					"faction" : 1,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
 					"anchor" : { "asteroid" : "red_right_foot", "navIdx" : 1 },
 					"unitType" : "ant",
 					
@@ -549,13 +549,13 @@
 					"type" : "spawner",
 					"faction" : 3,
 					"size" : 10,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 16 },
 					"spawnedUnit" : {
 						"type" : "birdy",
 						"faction" : 3,
 						"size" : 10,
-						"spriteTexture" : "anima//gears//birdy_02",
+						"spriteTexture" : "anima//gears//birdy_02.png",
 						"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" }
 					},			
 					"maxUnits" : 50,
@@ -565,13 +565,13 @@
 					"type" : "spawner",
 					"faction" : 3,
 					"size" : 10,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
 					"anchor" : { "asteroid" : "red_ass", "navIdx" : 10 },
 					"spawnedUnit" : {
 						"type" : "birdy",
 						"faction" : 3,
 						"size" : 10,
-						"spriteTexture" : "anima//gears//birdy_02",
+						"spriteTexture" : "anima//gears//birdy_02.png",
 						"deathAnimation" : { "atlasId" : "anima//effects//explosion//explosion02.atlas", "regionId" : "explosion02" }
 					},			
 					"maxUnits" : 50,
@@ -583,13 +583,13 @@
 					"type" : "spawner",
 					"faction" : 3,
 					"size" : 10,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 100 },
 					"spawnedUnit" : {
 						"type" : "birdy",
 						"faction" : 3,
 						"size" : 10,
-						"spriteTexture" : "anima//gears//birdy_02"
+						"spriteTexture" : "anima//gears//birdy_02.png"
 					},			
 					"maxUnits" : 50,
 					"spawnInterval" : 1.5f
@@ -598,13 +598,13 @@
 					"type" : "spawner",
 					"size" : 10,
 					"faction" : 3,
-					"spriteTexture" : "anima//cannons//cannon_hybrid_01",
+					"spriteTexture" : "anima//cannons//cannon_hybrid_01.png",
 					"anchor" : { "asteroid" : "junkheap", "navIdx" : 50 },
 					"spawnedUnit" : {
 						"type" : "birdy",
 						"faction" : 3,
 						"size" : 10,
-						"spriteTexture" : "anima//gears//birdy_02"
+						"spriteTexture" : "anima//gears//birdy_02.png"
 					},			
 					"maxUnits" : 50,
 					"spawnInterval" : 1.5f

@@ -6,9 +6,9 @@ import eir.resources.levels.UnitDef;
 public class BulletDef extends UnitDef
 {
 
-	public BulletDef(final String type, final int size, final TextureHandle spriteTxr)
+	public BulletDef(final String type, final int factionId, final int size, final TextureHandle spriteTxr)
 	{
-		super( type, size, spriteTxr, null );
+		super( type, factionId, size, spriteTxr, null );
 	}
 
 }

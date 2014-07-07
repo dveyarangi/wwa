@@ -48,7 +48,7 @@ public class Asteroid
 	{
 		this.def = def;
 
-		model = GameFactory.loadAsteroidModel( this, def.getModelId() );
+		model = gameFactory.getPolygonalModel( this, def.getModel() );
 
 		Sprite sprite = gameFactory.createSprite(
 				def.getTexture(),
