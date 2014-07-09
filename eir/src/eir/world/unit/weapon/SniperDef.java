@@ -15,19 +15,19 @@ import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.cannons.TargetProvider;
 
-public class MinigunDef extends WeaponDef
+public class SniperDef extends WeaponDef
 {
 
-	public MinigunDef(final String type, final int faction, final float size,
+	public SniperDef(final String type, final int faction, final float size,
 			final TextureHandle unitSprite, final AnimationHandle deathAnimation, final boolean isPickable)
 	{
 		super( type, faction, size, unitSprite, deathAnimation, isPickable );
 
 		bulletBehavior = new MassDriverBehavior();
 
-		bulletDamage = new Damage(10f,0,0,0);
+		bulletDamage = new Damage(200f,0,0,0);
 
-		this.bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 0.3f, GameFactory.FIREBALL_TXR, null, false );
+		this.bulletDef = new UnitDef( UnitsFactory.BULLET, faction, 1f, GameFactory.STRIPE_TXR, null, false );
 	}
 
 	private IBulletBehavior bulletBehavior;
@@ -47,16 +47,16 @@ public class MinigunDef extends WeaponDef
 	}
 
 	@Override
-	public int getBurstSize() { return 15; }
+	public int getBurstSize() { return 1; }
 
 	@Override
-	public float getMagazineReloadTime() { return 0.5f; }
+	public float getMagazineReloadTime() { return 2f; }
 
 	@Override
-	public float getReloadingTime() { return 0.05f; }
+	public float getReloadingTime() { return 0.04f; }
 
 	@Override
-	public float getDispersion() { return 1f; }
+	public float getDispersion() { return 0.0f; }
 
 	@Override
 	public IBulletBehavior getBulletBehavior() { return bulletBehavior; }
@@ -65,7 +65,7 @@ public class MinigunDef extends WeaponDef
 	public float createSpeed() { return getBulletSpeed(); }
 
 	@Override
-	public float getBulletSpeed() { return 50; }
+	public float getBulletSpeed() { return 150; }
 
 	@Override
 	public Effect createTraceEffect(final Bullet bullet) { return null; }
@@ -81,11 +81,11 @@ public class MinigunDef extends WeaponDef
 		return bulletDamage;
 	}
 	@Override
-	public float getAngularSpeed() { return 200f; }
+	public float getAngularSpeed() { return 15f; }
 
 
 	@Override
-	public float getMaxFireAngle() { return 10f; }
+	public float getMaxFireAngle() { return 1f; }
 
 	@Override
 	public boolean decayOnNoTarget() { return true; }
@@ -114,7 +114,7 @@ public class MinigunDef extends WeaponDef
 	}
 
 	@Override
-	public float getSensorRadius() { return 30; }
+	public float getSensorRadius() { return 100; }
 }
 
 

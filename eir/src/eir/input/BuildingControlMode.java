@@ -20,6 +20,7 @@ import eir.world.unit.cannons.CannonDef;
 import eir.world.unit.structure.SpawnerDef;
 import eir.world.unit.weapon.HomingLauncherDef;
 import eir.world.unit.weapon.MinigunDef;
+import eir.world.unit.weapon.SniperDef;
 
 /**
  * TODO: placeholder for building control mode;
@@ -77,6 +78,16 @@ public class BuildingControlMode implements IControlMode
 							GameFactory.CANNON_HYBRID_TXR,
 							GameFactory.EXPLOSION_04_ANIM, false ),
 					true),
+					new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
+							5,
+							null,
+							GameFactory.EXPLOSION_04_ANIM,
+							new SniperDef(
+									UnitsFactory.WEAPON,
+									CONTROLLING_FACTION_ID, 5,
+									GameFactory.CANNON_HYBRID_TXR,
+									GameFactory.EXPLOSION_04_ANIM, false ),
+							true),
 
 				new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
 					5,

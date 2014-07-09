@@ -30,7 +30,7 @@ public class WildlifeController implements IController
 
 	public boolean spawnersGuardsInited = false;
 
-	private static final float BIRDY_HIT_IRRITATION = 1;
+	private static final float BIRDY_HIT_IRRITATION = 100;
 	private static final float SPAWNER_HIT_IRRITATION = 10;
 	private static final float ATTACK_IRRITATION_TRESHOLD = 100;
 	private static final float IRRITATION_DECAY = 0.01f;
