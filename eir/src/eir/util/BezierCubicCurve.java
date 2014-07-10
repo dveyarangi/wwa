@@ -25,10 +25,12 @@ public class BezierCubicCurve implements ParametricCurve
 	{
 		float f = 1 - t;
 
-		return at1.set(p1).mul(f*f*f).add(
+		target.set( at1.set(p1).mul(f*f*f).add(
 			   at2.set(p2).mul(3*f*f*t)).add(
 			   at3.set(p3).mul(3*f*t*t)).add(
-			   at4.set(p4).mul(t*t*t));
+			   at4.set(p4).mul(t*t*t)) );
+
+		return target;
 	}
 
 	public Vector2 p1() { return p1; }

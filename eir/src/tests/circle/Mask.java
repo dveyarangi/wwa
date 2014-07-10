@@ -21,6 +21,7 @@ public class Mask
 
 	public void put( final int mx, final int my, final int value, final IMaskingMethod method )
 	{
+		if(inBounds( mx, my ))
 		buffer[index(mx,my)] = method.eval( value, buffer[index(mx,my)] );
 	}
 	public void put( final int mx, final int my, final int value)
