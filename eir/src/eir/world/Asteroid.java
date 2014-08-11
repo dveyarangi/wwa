@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import eir.rendering.EntityRenderer;
 import eir.rendering.IRenderer;
-import eir.rendering.SpriteRenderer;
 import eir.resources.GameFactory;
 import eir.resources.PolygonalModel;
 import eir.resources.levels.AsteroidDef;
@@ -32,6 +31,10 @@ public class Asteroid
 	 */
 	private PolygonalModel model;
 
+	Sprite sprite;
+
+	private float angle;
+
 	public Asteroid( )
 	{
 	}
@@ -50,15 +53,14 @@ public class Asteroid
 
 		model = gameFactory.getPolygonalModel( this, def.getModel() );
 
-		Sprite sprite = gameFactory.createSprite(
+		sprite = gameFactory.createSprite(
 				def.getTexture(),
 				def.getPosition(),
 				model.getOrigin(),
 				def.getSize(), def.getSize(), def.getAngle() );
 
-		this.renderer = new SpriteRenderer <Asteroid>( sprite );
-
 		model.addToMesh( level.getEnvironment().getGroundMesh(), this );
+
 	}
 
 
@@ -68,7 +70,15 @@ public class Asteroid
 	 */
 	public void draw( final IRenderer renderer )
 	{
-		this.renderer.draw( renderer, this );
+///		angle += 		def.getRotation();
+
+		renderer.getSpriteBatch().draw( sprite,
+				def.getPosition().x-sprite.getRegionWidth()/2, def.getPosition().y-sprite.getRegionHeight()/2,
+				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
+				sprite.getRegionWidth(), sprite.getRegionHeight(),
+				getSize()/sprite.getRegionWidth(),
+				getSize()/sprite.getRegionWidth(), angle);
+//		sprite.draw( renderer.getSpriteBatch() );
 	}
 
 

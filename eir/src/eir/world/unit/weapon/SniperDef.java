@@ -50,7 +50,7 @@ public class SniperDef extends WeaponDef
 	public int getBurstSize() { return 1; }
 
 	@Override
-	public float getMagazineReloadTime() { return 2f; }
+	public float getMagazineReloadTime() { return 1f; }
 
 	@Override
 	public float getReloadingTime() { return 0.04f; }
@@ -110,7 +110,7 @@ public class SniperDef extends WeaponDef
 	@Override
 	public TargetProvider createTargetProvider( final Unit owner )
 	{
-		return TargetProvider.CLOSEST_TARGETER( owner );
+		return TargetProvider.RANDOM_TARGETER( owner );
 	}
 
 	@Override

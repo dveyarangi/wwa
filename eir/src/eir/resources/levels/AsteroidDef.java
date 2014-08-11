@@ -35,6 +35,23 @@ public class AsteroidDef
 
 	private PolygonalModelHandle model;
 
+	private float rotation;
+
+	public AsteroidDef() {} // for json loader
+
+	public AsteroidDef(final String name, final Vector2 position, final float angle, final float size,
+			final TextureHandle texture, final PolygonalModelHandle model, final float rotation)
+	{
+		super();
+		this.name = name;
+		this.position = position;
+		this.angle = angle;
+		this.size = size;
+		this.texture = texture;
+		this.model = model;
+		this.rotation = rotation;
+	}
+
 	public String getName() { return name; }
 
 	public float getAngle()	{ return angle;	}
@@ -44,4 +61,6 @@ public class AsteroidDef
 	public TextureHandle getTexture() { return texture; }
 
 	public PolygonalModelHandle getModel() { return model; }
+
+	public float getRotation() { return rotation; }
 }

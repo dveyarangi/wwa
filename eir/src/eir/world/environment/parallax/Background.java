@@ -29,13 +29,25 @@ public class Background
 		private Vector2 scroll;
 		private boolean tiling;
 
+		public Layer(final float depth, final TextureHandle handle, final Vector2 scroll, final boolean tiling)
+		{
+			this.depth = depth;
+			this.texture = handle;
+			this.scroll = scroll;
+			this.tiling = tiling;
+		}
+
 		@Override
 		public int compareTo(final Layer o)
 		{
 			return Float.compare( o.depth, depth);
 		}
 	}
-
+	public Background() {}
+	public Background(final NavigableSet <Layer> layers)
+	{
+		this.layers = layers;
+	}
 
 	private NavigableSet<Layer> layers = new TreeSet <Layer> ();
 	private GameInputProcessor processor;

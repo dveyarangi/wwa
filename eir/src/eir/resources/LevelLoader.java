@@ -193,7 +193,7 @@ public class LevelLoader
 				{
 					String modelFile = elem.getAsString();
 
-					return gameFactory.registerModelHandle( new PolygonalModelHandle( modelFile ) );
+					return gameFactory.registerModelHandle( new PolygonalModelHandle( modelFile, false ) );
 				}
 			})
 			// mapping unit definition classes

@@ -1,28 +1,7 @@
 package eir.world.environment.nav;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import yarangi.math.Edge;
-import yarangi.math.IVector2D;
-import yarangi.math.Vector2D;
 import yarangi.math.triangulation.Delaunay2D;
 import yarangi.math.triangulation.ITriangulator;
-import yarangi.math.triangulation.Mesh;
-import yarangi.math.triangulation.MeshFilter;
-import yarangi.math.triangulation.TriangleStore;
-import yarangi.math.triangulation.VoronoiDiagram;
-
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
-
-import eir.world.Asteroid;
-import eir.world.environment.nav.NavEdge.Type;
 
 public class NavMeshGenerator
 {
@@ -37,7 +16,7 @@ public class NavMeshGenerator
 	/**
 	 * Filter for triangulated stuff
 	 */
-	private static class AsteroidFilter implements MeshFilter
+	/*private static class AsteroidFilter implements MeshFilter
 	{
 		private Vector2 minCorner, maxCorner;
 		private List<Polygon> polygons;
@@ -69,9 +48,9 @@ public class NavMeshGenerator
 			}
 			return true;
 		}
-	}
+	}*/
 
-	public NavMesh generateMesh( final Collection <Asteroid> asteroids, final Vector2 minCorner, final Vector2 maxCorner )
+/*	public NavMesh generateMesh( final Collection <Asteroid> asteroids, final Vector2 minCorner, final Vector2 maxCorner )
 	{
 		NavMesh resultMesh = new AirNavMesh();
 
@@ -100,10 +79,10 @@ public class NavMeshGenerator
 		points.add( Vector2D.R( maxCorner.x, minCorner.y ) );
 
 		// triangulating:
-		TriangleStore store1 = triangulator.triangulate( points );
+//		TriangleStore store1 = triangulator.triangulate( points );
 
 		// inverting the triangulation to get regions
-		Mesh mesh = VoronoiDiagram.invertTriangleStore( store1, new AsteroidFilter( polygons, minCorner, maxCorner ));
+//		Mesh mesh = VoronoiDiagram.invertTriangleStore( store1, new AsteroidFilter( polygons, minCorner, maxCorner ));
 
 /*		for( Asteroid asteroid : asteroids )
 		{
@@ -122,7 +101,7 @@ public class NavMeshGenerator
 			NavNode node2 = nodes.get( new Vector2((float)edge.second().x(), (float)edge.second().y() ) );
 			mesh.linkNodes( node1, node2, Type.AIR );
 		}
-		*/
+
 
 		// converting voronoi regions to nav mesh:
 
@@ -156,5 +135,5 @@ public class NavMeshGenerator
 		}
 
 		return resultMesh;
-	}
+	}*/
 }

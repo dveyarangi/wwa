@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -27,15 +28,27 @@ public class PolygonLoader extends AsynchronousAssetLoader<PolygonShape, AssetLo
 	}
 
 	@Override
-	public void loadAsync( final AssetManager manager, final String fileName,
+	public void loadAsync( final AssetManager manager, final String name,
 			final AssetLoaderParameters<PolygonShape> parameter )
 	{
+		FileHandle handle = Gdx.files.internal( name );
+		Vector2 origin = null;
+		Vector2 [] vertices = null;
+		if(handle.exists())
+		{
+			ShapeLoader.RigidBodyModel bodyModel = ShapeLoader.readShape( handle.readString() ).rigidBodies.get( 0 );
+			vertices = bodyModel.shapes.get( 0 ).vertices;
 
-		ShapeLoader.RigidBodyModel bodyModel = ShapeLoader.readShape( Gdx.files.internal( fileName ).readString() ).rigidBodies.get( 0 );
-		Vector2 [] vertices = bodyModel.shapes.get( 0 ).vertices;
+			origin = bodyModel.origin;
+
+			this.shape = new PolygonShape(vertices, origin);
+		}
+		else
+		{
+			shape = PolygonShape.generateCircleModel( name );
+		}
 
 
-		shape = new PolygonShape(vertices, bodyModel.origin);
 	}
 
 	@Override
@@ -44,5 +57,6 @@ public class PolygonLoader extends AsynchronousAssetLoader<PolygonShape, AssetLo
 	{
 		return shape;
 	}
+
 
 }

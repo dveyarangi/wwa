@@ -8,7 +8,7 @@ public class SpriteRenderer <E> implements EntityRenderer <E>
 	private Sprite sprite;
 
 
-	public SpriteRenderer (final Sprite sprite)
+	public SpriteRenderer(final Sprite sprite)
 	{
 		this.sprite = sprite;
 	}
@@ -16,7 +16,6 @@ public class SpriteRenderer <E> implements EntityRenderer <E>
 	@Override
 	public void draw( final IRenderer renderer, final E entity )
 	{
-
 		sprite.draw( renderer.getSpriteBatch() );
 	}
 

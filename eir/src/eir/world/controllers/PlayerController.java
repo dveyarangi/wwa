@@ -24,4 +24,11 @@ public class PlayerController implements IController {
 
 	}
 
+	@Override
+	public void unitAdded( final Unit unit )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
 }

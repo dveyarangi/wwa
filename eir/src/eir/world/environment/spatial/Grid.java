@@ -51,6 +51,7 @@ public abstract class Grid <E>
 	@SuppressWarnings("unchecked")
 	public Grid(final String name, final int size, final float cellSize, final float width, final float height)
 	{
+		if(size <= 0) throw new IllegalArgumentException("Size must be positive");
 		this.size = size;
 
 		this.width = width;

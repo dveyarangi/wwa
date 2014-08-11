@@ -91,8 +91,8 @@ public class Cannon extends Unit implements IDamager
 //		}
 
 
-
-		target = targetProvider.pickTarget( units );
+		if(target == null || !target.isAlive())
+			target = targetProvider.pickTarget( units );
 		weapon.target = target;
 		Vector2 targetDirection = targetingModule.getShootingDirection( target, this );
 		if(targetDirection != null)
@@ -119,6 +119,8 @@ public class Cannon extends Unit implements IDamager
 			if(weapon.getTimeToReload() > 0)
 				return;
 			weapon.fire( target );
+
+			this.target = null;
 		}
 	}
 

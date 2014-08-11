@@ -13,6 +13,7 @@ import eir.world.unit.Unit;
 import eir.world.unit.UnitsFactory;
 import eir.world.unit.ai.AttackingOrder;
 import eir.world.unit.ai.PolygonGuardingOrder;
+import eir.world.unit.structure.Spawner;
 import gnu.trove.map.hash.TObjectFloatHashMap;
 
 public class WildlifeController implements IController
@@ -49,6 +50,14 @@ public class WildlifeController implements IController
 
 	}
 
+	@Override
+	public void unitAdded(final Unit unit)
+	{
+		if(unit instanceof Spawner)
+		{
+			resetGuardTargets();
+		}
+	}
 
 	@Override
 	public void yellUnitHit(final Unit unit, final IDamager hitSource)
@@ -156,6 +165,7 @@ public class WildlifeController implements IController
 			guardTargets.add( asteroid );
 
 		}
+
 		for(Asteroid asteroid : guardTargets)
 		{
 			PolygonGuardingOrder order = new PolygonGuardingOrder(1, asteroid.getModel());
@@ -164,6 +174,11 @@ public class WildlifeController implements IController
 
 			faction.getScheduler().addOrder(UnitsFactory.BIDRY, order);
 		}
+	}
+
+	public void resetGuardTargets()
+	{
+		spawnersGuardsInited = false;
 	}
 
 }

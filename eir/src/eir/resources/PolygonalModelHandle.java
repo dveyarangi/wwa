@@ -1,6 +1,7 @@
 package eir.resources;
 
 
+
 public class PolygonalModelHandle
 {
 
@@ -8,9 +9,9 @@ public class PolygonalModelHandle
 
 	private String path;
 
-	public PolygonalModelHandle(final String modelId)
+	public PolygonalModelHandle(final String modelId, final boolean isCircular)
 	{
-		this.path = createBodyPath( modelId );
+		this.path = isCircular ? modelId : createBodyPath( modelId );
 	}
 
 
@@ -23,5 +24,11 @@ public class PolygonalModelHandle
 
 
 	public String getPath() { return path; }
+
+
+	public static PolygonalModelHandle createCircularHandle( final float radius, final int segments )
+	{
+		return new PolygonalModelHandle( PolygonShape.toCircularName( radius, segments ), true );
+	}
 
 }

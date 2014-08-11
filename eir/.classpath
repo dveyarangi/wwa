@@ -12,6 +12,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/main/tween-engine-api.jar" sourcepath="libs/dev/tween-engine-api-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/main/trove-3.0.0rc1.jar"/>
 	<classpathentry kind="lib" path="libs/main/gson-1.7.1.jar"/>
-	<classpathentry kind="lib" path="libs/main/util-1.0.b21.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -67,11 +67,11 @@ public class Environment
 
 		NavMeshGenerator generator = new NavMeshGenerator();
 
-		Debug.startTiming("air nav mesh generation");
+/*		Debug.startTiming("air nav mesh generation");
 		airMesh = generator.generateMesh(level.getAsteroids(),
 				new Vector2(-level.getWidth()/2+1, -level.getHeight()/2+1),
 				new Vector2( level.getWidth()-1,    level.getHeight()/2-1));
-		Debug.stopTiming("air nav mesh generation");
+		Debug.stopTiming("air nav mesh generation");*/
 
 		Debug.startTiming("navmesh calculation");
 		groundMesh.init();
@@ -83,11 +83,11 @@ public class Environment
 			index.add( groundMesh.getNode( idx ) );
 		}
 
-		for(int idx = 0; idx < airMesh.getNodesNum(); idx ++)
+/*		for(int idx = 0; idx < airMesh.getNodesNum(); idx ++)
 		{
 			airMesh.getNode( idx ).init();
 			index.add( airMesh.getNode( idx ) );
-		}
+		}*/
 
 	}
 

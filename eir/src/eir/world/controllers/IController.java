@@ -6,6 +6,7 @@ import eir.world.unit.Unit;
 
 public interface IController {
 
+	public void unitAdded(Unit unit);
 
 	void init(Faction faction);
 

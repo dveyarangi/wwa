@@ -19,7 +19,6 @@ public class BezierCubicCurve implements ParametricCurve
 		this.p4 = p4;
 	}
 
-
 	@Override
 	public Vector2 at(final Vector2 target, final float t)
 	{

@@ -187,7 +187,7 @@ public abstract class Unit implements ISpatialObject, IUnit
 		this.hoverOverlays.clear();
 
 		addHoverOverlay( LevelRenderer.INTEGRITY_OID);
-//		toggleOverlay( LevelRenderer.INTEGRITY_OID);
+		toggleOverlay( LevelRenderer.INTEGRITY_OID);
 	}
 
 	/**
@@ -272,11 +272,19 @@ public abstract class Unit implements ISpatialObject, IUnit
 		Vector2 position = getBody().getAnchor();
 		Sprite sprite = getUnitSprite();
 		batch.draw( sprite,
-				position.x-sprite.getRegionWidth()/2, position.y-sprite.getRegionHeight()/2,
-				sprite.getRegionWidth()/2,sprite.getRegionHeight()/2,
-				sprite.getRegionWidth(), sprite.getRegionHeight(),
+				position.x-sprite.getRegionWidth()/2,
+				position.y-sprite.getRegionHeight()/2,
+
+				sprite.getRegionWidth()/2,
+				sprite.getRegionHeight()/2,
+
+				sprite.getRegionWidth(),
+				sprite.getRegionHeight(),
+
 				getSize()/sprite.getRegionWidth(),
-				getSize()/sprite.getRegionWidth(), angle);
+				getSize()/sprite.getRegionWidth(),
+
+				angle);
 	}
 
 

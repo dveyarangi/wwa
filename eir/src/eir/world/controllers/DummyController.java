@@ -19,4 +19,11 @@ public class DummyController implements IController
 	public void update(final float delta) {
 	}
 
+	@Override
+	public void unitAdded( final Unit unit )
+	{
+		// TODO Auto-generated method stub
+
+	}
+
 }

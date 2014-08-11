@@ -100,6 +100,7 @@ public class Faction
 	{
 		units.add( unit );
 		unitsByTypes.put( unit.getType(), unit );
+		controller.unitAdded( unit );
 	}
 
 	public void removeUnit( final Unit unit )

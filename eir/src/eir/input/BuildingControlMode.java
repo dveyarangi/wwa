@@ -69,7 +69,7 @@ public class BuildingControlMode implements IControlMode
 
 		this.defRobin = new UnitDef [] {
 				new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
-					5,
+					15,
 					null,
 					GameFactory.EXPLOSION_04_ANIM,
 					new MinigunDef(
@@ -79,7 +79,7 @@ public class BuildingControlMode implements IControlMode
 							GameFactory.EXPLOSION_04_ANIM, false ),
 					true),
 					new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
-							5,
+							15,
 							null,
 							GameFactory.EXPLOSION_04_ANIM,
 							new SniperDef(
@@ -90,7 +90,7 @@ public class BuildingControlMode implements IControlMode
 							true),
 
 				new CannonDef( UnitsFactory.CANNON, CONTROLLING_FACTION_ID,
-					5,
+					15,
 					null,
 					GameFactory.EXPLOSION_04_ANIM,
 					new HomingLauncherDef(

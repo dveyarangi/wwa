@@ -59,7 +59,7 @@ public class NavNode implements ISpatialObject
 		this.point = point;
 		this.neighbours = new HashSet<NavNode>();
 
-		this.pickingArea = AABB.createSquare( point, 0.1f );
+		this.pickingArea = AABB.createSquare( point, 1f );
 	}
 
 	public Vector2 getPoint() { return point; }

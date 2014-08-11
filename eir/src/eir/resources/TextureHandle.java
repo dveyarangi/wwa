@@ -1,7 +1,5 @@
 package eir.resources;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.google.common.base.Preconditions;
 
 public class TextureHandle
@@ -26,8 +24,4 @@ public class TextureHandle
 	@Override
 	public String toString() { return getPath(); }
 
-	public Texture load()
-	{
-		return new Texture(Gdx.files.internal( getPath() ) + ".png");
-	}
 }

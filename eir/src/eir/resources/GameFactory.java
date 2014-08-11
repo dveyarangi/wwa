@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -51,12 +52,14 @@ public class GameFactory
 
 	public GameFactory()
 	{
-		this.manager = new AssetManager();
-		manager.setLoader( PolygonShape.class, new PolygonLoader(
-				new InternalFileHandleResolver() )  );
+		FileHandleResolver resolver = new InternalFileHandleResolver();
+		this.manager = new AssetManager( resolver );
+		manager.setLoader( PolygonShape.class, new PolygonLoader( resolver )  );
+		manager.setLoader( Texture.class, new EnhancedTextureLoader( resolver )  );
+
+		registerSharedResources();
+
 	}
-
-
 	public void dispose()
 	{
 		manager.dispose();
@@ -72,8 +75,6 @@ public class GameFactory
 		LevelLoader loader = new LevelLoader();
 
 		LevelDef levelDef = loader.readLevel( levelName, this, unitsFactory );
-
-		registerSharedResources();
 
 		return levelDef;
 	}

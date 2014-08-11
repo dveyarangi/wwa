@@ -240,6 +240,7 @@ public class GameInputProcessor implements InputProcessor
 
 		 IControlMode mode = controlModes[controlModeIdx];
 		 PickingSensor sensor = mode.getPickingSensor();
+		 sensor.setCursor(pointerPosition2);
 		 sensor.clear();
 		 level.getEnvironment().getIndex().queryAABB( sensor,
 				 pointerPosition2.x,

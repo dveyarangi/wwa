@@ -168,7 +168,7 @@ public class Debug
 		if(drawNavMesh)
 		{
 			drawNavMesh( level.getEnvironment().getGroundMesh(), batch, shape );
-			drawNavMesh( level.getEnvironment().getAirMesh(), batch, shape );
+//			drawNavMesh( level.getEnvironment().getAirMesh(), batch, shape );
 		}
 
 		if(drawFactions)

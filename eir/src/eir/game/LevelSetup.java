@@ -34,10 +34,10 @@ public class LevelSetup
 		int width = 1536;
 		int height = 1536;
 		int factionsNum = 3;
-		int asteroidNum = 15;
+		int asteroidNum = 20;
 
 		LevelParameters levelParams = new LevelParameters( width, height, factionsNum, asteroidNum);
-//		Level level = new LevelGenerator().generate( levelParams, unitsFactory );
+//		levelDef = new LevelGenerator().generate( levelParams, gameFactory );
 
 
 		// loading level definitions from file:
